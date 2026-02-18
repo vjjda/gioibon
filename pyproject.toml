@@ -1,0 +1,12 @@
+[project]
+name = "tung-gioi-bon"
+version = "0.1.0"
+description = "Web app for memorizing Bhikkhu Patimokkha with TTS support"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2.0.0",
+]
+
+[tool.setuptools]
+packages = ["src"]

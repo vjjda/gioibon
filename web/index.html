@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giới bổn Tỳ kheo - Pātimokkha Bhikkhu</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script type="importmap">
+    {
+        "imports": {
+            "core/": "./modules/core/",
+            "data/": "./modules/data/",
+            "tts/": "./modules/tts/",
+            "ui/": "./modules/ui/"
+        }
+    }
+    </script>
+</head>
+<body>
+    <button id="sidebar-toggle" class="icon-btn"><i class="fas fa-bars"></i></button>
+    
+    <aside id="sidebar">
+        <div class="toc-header">Mục lục</div>
+        <ul id="toc-list" class="toc-list">
+            <!-- TOC items will be generated here -->
+        </ul>
+    </aside>
+
+    <div class="container">
+        <header>
+            <div class="top-controls">
+                <button id="settings-btn" class="icon-btn" title="Cài đặt"><i class="fas fa-cog"></i></button>
+            </div>
+            <h1>Giới bổn Tỳ kheo</h1>
+            <p class="subtitle">Pātimokkha Bhikkhu</p>
+        </header>
+
+        <div id="settings-modal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Cài đặt</h2>
+                <div class="form-group">
+                    <label for="api-key">Google Cloud API Key:</label>
+                    <input type="password" id="api-key" placeholder="Nhập API Key của bạn">
+                    <small>API Key được lưu trên trình duyệt của bạn.</small>
+                </div>
+                <div class="form-group">
+                    <label for="voice-select">Giọng đọc:</label>
+                    <div class="voice-control-group">
+                        <select id="voice-select">
+                            <option value="" disabled selected>Đang tải giọng...</option>
+                        </select>
+                        <button id="refresh-voices-btn" class="icon-btn" title="Tải lại danh sách giọng"><i class="fas fa-sync-alt"></i></button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="speed-range">Tốc độ đọc: <span id="speed-value">1.0</span>x</label>
+                    <input type="range" id="speed-range" min="0.5" max="2.0" step="0.1" value="1.0">
+                </div>
+                <button id="save-settings" class="btn primary">Lưu</button>
+            </div>
+        </div>
+
+        <div class="global-controls">
+            <button id="play-all-btn" class="btn primary"><i class="fas fa-play"></i> Đọc tất cả</button>
+            <button id="pause-btn" class="btn secondary" disabled><i class="fas fa-pause"></i> Tạm dừng</button>
+            <button id="stop-btn" class="btn secondary" disabled><i class="fas fa-stop"></i> Dừng</button>
+        </div>
+
+        <main id="content">
+            <div class="loading">Đang tải dữ liệu...</div>
+        </main>
+
+        <footer>
+            <p>Phật Giáo Nguyên Thủy Theravāda</p>
+        </footer>
+    </div>
+
+    <script type="module" src="modules/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+# Virtual Environments
+.venv/
+env/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS metadata
+.DS_Store
+
+/data/
+
+# Generated output
+output/
+web/data/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
