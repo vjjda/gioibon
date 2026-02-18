@@ -222,7 +222,8 @@ class DataBuilder:
                     if match and i == 0 and j == 0 and current_rule_no:
                         is_rule_start = True
                         rule_label = current_rule_no
-                        display_text_html = f"<b>{current_rule_no}.</b> {display_text}"
+                        # User requested to remove the number prefix in the text body
+                        display_text_html = display_text
                     else:
                         display_text_html = display_text
 

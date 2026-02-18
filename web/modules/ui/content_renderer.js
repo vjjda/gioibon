@@ -42,13 +42,37 @@ export class ContentRenderer {
         titleEl.className = 'section-title';
         
         if (section.level === 3) {
+            // Flex container for Title + Play Button
+            headerEl.style.display = 'flex';
+            headerEl.style.alignItems = 'center';
+            headerEl.style.gap = '10px';
+
             titleEl.textContent = `Điều ${section.heading}`;
             titleEl.classList.add('rule-title');
+            titleEl.style.margin = '0'; // Remove default margin for alignment
+
+            // Create Play Rule Button
+            const playRuleBtn = document.createElement('button');
+            playRuleBtn.className = 'play-segment-btn icon-btn rule-play-btn';
+            playRuleBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            playRuleBtn.title = "Nghe toàn bộ điều này";
+            // Make sure it's visible and distinct
+            playRuleBtn.style.opacity = '1'; 
+            playRuleBtn.style.marginTop = '0';
+            
+            playRuleBtn.onclick = (e) => {
+                e.stopPropagation();
+                if (this.playRuleCallback) this.playRuleCallback(index, 0);
+            };
+
+            headerEl.appendChild(titleEl);
+            headerEl.appendChild(playRuleBtn);
+
         } else {
             titleEl.textContent = section.heading;
+            headerEl.appendChild(titleEl);
         }
         
-        headerEl.appendChild(titleEl);
         sectionEl.appendChild(headerEl);
 
         section.segments.forEach((segment, segmentIndex) => {
@@ -66,7 +90,6 @@ export class ContentRenderer {
         
         // Use unique ID based on segment ID to avoid conflicts if needed, or stick to pattern
         if (segment.is_rule_start && segment.rule_label) {
-            // This logic might be redundant if we rely on section structure, but keep for compatibility
             segmentEl.id = `rule-${sectionId}-${segment.rule_label}`;
         }
 
@@ -77,24 +100,11 @@ export class ContentRenderer {
         playBtn.className = 'play-segment-btn icon-btn';
         playBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
         
-        // Determine if this is a rule start segment
-        // In our new structure, the first segment of a Level 3 section is the rule start.
-        // The converter sets is_rule_start=True for it.
-        
-        if (segment.is_rule_start) {
-            playBtn.title = "Nghe toàn bộ điều này";
-            playBtn.classList.add('rule-play-btn');
-            playBtn.onclick = (e) => {
-                e.stopPropagation();
-                if (this.playRuleCallback) this.playRuleCallback(sectionIndex, segmentIndex);
-            };
-        } else {
-            playBtn.title = "Nghe đoạn này";
-            playBtn.onclick = (e) => {
-                e.stopPropagation();
-                if (this.playSegmentCallback) this.playSegmentCallback(segment.id, segment.text);
-            };
-        }
+        playBtn.title = "Nghe đoạn này";
+        playBtn.onclick = (e) => {
+            e.stopPropagation();
+            if (this.playSegmentCallback) this.playSegmentCallback(segment.id, segment.text);
+        };
 
         const textEl = document.createElement('div');
         textEl.className = 'segment-text';

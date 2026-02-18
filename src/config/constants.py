@@ -12,7 +12,7 @@ INPUT_MARKDOWN_PATTERN = str(DATA_DIR / "Gioi bon Viet/*.md")
 OUTPUT_JSON_PATH = str(WEB_DIR / "data/content.json")
 
 # Regex Patterns
-RULE_PATTERN_REGEX = r'^\s*(\d+)(?:\|\.)\.\s+(.*)'
+RULE_PATTERN_REGEX = r'^\s*(\d+)\\?\.\s+(.*)'
 TITLE_MATCH_REGEX = r'^#\s+(.*)'
 
 # Special Rule Identifiers

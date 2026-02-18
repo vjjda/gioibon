@@ -104,7 +104,7 @@ export class TocRenderer {
     _scrollTo(id) {
         const target = document.getElementById(id);
         if (target) {
-            target.scrollIntoView({ behavior: 'smooth' });
+            target.scrollIntoView({ behavior: 'auto' });
             if (window.innerWidth <= 1024 && this.sidebar) {
                 this.sidebar.classList.remove('visible');
             }
