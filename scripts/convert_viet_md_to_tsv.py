@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # Path: scripts/convert_viet_md_to_tsv.py
 
 import re

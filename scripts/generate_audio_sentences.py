@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # Path: scripts/generate_audio_sentences.py
 
 import os
