@@ -39,7 +39,7 @@ export class ControlBar {
                 if (this.speedChangeCallback) this.speedChangeCallback(newRate);
             });
         }
-        // [NEW] Xử lý sự kiện nút Loop
+        // Xử lý sự kiện nút Loop
         if (this.loopBtn) {
             this.loopBtn.addEventListener('click', () => {
                 this.loopBtn.classList.toggle('active');
@@ -47,6 +47,20 @@ export class ControlBar {
                 if (this.loopToggleCallback) this.loopToggleCallback(isLooping);
             });
         }
+
+        // [NEW] Global keyboard shortcuts cho Control Bar
+        document.addEventListener('keydown', (e) => {
+            // Ngăn việc kích hoạt phím tắt khi đang nhập liệu (ví dụ: trong form cài đặt)
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+
+            const key = e.key.toLowerCase();
+            if (key === 'g') {
+                e.preventDefault(); // Ngăn hành vi mặc định của trình duyệt nếu có
+                if (this.loopBtn) {
+                    this.loopBtn.click(); // Gọi trực tiếp logic click của nút Loop
+                }
+            }
+        });
     }
 
     // Initialize speed select with current rate
@@ -84,4 +98,3 @@ export class ControlBar {
         }
     }
 }
-
