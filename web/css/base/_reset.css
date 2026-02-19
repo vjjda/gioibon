@@ -1,0 +1,12 @@
+/* Reset & Base */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    line-height: 1.7;
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+    font-weight: 300;
+}

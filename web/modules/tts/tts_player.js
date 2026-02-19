@@ -82,6 +82,16 @@ export class TTSPlayer {
         if (this.onPlaybackStateChange) this.onPlaybackStateChange('stopped');
     }
 
+    _normalizeText(text) {
+        if (!text) return "";
+        // Replicate backend logic:
+        // 1. Remove (), [], *
+        let clean = text.replace(/[()\[\]*]/g, ' ');
+        // 2. Collapse whitespace
+        clean = clean.replace(/\s+/g, ' ').trim();
+        return clean;
+    }
+
     async _processQueue() {
         if (this.audioQueue.length === 0) {
             this.stop();
@@ -105,13 +115,14 @@ export class TTSPlayer {
             if (item.audio && item.audio !== 'skip') {
                 audioSrc = `data/audio/${item.audio}`;
             } else if (item.text) {
-                // Remove HTML/Markdown from text if needed? 
-                // For now, assume engine handles it or text is clean enough.
-                // Or user might have stripped it before.
-                // The DB 'segment' column has markdown.
-                // Let's do a simple strip if using TTS fallback.
-                const cleanText = item.text.replace(/<[^>]*>?/gm, '').replace(/\*+/g, '');
-                audioSrc = await this.engine.fetchAudio(cleanText);
+                // Normalize text using backend logic
+                // Also remove HTML tags just in case
+                const textWithoutHtml = item.text.replace(/<[^>]*>?/gm, '');
+                const normalizedText = this._normalizeText(textWithoutHtml);
+                
+                if (normalizedText) {
+                    audioSrc = await this.engine.fetchAudio(normalizedText);
+                }
             }
 
             if (!audioSrc) {

@@ -1,0 +1,38 @@
+/* Footer Controls */
+.global-controls {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    padding: 6px 8px;
+    border-radius: 50px;
+    box-shadow: var(--shadow-float);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 500;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.divider {
+    width: 1px;
+    height: 20px;
+    background-color: var(--border-color);
+    margin: 0 4px;
+}
+
+.control-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    opacity: 0.6;
+    font-size: 1rem;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.control-btn:hover {
+    background-color: rgba(0,0,0,0.05);
+    opacity: 1;
+}

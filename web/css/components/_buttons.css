@@ -1,0 +1,73 @@
+/* Buttons */
+.btn {
+    padding: 8px 20px;
+    border-radius: 25px;
+    border: none;
+    font-family: var(--font-ui);
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn.primary {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
+}
+
+.btn.primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(139, 69, 19, 0.25);
+}
+
+.btn.secondary {
+    background-color: transparent;
+    color: var(--text-main);
+}
+.btn.secondary:hover {
+    background-color: rgba(0,0,0,0.04);
+}
+
+/* Play Buttons (Low Profile Dot) */
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary-color);
+    transition: all 0.2s;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.play-btn {
+    font-size: 0.4rem; /* Very small dot */
+    opacity: 0.3; /* Low profile */
+    width: 20px; 
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.play-btn:hover {
+    opacity: 1;
+    transform: scale(1.2);
+    color: var(--accent-color);
+}
+
+/* Rule Play Button distinct style */
+.play-rule-btn {
+    color: var(--primary-color);
+    opacity: 0.5;
+    font-size: 1rem; /* Keep rule play larger */
+    margin-left: -4px;
+}
+.play-rule-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}

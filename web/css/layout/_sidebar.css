@@ -1,0 +1,142 @@
+/* --- Sidebar (TOC) --- */
+#sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--bg-sidebar);
+    border-right: 1px solid var(--border-color);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.toc-header {
+    height: var(--header-height);
+    padding: 0 1.5rem;
+    font-family: var(--font-ui);
+    font-weight: 500;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-sidebar);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+}
+
+.toc-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem 1rem;
+    list-style: none;
+}
+
+/* TOC Main Items */
+.toc-main-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc-item {
+    margin-bottom: 0.25rem;
+}
+
+.toc-link {
+    display: block;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+    line-height: 1.4;
+}
+
+.toc-link:hover {
+    background-color: rgba(139, 69, 19, 0.04);
+    color: var(--primary-color);
+}
+
+.toc-link.active {
+    background-color: rgba(139, 69, 19, 0.08);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Level Styles */
+.level-title .toc-link {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    text-align: center;
+    background: transparent !important;
+}
+
+/* H2: Main Section (Chapter) */
+.level-h2 .toc-link {
+    font-weight: 500;
+    margin-top: 1.5rem;
+    color: var(--text-main);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid transparent;
+}
+
+/* H3: Sub-section */
+.level-h3 .toc-link {
+    font-weight: 400;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    padding-left: 1.5rem;
+    margin-top: 0.25rem;
+}
+
+/* TOC Grid for Rules */
+.toc-rule-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px; /* Tighter gap */
+    padding: 0.5rem 0.5rem 1rem 1.5rem;
+    list-style: none;
+    align-content: start;
+}
+
+.toc-rule-item {
+    margin: 0;
+    padding: 0;
+}
+
+.toc-rule-item .toc-link {
+    text-align: center;
+    padding: 4px 0;
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    border-radius: 4px;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2; /* Tighter line height for numbers */
+}
+
+.toc-rule-item .toc-link:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    background-color: #fff;
+}
+
+.toc-rule-item .toc-link.active {
+    background-color: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+}

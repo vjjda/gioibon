@@ -88,7 +88,7 @@ class TTSGenerator:
 
     def process_segment(self, uid: int, label: str, segment_text: str) -> str:
         """Xử lý đoạn văn, trả về tên file MP3 cuối cùng, hoặc 'skip' nếu được loại trừ."""
-        if not segment_text.strip() or label.startswith("note-") or label.endswith("-name"):
+        if not segment_text.strip() or label.startswith("note-") or label.endswith("-name") or label in ["title", "subtitle"]:
             return "skip"
 
         # 1. Tạo bản Text sạch dành riêng cho việc sinh Audio (xóa (), [], *)

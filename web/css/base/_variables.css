@@ -1,0 +1,28 @@
+:root {
+  /* --- COLOR PALETTE (Warm / Sepia Tone) --- */
+  --bg-body: #fdfbf7;      /* Warm Paper White */
+  --bg-sidebar: #f5f2eb;   /* Slightly darker paper */
+  --bg-card: #ffffff;
+  --bg-modal: #ffffff;
+  
+  --text-main: #2b221b;    /* Dark Ink */
+  --text-muted: #5c5550;   /* Muted Ink */
+  --text-light: #888888;   /* Very Light Text */
+  --text-pali: #8b4513;    /* SaddleBrown for Pali */
+  
+  --primary-color: #8b4513; /* SaddleBrown */
+  --primary-hover: #a0522d; /* Sienna */
+  --accent-color: #d2691e;  /* Chocolate */
+  
+  --border-color: #eaddcf;
+  --border-light: #eceae5;
+
+  --shadow-soft: 0 4px 20px rgba(62, 39, 35, 0.08);
+  --shadow-float: 0 8px 30px rgba(62, 39, 35, 0.15);
+  
+  --font-main: "Merriweather", "Times New Roman", serif;
+  --font-ui: "Inter", "Segoe UI", sans-serif;
+  
+  --sidebar-width: 280px;
+  --header-height: 70px;
+}

@@ -1,0 +1,108 @@
+/* Text Typography */
+.segment-text {
+    flex: 1;
+    font-size: 1.15rem;
+    color: var(--text-main);
+    line-height: 1.7;
+    font-weight: 300;
+}
+
+/* Heading Typography Override */
+.segment-text h1, .segment-text h2, .segment-text h3, .segment-text h4 {
+    margin: 0;
+    line-height: 1.4;
+    color: var(--text-main);
+}
+
+/* Specific Heading Styles */
+.main-title .segment-text h1 {
+    font-size: 2.2rem;
+    font-weight: 400;
+    text-align: center;
+    color: var(--primary-color);
+    margin: 3rem 0 1rem 0;
+    letter-spacing: -0.5px;
+}
+
+.segment[data-label="subtitle"] .segment-text h2 {
+    font-size: 1.1rem;
+    font-weight: 300;
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 4rem;
+    border: none;
+}
+
+.chapter-header .segment-text h2,
+.segment-text h2 {
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--text-main);
+    margin-top: 4rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-family: var(--font-main);
+    letter-spacing: 0.5px;
+    border: none;
+    text-transform: uppercase;
+}
+
+.segment-text h3 {
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--primary-color);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    font-family: var(--font-ui);
+    text-align: center;
+    padding-left: 0;
+    border: none;
+}
+
+.rule-header .segment-text h4,
+.segment-text h4 {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--accent-color);
+    font-family: var(--font-ui);
+    margin-top: 1.5rem;
+    display: inline-block;
+}
+
+/* Pali Text */
+.pli {
+    display: block;
+    font-style: italic;
+    color: var(--text-pali);
+    font-size: 0.95em;
+    margin-bottom: 0.4rem;
+    font-weight: 300;
+}
+
+/* [NEW] Note Styling (Low Profile) */
+.note {
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    background-color: rgba(0, 0, 0, 0.02); /* Very subtle bg */
+    border-left: 3px solid var(--border-color);
+    padding: 0.8rem 1rem;
+    margin: 1rem 0;
+    border-radius: 0 4px 4px 0;
+    font-style: italic;
+}
+
+/* [NEW] End Sections (Centered, Low Profile) */
+.endsection, .endvagga, .endsutta {
+    text-align: center;
+    font-style: italic;
+    color: var(--text-light); /* Lighter text */
+    font-size: 0.9rem;
+    /* Margins removed here to be handled by segment container alignment logic */
+    margin: 0; 
+    font-family: var(--font-ui);
+    position: relative;
+    display: block;
+    width: 100%;
+}

@@ -1,0 +1,72 @@
+/* Segment Styling */
+.segment {
+    position: relative;
+    padding: 0.25rem 0.5rem;
+    margin-bottom: 0.75rem;
+    transition: background-color 0.2s;
+    border-radius: 6px;
+    border-left: 3px solid transparent;
+}
+
+.segment.active {
+    background-color: rgba(139, 69, 19, 0.04);
+    border-left-color: var(--primary-color);
+}
+
+.segment-content-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    position: relative;
+}
+
+/* Play Buttons Default Alignment (for body text) */
+.play-btn {
+    margin-top: 5px; /* Align with ~1.7 line-height of body text */
+}
+
+/* [FIX] Alignment for headers and end sections */
+.chapter-header .segment-content-wrapper,
+.rule-header .segment-content-wrapper,
+.end-segment .segment-content-wrapper {
+    align-items: center; 
+}
+
+.chapter-header .play-btn,
+.rule-header .play-btn,
+.end-segment .play-btn {
+    margin-top: 0; /* Reset top margin when centered */
+}
+
+/* [FIX] Move vertical spacing to segment container */
+.chapter-header {
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+    padding-top: 0;
+}
+
+.rule-header {
+    margin-top: 1.5rem;
+}
+
+/* Reset internal margins for headers inside segments */
+.segment-text h1:first-child,
+.segment-text h2:first-child,
+.segment-text h3:first-child,
+.segment-text h4:first-child {
+    margin-top: 0 !important;
+}
+
+.chapter-header .segment-text h2,
+.rule-header .segment-text h4 {
+    margin-bottom: 0 !important; 
+}
+
+/* Reset margins for end sections inside segments */
+.end-segment .segment-text .endsection,
+.end-segment .segment-text .endvagga,
+.end-segment .segment-text .endsutta {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 1rem 0; /* Internal padding instead */
+}

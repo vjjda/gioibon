@@ -69,6 +69,11 @@ export class ContentRenderer {
             segmentEl.classList.add('main-title');
         }
 
+        // Check for end sections in HTML content
+        if (item.html && item.html.match(/class=['"](endsection|endvagga|endsutta|sadhu)['"]/)) {
+            segmentEl.classList.add('end-segment');
+        }
+
         const contentWrapper = document.createElement('div');
         contentWrapper.className = 'segment-content-wrapper';
 
@@ -76,7 +81,7 @@ export class ContentRenderer {
         if (item.audio && item.audio !== 'skip') {
             const playBtn = document.createElement('button');
             playBtn.className = 'play-btn icon-btn';
-            playBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            playBtn.innerHTML = '<i class="fas fa-circle"></i>';
             playBtn.title = "Nghe đoạn này";
             playBtn.onclick = (e) => {
                 e.stopPropagation();

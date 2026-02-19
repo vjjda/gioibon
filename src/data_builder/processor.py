@@ -109,7 +109,9 @@ class ContentProcessor:
                 if re.match(r'^PHẨM\s+\d+', text, re.IGNORECASE):
                     label = f"{self.labeler.current_prefix}-chapter"
 
-                tmpl = f"<h{level}>{{}}</h{level}>"
+                # User requested headings to start from h2 (offset by +1)
+                adjusted_level = level + 1
+                tmpl = f"<h{adjusted_level}>{{}}</h{adjusted_level}>"
                 self._add_segment(html=tmpl, label=label, segment=text)
                 continue
 
@@ -124,7 +126,7 @@ class ContentProcessor:
                     self.last_rule_label = label
                     rule_name = self.rule_mapper.get_rule_name(label)
                     if rule_name:
-                        self._add_segment(html="<h3>{}</h3>", label=f"{label}-name", segment=rule_name)
+                        self._add_segment(html="<h4>{}</h4>", label=f"{label}-name", segment=rule_name)
             else:
                 text_to_process = para
                 label = self.labeler.get_label()
