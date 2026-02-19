@@ -11,7 +11,7 @@ export class TTSPlayer {
         this.currentSegmentId = null;
         this.isSequence = false;
         
-        // [NEW] Theo dõi trạng thái lặp và lưu trữ playlist ban đầu
+        // Theo dõi trạng thái lặp và lưu trữ playlist ban đầu
         this.isLooping = false;
         this.currentPlaylist = [];
 
@@ -34,6 +34,12 @@ export class TTSPlayer {
     // --- Playback Control ---
 
     playSegment(segmentId, audio, text) {
+        // [NEW] Nếu đang play/pause ĐÚNG segment này (ở chế độ đơn), thì toggle pause thay vì restart
+        if (!this.isSequence && this.currentSegmentId === segmentId && (this.isPlaying || this.isPaused)) {
+            this.togglePause();
+            return;
+        }
+
         this.stop();
         this.isSequence = false;
         
@@ -45,6 +51,14 @@ export class TTSPlayer {
     }
 
     playSequence(segments) {
+        // [NEW] Nếu đang play/pause ĐÚNG chuỗi này, thì toggle pause thay vì restart
+        // Dựa vào ID của segment đầu tiên trong chuỗi để nhận diện
+        if (this.isSequence && segments.length > 0 && this.currentPlaylist.length > 0 && 
+            this.currentPlaylist[0].id === segments[0].id && (this.isPlaying || this.isPaused)) {
+            this.togglePause();
+            return;
+        }
+
         this.stop();
         this.isSequence = true;
         // segments is array of { id, audio, text }
@@ -110,7 +124,7 @@ export class TTSPlayer {
 
     async _processQueue() {
         if (this.audioQueue.length === 0) {
-            // [NEW] Logic Loop tự động khi hết bài
+            // Logic Loop tự động khi hết bài
             if (this.isLooping && this.currentPlaylist.length > 0) {
                 this.audioQueue = [...this.currentPlaylist];
             } else {
@@ -184,4 +198,3 @@ export class TTSPlayer {
         }
     }
 }
-
