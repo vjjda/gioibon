@@ -69,7 +69,8 @@
 .end-segment .segment-text .endsection,
 .end-segment .segment-text .endvagga,
 .end-segment .segment-text .endsutta,
-.end-segment .segment-text .namo {
+.end-segment .segment-text .namo,
+.end-segment .segment-text .sadhu {
     margin-top: 0;
     margin-bottom: 0;
     padding: 1rem 0; /* Internal padding instead */

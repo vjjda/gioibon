@@ -105,6 +105,16 @@
     font-size: 1rem;
 }
 
+/* [NEW] Sadhu Styling */
+.sadhu {
+    text-align: center;
+    font-weight: 600;
+    color: var(--primary-color);
+    font-style: italic;
+    margin: 2rem 0;
+    font-size: 1.1rem;
+}
+
 /* [NEW] End Sections (Centered, Low Profile) */
 .endsection, .endvagga, .endsutta {
     text-align: center;

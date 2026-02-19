@@ -170,7 +170,7 @@ class ContentProcessor:
                 for j, seg in enumerate(line_segments):
                     # Logic xác định class kết thúc đoạn
                     css_class = ""
-                    if "sadhu" in seg.lower():
+                    if "Sādhu! Sādhu!! Sādhu!!!" in seg:
                         css_class = "sadhu"
                     elif "NAMO TASSA BHAGAVATO ARAHATO SAMMĀSAMBUDDHASSA" in seg:
                         css_class = "namo"
@@ -190,6 +190,8 @@ class ContentProcessor:
                     final_seg = seg
                     if css_class in ["endsutta", "endsection", "endvagga"]:
                         final_seg = seg.replace("_", "").strip()
+                    elif css_class == "sadhu":
+                        final_seg = seg.replace("*", "").strip()
 
                     prefix = p_tag if (i == 0 and j == 0) else ""
                     suffix = "</p>" if (i == len(lines)-1 and j == num_segs-1) else " "
