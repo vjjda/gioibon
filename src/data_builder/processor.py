@@ -1,7 +1,8 @@
 # Path: src/data_builder/processor.py
 import re
 import logging
-from typing import List
+from typing import List, Dict, Any
+from collections import defaultdict
 from src.config.constants import RULE_24_IDENTIFIER, RULE_PATTERN_REGEX
 from src.data_builder.models import SegmentData
 from src.data_builder.labeler import ContentLabeler
@@ -16,6 +17,7 @@ class ContentProcessor:
         self.labeler = ContentLabeler()
         self.tts_generator = tts_generator
         self.uid_counter = 1
+        self.raw_segments: List[Dict[str, Any]] = []
         self.segments_output: List[SegmentData] = []
 
     def clean_text(self, text: str) -> str:
@@ -41,16 +43,18 @@ class ContentProcessor:
         return [p.strip() for p in parts if p.strip()]
 
     def _add_segment(self, html: str, label: str, segment: str) -> None:
-        """Hàm hỗ trợ thêm segment, xử lý Audio và tự động tăng UID."""
-        audio_filename = self.tts_generator.process_segment(self.uid_counter, label, segment)
-        
-        self.segments_output.append(SegmentData(
-            uid=self.uid_counter, html=html, label=label, segment=segment, audio=audio_filename
-        ))
+        """Lưu trữ dữ liệu vào danh sách tạm (raw) để thực hiện thống kê trước khi gen Audio."""
+        self.raw_segments.append({
+            "uid": self.uid_counter,
+            "html": html,
+            "label": label,
+            "segment": segment
+        })
         self.uid_counter += 1
 
     def process_content(self, raw_md: str) -> List[SegmentData]:
         self.segments_output = []
+        self.raw_segments = []
         self.uid_counter = 1
         
         # Loại bỏ metadata đầu file (YAML frontmatter)
@@ -62,6 +66,9 @@ class ContentProcessor:
         # Chuỗi ngoại lệ không được cắt nháy đơn
         SILENCE_EXCEPTION = "Do thái độ im lặng, tôi sẽ nhận biết về các đại đức rằng: '(Các vị) được trong sạch.'"
 
+        # ==========================================
+        # BƯỚC 1: PARSE MARKDOWN THÀNH CÁC RAW SEGMENT
+        # ==========================================
         for para in paragraphs:
             para = para.strip()
             if not para:
@@ -71,9 +78,6 @@ class ContentProcessor:
             if re.match(r'^\\?\*\\?\*\\?\*$', para):
                 continue
 
-            # ----------------------------------------------------
-            # 1. XỬ LÝ ĐẶC BIỆT TITLE / SUBTITLE / SKIP
-            # ----------------------------------------------------
             if para == "# GIỚI BỔN TỲ KHƯU":
                 self._add_segment(html="<h1 class=\"title\">{}</h1>", label="title", segment="GIỚI BỔN TỲ KHƯU")
                 continue
@@ -83,22 +87,14 @@ class ContentProcessor:
                 continue
             
             if para == "**PHẬT GIÁO NGUYÊN THUỶ THERAVĀDA**":
-                continue  # Bỏ qua segment này
+                continue  
 
-            # ----------------------------------------------------
-            # 2. XỬ LÝ NOTE (Ghi chú bắt đầu bằng |)
-            # ----------------------------------------------------
             if para.startswith("|"):
-                # Clean: loại bỏ '|' và '*' 
                 clean_note = para.replace('|', '').replace('*', '').strip()
-                # Lấy uid của segment liền trước
                 note_label = f"note-{self.uid_counter - 1}"
                 self._add_segment(html="<p class=\"note\">{}</p>", label=note_label, segment=clean_note)
                 continue
 
-            # ----------------------------------------------------
-            # 3. XỬ LÝ HEADINGS
-            # ----------------------------------------------------
             if para.startswith('#'):
                 level_match = re.match(r'^(#+)', para)
                 level = len(level_match.group(1))
@@ -106,8 +102,6 @@ class ContentProcessor:
                 self.labeler.update_context(text, level)
                 
                 label = self.labeler.get_label()
-
-                # Bổ sung logic bắt "PHẨM \d+"
                 if re.match(r'^PHẨM\s+\d+', text, re.IGNORECASE):
                     label = f"{self.labeler.current_prefix}-chapter"
 
@@ -115,9 +109,6 @@ class ContentProcessor:
                 self._add_segment(html=tmpl, label=label, segment=text)
                 continue
 
-            # ----------------------------------------------------
-            # 4. XỬ LÝ NỘI DUNG (RULES VÀ ĐOẠN VĂN THƯỜNG)
-            # ----------------------------------------------------
             match = rule_pattern.match(para)
             if match:
                 rule_no = match.group(1)
@@ -127,7 +118,6 @@ class ContentProcessor:
                 text_to_process = para
                 label = self.labeler.get_label()
 
-            # Rule 24 Exception
             if RULE_24_IDENTIFIER in text_to_process:
                 sub_parts = [
                     "(Biết rằng): 'Mùa nóng còn lại là một tháng' vị tỳ khưu nên tìm kiếm y choàng tắm mưa.",
@@ -141,7 +131,6 @@ class ContentProcessor:
                     self._add_segment(html=f"{prefix}{{}}{suffix}", label=label, segment=s)
                 continue
 
-            # Đoạn văn thường
             lines = text_to_process.split('\n')
             for i, line in enumerate(lines):
                 clean_l = self.clean_text(line)
@@ -152,31 +141,46 @@ class ContentProcessor:
                 is_sekhiya = "sk" in label.lower()
                 
                 line_segments = []
-                # 1. Tách thành các câu dựa trên dấu chấm/hỏi/than
                 sentences = self.split_sentences(clean_l)
                 
-                # 2. Xử lý tách theo dấu nháy đơn (giống hệt backend cũ)
                 if is_sekhiya or is_sadhu:
-                    # Sk và Sadhu chỉ tách câu, KHÔNG tách nháy đơn
                     line_segments = sentences
                 else:
-                    # Các phần khác (bao gồm nidana, pj, ss, v.v.) sẽ tách thêm nháy đơn
                     for sent in sentences:
-                        # Bổ sung ngoại lệ giữ nguyên câu đặc thù không cắt nháy đơn
                         if SILENCE_EXCEPTION in sent:
                             line_segments.append(sent)
                         else:
                             line_segments.extend(self.segment_sentence(sent))
 
-                # 3. Gắn HTML Template và Add
                 num_segs = len(line_segments)
                 for j, seg in enumerate(line_segments):
                     prefix = "<p>" if (i == 0 and j == 0) else ""
                     suffix = "</p>" if (i == len(lines)-1 and j == num_segs-1) else " "
-                    
                     if j == num_segs-1 and i < len(lines)-1:
                         suffix = "<br>"
                     
                     self._add_segment(html=f"{prefix}{{}}{suffix}", label=label, segment=seg)
+
+        # ==========================================
+        # BƯỚC 2: THỐNG KÊ LABEL VÀ SINH AUDIO
+        # ==========================================
+        label_totals = defaultdict(int)
+        for item in self.raw_segments:
+            if item["segment"].strip() and not item["label"].startswith("note-"):
+                label_totals[item["label"]] += 1
+                
+        # Nạp tổng số lượng vào TTS Generator
+        self.tts_generator.set_label_totals(label_totals)
+        
+        # Chạy vòng lặp để tạo Audio và xuất dữ liệu chuẩn
+        for item in self.raw_segments:
+            audio_filename = self.tts_generator.process_segment(item["uid"], item["label"], item["segment"])
+            self.segments_output.append(SegmentData(
+                uid=item["uid"],
+                html=item["html"],
+                label=item["label"],
+                segment=item["segment"],
+                audio=audio_filename
+            ))
 
         return self.segments_output

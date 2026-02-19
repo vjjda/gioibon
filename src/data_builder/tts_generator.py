@@ -24,6 +24,7 @@ class TTSGenerator:
         self.language_code = "vi-VN"
         
         self.label_counts: Dict[str, int] = defaultdict(int)
+        self.label_totals: Dict[str, int] = defaultdict(int)
         
         self._prepare_directories()
 
@@ -33,6 +34,10 @@ class TTSGenerator:
             shutil.rmtree(self.output_dir)
         os.makedirs(self.output_dir, exist_ok=True)
         os.makedirs(self.tmp_dir, exist_ok=True)
+
+    def set_label_totals(self, totals: Dict[str, int]) -> None:
+        """Nhận tổng số lượng của từng label để xử lý việc đặt tên file (Unique vs Multiple)."""
+        self.label_totals = totals
 
     def _get_hash(self, text: str) -> str:
         return hashlib.md5(text.encode('utf-8')).hexdigest()
@@ -83,13 +88,18 @@ class TTSGenerator:
         if not segment_text.strip() or label.startswith("note-"):
             return ""
 
-        # Tăng biến đếm cho label này
+        # Tăng biến đếm hiện tại cho label này
         self.label_counts[label] += 1
         count = self.label_counts[label]
+        total = self.label_totals.get(label, 0)
         
-        # Format tên file: 001_nidana_1.mp3
         uid_padded = f"{uid:03d}"
-        filename = f"{uid_padded}_{label}_{count}.mp3"
+        
+        # Format tên file: Có đuôi _số nếu xuất hiện nhiều lần, ngược lại thì không có
+        if total > 1:
+            filename = f"{uid_padded}_{label}_{count}.mp3"
+        else:
+            filename = f"{uid_padded}_{label}.mp3"
         
         final_filepath = os.path.join(self.output_dir, filename)
 
