@@ -42,7 +42,6 @@ class TTSGenerator:
 
     def _get_hash(self, text: str) -> str:
         """Tạo mã băm SHA-256 bao gồm cả nội dung và cấu hình giọng đọc."""
-        # Ghép cả cấu hình giọng vào để tạo tính duy nhất cho phiên bản âm thanh
         raw_data = f"{text}|{self.voice_name}|{self.language_code}"
         return hashlib.sha256(raw_data.encode('utf-8')).hexdigest()
 
@@ -78,9 +77,8 @@ class TTSGenerator:
             if audio.tags is None:
                 audio.add_tags()
                 
-            # text truyền vào ở đây vẫn là text gốc có chứa ngoặc để hiển thị làm Lyrics
             audio.tags.add(USLT(encoding=3, lang='vie', desc='', text=text))
-            audio.tags.add(TIT2(encoding=3, text=title))
+            audio.tags.add(TIT2(encoding=3, text=title)) # Title truyền vào ở đây sẽ sạch sẽ, không chứa hash
             audio.tags.add(TALB(encoding=3, text="Giới bổn Patimokkha Việt"))
             audio.tags.add(TPE1(encoding=3, text="Vi-Charon"))
             audio.tags.add(TRCK(encoding=3, text=track_no))
@@ -94,30 +92,28 @@ class TTSGenerator:
             return "skip"
 
         # 1. Tạo bản Text sạch dành riêng cho việc sinh Audio (xóa (), [], *)
-        # Thay thế bằng khoảng trắng để tránh việc các chữ bị dính vào nhau sau khi xóa
         tts_text = re.sub(r'[()\[\]*]', ' ', segment_text)
-        # Gom các khoảng trắng thừa lại thành 1
         tts_text = re.sub(r'\s+', ' ', tts_text).strip()
 
         if not tts_text:
             return "skip"
 
-        # Tăng biến đếm hiện tại cho label này
         self.label_counts[label] += 1
         count = self.label_counts[label]
         total = self.label_totals.get(label, 0)
         
         uid_padded = f"{uid:03d}"
         
-        # 2. Sinh Hash dựa trên Text sạch và Giọng đọc
-        # Rút gọn hash xuống còn 16 ký tự đầu để tên file không quá dài, nhưng vẫn đủ an toàn chống trùng lặp
+        # 2. Sinh Hash
         text_hash = self._get_hash(tts_text)[:16] 
         
-        # 3. Format tên file theo cấu trúc có gắn hash
+        # 3. Phân tách title metadata và filename
         if total > 1:
-            filename = f"{uid_padded}_{label}_{count}__{text_hash}.mp3"
+            title_base = f"{uid_padded}_{label}_{count}"
         else:
-            filename = f"{uid_padded}_{label}__{text_hash}.mp3"
+            title_base = f"{uid_padded}_{label}"
+            
+        filename = f"{title_base}__{text_hash}.mp3"
         
         final_filepath = os.path.join(self.output_dir, filename)
         tmp_filepath = os.path.join(self.tmp_dir, f"{text_hash}.mp3")
@@ -125,14 +121,14 @@ class TTSGenerator:
         # 4. Kiểm tra cache
         if os.path.exists(tmp_filepath):
             shutil.copy2(tmp_filepath, final_filepath)
-            # Dùng segment_text (có dấu ngoặc) để lưu vào metadata (Lyrics)
-            self._add_metadata(final_filepath, segment_text, filename, uid_padded)
+            # Truyền title_base (không chứa hash và .mp3) vào metadata
+            self._add_metadata(final_filepath, segment_text, title_base, uid_padded)
         else:
             # 5. Gọi API với bản text sạch (tts_text)
             if self._fetch_audio_from_api(tts_text, tmp_filepath):
                 shutil.copy2(tmp_filepath, final_filepath)
-                self._add_metadata(tmp_filepath, segment_text, filename, uid_padded)
-                self._add_metadata(final_filepath, segment_text, filename, uid_padded)
+                self._add_metadata(tmp_filepath, segment_text, title_base, uid_padded)
+                self._add_metadata(final_filepath, segment_text, title_base, uid_padded)
                 logger.debug(f"✅ Đã tạo mới Audio: {filename}")
 
         return filename
