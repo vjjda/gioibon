@@ -13,6 +13,7 @@ from src.config.logging_config import setup_logging
 from src.data_builder.processor import ContentProcessor
 from src.data_builder.writer import DataWriter
 from src.data_builder.tts_generator import TTSGenerator
+from src.data_builder.rule_mapper import RuleMapper
 
 # Load Environment Variables (.env)
 load_dotenv()
@@ -31,20 +32,29 @@ def run_data_builder() -> None:
     """Thực thi logic build dữ liệu từ Markdown sang DB/TSV kèm theo việc sinh Audio TTS."""
     logger.info("🚀 Khởi động quy trình xây dựng dữ liệu và Audio...")
     
-    # Tìm file markdown
-    files = glob.glob("data/Gioi bon Viet/*.md")
-    if not files:
-        logger.error("❌ Không tìm thấy file markdown đầu vào.")
+    # Tìm file markdown Tiếng Việt
+    viet_files = glob.glob("data/Gioi bon Viet/*.md")
+    if not viet_files:
+        viet_files = glob.glob("data/*Pātimokkha Bhikhu*.md")
+        
+    if not viet_files:
+        logger.error("❌ Không tìm thấy file markdown Tiếng Việt đầu vào.")
         return
 
+    # Tìm file markdown Tiếng Pali
+    pali_files = glob.glob("data/Bu Bhikkhu*.md")
+    pali_path = pali_files[0] if pali_files else ""
+
     try:
-        # 1. Đọc nội dung
-        with open(files[0], 'r', encoding='utf-8') as f:
+        # 1. Đọc nội dung file Tiếng Việt
+        with open(viet_files[0], 'r', encoding='utf-8') as f:
             raw_md = f.read()
 
         # 2. Khởi tạo Logic
+        rule_mapper = RuleMapper(pali_path)
         tts_generator = TTSGenerator(AUDIO_FINAL_DIR, AUDIO_TMP_DIR)
-        processor = ContentProcessor(tts_generator)
+        processor = ContentProcessor(tts_generator, rule_mapper)
+        
         segments = processor.process_content(raw_md)
 
         # 3. Ghi dữ liệu (TSV & SQLite)
