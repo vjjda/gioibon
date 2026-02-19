@@ -165,8 +165,25 @@ class ContentProcessor:
 
                 num_segs = len(line_segments)
                 for j, seg in enumerate(line_segments):
-                    prefix = "<p>" if (i == 0 and j == 0) else ""
+                    # Logic xác định class kết thúc đoạn
+                    css_class = ""
+                    if "sadhu" in seg.lower():
+                        css_class = "sadhu"
+                    elif "_Dứt Giới Bổn" in seg:
+                        css_class = "endsutta"
+                    elif "_Phần Đọc Tụng Chi Tiết" in seg:
+                        css_class = "endsection"
+                    elif "_Dứt " in seg:
+                        css_class = "endsection"
+                    elif "_Phẩm " in seg:
+                        css_class = "endvagga"
+
+                    # Khởi tạo thẻ <p> với class tương ứng
+                    p_tag = f"<p class='{css_class}'>" if css_class else "<p>"
+
+                    prefix = p_tag if (i == 0 and j == 0) else ""
                     suffix = "</p>" if (i == len(lines)-1 and j == num_segs-1) else " "
+                    
                     if j == num_segs-1 and i < len(lines)-1:
                         suffix = "<br>"
                     
