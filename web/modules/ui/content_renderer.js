@@ -1,126 +1,158 @@
 // Path: web/modules/ui/content_renderer.js
 
 export class ContentRenderer {
-    constructor(containerId, playSegmentCallback, playRuleCallback) {
+    constructor(containerId, playSegmentCallback, playSequenceCallback) {
         this.container = document.getElementById(containerId);
         this.playSegmentCallback = playSegmentCallback;
-        this.playRuleCallback = playRuleCallback;
+        this.playSequenceCallback = playSequenceCallback;
+        this.items = []; // Store items for index lookups
     }
 
-    render(sections) {
+    render(items) {
         if (!this.container) return;
         this.container.innerHTML = '';
+        this.items = items || [];
         
-        if (!sections || sections.length === 0) {
+        if (!this.items || this.items.length === 0) {
             this.container.innerHTML = '<div class="empty">Không có dữ liệu hiển thị.</div>';
             return;
         }
 
-        sections.forEach((section, index) => {
-            const sectionEl = this._createSection(section, index);
-            this.container.appendChild(sectionEl);
-        });
-    }
+        let currentSection = null;
+        let currentPrefix = null;
 
-    _createSection(section, index) {
-        const sectionId = `section-${index}`;
-        const sectionEl = document.createElement('section');
-        sectionEl.className = 'section';
-        if (section.level === 3) {
-            sectionEl.classList.add('rule-section');
-        }
-        sectionEl.id = sectionId;
-
-        const headerEl = document.createElement('div');
-        headerEl.className = 'section-header';
-        
-        let headingTag = 'h2';
-        if (section.level === 2) headingTag = 'h3';
-        if (section.level === 3) headingTag = 'h3'; // Treat rule heading as H3 per request
-        
-        const titleEl = document.createElement(headingTag);
-        titleEl.className = 'section-title';
-        
-        if (section.level === 3) {
-            // Flex container for Title + Play Button
-            headerEl.style.display = 'flex';
-            headerEl.style.alignItems = 'center';
-            headerEl.style.gap = '10px';
-
-            titleEl.textContent = `Điều ${section.heading}`;
-            titleEl.classList.add('rule-title');
-            titleEl.style.margin = '0'; // Remove default margin for alignment
-
-            // Create Play Rule Button
-            const playRuleBtn = document.createElement('button');
-            playRuleBtn.className = 'play-segment-btn icon-btn rule-play-btn';
-            playRuleBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-            playRuleBtn.title = "Nghe toàn bộ điều này";
-            // Make sure it's visible and distinct
-            playRuleBtn.style.opacity = '1'; 
-            playRuleBtn.style.marginTop = '0';
+        this.items.forEach((item, index) => {
+            // Determine grouping logic
+            let prefix = 'misc';
+            if (['title', 'subtitle', 'nidana'].includes(item.label)) {
+                prefix = 'intro';
+            } else if (item.label === 'end') {
+                prefix = 'outro';
+            } else if (item.label.startsWith('note-')) {
+                prefix = currentPrefix || 'intro'; 
+            } else {
+                const match = item.label.match(/^([a-z]+)/);
+                if (match) {
+                    prefix = match[1];
+                }
+            }
             
-            playRuleBtn.onclick = (e) => {
-                e.stopPropagation();
-                if (this.playRuleCallback) this.playRuleCallback(index, 0);
-            };
+            const isSectionStart = 
+                (prefix !== currentPrefix) || 
+                (item.label.endsWith('-chapter')) ||
+                (item.label === 'title');
 
-            headerEl.appendChild(titleEl);
-            headerEl.appendChild(playRuleBtn);
+            if (isSectionStart || !currentSection) {
+                currentPrefix = prefix;
+                currentSection = document.createElement('section');
+                currentSection.className = `section section-${prefix}`;
+                currentSection.id = `section-${item.label}`; 
+                this.container.appendChild(currentSection);
+            }
 
-        } else {
-            titleEl.textContent = section.heading;
-            headerEl.appendChild(titleEl);
-        }
-        
-        sectionEl.appendChild(headerEl);
-
-        section.segments.forEach((segment, segmentIndex) => {
-            const segmentEl = this._createSegment(segment, sectionId, index, segmentIndex);
-            sectionEl.appendChild(segmentEl);
+            const segmentEl = this._createSegment(item, index);
+            currentSection.appendChild(segmentEl);
         });
-
-        return sectionEl;
     }
 
-    _createSegment(segment, sectionId, sectionIndex, segmentIndex) {
+    _createSegment(item, index) {
         const segmentEl = document.createElement('div');
-        segmentEl.className = 'rule-segment';
-        segmentEl.dataset.id = segment.id;
+        segmentEl.className = 'segment';
+        segmentEl.dataset.id = item.id;
+        segmentEl.dataset.label = item.label;
         
-        // Use unique ID based on segment ID to avoid conflicts if needed, or stick to pattern
-        if (segment.is_rule_start && segment.rule_label) {
-            segmentEl.id = `rule-${sectionId}-${segment.rule_label}`;
+        if (item.label.endsWith('-name')) {
+            segmentEl.classList.add('rule-header');
+        } else if (item.label.endsWith('-chapter')) {
+            segmentEl.classList.add('chapter-header');
+        } else if (item.label === 'title') {
+            segmentEl.classList.add('main-title');
         }
 
         const contentWrapper = document.createElement('div');
-        contentWrapper.className = 'segment-content';
+        contentWrapper.className = 'segment-content-wrapper';
 
-        const playBtn = document.createElement('button');
-        playBtn.className = 'play-segment-btn icon-btn';
-        playBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-        
-        playBtn.title = "Nghe đoạn này";
-        playBtn.onclick = (e) => {
-            e.stopPropagation();
-            if (this.playSegmentCallback) this.playSegmentCallback(segment.id, segment.text);
-        };
+        // 1. Play Segment Button (Single Segment)
+        if (item.audio && item.audio !== 'skip') {
+            const playBtn = document.createElement('button');
+            playBtn.className = 'play-btn icon-btn';
+            playBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            playBtn.title = "Nghe đoạn này";
+            playBtn.onclick = (e) => {
+                e.stopPropagation();
+                if (this.playSegmentCallback) this.playSegmentCallback(item.id, item.audio, item.segment);
+            };
+            contentWrapper.appendChild(playBtn);
+        }
+
+        // 2. Play Rule Button (Sequence) - Only for Rule Headers
+        if (item.label.endsWith('-name')) {
+            const playRuleBtn = document.createElement('button');
+            playRuleBtn.className = 'play-btn icon-btn play-rule-btn';
+            playRuleBtn.innerHTML = '<i class="fas fa-play-circle"></i>';
+            playRuleBtn.title = "Nghe toàn bộ điều này";
+            // Make distinct color/style via CSS
+            
+            playRuleBtn.onclick = (e) => {
+                e.stopPropagation();
+                this._handlePlayRule(index);
+            };
+            contentWrapper.appendChild(playRuleBtn);
+        }
 
         const textEl = document.createElement('div');
         textEl.className = 'segment-text';
-        textEl.innerHTML = segment.html;
+        
+        const htmlTemplate = item.html || '{}';
+        const renderedHtml = htmlTemplate.replace('{}', item.segment || '');
+        textEl.innerHTML = renderedHtml;
 
-        contentWrapper.appendChild(playBtn);
         contentWrapper.appendChild(textEl);
         segmentEl.appendChild(contentWrapper);
         
         return segmentEl;
     }
 
+    _handlePlayRule(startIndex) {
+        if (!this.playSequenceCallback) return;
+
+        // Logic: Collect segments starting from startIndex + 1
+        // Until we hit the next rule header (-name), chapter start (-chapter), or section end.
+        const sequence = [];
+        
+        // Include the rule header itself if it has audio (unlikely per schema 'skip', but just in case)
+        // Actually, usually rule name is 'skip'.
+        
+        // Start looking from next item
+        for (let i = startIndex + 1; i < this.items.length; i++) {
+            const item = this.items[i];
+            
+            // Stop conditions
+            if (item.label.endsWith('-name')) break; // Next rule
+            if (item.label.endsWith('-chapter')) break; // Next chapter
+            if (item.label === 'end') break;
+            
+            // Add to sequence if it has audio
+            if (item.audio && item.audio !== 'skip') {
+                sequence.push({
+                    id: item.id,
+                    audio: item.audio,
+                    text: item.segment
+                });
+            }
+        }
+
+        if (sequence.length > 0) {
+            this.playSequenceCallback(sequence);
+        } else {
+            alert("Không có dữ liệu âm thanh cho điều luật này.");
+        }
+    }
+
     highlightSegment(id) {
         if (!this.container) return;
-        this.container.querySelectorAll('.rule-segment').forEach(el => el.classList.remove('active'));
-        const activeEl = this.container.querySelector(`.rule-segment[data-id="${id}"]`);
+        this.container.querySelectorAll('.segment').forEach(el => el.classList.remove('active'));
+        const activeEl = this.container.querySelector(`.segment[data-id="${id}"]`);
         if (activeEl) {
             activeEl.classList.add('active');
             activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -129,6 +161,6 @@ export class ContentRenderer {
 
     clearHighlight() {
         if (!this.container) return;
-        this.container.querySelectorAll('.rule-segment').forEach(el => el.classList.remove('active'));
+        this.container.querySelectorAll('.segment').forEach(el => el.classList.remove('active'));
     }
 }

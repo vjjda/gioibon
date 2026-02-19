@@ -1,4 +1,3 @@
-// Path: web/modules/main.js
 import { TTSPlayer } from 'tts/tts_player.js';
 import { ContentLoader } from 'data/content_loader.js';
 import { TocRenderer } from 'ui/toc_renderer.js';
@@ -38,14 +37,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const contentRenderer = new ContentRenderer(
         'content',
-        (segmentId, text) => { // Play Segment
-            ttsPlayer.playSegment(segmentId, text);
+        (segmentId, audio, text) => { // Play Segment
+            ttsPlayer.playSegment(segmentId, audio, text);
         },
-        (sectionIndex, segmentIndex) => { // Play Rule
-            const segments = contentLoader.getRuleSegments(sectionIndex, segmentIndex);
-            if (segments.length > 0) {
-                ttsPlayer.playSequence(segments);
-            }
+        (sequence) => { // Play Rule Sequence
+            ttsPlayer.playSequence(sequence);
         }
     );
 
@@ -68,8 +64,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Load Content ---
     try {
         const data = await contentLoader.load();
-        contentRenderer.render(data.sections);
-        tocRenderer.render(data.sections);
+        // data is now a flat array of items
+        contentRenderer.render(data);
+        tocRenderer.render(data);
     } catch (error) {
         console.error("Initialization Error:", error);
         document.getElementById('content').innerHTML = 

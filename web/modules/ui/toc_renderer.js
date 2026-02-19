@@ -1,5 +1,3 @@
-// Path: web/modules/ui/toc_renderer.js
-
 export class TocRenderer {
     constructor(containerId, sidebarId, sidebarToggleId) {
         this.container = document.getElementById(containerId);
@@ -8,50 +6,54 @@ export class TocRenderer {
         this.activeLink = null;
     }
 
-    render(sections) {
+    render(items) {
         if (!this.container) return;
         this.container.innerHTML = '';
+        
+        let currentSectionList = null;
+        let ruleList = null;
 
-        let currentRuleList = null;
+        // Create main TOC list
+        const mainList = document.createElement('ul');
+        mainList.className = 'toc-main-list';
+        this.container.appendChild(mainList);
 
-        sections.forEach((section, index) => {
-            const sectionId = `section-${index}`;
-
-            if (section.level === 3) {
-                // Rule Section - Group into a list/grid
-                if (!currentRuleList) {
-                    currentRuleList = document.createElement('ul');
-                    currentRuleList.className = 'toc-sub-list';
-                    this.container.appendChild(currentRuleList);
-                }
-
-                const li = document.createElement('li');
-                li.className = 'toc-item level-rule';
+        items.forEach(item => {
+            // Identify TOC entries based on label
+            if (item.label === 'title') {
+                const li = this._createTocItem(item, 'Giới Bổn', 'level-title');
+                mainList.appendChild(li);
+            } 
+            else if (item.label.endsWith('-chapter')) {
+                // Chapter Header
+                const li = this._createTocItem(item, item.segment, 'level-chapter'); // Use segment as title
+                mainList.appendChild(li);
                 
-                const link = document.createElement('a');
-                link.className = 'toc-link rule-link';
-                link.href = `#${sectionId}`;
-                // Display just the number for compactness in grid, or "Điều X" if preferred.
-                // Given the user said "skip đến các rule một cách nhanh chóng", a grid of numbers is usually best.
-                link.textContent = section.heading; 
-                link.title = `Điều ${section.heading}`;
-                link.onclick = (e) => this._handleLinkClick(e, sectionId, link);
-                
-                li.appendChild(link);
-                currentRuleList.appendChild(li);
+                // Prepare rule list for this chapter
+                ruleList = document.createElement('ul');
+                ruleList.className = 'toc-rule-list'; // Grid style via CSS
+                li.appendChild(ruleList);
+            }
+            else if (item.label.endsWith('-name')) {
+                // Rule Header (e.g., pj1-name)
+                // Extract rule number: pj1-name -> 1
+                const match = item.label.match(/([a-z]+)(\d+)-name/);
+                const ruleNumber = match ? match[2] : '?';
+                const rulePrefix = match ? match[1] : '';
 
-            } else {
-                // Normal Section (Level 1, 2)
-                currentRuleList = null; // Break the rule list group
-
-                const li = this._createSectionItem(section, sectionId);
-                this.container.appendChild(li);
-
-                // Check for nested rules inside this section (if any remaining - legacy support)
-                const ruleSegments = section.segments.filter(s => s.is_rule_start);
-                if (ruleSegments.length > 0) {
-                    const ruleListUl = this._createRuleList(ruleSegments, sectionId);
-                    this.container.appendChild(ruleListUl);
+                if (ruleList) {
+                    const li = document.createElement('li');
+                    li.className = 'toc-rule-item';
+                    
+                    const link = document.createElement('a');
+                    link.className = 'toc-link rule-link';
+                    link.href = `#section-${item.label}`; // Matches ID set in ContentRenderer
+                    link.textContent = ruleNumber; // Just the number
+                    link.title = `Điều ${ruleNumber} (${item.segment})`; // Full title on hover
+                    link.onclick = (e) => this._handleLinkClick(e, `section-${item.label}`, link);
+                    
+                    li.appendChild(link);
+                    ruleList.appendChild(li);
                 }
             }
         });
@@ -59,40 +61,18 @@ export class TocRenderer {
         this._setupToggle();
     }
 
-    _createSectionItem(section, sectionId) {
+    _createTocItem(item, text, className) {
         const li = document.createElement('li');
-        li.className = `toc-item level-${section.level || 1}`;
+        li.className = `toc-item ${className}`;
         
         const link = document.createElement('a');
         link.className = 'toc-link';
-        link.href = `#${sectionId}`;
-        link.textContent = section.heading;
-        link.onclick = (e) => this._handleLinkClick(e, sectionId, link);
+        link.href = `#section-${item.label}`; // Matches ID set in ContentRenderer
+        link.textContent = text;
+        link.onclick = (e) => this._handleLinkClick(e, `section-${item.label}`, link);
         
         li.appendChild(link);
         return li;
-    }
-
-    _createRuleList(ruleSegments, sectionId) {
-        const ul = document.createElement('ul');
-        ul.className = 'toc-sub-list';
-        
-        ruleSegments.forEach((ruleSeg, rIndex) => {
-            const li = document.createElement('li');
-            li.className = 'toc-item level-rule';
-            
-            const ruleLink = document.createElement('a');
-            ruleLink.className = 'toc-link rule-link';
-            const ruleId = `rule-${sectionId}-${ruleSeg.rule_label}`;
-            ruleLink.href = `#${ruleId}`;
-            ruleLink.textContent = ruleSeg.rule_label;
-            ruleLink.onclick = (e) => this._handleLinkClick(e, ruleId, ruleLink);
-            
-            li.appendChild(ruleLink);
-            ul.appendChild(li);
-        });
-        
-        return ul;
     }
 
     _handleLinkClick(e, targetId, linkElement) {
@@ -102,12 +82,33 @@ export class TocRenderer {
     }
 
     _scrollTo(id) {
-        const target = document.getElementById(id);
+        // Try to find element by ID. If not found, it might be a segment ID vs section ID mismatch
+        // ContentRenderer sets IDs as `section-${label}` for sections.
+        // Rule headers are just segments with data-label.
+        // Wait, ContentRenderer logic for IDs:
+        // Section: `section-${item.label}` (if new section)
+        // Segment: `data-id`, `data-label`
+        
+        // I need to ensure ContentRenderer sets IDs on the elements I want to scroll to.
+        // In ContentRenderer, I set `currentSection.id = section-${item.label}` only for new sections.
+        // For rules (e.g. pj1-name), they are just segments inside a section.
+        // I should update ContentRenderer to set IDs on specific segments (headers) too, or use querySelector.
+        
+        let target = document.getElementById(id);
+        
+        // If not found by ID, try finding segment by data-label
+        if (!target) {
+            const label = id.replace('section-', '');
+            target = document.querySelector(`.segment[data-label="${label}"]`);
+        }
+
         if (target) {
-            target.scrollIntoView({ behavior: 'auto' });
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             if (window.innerWidth <= 1024 && this.sidebar) {
                 this.sidebar.classList.remove('visible');
             }
+        } else {
+            console.warn("Scroll target not found:", id);
         }
     }
 
@@ -120,6 +121,10 @@ export class TocRenderer {
     _setupToggle() {
         if (!this.toggle) return;
         
+        // Remove old listeners to avoid duplicates if re-rendered? 
+        // Best to just replace the element or handle externally.
+        // Here we just attach if not attached? 
+        // Simply cloning to clear previous listeners is a robust pattern.
         const newToggle = this.toggle.cloneNode(true);
         this.toggle.parentNode.replaceChild(newToggle, this.toggle);
         this.toggle = newToggle;
@@ -128,6 +133,9 @@ export class TocRenderer {
             this.sidebar.classList.toggle('visible');
         });
 
+        // Close on outside click
+        // Note: This adds a global listener every render call if not careful.
+        // But render() is usually called once.
         document.addEventListener('click', (e) => {
             if (window.innerWidth <= 1024 && this.sidebar) {
                 if (!this.sidebar.contains(e.target) && !this.toggle.contains(e.target) && this.sidebar.classList.contains('visible')) {

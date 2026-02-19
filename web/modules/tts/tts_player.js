@@ -28,14 +28,15 @@ export class TTSPlayer {
 
     // --- Playback Control ---
 
-    playSegment(segmentId, text) {
+    playSegment(segmentId, audio, text) {
         this.stop();
-        this.audioQueue = [{ id: segmentId, text: text }];
+        this.audioQueue = [{ id: segmentId, audio: audio, text: text }];
         this._processQueue();
     }
 
     playSequence(segments) {
         this.stop();
+        // segments is array of { id, audio, text }
         this.audioQueue = [...segments];
         this._processQueue();
     }
@@ -98,12 +99,37 @@ export class TTSPlayer {
         if (this.onSegmentStart) this.onSegmentStart(item.id);
 
         try {
-            const audioSrc = await this.engine.fetchAudio(item.text);
+            let audioSrc = null;
+            
+            // Priority: Pre-generated Audio File > Text-to-Speech
+            if (item.audio && item.audio !== 'skip') {
+                audioSrc = `data/audio/${item.audio}`;
+            } else if (item.text) {
+                // Remove HTML/Markdown from text if needed? 
+                // For now, assume engine handles it or text is clean enough.
+                // Or user might have stripped it before.
+                // The DB 'segment' column has markdown.
+                // Let's do a simple strip if using TTS fallback.
+                const cleanText = item.text.replace(/<[^>]*>?/gm, '').replace(/\*+/g, '');
+                audioSrc = await this.engine.fetchAudio(cleanText);
+            }
+
+            if (!audioSrc) {
+                // If no audio source found (e.g. skip + no text), skip to next
+                if (this.onSegmentEnd) this.onSegmentEnd(item.id);
+                this._processQueue();
+                return;
+            }
             
             if (!this.isPlaying && !this.isPaused && this.audioQueue.length === 0 && !this.currentSegmentId) return;
 
             const audio = new Audio(audioSrc);
             this.currentAudio = audio;
+
+            // Handle rate for HTML5 Audio (if supported)
+            if (this.engine.rate) {
+                audio.playbackRate = this.engine.rate;
+            }
 
             audio.onended = () => {
                 this.currentAudio = null;
@@ -112,7 +138,7 @@ export class TTSPlayer {
             };
 
             audio.onerror = (e) => {
-                console.error("Audio Playback Error:", e);
+                console.error("Audio Playback Error:", e, audioSrc);
                 this.currentAudio = null;
                 if (this.onSegmentEnd) this.onSegmentEnd(item.id);
                 this._processQueue();

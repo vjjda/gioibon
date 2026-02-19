@@ -1,8 +1,8 @@
-// Path: web/modules/data/content_loader.js
+import { SqliteConnection } from '../services/sqlite_connection.js';
 
 export class ContentLoader {
-    constructor(url = 'data/content.json') {
-        this.url = url;
+    constructor() {
+        this.db = new SqliteConnection();
         this.data = null;
     }
 
@@ -10,9 +10,20 @@ export class ContentLoader {
         if (this.data) return this.data;
 
         try {
-            const response = await fetch(this.url);
-            if (!response.ok) throw new Error(`Failed to load content: ${response.status}`);
-            this.data = await response.json();
+            // Fetch all contents ordered by UID
+            const rows = await this.db.query("SELECT * FROM contents ORDER BY uid ASC");
+            
+            // Map rows to a cleaner format if necessary, or use as is.
+            // wa-sqlite (via SqliteConnection) returns rows as objects usually.
+            // We'll normalize just in case.
+            this.data = rows.map(row => ({
+                id: row.uid,
+                html: row.html,
+                label: row.label,
+                segment: row.segment,
+                audio: row.audio
+            }));
+
             return this.data;
         } catch (error) {
             console.error("ContentLoader Error:", error);
@@ -20,31 +31,23 @@ export class ContentLoader {
         }
     }
 
-    getSection(index) {
-        return this.data?.sections[index];
-    }
-
     getAllSegments() {
         if (!this.data) return [];
-        const all = [];
-        this.data.sections.forEach(section => {
-            section.segments.forEach(seg => {
-                all.push({ id: seg.id, text: seg.text });
-            });
-        });
-        return all;
+        // Return segments that have audio (not 'skip')
+        return this.data.filter(item => item.audio !== 'skip').map(item => ({
+            id: item.id,
+            text: item.segment, // or compiled HTML? Usually TTS needs text.
+            audio: item.audio
+        }));
     }
 
-    getRuleSegments(sectionIndex, startSegmentIndex) {
+    getSegment(id) {
+        return this.data?.find(item => item.id === id);
+    }
+    
+    // Helper to find range of segments for a specific rule/group if needed
+    getSegmentsByLabelPrefix(prefix) {
         if (!this.data) return [];
-        const section = this.data.sections[sectionIndex];
-        const segments = [];
-        
-        for (let i = startSegmentIndex; i < section.segments.length; i++) {
-            const seg = section.segments[i];
-            if (i > startSegmentIndex && seg.is_rule_start) break;
-            segments.push({ id: seg.id, text: seg.text });
-        }
-        return segments;
+        return this.data.filter(item => item.label.startsWith(prefix));
     }
 }
