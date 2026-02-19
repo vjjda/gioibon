@@ -5,6 +5,7 @@ import hashlib
 import requests
 import base64
 import logging
+import re
 from typing import Dict, Any, Optional
 from collections import defaultdict
 
@@ -40,7 +41,10 @@ class TTSGenerator:
         self.label_totals = totals
 
     def _get_hash(self, text: str) -> str:
-        return hashlib.md5(text.encode('utf-8')).hexdigest()
+        """Tạo mã băm SHA-256 bao gồm cả nội dung và cấu hình giọng đọc."""
+        # Ghép cả cấu hình giọng vào để tạo tính duy nhất cho phiên bản âm thanh
+        raw_data = f"{text}|{self.voice_name}|{self.language_code}"
+        return hashlib.sha256(raw_data.encode('utf-8')).hexdigest()
 
     def _fetch_audio_from_api(self, text: str, output_filepath: str) -> bool:
         """Gọi API Google TTS và lưu file."""
@@ -74,6 +78,7 @@ class TTSGenerator:
             if audio.tags is None:
                 audio.add_tags()
                 
+            # text truyền vào ở đây vẫn là text gốc có chứa ngoặc để hiển thị làm Lyrics
             audio.tags.add(USLT(encoding=3, lang='vie', desc='', text=text))
             audio.tags.add(TIT2(encoding=3, text=title))
             audio.tags.add(TALB(encoding=3, text="Giới bổn Patimokkha Việt"))
@@ -85,8 +90,16 @@ class TTSGenerator:
 
     def process_segment(self, uid: int, label: str, segment_text: str) -> str:
         """Xử lý đoạn văn, trả về tên file MP3 cuối cùng, hoặc 'skip' nếu được loại trừ."""
-        # Trả về 'skip' cho các segment trống, ghi chú, hoặc tiêu đề tiếng Pali
         if not segment_text.strip() or label.startswith("note-") or label.endswith("-name"):
+            return "skip"
+
+        # 1. Tạo bản Text sạch dành riêng cho việc sinh Audio (xóa (), [], *)
+        # Thay thế bằng khoảng trắng để tránh việc các chữ bị dính vào nhau sau khi xóa
+        tts_text = re.sub(r'[()\[\]*]', ' ', segment_text)
+        # Gom các khoảng trắng thừa lại thành 1
+        tts_text = re.sub(r'\s+', ' ', tts_text).strip()
+
+        if not tts_text:
             return "skip"
 
         # Tăng biến đếm hiện tại cho label này
@@ -96,24 +109,27 @@ class TTSGenerator:
         
         uid_padded = f"{uid:03d}"
         
-        # Format tên file: Có đuôi _số nếu xuất hiện nhiều lần, ngược lại thì không có
+        # 2. Sinh Hash dựa trên Text sạch và Giọng đọc
+        # Rút gọn hash xuống còn 16 ký tự đầu để tên file không quá dài, nhưng vẫn đủ an toàn chống trùng lặp
+        text_hash = self._get_hash(tts_text)[:16] 
+        
+        # 3. Format tên file theo cấu trúc có gắn hash
         if total > 1:
-            filename = f"{uid_padded}_{label}_{count}.mp3"
+            filename = f"{uid_padded}_{label}_{count}__{text_hash}.mp3"
         else:
-            filename = f"{uid_padded}_{label}.mp3"
+            filename = f"{uid_padded}_{label}__{text_hash}.mp3"
         
         final_filepath = os.path.join(self.output_dir, filename)
-
-        text_hash = self._get_hash(segment_text)
         tmp_filepath = os.path.join(self.tmp_dir, f"{text_hash}.mp3")
 
-        # 1. Kiểm tra cache
+        # 4. Kiểm tra cache
         if os.path.exists(tmp_filepath):
             shutil.copy2(tmp_filepath, final_filepath)
+            # Dùng segment_text (có dấu ngoặc) để lưu vào metadata (Lyrics)
             self._add_metadata(final_filepath, segment_text, filename, uid_padded)
         else:
-            # 2. Gọi API nếu không có trong cache
-            if self._fetch_audio_from_api(segment_text, tmp_filepath):
+            # 5. Gọi API với bản text sạch (tts_text)
+            if self._fetch_audio_from_api(tts_text, tmp_filepath):
                 shutil.copy2(tmp_filepath, final_filepath)
                 self._add_metadata(tmp_filepath, segment_text, filename, uid_padded)
                 self._add_metadata(final_filepath, segment_text, filename, uid_padded)
