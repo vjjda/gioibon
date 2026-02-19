@@ -6,6 +6,8 @@
     transition: background-color 0.2s;
     border-radius: 6px;
     border-left: 3px solid transparent;
+    /* Ensure overflow visible so mask toggle can extend outside */
+    overflow: visible;
 }
 
 .segment.active {
@@ -77,9 +79,10 @@
 .segment-mask-toggle {
     position: absolute;
     top: 0;
-    right: 0;
+    /* Extend outside to right margin for easier click */
+    right: -30px; 
     bottom: 0;
-    width: 40px; /* Generous touch area */
+    width: 60px; /* Wider hit area */
     cursor: pointer;
     z-index: 20; /* Ensure on top of content */
 }
@@ -96,9 +99,7 @@
     color: transparent !important;
     background-color: transparent !important;
     user-select: none;
-    /* Optional: Add a very subtle blur to make it look "erased" rather than just gone? */
-    /* filter: blur(4px); */ 
-    /* User requested dynamic match, simple transparency is best */
+    box-shadow: none; 
 }
 
 /* Hide children */
