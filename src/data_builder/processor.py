@@ -91,6 +91,11 @@ class ContentProcessor:
                 self.labeler.update_context(text, level)
                 
                 label = self.labeler.get_label()
+
+                # Bổ sung logic bắt "PHẨM \d+"
+                if re.match(r'^PHẨM\s+\d+', text, re.IGNORECASE):
+                    label = f"{self.labeler.current_prefix}-chapter"
+
                 tmpl = f"<h{level}>{{}}</h{level}>"
                 self._add_segment(html=tmpl, label=label, segment=text)
                 continue
