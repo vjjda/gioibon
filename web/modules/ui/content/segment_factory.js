@@ -40,7 +40,7 @@ export class SegmentFactory {
             el.classList.add('main-title');
         }
 
-        // [NEW] Gắn cờ heading cho mọi thẻ Hx
+        // Gắn cờ heading cho mọi thẻ Hx
         if (item.html && item.html.match(/^<h[1-6]/i)) {
             el.classList.add('heading-segment');
         }
@@ -64,8 +64,8 @@ export class SegmentFactory {
             wrapper.appendChild(playBtn);
         }
 
-        // [UPDATED] Play Sequence Button (Render cho tất cả các Heading)
-        if (item.html && item.html.match(/^<h[1-6]/i)) {
+        // [FIX] Play Sequence Button (Render cho tất cả các Heading nhưng bỏ qua Title và Subtitle)
+        if (item.html && item.html.match(/^<h[1-6]/i) && item.label !== 'title' && item.label !== 'subtitle') {
             const playSeqBtn = document.createElement('button');
             playSeqBtn.className = 'play-btn icon-btn play-sequence-btn';
             playSeqBtn.innerHTML = '<i class="fas fa-play-circle"></i>';
@@ -109,4 +109,3 @@ export class SegmentFactory {
         }
     }
 }
-
