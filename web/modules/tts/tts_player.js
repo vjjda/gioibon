@@ -15,21 +15,19 @@ export class TTSPlayer {
         this.isLooping = false;
         this.currentPlaylist = [];
 
-        // Events
         this.onSegmentStart = null;
         this.onSegmentEnd = null;
         this.onPlaybackEnd = null;
         this.onPlaybackStateChange = null; 
 
-        // Nạp từ điển phiên âm
-        this.phonetics = {};
-        this.phoneticsPromise = fetch('data/phonetics.json')
+        // [NEW] Nạp bộ rules cấu hình
+        this.ttsRules = null;
+        this.rulesPromise = fetch('data/tts_rules.json')
             .then(res => res.json())
-            .then(data => { this.phonetics = data; })
-            .catch(err => console.warn("Không tìm thấy phonetics.json", err));
+            .then(data => { this.ttsRules = data; })
+            .catch(err => console.warn("Không tìm thấy tts_rules.json", err));
     }
 
-    // Proxy Engine Methods
     setApiKey(key) { this.engine.setApiKey(key); }
     getApiKey() { return this.engine.getApiKey(); }
     setVoice(name) { this.engine.setVoice(name); }
@@ -38,21 +36,16 @@ export class TTSPlayer {
     get currentVoice() { return this.engine.voice; }
     get currentRate() { return this.engine.rate; }
 
-    // --- Playback Control ---
-
     playSegment(segmentId, audio, text) {
         if (String(this.currentSegmentId) === String(segmentId) && (this.isPlaying || this.isPaused)) {
             this.togglePause();
             return;
         }
-
         this.stop();
         this.isSequence = false;
-        
         const item = { id: segmentId, audio: audio, text: text };
         this.audioQueue = [item];
         this.currentPlaylist = [item];
-
         this._processQueue();
     }
 
@@ -62,13 +55,11 @@ export class TTSPlayer {
             this.togglePause();
             return;
         }
-
         this.stop();
         this.isSequence = true;
         this.sequenceParentId = parentId; 
         this.audioQueue = [...segments];
         this.currentPlaylist = [...segments]; 
-
         this._processQueue();
     }
 
@@ -117,36 +108,52 @@ export class TTSPlayer {
         if (this.onPlaybackStateChange) this.onPlaybackStateChange('stopped');
     }
 
-    // --- Format Text Helpers (Must strictly match Backend Rules) ---
-
-    _normalizeText(text) {
-        if (!text) return "";
-        // Loại bỏ HTML tags để đảm bảo text thuần
-        let clean = text.replace(/<[^>]*>?/gm, '');
-        // 1. Xóa (), [], *
-        clean = clean.replace(/[()\[\]*]/g, ' ');
-        // 2. Gom khoảng trắng thừa
-        clean = clean.replace(/\s+/g, ' ').trim();
-        return clean;
-    }
+    // --- Format Text Helpers ---
 
     _escapeRegExp(string) {
-        // Tương đương re.escape() của Python
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
     _isUpper(text) {
-        // Tương đương .isupper() của Python (Bao gồm cả ký tự tiếng Việt)
         return text === text.toUpperCase() && text !== text.toLowerCase();
     }
 
     _capitalize(text) {
-        // Tương đương .capitalize() của Python
         if (!text) return text;
         return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
     }
 
-    // --- Process Queue ---
+    // [NEW] Áp dụng rules engine từ JSON
+    async _applyTTSRules(text) {
+        if (!text) return "";
+        await this.rulesPromise;
+        if (!this.ttsRules) return text;
+
+        let ttsText = text;
+
+        if (this.ttsRules.remove_html) {
+            ttsText = ttsText.replace(/<[^>]*>?/gm, '');
+        }
+        if (this.ttsRules.remove_chars_regex) {
+            ttsText = ttsText.replace(new RegExp(this.ttsRules.remove_chars_regex, 'g'), ' ');
+        }
+        if (this.ttsRules.collapse_spaces) {
+            ttsText = ttsText.replace(/\s+/g, ' ').trim();
+        }
+
+        if (this.ttsRules.phonetics) {
+            for (const [word, replacement] of Object.entries(this.ttsRules.phonetics)) {
+                const regex = new RegExp(this._escapeRegExp(word), 'gi');
+                ttsText = ttsText.replace(regex, replacement);
+            }
+        }
+
+        if (this.ttsRules.capitalize_upper && this._isUpper(ttsText)) {
+            ttsText = this._capitalize(ttsText);
+        }
+
+        return ttsText;
+    }
 
     async _processQueue() {
         if (this.audioQueue.length === 0) {
@@ -174,20 +181,8 @@ export class TTSPlayer {
             if (item.audio && item.audio !== 'skip') {
                 audioSrc = `data/audio/${item.audio}`;
             } else if (item.text) {
-                // Rule 1 & 2: Normalize
-                let ttsText = this._normalizeText(item.text);
-                
-                // Rule 3: Áp dụng thay thế phiên âm
-                await this.phoneticsPromise;
-                for (const [word, replacement] of Object.entries(this.phonetics)) {
-                    const regex = new RegExp(this._escapeRegExp(word), 'gi'); 
-                    ttsText = ttsText.replace(regex, replacement);
-                }
-
-                // Rule 4: Chuyển in hoa thành in thường chữ cái đầu (Ngăn đánh vần)
-                if (this._isUpper(ttsText)) {
-                    ttsText = this._capitalize(ttsText);
-                }
+                // Áp dụng bộ rules chuẩn hóa Text
+                const ttsText = await this._applyTTSRules(item.text);
 
                 if (ttsText) {
                     audioSrc = await this.engine.fetchAudio(ttsText);

@@ -27,21 +27,22 @@ class TTSGenerator:
         
         self.label_counts: Dict[str, int] = defaultdict(int)
         self.label_totals: Dict[str, int] = defaultdict(int)
-        self.phonetics: Dict[str, str] = {}
         
-        self._load_phonetics()
+        self.tts_rules: Dict[str, Any] = {}
+        
+        self._load_rules()
         self._prepare_directories()
 
-    def _load_phonetics(self) -> None:
-        """Đọc dictionary phiên âm từ file JSON dùng chung."""
-        phonetics_path = "web/data/phonetics.json"
-        if os.path.exists(phonetics_path):
+    def _load_rules(self) -> None:
+        """Đọc quy tắc tiền xử lý Text từ file JSON dùng chung."""
+        rules_path = "web/data/tts_rules.json"
+        if os.path.exists(rules_path):
             try:
-                with open(phonetics_path, 'r', encoding='utf-8') as f:
-                    self.phonetics = json.load(f)
-                logger.info(f"Đã tải {len(self.phonetics)} từ phiên âm.")
+                with open(rules_path, 'r', encoding='utf-8') as f:
+                    self.tts_rules = json.load(f)
+                logger.info("Đã tải tts_rules.json thành công.")
             except Exception as e:
-                logger.error(f"❌ Lỗi đọc file phonetics.json: {e}")
+                logger.error(f"❌ Lỗi đọc file tts_rules.json: {e}")
 
     def _prepare_directories(self) -> None:
         """Xóa thư mục output cũ để dọn rác, và tạo lại các thư mục cần thiết."""
@@ -51,7 +52,7 @@ class TTSGenerator:
         os.makedirs(self.tmp_dir, exist_ok=True)
 
     def set_label_totals(self, totals: Dict[str, int]) -> None:
-        """Nhận tổng số lượng của từng label để xử lý việc đặt tên file (Unique vs Multiple)."""
+        """Nhận tổng số lượng của từng label để xử lý việc đặt tên file."""
         self.label_totals = totals
 
     def _get_hash(self, text: str) -> str:
@@ -100,11 +101,28 @@ class TTSGenerator:
         except Exception as e:
             logger.error(f"❌ Lỗi thêm metadata vào {filepath}: {e}")
 
-    def _apply_phonetics(self, text: str) -> str:
-        """Thay thế các từ Pali bằng phiên âm tiếng Việt trước khi TTS."""
-        for word, phonetic in self.phonetics.items():
+    def _apply_tts_rules(self, text: str) -> str:
+        """Áp dụng quy tắc từ tts_rules.json chung của cả Frontend và Backend."""
+        rules = self.tts_rules
+        if not rules:
+            return text
+            
+        if rules.get("remove_html"):
+            text = re.sub(r'<[^>]*>?', '', text)
+            
+        if rules.get("remove_chars_regex"):
+            text = re.sub(rules["remove_chars_regex"], ' ', text)
+            
+        if rules.get("collapse_spaces"):
+            text = re.sub(r'\s+', ' ', text).strip()
+            
+        for word, phonetic in rules.get("phonetics", {}).items():
             pattern = re.compile(re.escape(word), re.IGNORECASE)
             text = pattern.sub(phonetic, text)
+            
+        if rules.get("capitalize_upper") and text.isupper():
+            text = text.capitalize()
+            
         return text
 
     def process_segment(self, uid: int, label: str, segment_text: str, html: str = "") -> str:
@@ -112,16 +130,8 @@ class TTSGenerator:
         if not segment_text.strip() or label.startswith("note-") or label.endswith("-name") or label in ["title", "subtitle"] or html.startswith("<h"):
             return "skip"
 
-        # 1. Tạo bản Text sạch dành riêng cho việc sinh Audio (xóa (), [], *)
-        tts_text = re.sub(r'[()\[\]*]', ' ', segment_text)
-        tts_text = re.sub(r'\s+', ' ', tts_text).strip()
-
-        # [NEW] Áp dụng Dictionary thay thế phiên âm
-        tts_text = self._apply_phonetics(tts_text)
-
-        # Xử lý ngoại lệ: Chuyển chuỗi in hoa toàn bộ thành in hoa chữ cái đầu
-        if tts_text.isupper():
-            tts_text = tts_text.capitalize()
+        # 1. Áp dụng toàn bộ quy tắc động từ file JSON
+        tts_text = self._apply_tts_rules(segment_text)
 
         if not tts_text:
             return "skip"
@@ -141,7 +151,7 @@ class TTSGenerator:
         else:
             title_base = f"{uid_padded}_{label}"
             
-        filename = f"{title_base}__{text_hash}.mp3"
+        filename = f"{title_base}____{text_hash}.mp3"
         
         final_filepath = os.path.join(self.output_dir, filename)
         tmp_filepath = os.path.join(self.tmp_dir, f"{text_hash}.mp3")
