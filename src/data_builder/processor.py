@@ -17,9 +17,11 @@ class ContentProcessor:
         self.segments_output: List[SegmentData] = []
 
     def clean_text(self, text: str) -> str:
-        # Xóa chú thích [^1] và 
+        # Xóa chú thích dạng footnote [^1], [^2] (nếu có)
         cleaned = re.sub(r'\[\^.*?\]', '', text)
-        cleaned = re.sub(r'\[.*?\]', '', cleaned)
+        
+        # Đã lược bỏ lệnh re.sub(r'\[.*?\]', '', cleaned) để không xóa nhầm chữ trong ngoặc vuông
+        
         cleaned = cleaned.replace(r'\.', '.')
         return cleaned.strip()
 
