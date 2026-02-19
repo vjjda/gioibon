@@ -5,14 +5,16 @@ from typing import List
 from src.config.constants import RULE_24_IDENTIFIER, RULE_PATTERN_REGEX
 from src.data_builder.models import SegmentData
 from src.data_builder.labeler import ContentLabeler
+from src.data_builder.tts_generator import TTSGenerator
 
 logger = logging.getLogger(__name__)
 
 __all__ = ["ContentProcessor"]
 
 class ContentProcessor:
-    def __init__(self):
+    def __init__(self, tts_generator: TTSGenerator):
         self.labeler = ContentLabeler()
+        self.tts_generator = tts_generator
         self.uid_counter = 1
         self.segments_output: List[SegmentData] = []
 
@@ -39,9 +41,11 @@ class ContentProcessor:
         return [p.strip() for p in parts if p.strip()]
 
     def _add_segment(self, html: str, label: str, segment: str) -> None:
-        """Hàm hỗ trợ thêm segment và tự động tăng UID."""
+        """Hàm hỗ trợ thêm segment, xử lý Audio và tự động tăng UID."""
+        audio_filename = self.tts_generator.process_segment(self.uid_counter, label, segment)
+        
         self.segments_output.append(SegmentData(
-            uid=self.uid_counter, html=html, label=label, segment=segment
+            uid=self.uid_counter, html=html, label=label, segment=segment, audio=audio_filename
         ))
         self.uid_counter += 1
 

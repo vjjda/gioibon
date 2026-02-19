@@ -21,9 +21,9 @@ class ContentLabeler:
         self.current_main_section = ""
         self.current_prefix = ""
         self.in_rule_zone = False
-        self.nidana_sub_section = "" # "opening", "main", "ending"
+        self.nidana_sub_section = ""
 
-    def update_context(self, heading_text: str, level: int):
+    def update_context(self, heading_text: str, level: int) -> None:
         clean_heading = heading_text.strip().upper()
         
         if level == 1:
