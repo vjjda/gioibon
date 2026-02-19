@@ -11,10 +11,7 @@ export class TTSPlayer {
         this.currentSegmentId = null;
         this.isSequence = false;
         
-        // [NEW] Ghi nhớ ID của Heading cha tạo ra chuỗi này
         this.sequenceParentId = null; 
-        
-        // Theo dõi trạng thái lặp và lưu trữ playlist ban đầu
         this.isLooping = false;
         this.currentPlaylist = [];
 
@@ -23,6 +20,13 @@ export class TTSPlayer {
         this.onSegmentEnd = null;
         this.onPlaybackEnd = null;
         this.onPlaybackStateChange = null; 
+
+        // [NEW] Nạp từ điển phiên âm
+        this.phonetics = {};
+        this.phoneticsPromise = fetch('data/phonetics.json')
+            .then(res => res.json())
+            .then(data => { this.phonetics = data; })
+            .catch(err => console.warn("Không tìm thấy phonetics.json", err));
     }
 
     // Proxy Engine Methods
@@ -52,7 +56,6 @@ export class TTSPlayer {
         this._processQueue();
     }
 
-    // [UPDATED] Nhận thêm tham số parentId
     playSequence(segments, parentId = null) {
         if (this.isSequence && segments.length > 0 && this.currentPlaylist.length > 0 && 
             String(this.currentPlaylist[0].id) === String(segments[0].id) && (this.isPlaying || this.isPaused)) {
@@ -62,7 +65,7 @@ export class TTSPlayer {
 
         this.stop();
         this.isSequence = true;
-        this.sequenceParentId = parentId; // Lưu trữ Parent
+        this.sequenceParentId = parentId; 
         this.audioQueue = [...segments];
         this.currentPlaylist = [...segments]; 
 
@@ -148,8 +151,16 @@ export class TTSPlayer {
                 audioSrc = `data/audio/${item.audio}`;
             } else if (item.text) {
                 const textWithoutHtml = item.text.replace(/<[^>]*>?/gm, '');
-                const normalizedText = this._normalizeText(textWithoutHtml);
+                let normalizedText = this._normalizeText(textWithoutHtml);
                 
+                // [NEW] Áp dụng thay thế phiên âm (chờ fetch tải xong nếu cần)
+                await this.phoneticsPromise;
+                for (const [word, replacement] of Object.entries(this.phonetics)) {
+                    // Regex tìm và thay thế, cờ 'gi' = global + ignore case
+                    const regex = new RegExp(word, 'gi'); 
+                    normalizedText = normalizedText.replace(regex, replacement);
+                }
+
                 if (normalizedText) {
                     audioSrc = await this.engine.fetchAudio(normalizedText);
                 }

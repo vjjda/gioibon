@@ -6,6 +6,7 @@ import requests
 import base64
 import logging
 import re
+import json
 from typing import Dict, Any, Optional
 from collections import defaultdict
 
@@ -26,8 +27,21 @@ class TTSGenerator:
         
         self.label_counts: Dict[str, int] = defaultdict(int)
         self.label_totals: Dict[str, int] = defaultdict(int)
+        self.phonetics: Dict[str, str] = {}
         
+        self._load_phonetics()
         self._prepare_directories()
+
+    def _load_phonetics(self) -> None:
+        """Đọc dictionary phiên âm từ file JSON dùng chung."""
+        phonetics_path = "web/data/phonetics.json"
+        if os.path.exists(phonetics_path):
+            try:
+                with open(phonetics_path, 'r', encoding='utf-8') as f:
+                    self.phonetics = json.load(f)
+                logger.info(f"Đã tải {len(self.phonetics)} từ phiên âm.")
+            except Exception as e:
+                logger.error(f"❌ Lỗi đọc file phonetics.json: {e}")
 
     def _prepare_directories(self) -> None:
         """Xóa thư mục output cũ để dọn rác, và tạo lại các thư mục cần thiết."""
@@ -86,9 +100,15 @@ class TTSGenerator:
         except Exception as e:
             logger.error(f"❌ Lỗi thêm metadata vào {filepath}: {e}")
 
+    def _apply_phonetics(self, text: str) -> str:
+        """Thay thế các từ Pali bằng phiên âm tiếng Việt trước khi TTS."""
+        for word, phonetic in self.phonetics.items():
+            pattern = re.compile(re.escape(word), re.IGNORECASE)
+            text = pattern.sub(phonetic, text)
+        return text
+
     def process_segment(self, uid: int, label: str, segment_text: str, html: str = "") -> str:
         """Xử lý đoạn văn, trả về tên file MP3 cuối cùng, hoặc 'skip' nếu được loại trừ."""
-        # [FIX] Thêm điều kiện html.startswith("<h") để bỏ qua tất cả các heading
         if not segment_text.strip() or label.startswith("note-") or label.endswith("-name") or label in ["title", "subtitle"] or html.startswith("<h"):
             return "skip"
 
@@ -96,8 +116,10 @@ class TTSGenerator:
         tts_text = re.sub(r'[()\[\]*]', ' ', segment_text)
         tts_text = re.sub(r'\s+', ' ', tts_text).strip()
 
-        # Xử lý ngoại lệ: Chuyển chuỗi in hoa toàn bộ thành in hoa chữ cái đầu 
-        # để tránh việc AI đọc đánh vần từng chữ cái (Ví dụ: "MỞ ĐẦU" -> "Mở đầu")
+        # [NEW] Áp dụng Dictionary thay thế phiên âm
+        tts_text = self._apply_phonetics(tts_text)
+
+        # Xử lý ngoại lệ: Chuyển chuỗi in hoa toàn bộ thành in hoa chữ cái đầu
         if tts_text.isupper():
             tts_text = tts_text.capitalize()
 
@@ -129,7 +151,7 @@ class TTSGenerator:
             shutil.copy2(tmp_filepath, final_filepath)
             self._add_metadata(final_filepath, segment_text, title_base, uid_padded)
         else:
-            # 5. Gọi API với bản text sạch (tts_text)
+            # 5. Gọi API với bản text sạch
             if self._fetch_audio_from_api(tts_text, tmp_filepath):
                 shutil.copy2(tmp_filepath, final_filepath)
                 self._add_metadata(tmp_filepath, segment_text, title_base, uid_padded)
@@ -137,3 +159,4 @@ class TTSGenerator:
                 logger.debug(f"✅ Đã tạo mới Audio: {filename}")
 
         return filename
+
