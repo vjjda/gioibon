@@ -54,8 +54,8 @@ class ContentLabeler:
 
         if is_rule:
             self.in_rule_zone = True
-            # Format: Pj 1, Ss 1...
-            return f"{self.current_prefix.capitalize()} {rule_no}"
+            # Format lowercase, không khoảng cách: pj1, ss6...
+            return f"{self.current_prefix}{rule_no}"
         
         if not self.in_rule_zone:
             return f"{self.current_prefix}-opening"
