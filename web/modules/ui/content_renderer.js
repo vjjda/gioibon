@@ -1,6 +1,6 @@
 // Path: web/modules/ui/content_renderer.js
-import { SegmentFactory } from './content/segment_factory.js';
-import { MaskManager } from './content/mask_manager.js';
+import { SegmentFactory } from 'ui/content/segment_factory.js';
+import { MaskManager } from 'ui/content/mask_manager.js';
 
 export class ContentRenderer {
     constructor(containerId, playSegmentCallback, playSequenceCallback) {
@@ -24,8 +24,14 @@ export class ContentRenderer {
 
     _setupKeyboardListeners() {
         document.addEventListener('keydown', (e) => {
-            if (e.key.toLowerCase() === 'r') {
+            // Ngăn việc kích hoạt phím tắt khi đang nhập liệu (ví dụ: trong form cài đặt)
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+
+            const key = e.key.toLowerCase();
+            if (key === 'r') {
                 this._handleKeyboardPlay();
+            } else if (key === 'f') {
+                this._handleKeyboardFlip();
             }
         });
     }
@@ -68,7 +74,7 @@ export class ContentRenderer {
                 currentPrefix = prefix;
                 currentSection = document.createElement('section');
                 currentSection.className = `section section-${prefix}`;
-                currentSection.id = `section-${item.label}`; 
+                currentSection.id = `section-${item.label}`;
                 this.container.appendChild(currentSection);
             }
 
@@ -80,11 +86,13 @@ export class ContentRenderer {
     _handlePlayRule(startIndex) {
         if (!this.playSequenceCallback) return;
         const sequence = [];
+
         for (let i = startIndex + 1; i < this.items.length; i++) {
             const item = this.items[i];
             if (item.label.endsWith('-name')) break; 
             if (item.label.endsWith('-chapter')) break; 
             if (item.label === 'end') break;
+
             if (item.audio && item.audio !== 'skip') {
                 sequence.push({ id: item.id, audio: item.audio, text: item.segment });
             }
@@ -95,7 +103,6 @@ export class ContentRenderer {
 
     _handleKeyboardPlay() {
         if (!this.hoveredSegmentId) return;
-        
         const item = this.items.find(i => i.id === this.hoveredSegmentId);
         if (!item) return;
 
@@ -105,6 +112,23 @@ export class ContentRenderer {
         } else {
             if (item.audio && item.audio !== 'skip' && this.playSegmentCallback) {
                 this.playSegmentCallback(item.id, item.audio, item.segment);
+            }
+        }
+    }
+
+    // [NEW] Hàm xử lý lật thẻ ghi nhớ thông qua phím tắt
+    _handleKeyboardFlip() {
+        if (!this.hoveredSegmentId) return;
+        const item = this.items.find(i => i.id === this.hoveredSegmentId);
+        if (!item) return;
+
+        const segmentEl = this.container.querySelector(`.segment[data-id="${this.hoveredSegmentId}"]`);
+        if (segmentEl) {
+            // Đảm bảo chỉ mask những segment đủ điều kiện giống như logic render mask toggle (có audio hoặc là tên rule)
+            const hasAudio = item.audio && item.audio !== 'skip';
+            const isRuleHeader = item.label.endsWith('-name');
+            if (hasAudio || isRuleHeader) {
+                this.maskManager.toggleMask(segmentEl, item);
             }
         }
     }
@@ -129,8 +153,8 @@ export class ContentRenderer {
     getFirstVisibleSegmentId() {
         if (!this.container) return null;
         const segments = this.container.querySelectorAll('.segment');
-        const viewportTop = window.scrollY + 80; 
-        
+        const viewportTop = window.scrollY + 80;
+
         for (const segment of segments) {
             const rect = segment.getBoundingClientRect();
             if (rect.top + rect.height > 80 && rect.top < window.innerHeight) {

@@ -23,9 +23,22 @@ export class MaskManager {
         document.addEventListener('touchend', endDrag);
     }
 
+    // [NEW] Phương thức xử lý ẩn/hiện tách biệt, sử dụng cho Keyboard Shortcut
+    toggleMask(segmentEl, item) {
+        const textEl = segmentEl.querySelector('.segment-text');
+        if (!textEl) return;
+
+        if (item.label.endsWith('-name')) {
+            this._toggleRuleMask(segmentEl, item);
+            return;
+        }
+
+        const isMasked = textEl.classList.contains('masked');
+        this._applyMaskAction(textEl, isMasked ? 'unmask' : 'mask');
+    }
+
     handleMaskStart(e, segmentEl, item) {
-        if (e.cancelable) e.preventDefault(); 
-        
+        if (e && e.cancelable) e.preventDefault();
         this.isDraggingMask = true;
         const textEl = segmentEl.querySelector('.segment-text');
         
@@ -44,10 +57,8 @@ export class MaskManager {
 
     handleMaskEnter(e, segmentEl) {
         if (!this.isDraggingMask || !this.dragMaskAction) return;
-        
         // Prevent masking rule headers during drag
         if (segmentEl.classList.contains('rule-header')) return;
-
         const textEl = segmentEl.querySelector('.segment-text');
         this._applyMaskAction(textEl, this.dragMaskAction);
     }
@@ -95,9 +106,7 @@ export class MaskManager {
     }
 
     _isStopCondition(item) {
-        return item.label.endsWith('-name') || 
-               item.label.endsWith('-chapter') || 
-               item.label === 'end';
+        return item.label.endsWith('-name') || item.label.endsWith('-chapter') || item.label === 'end';
     }
 
     _findElement(id) {
