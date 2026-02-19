@@ -21,7 +21,7 @@ export class TTSPlayer {
         this.onPlaybackEnd = null;
         this.onPlaybackStateChange = null; 
 
-        // [NEW] Nạp từ điển phiên âm
+        // Nạp từ điển phiên âm
         this.phonetics = {};
         this.phoneticsPromise = fetch('data/phonetics.json')
             .then(res => res.json())
@@ -117,12 +117,36 @@ export class TTSPlayer {
         if (this.onPlaybackStateChange) this.onPlaybackStateChange('stopped');
     }
 
+    // --- Format Text Helpers (Must strictly match Backend Rules) ---
+
     _normalizeText(text) {
         if (!text) return "";
-        let clean = text.replace(/[()\[\]*]/g, ' ');
+        // Loại bỏ HTML tags để đảm bảo text thuần
+        let clean = text.replace(/<[^>]*>?/gm, '');
+        // 1. Xóa (), [], *
+        clean = clean.replace(/[()\[\]*]/g, ' ');
+        // 2. Gom khoảng trắng thừa
         clean = clean.replace(/\s+/g, ' ').trim();
         return clean;
     }
+
+    _escapeRegExp(string) {
+        // Tương đương re.escape() của Python
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    _isUpper(text) {
+        // Tương đương .isupper() của Python (Bao gồm cả ký tự tiếng Việt)
+        return text === text.toUpperCase() && text !== text.toLowerCase();
+    }
+
+    _capitalize(text) {
+        // Tương đương .capitalize() của Python
+        if (!text) return text;
+        return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+    }
+
+    // --- Process Queue ---
 
     async _processQueue() {
         if (this.audioQueue.length === 0) {
@@ -150,19 +174,23 @@ export class TTSPlayer {
             if (item.audio && item.audio !== 'skip') {
                 audioSrc = `data/audio/${item.audio}`;
             } else if (item.text) {
-                const textWithoutHtml = item.text.replace(/<[^>]*>?/gm, '');
-                let normalizedText = this._normalizeText(textWithoutHtml);
+                // Rule 1 & 2: Normalize
+                let ttsText = this._normalizeText(item.text);
                 
-                // [NEW] Áp dụng thay thế phiên âm (chờ fetch tải xong nếu cần)
+                // Rule 3: Áp dụng thay thế phiên âm
                 await this.phoneticsPromise;
                 for (const [word, replacement] of Object.entries(this.phonetics)) {
-                    // Regex tìm và thay thế, cờ 'gi' = global + ignore case
-                    const regex = new RegExp(word, 'gi'); 
-                    normalizedText = normalizedText.replace(regex, replacement);
+                    const regex = new RegExp(this._escapeRegExp(word), 'gi'); 
+                    ttsText = ttsText.replace(regex, replacement);
                 }
 
-                if (normalizedText) {
-                    audioSrc = await this.engine.fetchAudio(normalizedText);
+                // Rule 4: Chuyển in hoa thành in thường chữ cái đầu (Ngăn đánh vần)
+                if (this._isUpper(ttsText)) {
+                    ttsText = this._capitalize(ttsText);
+                }
+
+                if (ttsText) {
+                    audioSrc = await this.engine.fetchAudio(ttsText);
                 }
             }
 
