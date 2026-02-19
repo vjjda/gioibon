@@ -3,6 +3,11 @@ import sys
 import os
 import glob
 import logging
+import argparse
+
+# Add src to python path to allow imports if run directly
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 from src.config.logging_config import setup_logging
 from src.data_builder.processor import ContentProcessor
 from src.data_builder.writer import DataWriter
@@ -10,13 +15,14 @@ from src.data_builder.writer import DataWriter
 setup_logging()
 logger = logging.getLogger(__name__)
 
-# Cấu hình đường dẫn mới
+# Cấu hình đường dẫn
 DATA_CONTENT_DIR = "data/content"
 WEB_DATA_DIR = "web/data"
 TSV_OUT = os.path.join(DATA_CONTENT_DIR, "content.tsv")
 DB_OUT = os.path.join(WEB_DATA_DIR, "content.db")
 
-def main():
+def run_data_builder() -> None:
+    """Thực thi logic build dữ liệu từ Markdown sang DB/TSV."""
     logger.info("🚀 Khởi động quy trình xây dựng dữ liệu phẳng...")
     
     # Tìm file markdown
@@ -44,5 +50,23 @@ def main():
         logger.exception(f"❌ Lỗi: {e}")
         sys.exit(1)
 
+def cli() -> None:
+    """Cổng giao tiếp CLI cho toàn bộ ứng dụng."""
+    parser = argparse.ArgumentParser(description="Công cụ quản lý dự án Giới Bổn")
+    subparsers = parser.add_subparsers(dest="command", help="Các lệnh có sẵn")
+    
+    # Đăng ký lệnh: data
+    parser_data = subparsers.add_parser("data", help="Xây dựng dữ liệu (chuyển đổi Markdown sang DB/TSV)")
+    
+    # Parse tham số do người dùng nhập vào
+    args = parser.parse_args()
+    
+    # Điều hướng logic dựa trên lệnh
+    if args.command == "data":
+        run_data_builder()
+    else:
+        # Nếu gõ `gioibon` không kèm argument, hiển thị hướng dẫn
+        parser.print_help()
+
 if __name__ == "__main__":
-    main()
+    cli()
