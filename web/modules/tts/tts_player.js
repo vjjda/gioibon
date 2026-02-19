@@ -34,8 +34,8 @@ export class TTSPlayer {
     // --- Playback Control ---
 
     playSegment(segmentId, audio, text) {
-        // [NEW] Nếu đang play/pause ĐÚNG segment này (ở chế độ đơn), thì toggle pause thay vì restart
-        if (!this.isSequence && this.currentSegmentId === segmentId && (this.isPlaying || this.isPaused)) {
+        // [FIX] Nếu ĐÚNG segment này đang được phát (dù phát đơn hay trong chuỗi), thì toggle pause
+        if (String(this.currentSegmentId) === String(segmentId) && (this.isPlaying || this.isPaused)) {
             this.togglePause();
             return;
         }
@@ -45,25 +45,23 @@ export class TTSPlayer {
         
         const item = { id: segmentId, audio: audio, text: text };
         this.audioQueue = [item];
-        this.currentPlaylist = [item]; // Lưu trữ để loop
+        this.currentPlaylist = [item];
 
         this._processQueue();
     }
 
     playSequence(segments) {
-        // [NEW] Nếu đang play/pause ĐÚNG chuỗi này, thì toggle pause thay vì restart
-        // Dựa vào ID của segment đầu tiên trong chuỗi để nhận diện
+        // Nếu đang play/pause ĐÚNG chuỗi này, thì toggle pause thay vì restart
         if (this.isSequence && segments.length > 0 && this.currentPlaylist.length > 0 && 
-            this.currentPlaylist[0].id === segments[0].id && (this.isPlaying || this.isPaused)) {
+            String(this.currentPlaylist[0].id) === String(segments[0].id) && (this.isPlaying || this.isPaused)) {
             this.togglePause();
             return;
         }
 
         this.stop();
         this.isSequence = true;
-        // segments is array of { id, audio, text }
         this.audioQueue = [...segments];
-        this.currentPlaylist = [...segments]; // Lưu trữ để loop
+        this.currentPlaylist = [...segments]; 
 
         this._processQueue();
     }
@@ -98,7 +96,7 @@ export class TTSPlayer {
 
     stop() {
         this.audioQueue = [];
-        this.currentPlaylist = []; // Xóa playlist khi user chủ động stop
+        this.currentPlaylist = [];
         if (this.currentAudio) {
             this.currentAudio.pause();
             this.currentAudio = null;
@@ -114,17 +112,13 @@ export class TTSPlayer {
 
     _normalizeText(text) {
         if (!text) return "";
-        // Replicate backend logic:
-        // 1. Remove (), [], *
         let clean = text.replace(/[()\[\]*]/g, ' ');
-        // 2. Collapse whitespace
         clean = clean.replace(/\s+/g, ' ').trim();
         return clean;
     }
 
     async _processQueue() {
         if (this.audioQueue.length === 0) {
-            // Logic Loop tự động khi hết bài
             if (this.isLooping && this.currentPlaylist.length > 0) {
                 this.audioQueue = [...this.currentPlaylist];
             } else {
@@ -146,12 +140,9 @@ export class TTSPlayer {
         try {
             let audioSrc = null;
 
-            // Priority: Pre-generated Audio File > Text-to-Speech
             if (item.audio && item.audio !== 'skip') {
                 audioSrc = `data/audio/${item.audio}`;
             } else if (item.text) {
-                // Normalize text using backend logic
-                // Also remove HTML tags just in case
                 const textWithoutHtml = item.text.replace(/<[^>]*>?/gm, '');
                 const normalizedText = this._normalizeText(textWithoutHtml);
                 
@@ -161,7 +152,6 @@ export class TTSPlayer {
             }
 
             if (!audioSrc) {
-                // If no audio source found (e.g. skip + no text), skip to next
                 if (this.onSegmentEnd) this.onSegmentEnd(item.id);
                 this._processQueue();
                 return;
@@ -172,7 +162,6 @@ export class TTSPlayer {
             const audio = new Audio(audioSrc);
             this.currentAudio = audio;
 
-            // Handle rate for HTML5 Audio (if supported)
             if (this.engine.rate) {
                 audio.playbackRate = this.engine.rate;
             }
@@ -198,3 +187,4 @@ export class TTSPlayer {
         }
     }
 }
+

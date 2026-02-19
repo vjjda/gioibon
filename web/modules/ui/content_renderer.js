@@ -24,7 +24,6 @@ export class ContentRenderer {
 
     _setupKeyboardListeners() {
         document.addEventListener('keydown', (e) => {
-            // Ngăn việc kích hoạt phím tắt khi đang nhập liệu (ví dụ: trong form cài đặt)
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
 
             const key = e.key.toLowerCase();
@@ -116,7 +115,6 @@ export class ContentRenderer {
         }
     }
 
-    // [NEW] Hàm xử lý lật thẻ ghi nhớ thông qua phím tắt
     _handleKeyboardFlip() {
         if (!this.hoveredSegmentId) return;
         const item = this.items.find(i => i.id === this.hoveredSegmentId);
@@ -124,7 +122,6 @@ export class ContentRenderer {
 
         const segmentEl = this.container.querySelector(`.segment[data-id="${this.hoveredSegmentId}"]`);
         if (segmentEl) {
-            // Đảm bảo chỉ mask những segment đủ điều kiện giống như logic render mask toggle (có audio hoặc là tên rule)
             const hasAudio = item.audio && item.audio !== 'skip';
             const isRuleHeader = item.label.endsWith('-name');
             if (hasAudio || isRuleHeader) {
@@ -150,11 +147,55 @@ export class ContentRenderer {
         this.container.querySelectorAll('.segment').forEach(el => el.classList.remove('active'));
     }
 
+    // [NEW] Cập nhật giao diện của nút bấm Play/Pause
+    updatePlaybackState(state, activeSegmentId, isSequence) {
+        // Reset tất cả các nút play segment về chấm nhỏ
+        this.container.querySelectorAll('.play-btn:not(.play-rule-btn)').forEach(btn => {
+            btn.classList.remove('active-play');
+            btn.innerHTML = '<i class="fas fa-circle"></i>';
+            btn.title = "Nghe đoạn này";
+        });
+        
+        // Reset tất cả các nút play rule về hình play lớn
+        this.container.querySelectorAll('.play-rule-btn').forEach(btn => {
+            btn.classList.remove('active-play');
+            btn.innerHTML = '<i class="fas fa-play-circle"></i>';
+            btn.title = "Nghe toàn bộ điều này";
+        });
+
+        if (!activeSegmentId || state === 'stopped') return;
+
+        const activeEl = this.container.querySelector(`.segment[data-id="${activeSegmentId}"]`);
+        if (!activeEl) return;
+
+        // Cập nhật icon cho nút của segment hiện tại
+        const segmentBtn = activeEl.querySelector('.play-btn:not(.play-rule-btn)');
+        if (segmentBtn) {
+            segmentBtn.classList.add('active-play');
+            segmentBtn.innerHTML = state === 'playing' ? '<i class="fas fa-pause-circle"></i>' : '<i class="fas fa-play-circle"></i>';
+            segmentBtn.title = state === 'playing' ? "Tạm dừng" : "Tiếp tục";
+        }
+
+        // Cập nhật icon cho nút của Rule cha nếu đang phát sequence
+        if (isSequence) {
+            let prev = activeEl;
+            while(prev && !prev.classList.contains('rule-header')) {
+                prev = prev.previousElementSibling;
+            }
+            if (prev) {
+                const ruleBtn = prev.querySelector('.play-rule-btn');
+                if (ruleBtn) {
+                    ruleBtn.classList.add('active-play');
+                    ruleBtn.innerHTML = state === 'playing' ? '<i class="fas fa-pause-circle"></i>' : '<i class="fas fa-play-circle"></i>';
+                    ruleBtn.title = state === 'playing' ? "Tạm dừng" : "Tiếp tục";
+                }
+            }
+        }
+    }
+
     getFirstVisibleSegmentId() {
         if (!this.container) return null;
         const segments = this.container.querySelectorAll('.segment');
-        const viewportTop = window.scrollY + 80;
-
         for (const segment of segments) {
             const rect = segment.getBoundingClientRect();
             if (rect.top + rect.height > 80 && rect.top < window.innerHeight) {
@@ -166,3 +207,4 @@ export class ContentRenderer {
         return null;
     }
 }
+

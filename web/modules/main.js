@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (ttsPlayer.isPaused) {
                 ttsPlayer.resume();
             } else {
-                // Try to start from visible segment
                 const startId = contentRenderer.getFirstVisibleSegmentId();
                 const segments = startId 
                     ? contentLoader.getSegmentsStartingFrom(startId)
@@ -42,20 +41,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         (newRate) => { // Speed Change
             ttsPlayer.setRate(newRate);
         },
-        (isLooping) => { // [NEW] Loop Change
+        (isLooping) => { // Loop Change
             ttsPlayer.isLooping = isLooping;
         }
     );
     
-    // Initialize speed UI from player defaults
     controlBar.setSpeed(ttsPlayer.currentRate);
 
     const contentRenderer = new ContentRenderer(
         'content',
-        (segmentId, audio, text) => { // Play Segment
+        (segmentId, audio, text) => { 
             ttsPlayer.playSegment(segmentId, audio, text);
         },
-        (sequence) => { // Play Rule Sequence
+        (sequence) => { 
             ttsPlayer.playSequence(sequence);
         }
     );
@@ -65,21 +63,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Wire up TTS Events to UI ---
     ttsPlayer.onSegmentStart = (id, isSequence) => {
         contentRenderer.highlightSegment(id, isSequence);
+        // [NEW] Cập nhật Icon nút phát
+        contentRenderer.updatePlaybackState(ttsPlayer.isPlaying ? 'playing' : 'paused', id, isSequence);
     };
 
     ttsPlayer.onPlaybackEnd = () => {
         contentRenderer.clearHighlight();
         controlBar.updateState('stopped');
+        // [NEW] Reset toàn bộ Icon nút phát
+        contentRenderer.updatePlaybackState('stopped', null, false);
     };
 
     ttsPlayer.onPlaybackStateChange = (state) => {
         controlBar.updateState(state);
+        // [NEW] Cập nhật Icon nút phát khi pause/resume
+        contentRenderer.updatePlaybackState(state, ttsPlayer.currentSegmentId, ttsPlayer.isSequence);
     };
 
     // --- Load Content ---
     try {
         const data = await contentLoader.load();
-        // data is now a flat array of items
         contentRenderer.render(data);
         tocRenderer.render(data);
     } catch (error) {
