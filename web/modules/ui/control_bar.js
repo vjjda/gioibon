@@ -1,14 +1,16 @@
 // Path: web/modules/ui/control_bar.js
 
 export class ControlBar {
-    constructor(playCallback, pauseCallback, stopCallback) {
+    constructor(playCallback, pauseCallback, stopCallback, speedChangeCallback) {
         this.playBtn = document.getElementById('play-all-btn');
         this.pauseBtn = document.getElementById('pause-btn');
         this.stopBtn = document.getElementById('stop-btn');
+        this.speedSelect = document.getElementById('speed-select');
         
         this.playCallback = playCallback;
         this.pauseCallback = pauseCallback;
         this.stopCallback = stopCallback;
+        this.speedChangeCallback = speedChangeCallback;
 
         this._setupListeners();
     }
@@ -29,6 +31,19 @@ export class ControlBar {
                 if (this.stopCallback) this.stopCallback();
             });
         }
+        if (this.speedSelect) {
+            this.speedSelect.addEventListener('change', (e) => {
+                const newRate = parseFloat(e.target.value);
+                if (this.speedChangeCallback) this.speedChangeCallback(newRate);
+            });
+        }
+    }
+
+    // Initialize speed select with current rate
+    setSpeed(rate) {
+        if (this.speedSelect) {
+            this.speedSelect.value = rate.toString();
+        }
     }
 
     updateState(state) {
@@ -39,17 +54,24 @@ export class ControlBar {
             this.playBtn.disabled = true;
             this.pauseBtn.disabled = false;
             this.stopBtn.disabled = false;
-            this.pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Tạm dừng';
+            
+            // Icon only
+            this.pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            this.pauseBtn.title = "Tạm dừng";
         } else if (state === 'paused') {
             this.playBtn.disabled = false; 
             this.pauseBtn.disabled = false;
             this.stopBtn.disabled = false;
-            this.pauseBtn.innerHTML = '<i class="fas fa-play"></i> Tiếp tục';
+            
+            this.pauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            this.pauseBtn.title = "Tiếp tục";
         } else {
             this.playBtn.disabled = false;
             this.pauseBtn.disabled = true;
             this.stopBtn.disabled = true;
-            this.pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Tạm dừng';
+            
+            this.pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            this.pauseBtn.title = "Tạm dừng";
         }
     }
 }

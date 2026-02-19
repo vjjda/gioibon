@@ -15,12 +15,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const tocRenderer = new TocRenderer('toc-list', 'sidebar', 'sidebar-toggle');
     const controlBar = new ControlBar(
         () => { // Play All
-            const allSegments = contentLoader.getAllSegments();
-            if (allSegments.length > 0) {
-                if (ttsPlayer.isPaused) {
-                    ttsPlayer.resume();
-                } else {
-                    ttsPlayer.playSequence(allSegments);
+            if (ttsPlayer.isPaused) {
+                ttsPlayer.resume();
+            } else {
+                // Try to start from visible segment
+                const startId = contentRenderer.getFirstVisibleSegmentId();
+                const segments = startId 
+                    ? contentLoader.getSegmentsStartingFrom(startId)
+                    : contentLoader.getAllSegments();
+                
+                if (segments.length > 0) {
+                    ttsPlayer.playSequence(segments);
                 }
             }
         },
@@ -33,8 +38,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         },
         () => { // Stop
             ttsPlayer.stop();
+        },
+        (newRate) => { // Speed Change
+            ttsPlayer.setRate(newRate);
         }
     );
+    
+    // Initialize speed UI from player defaults
+    controlBar.setSpeed(ttsPlayer.currentRate);
 
     const contentRenderer = new ContentRenderer(
         'content',
@@ -49,8 +60,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const settingsModal = new SettingsModal(ttsPlayer);
 
     // --- Wire up TTS Events to UI ---
-    ttsPlayer.onSegmentStart = (id) => {
-        contentRenderer.highlightSegment(id);
+    ttsPlayer.onSegmentStart = (id, isSequence) => {
+        contentRenderer.highlightSegment(id, isSequence);
     };
 
     ttsPlayer.onPlaybackEnd = () => {

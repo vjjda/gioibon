@@ -9,6 +9,7 @@ export class TTSPlayer {
         this.isPaused = false;
         this.currentAudio = null;
         this.currentSegmentId = null;
+        this.isSequence = false; // Track if playing a sequence
 
         // Events
         this.onSegmentStart = null;
@@ -30,12 +31,14 @@ export class TTSPlayer {
 
     playSegment(segmentId, audio, text) {
         this.stop();
+        this.isSequence = false;
         this.audioQueue = [{ id: segmentId, audio: audio, text: text }];
         this._processQueue();
     }
 
     playSequence(segments) {
         this.stop();
+        this.isSequence = true;
         // segments is array of { id, audio, text }
         this.audioQueue = [...segments];
         this._processQueue();
@@ -78,6 +81,7 @@ export class TTSPlayer {
         this.isPlaying = false;
         this.isPaused = false;
         this.currentSegmentId = null;
+        this.isSequence = false;
         if (this.onPlaybackEnd) this.onPlaybackEnd();
         if (this.onPlaybackStateChange) this.onPlaybackStateChange('stopped');
     }
@@ -106,7 +110,7 @@ export class TTSPlayer {
         const item = this.audioQueue.shift();
         this.currentSegmentId = item.id;
 
-        if (this.onSegmentStart) this.onSegmentStart(item.id);
+        if (this.onSegmentStart) this.onSegmentStart(item.id, this.isSequence);
 
         try {
             let audioSrc = null;

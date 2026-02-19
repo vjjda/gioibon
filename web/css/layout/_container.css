@@ -1,4 +1,3 @@
-/* Path: web/css/layout/_container.css */
 /* --- Main Layout --- */
 .container {
     flex: 1;
@@ -16,7 +15,7 @@
     flex: 1;
     overflow-y: auto;
     padding: 2rem 20%;
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth; REMOVED for instant jump */
     padding-bottom: 120px;
 }
 

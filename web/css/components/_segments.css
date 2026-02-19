@@ -1,4 +1,3 @@
-/* Path: web/css/components/_segments.css */
 /* Segment Styling */
 .segment {
     position: relative;
@@ -19,6 +18,7 @@
     align-items: flex-start;
     gap: 0.75rem;
     position: relative;
+    z-index: 1; /* Content lower than mask toggle */
 }
 
 /* Play Buttons Default Alignment (for body text) */
@@ -66,8 +66,45 @@
 /* Reset margins for end sections inside segments */
 .end-segment .segment-text .endsection,
 .end-segment .segment-text .endvagga,
-.end-segment .segment-text .endsutta {
+.end-segment .segment-text .endsutta,
+.end-segment .segment-text .namo {
     margin-top: 0;
     margin-bottom: 0;
     padding: 1rem 0; /* Internal padding instead */
+}
+
+/* --- Flashcard Feature --- */
+.segment-mask-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 40px; /* Generous touch area */
+    cursor: pointer;
+    z-index: 20; /* Ensure on top of content */
+}
+
+/* Visual cue on hover/active */
+.segment-mask-toggle:hover,
+.segment-mask-toggle:active {
+    background: linear-gradient(to left, rgba(0,0,0,0.05), transparent);
+}
+
+/* Masked State (Hide Text) */
+.segment-text.masked {
+    /* Make text transparent so it takes color of whatever background is behind it */
+    color: transparent !important;
+    background-color: transparent !important;
+    user-select: none;
+    /* Optional: Add a very subtle blur to make it look "erased" rather than just gone? */
+    /* filter: blur(4px); */ 
+    /* User requested dynamic match, simple transparency is best */
+}
+
+/* Hide children */
+.segment-text.masked * {
+    color: transparent !important;
+    border-color: transparent !important;
+    text-decoration-color: transparent !important;
+    opacity: 0; 
 }

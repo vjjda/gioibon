@@ -1,4 +1,3 @@
-/* Path: web/css/modules/_responsive.css */
 /* Mobile Responsive */
 #sidebar-toggle {
     display: none;
@@ -26,6 +25,10 @@
     #sidebar.visible {
         transform: translateX(0);
     }
+    /* Add padding to TOC header to avoid overlap with fixed toggle button */
+    .toc-header {
+        padding-left: 60px;
+    }
     .container {
         margin-left: 0;
     }
@@ -36,8 +39,10 @@
         padding: 2rem 5% 10rem 5%;
     }
     header {
-        padding-left: 60px;
-        align-items: flex-start;
+        /* Center text even on mobile, with padding to avoid button overlap */
+        padding: 0 60px; 
+        align-items: center; 
+        text-align: center;
     }
     header h1 {
         font-size: 1rem;

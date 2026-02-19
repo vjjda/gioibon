@@ -10,8 +10,6 @@ export class SettingsModal {
         this.apiKeyInput = document.getElementById('api-key');
         this.voiceSelect = document.getElementById('voice-select');
         this.refreshVoicesBtn = document.getElementById('refresh-voices-btn');
-        this.speedRange = document.getElementById('speed-range');
-        this.speedValue = document.getElementById('speed-value');
 
         this._setupListeners();
     }
@@ -49,14 +47,6 @@ export class SettingsModal {
             });
         }
 
-        if (this.speedRange) {
-            this.speedRange.addEventListener('input', (e) => {
-                const rate = e.target.value;
-                if (this.speedValue) this.speedValue.textContent = rate;
-                this.ttsEngine.setRate(rate);
-            });
-        }
-
         if (this.voiceSelect) {
             this.voiceSelect.addEventListener('change', (e) => {
                 this.ttsEngine.setVoice(e.target.value);
@@ -83,13 +73,6 @@ export class SettingsModal {
             
             if (this.ttsEngine) {
                 if (this.apiKeyInput) this.apiKeyInput.value = this.ttsEngine.getApiKey() || '';
-                
-                if (this.speedRange) {
-                    const rate = this.ttsEngine.currentRate || 1.0;
-                    this.speedRange.value = rate;
-                    if (this.speedValue) this.speedValue.textContent = rate;
-                }
-                
                 this._loadVoices(false);
             }
         } catch (error) {
@@ -104,17 +87,19 @@ export class SettingsModal {
     _save() {
         try {
             const key = this.apiKeyInput ? this.apiKeyInput.value.trim() : '';
+            // Always save, even if empty (clearing the key)
+            this.ttsEngine.setApiKey(key);
+            this._close();
+            
+            // Only reload voices if we have a key
             if (key) {
-                this.ttsEngine.setApiKey(key);
-                alert('Đã lưu API Key thành công!');
-                this._close();
                 this._loadVoices(true); 
             } else {
-                alert('Vui lòng nhập API Key hợp lệ.');
+                // Clear voice list if key removed
+                if (this.voiceSelect) this.voiceSelect.innerHTML = '<option value="" disabled selected>Vui lòng nhập API Key</option>';
             }
         } catch (error) {
             console.error("Error saving settings:", error);
-            alert("Có lỗi xảy ra khi lưu cài đặt.");
         }
     }
 

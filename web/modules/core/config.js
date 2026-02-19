@@ -11,7 +11,7 @@ export const CONFIG_KEYS = {
 export const DEFAULTS = {
     VOICE_LANG: 'vi-VN',
     VOICE_NAME: 'vi-VN-Chirp3-HD-Charon',
-    RATE: 1.0,
+    RATE: 1.25,
     CACHE_DURATION: 7 * 24 * 60 * 60 * 1000 // 7 days
 };
 

@@ -151,12 +151,13 @@ class ContentProcessor:
                     continue
                 
                 is_sadhu = "sadhu" in clean_l.lower()
+                is_namo = "NAMO TASSA BHAGAVATO ARAHATO SAMMĀSAMBUDDHASSA" in clean_l
                 is_sekhiya = "sk" in label.lower()
                 
                 line_segments = []
                 sentences = self.split_sentences(clean_l)
                 
-                if is_sekhiya or is_sadhu:
+                if is_sekhiya or is_sadhu or is_namo:
                     line_segments = sentences
                 else:
                     for sent in sentences:
@@ -171,6 +172,8 @@ class ContentProcessor:
                     css_class = ""
                     if "sadhu" in seg.lower():
                         css_class = "sadhu"
+                    elif "NAMO TASSA BHAGAVATO ARAHATO SAMMĀSAMBUDDHASSA" in seg:
+                        css_class = "namo"
                     elif "_Dứt Giới Bổn" in seg:
                         css_class = "endsutta"
                     elif "_Phần Đọc Tụng Chi Tiết" in seg:

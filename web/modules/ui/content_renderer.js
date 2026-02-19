@@ -5,7 +5,31 @@ export class ContentRenderer {
         this.container = document.getElementById(containerId);
         this.playSegmentCallback = playSegmentCallback;
         this.playSequenceCallback = playSequenceCallback;
-        this.items = []; // Store items for index lookups
+        this.items = []; 
+        this.isDraggingMask = false;
+        this.dragMaskAction = null; // 'mask' or 'unmask'
+        this.hoveredSegmentId = null;
+
+        this._setupGlobalListeners();
+    }
+
+    _setupGlobalListeners() {
+        // Drag Mask Listeners
+        document.addEventListener('mouseup', () => {
+            this.isDraggingMask = false;
+            this.dragMaskAction = null;
+        });
+        document.addEventListener('touchend', () => {
+            this.isDraggingMask = false;
+            this.dragMaskAction = null;
+        });
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === 'r') {
+                this._handleKeyboardPlay();
+            }
+        });
     }
 
     render(items) {
@@ -22,7 +46,6 @@ export class ContentRenderer {
         let currentPrefix = null;
 
         this.items.forEach((item, index) => {
-            // Determine grouping logic
             let prefix = 'misc';
             if (['title', 'subtitle', 'nidana'].includes(item.label)) {
                 prefix = 'intro';
@@ -60,7 +83,13 @@ export class ContentRenderer {
         segmentEl.className = 'segment';
         segmentEl.dataset.id = item.id;
         segmentEl.dataset.label = item.label;
+        segmentEl.dataset.index = index; 
         
+        // Track hover for keyboard shortcut
+        segmentEl.addEventListener('mouseenter', () => {
+            this.hoveredSegmentId = item.id;
+        });
+
         if (item.label.endsWith('-name')) {
             segmentEl.classList.add('rule-header');
         } else if (item.label.endsWith('-chapter')) {
@@ -69,15 +98,14 @@ export class ContentRenderer {
             segmentEl.classList.add('main-title');
         }
 
-        // Check for end sections in HTML content
-        if (item.html && item.html.match(/class=['"](endsection|endvagga|endsutta|sadhu)['"]/)) {
+        if (item.html && item.html.match(/class=['"](endsection|endvagga|endsutta|sadhu|namo)['"]/)) {
             segmentEl.classList.add('end-segment');
         }
 
         const contentWrapper = document.createElement('div');
         contentWrapper.className = 'segment-content-wrapper';
 
-        // 1. Play Segment Button (Single Segment)
+        // Play Button
         if (item.audio && item.audio !== 'skip') {
             const playBtn = document.createElement('button');
             playBtn.className = 'play-btn icon-btn';
@@ -90,14 +118,12 @@ export class ContentRenderer {
             contentWrapper.appendChild(playBtn);
         }
 
-        // 2. Play Rule Button (Sequence) - Only for Rule Headers
+        // Play Rule Button
         if (item.label.endsWith('-name')) {
             const playRuleBtn = document.createElement('button');
             playRuleBtn.className = 'play-btn icon-btn play-rule-btn';
             playRuleBtn.innerHTML = '<i class="fas fa-play-circle"></i>';
             playRuleBtn.title = "Nghe toàn bộ điều này";
-            // Make distinct color/style via CSS
-            
             playRuleBtn.onclick = (e) => {
                 e.stopPropagation();
                 this._handlePlayRule(index);
@@ -105,67 +131,191 @@ export class ContentRenderer {
             contentWrapper.appendChild(playRuleBtn);
         }
 
+        // Text Content
         const textEl = document.createElement('div');
         textEl.className = 'segment-text';
-        
         const htmlTemplate = item.html || '{}';
         const renderedHtml = htmlTemplate.replace('{}', item.segment || '');
         textEl.innerHTML = renderedHtml;
 
         contentWrapper.appendChild(textEl);
         segmentEl.appendChild(contentWrapper);
+
+        // --- Flashcard Toggle Area ---
+        const isRuleHeader = item.label.endsWith('-name');
+        const hasAudio = item.audio && item.audio !== 'skip';
+
+        if (hasAudio || isRuleHeader) {
+            const toggleArea = document.createElement('div');
+            toggleArea.className = 'segment-mask-toggle';
+            toggleArea.title = "Nhấp để che/hiện text";
+            
+            // Mouse Events for Drag
+            toggleArea.addEventListener('mousedown', (e) => this._startMaskDrag(e, segmentEl, item));
+            toggleArea.addEventListener('mouseenter', (e) => this._continueMaskDrag(e, segmentEl));
+            
+            // Touch Events
+            toggleArea.addEventListener('touchstart', (e) => this._startMaskDrag(e, segmentEl, item), { passive: false });
+            
+            segmentEl.appendChild(toggleArea);
+        }
         
         return segmentEl;
     }
 
-    _handlePlayRule(startIndex) {
-        if (!this.playSequenceCallback) return;
-
-        // Logic: Collect segments starting from startIndex + 1
-        // Until we hit the next rule header (-name), chapter start (-chapter), or section end.
-        const sequence = [];
+    _startMaskDrag(e, segmentEl, item) {
+        if (e.cancelable) e.preventDefault(); 
         
-        // Include the rule header itself if it has audio (unlikely per schema 'skip', but just in case)
-        // Actually, usually rule name is 'skip'.
+        this.isDraggingMask = true;
+        const textEl = segmentEl.querySelector('.segment-text');
         
-        // Start looking from next item
-        for (let i = startIndex + 1; i < this.items.length; i++) {
-            const item = this.items[i];
-            
-            // Stop conditions
-            if (item.label.endsWith('-name')) break; // Next rule
-            if (item.label.endsWith('-chapter')) break; // Next chapter
-            if (item.label === 'end') break;
-            
-            // Add to sequence if it has audio
-            if (item.audio && item.audio !== 'skip') {
-                sequence.push({
-                    id: item.id,
-                    audio: item.audio,
-                    text: item.segment
-                });
-            }
+        // Special logic for Rule Header
+        if (item.label.endsWith('-name')) {
+            this._toggleRuleMask(segmentEl, item);
+            return;
         }
 
-        if (sequence.length > 0) {
-            this.playSequenceCallback(sequence);
+        // Normal toggle
+        const isMasked = textEl.classList.contains('masked');
+        this.dragMaskAction = isMasked ? 'unmask' : 'mask'; 
+        
+        this._applyMaskAction(textEl, this.dragMaskAction);
+    }
+
+    _continueMaskDrag(e, segmentEl) {
+        if (!this.isDraggingMask || !this.dragMaskAction) return;
+        
+        // [FIX] Never mask rule headers during drag
+        if (segmentEl.classList.contains('rule-header')) return;
+
+        const textEl = segmentEl.querySelector('.segment-text');
+        this._applyMaskAction(textEl, this.dragMaskAction);
+    }
+
+    _applyMaskAction(textEl, action) {
+        if (action === 'mask') {
+            textEl.classList.add('masked');
         } else {
-            alert("Không có dữ liệu âm thanh cho điều luật này.");
+            textEl.classList.remove('masked');
         }
     }
 
-    highlightSegment(id) {
+    _toggleRuleMask(headerSegmentEl, headerItem) {
+        const startIndex = parseInt(headerSegmentEl.dataset.index);
+        let action = 'mask'; 
+        
+        for (let i = startIndex + 1; i < this.items.length; i++) {
+            const nextItem = this.items[i];
+            if (nextItem.label.endsWith('-name') || nextItem.label.endsWith('-chapter') || nextItem.label === 'end') break;
+            
+            const nextEl = this.container.querySelector(`.segment[data-id="${nextItem.id}"]`);
+            if (nextEl) {
+                const nextTextEl = nextEl.querySelector('.segment-text');
+                if (nextTextEl) {
+                    action = nextTextEl.classList.contains('masked') ? 'unmask' : 'mask';
+                    break;
+                }
+            }
+        }
+
+        for (let i = startIndex + 1; i < this.items.length; i++) {
+            const nextItem = this.items[i];
+            if (nextItem.label.endsWith('-name') || nextItem.label.endsWith('-chapter') || nextItem.label === 'end') break;
+
+            const nextEl = this.container.querySelector(`.segment[data-id="${nextItem.id}"]`);
+            if (nextEl) {
+                const nextTextEl = nextEl.querySelector('.segment-text');
+                if (nextTextEl) {
+                    this._applyMaskAction(nextTextEl, action);
+                }
+            }
+        }
+    }
+
+    _handlePlayRule(startIndex) {
+        if (!this.playSequenceCallback) return;
+        const sequence = [];
+        for (let i = startIndex + 1; i < this.items.length; i++) {
+            const item = this.items[i];
+            if (item.label.endsWith('-name')) break; 
+            if (item.label.endsWith('-chapter')) break; 
+            if (item.label === 'end') break;
+            if (item.audio && item.audio !== 'skip') {
+                sequence.push({ id: item.id, audio: item.audio, text: item.segment });
+            }
+        }
+        if (sequence.length > 0) this.playSequenceCallback(sequence);
+        else alert("Không có dữ liệu âm thanh cho điều luật này.");
+    }
+
+    _handleKeyboardPlay() {
+        if (!this.hoveredSegmentId) return;
+        
+        const item = this.items.find(i => i.id === this.hoveredSegmentId);
+        if (!item) return;
+
+        if (item.label.endsWith('-name')) {
+            const index = this.items.indexOf(item);
+            this._handlePlayRule(index);
+        } else {
+            if (item.audio && item.audio !== 'skip' && this.playSegmentCallback) {
+                this.playSegmentCallback(item.id, item.audio, item.segment);
+            }
+        }
+    }
+
+    highlightSegment(id, shouldScroll = true) {
         if (!this.container) return;
         this.container.querySelectorAll('.segment').forEach(el => el.classList.remove('active'));
         const activeEl = this.container.querySelector(`.segment[data-id="${id}"]`);
         if (activeEl) {
             activeEl.classList.add('active');
-            activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (shouldScroll) {
+                activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         }
     }
 
     clearHighlight() {
         if (!this.container) return;
         this.container.querySelectorAll('.segment').forEach(el => el.classList.remove('active'));
+    }
+
+    getFirstVisibleSegmentId() {
+        if (!this.container) return null;
+        
+        const containerRect = this.container.getBoundingClientRect();
+        // Since container scrolls inside window (actually body scrolls, container is flex-1), 
+        // segments are in document flow.
+        // We want the first segment that is roughly in the viewport.
+        
+        const segments = this.container.querySelectorAll('.segment');
+        
+        // Optimization: Use binary search or assume order? 
+        // Linear scan is fine for ~1000 items on modern devices, but we can break early.
+        // Or checking `elementFromPoint`?
+        
+        // Let's use elementFromPoint at center or top of viewport
+        const x = window.innerWidth / 2;
+        const y = 100; // Offset for header + margin
+        
+        // Or simply loop segments.
+        const viewportTop = window.scrollY + 80; // Header height offset
+        
+        for (const segment of segments) {
+            const rect = segment.getBoundingClientRect();
+            // rect.top is relative to viewport
+            if (rect.top + rect.height > 80 && rect.top < window.innerHeight) {
+                // This segment is visible
+                // Check if it has audio? Or return ID and let loader decide.
+                // Usually we want the one *at the top*, even if partially scrolled out?
+                // The user says "segment có mặt trên màn hình hiện tại".
+                // If we are reading, we probably want the one near the top.
+                if (parseInt(segment.dataset.id)) {
+                    return parseInt(segment.dataset.id);
+                }
+            }
+        }
+        return null;
     }
 }
