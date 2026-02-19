@@ -15,5 +15,20 @@ dependencies = [
 [project.scripts]
 gioibon = "src.main:cli"
 
+
+[tool.pcode]
+
+clean_extensions = ["py", "sh", "zsh"]
+
+extensions = ["", "bash", "cfg", "cfg.py", "gitignore", "ini", "js", "json", "md", "py", "sh", "template", "toml", "ts", "txt", "xml", "yaml", "yml", "zsh", "css", "html", "htm"]
+
+format_extensions = ["py"]
+
+ignore = [".DS_Store", ".git", ".hg", ".pcode.toml", ".ruff_cache", ".svn", ".venv", "__pycache__", "venv", "/web/libs"]
+
+include = []
+
+output_dir = "~/Documents/code.context"
+
 [tool.setuptools]
 packages = ["src"]
