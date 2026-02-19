@@ -206,16 +206,17 @@ class ContentProcessor:
         # ==========================================
         label_totals = defaultdict(int)
         for item in self.raw_segments:
-            # Loại bỏ label có chữ "-name" khỏi bộ đếm tần suất
-            if item["segment"].strip() and not item["label"].startswith("note-") and not item["label"].endswith("-name"):
+            # [FIX] Loại bỏ các đoạn note và tất cả các thẻ Heading (bắt đầu bằng <h) khỏi thống kê số lượng
+            if item["segment"].strip() and not item["label"].startswith("note-") and not item["html"].startswith("<h"):
                 label_totals[item["label"]] += 1
-                
+            
         # Nạp tổng số lượng vào TTS Generator
         self.tts_generator.set_label_totals(label_totals)
         
         # Chạy vòng lặp để tạo Audio và xuất dữ liệu chuẩn
         for item in self.raw_segments:
-            audio_filename = self.tts_generator.process_segment(item["uid"], item["label"], item["segment"])
+            # [FIX] Truyền thêm trường item["html"] vào quá trình xử lý segment
+            audio_filename = self.tts_generator.process_segment(item["uid"], item["label"], item["segment"], item["html"])
             self.segments_output.append(SegmentData(
                 uid=item["uid"],
                 html=item["html"],

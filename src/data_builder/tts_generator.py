@@ -86,9 +86,10 @@ class TTSGenerator:
         except Exception as e:
             logger.error(f"❌ Lỗi thêm metadata vào {filepath}: {e}")
 
-    def process_segment(self, uid: int, label: str, segment_text: str) -> str:
+    def process_segment(self, uid: int, label: str, segment_text: str, html: str = "") -> str:
         """Xử lý đoạn văn, trả về tên file MP3 cuối cùng, hoặc 'skip' nếu được loại trừ."""
-        if not segment_text.strip() or label.startswith("note-") or label.endswith("-name") or label in ["title", "subtitle"]:
+        # [FIX] Thêm điều kiện html.startswith("<h") để bỏ qua tất cả các heading
+        if not segment_text.strip() or label.startswith("note-") or label.endswith("-name") or label in ["title", "subtitle"] or html.startswith("<h"):
             return "skip"
 
         # 1. Tạo bản Text sạch dành riêng cho việc sinh Audio (xóa (), [], *)
@@ -118,7 +119,6 @@ class TTSGenerator:
         else:
             title_base = f"{uid_padded}_{label}"
             
-        filename = f"{title_base}___str__{text_hash}.mp3" # Điều chỉnh nếu muốn, giữ định dạng cũ là __
         filename = f"{title_base}__{text_hash}.mp3"
         
         final_filepath = os.path.join(self.output_dir, filename)
