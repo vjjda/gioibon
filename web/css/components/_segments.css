@@ -1,3 +1,4 @@
+/* Path: web/css/components/_segments.css */
 /* Segment Styling */
 .segment {
     position: relative;
@@ -28,20 +29,18 @@
     margin-top: 5px; /* Align with ~1.7 line-height of body text */
 }
 
-/* [FIX] Alignment for headers and end sections */
-.chapter-header .segment-content-wrapper,
-.rule-header .segment-content-wrapper,
+/* [UPDATED] Alignment for ALL headers and end sections */
+.heading-segment .segment-content-wrapper,
 .end-segment .segment-content-wrapper {
-    align-items: center; 
+    align-items: center;
 }
 
-.chapter-header .play-btn,
-.rule-header .play-btn,
+.heading-segment .play-btn,
 .end-segment .play-btn {
     margin-top: 0; /* Reset top margin when centered */
 }
 
-/* [FIX] Move vertical spacing to segment container */
+/* Move vertical spacing to segment container */
 .chapter-header {
     margin-top: 4rem;
     margin-bottom: 2rem;
@@ -62,7 +61,7 @@
 
 .chapter-header .segment-text h2,
 .rule-header .segment-text h4 {
-    margin-bottom: 0 !important; 
+    margin-bottom: 0 !important;
 }
 
 /* Reset margins for end sections inside segments */
@@ -96,7 +95,6 @@
 
 /* Masked State (Hide Text) */
 .segment-text.masked {
-    /* Make text transparent so it takes color of whatever background is behind it */
     color: transparent !important;
     background-color: transparent !important;
     user-select: none;
@@ -110,3 +108,4 @@
     text-decoration-color: transparent !important;
     opacity: 0; 
 }
+

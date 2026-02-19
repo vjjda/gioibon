@@ -53,8 +53,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         (segmentId, audio, text) => { 
             ttsPlayer.playSegment(segmentId, audio, text);
         },
-        (sequence) => { 
-            ttsPlayer.playSequence(sequence);
+        (sequence, parentId) => { // [UPDATED] Lấy thêm parentId
+            ttsPlayer.playSequence(sequence, parentId);
         }
     );
 
@@ -63,21 +63,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Wire up TTS Events to UI ---
     ttsPlayer.onSegmentStart = (id, isSequence) => {
         contentRenderer.highlightSegment(id, isSequence);
-        // [NEW] Cập nhật Icon nút phát
-        contentRenderer.updatePlaybackState(ttsPlayer.isPlaying ? 'playing' : 'paused', id, isSequence);
+        // Cập nhật Icon nút phát
+        contentRenderer.updatePlaybackState(ttsPlayer.isPlaying ? 'playing' : 'paused', id, isSequence, ttsPlayer.sequenceParentId);
     };
 
     ttsPlayer.onPlaybackEnd = () => {
         contentRenderer.clearHighlight();
         controlBar.updateState('stopped');
-        // [NEW] Reset toàn bộ Icon nút phát
-        contentRenderer.updatePlaybackState('stopped', null, false);
+        // Reset toàn bộ Icon nút phát
+        contentRenderer.updatePlaybackState('stopped', null, false, null);
     };
 
     ttsPlayer.onPlaybackStateChange = (state) => {
         controlBar.updateState(state);
-        // [NEW] Cập nhật Icon nút phát khi pause/resume
-        contentRenderer.updatePlaybackState(state, ttsPlayer.currentSegmentId, ttsPlayer.isSequence);
+        // Cập nhật Icon nút phát khi pause/resume
+        contentRenderer.updatePlaybackState(state, ttsPlayer.currentSegmentId, ttsPlayer.isSequence, ttsPlayer.sequenceParentId);
     };
 
     // --- Load Content ---

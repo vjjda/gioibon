@@ -11,6 +11,9 @@ export class TTSPlayer {
         this.currentSegmentId = null;
         this.isSequence = false;
         
+        // [NEW] Ghi nhớ ID của Heading cha tạo ra chuỗi này
+        this.sequenceParentId = null; 
+        
         // Theo dõi trạng thái lặp và lưu trữ playlist ban đầu
         this.isLooping = false;
         this.currentPlaylist = [];
@@ -34,7 +37,6 @@ export class TTSPlayer {
     // --- Playback Control ---
 
     playSegment(segmentId, audio, text) {
-        // [FIX] Nếu ĐÚNG segment này đang được phát (dù phát đơn hay trong chuỗi), thì toggle pause
         if (String(this.currentSegmentId) === String(segmentId) && (this.isPlaying || this.isPaused)) {
             this.togglePause();
             return;
@@ -50,8 +52,8 @@ export class TTSPlayer {
         this._processQueue();
     }
 
-    playSequence(segments) {
-        // Nếu đang play/pause ĐÚNG chuỗi này, thì toggle pause thay vì restart
+    // [UPDATED] Nhận thêm tham số parentId
+    playSequence(segments, parentId = null) {
         if (this.isSequence && segments.length > 0 && this.currentPlaylist.length > 0 && 
             String(this.currentPlaylist[0].id) === String(segments[0].id) && (this.isPlaying || this.isPaused)) {
             this.togglePause();
@@ -60,6 +62,7 @@ export class TTSPlayer {
 
         this.stop();
         this.isSequence = true;
+        this.sequenceParentId = parentId; // Lưu trữ Parent
         this.audioQueue = [...segments];
         this.currentPlaylist = [...segments]; 
 
@@ -97,6 +100,7 @@ export class TTSPlayer {
     stop() {
         this.audioQueue = [];
         this.currentPlaylist = [];
+        this.sequenceParentId = null;
         if (this.currentAudio) {
             this.currentAudio.pause();
             this.currentAudio = null;

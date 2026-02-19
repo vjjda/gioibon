@@ -2,7 +2,7 @@
 
 export class SegmentFactory {
     constructor(callbacks) {
-        this.callbacks = callbacks; // { playSegment, playRule, onMaskStart, onMaskEnter }
+        this.callbacks = callbacks; // { playSegment, playSequence, onMaskStart, onMaskEnter, onHover }
     }
 
     create(item, index) {
@@ -10,9 +10,8 @@ export class SegmentFactory {
         segmentEl.className = 'segment';
         segmentEl.dataset.id = item.id;
         segmentEl.dataset.label = item.label;
-        segmentEl.dataset.index = index; 
-        
-        // Track hover for keyboard shortcut
+        segmentEl.dataset.index = index;
+
         segmentEl.addEventListener('mouseenter', () => {
             if (this.callbacks.onHover) this.callbacks.onHover(item.id);
         });
@@ -41,6 +40,11 @@ export class SegmentFactory {
             el.classList.add('main-title');
         }
 
+        // [NEW] Gắn cờ heading cho mọi thẻ Hx
+        if (item.html && item.html.match(/^<h[1-6]/i)) {
+            el.classList.add('heading-segment');
+        }
+
         if (item.html && item.html.match(/class=['"](endsection|endvagga|endsutta|sadhu|namo)['"]/)) {
             el.classList.add('end-segment');
         }
@@ -60,17 +64,17 @@ export class SegmentFactory {
             wrapper.appendChild(playBtn);
         }
 
-        // Play Rule Button
-        if (item.label.endsWith('-name')) {
-            const playRuleBtn = document.createElement('button');
-            playRuleBtn.className = 'play-btn icon-btn play-rule-btn';
-            playRuleBtn.innerHTML = '<i class="fas fa-play-circle"></i>';
-            playRuleBtn.title = "Nghe toàn bộ điều này";
-            playRuleBtn.onclick = (e) => {
+        // [UPDATED] Play Sequence Button (Render cho tất cả các Heading)
+        if (item.html && item.html.match(/^<h[1-6]/i)) {
+            const playSeqBtn = document.createElement('button');
+            playSeqBtn.className = 'play-btn icon-btn play-sequence-btn';
+            playSeqBtn.innerHTML = '<i class="fas fa-play-circle"></i>';
+            playSeqBtn.title = "Nghe toàn bộ phần này";
+            playSeqBtn.onclick = (e) => {
                 e.stopPropagation();
-                if (this.callbacks.playRule) this.callbacks.playRule(index);
+                if (this.callbacks.playSequence) this.callbacks.playSequence(index);
             };
-            wrapper.appendChild(playRuleBtn);
+            wrapper.appendChild(playSeqBtn);
         }
     }
 
@@ -92,7 +96,6 @@ export class SegmentFactory {
             toggleArea.className = 'segment-mask-toggle';
             toggleArea.title = "Nhấp để che/hiện text";
             
-            // Delegate events to callbacks (MaskManager)
             if (this.callbacks.onMaskStart) {
                 toggleArea.addEventListener('mousedown', (e) => this.callbacks.onMaskStart(e, segmentEl, item));
                 toggleArea.addEventListener('touchstart', (e) => this.callbacks.onMaskStart(e, segmentEl, item), { passive: false });
@@ -106,3 +109,4 @@ export class SegmentFactory {
         }
     }
 }
+

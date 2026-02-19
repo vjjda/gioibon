@@ -71,27 +71,27 @@
     color: var(--accent-color);
 }
 
-/* Rule Play Button distinct style */
-.play-rule-btn {
+/* [UPDATED] Sequence/Heading Play Button distinct style */
+.play-sequence-btn {
     color: var(--primary-color);
     opacity: 0.5;
     font-size: 1rem;
     margin-left: -4px;
 }
 
-.play-rule-btn:hover {
+.play-sequence-btn:hover {
     opacity: 1;
     transform: scale(1.1);
 }
 
-/* [NEW] Trạng thái nút Play đang chạy */
+/* Trạng thái nút Play đang chạy */
 .play-btn.active-play {
     font-size: 0.9rem; /* Phóng to nút pause/play thay vì dấu chấm */
     opacity: 1;
     color: var(--accent-color);
 }
 
-.play-rule-btn.active-play {
+.play-sequence-btn.active-play {
     font-size: 1.1rem;
 }
 
