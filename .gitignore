@@ -18,6 +18,7 @@ __pycache__/
 # Generated output
 output/
 /web/data/
+!/web/data/phonetics.json
 
 # Build artifacts
 build/
