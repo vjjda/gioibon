@@ -7,18 +7,21 @@ from src.config.constants import RULE_24_IDENTIFIER, RULE_PATTERN_REGEX
 from src.data_builder.models import SegmentData
 from src.data_builder.labeler import ContentLabeler
 from src.data_builder.tts_generator import TTSGenerator
+from src.data_builder.rule_mapper import RuleMapper
 
 logger = logging.getLogger(__name__)
 
 __all__ = ["ContentProcessor"]
 
 class ContentProcessor:
-    def __init__(self, tts_generator: TTSGenerator):
+    def __init__(self, tts_generator: TTSGenerator, rule_mapper: RuleMapper):
         self.labeler = ContentLabeler()
         self.tts_generator = tts_generator
+        self.rule_mapper = rule_mapper
         self.uid_counter = 1
         self.raw_segments: List[Dict[str, Any]] = []
         self.segments_output: List[SegmentData] = []
+        self.last_rule_label = ""
 
     def clean_text(self, text: str) -> str:
         # Xóa chú thích dạng footnote [^1], [^2]
@@ -38,7 +41,6 @@ class ContentProcessor:
     def segment_sentence(self, sentence: str) -> List[str]:
         """Tách câu dựa trên dấu nháy đơn, giữ lại dấu câu liền kề nháy đóng."""
         s = re.sub(r"(\s|^)'", r"\1<SPLIT>'", sentence)
-        # Bắt dấu nháy đóng kèm theo dấu câu (nếu có) và theo sau là khoảng trắng hoặc hết chuỗi
         s = re.sub(r"'([.,;:]*)(?=\s|$)", r"'\1<SPLIT>", s)
         parts = s.split("<SPLIT>")
         return [p.strip() for p in parts if p.strip()]
@@ -57,6 +59,7 @@ class ContentProcessor:
         self.segments_output = []
         self.raw_segments = []
         self.uid_counter = 1
+        self.last_rule_label = ""
         
         # Loại bỏ metadata đầu file (YAML frontmatter)
         content = re.sub(r'^---.*?---', '', raw_md, flags=re.DOTALL)
@@ -115,6 +118,13 @@ class ContentProcessor:
                 rule_no = match.group(1)
                 text_to_process = match.group(2)
                 label = self.labeler.get_label(is_rule=True, rule_no=rule_no)
+                
+                # BỔ SUNG SEGMENT TITLE CHO RULE (Dựa vào RuleMapper)
+                if label != self.last_rule_label:
+                    self.last_rule_label = label
+                    rule_name = self.rule_mapper.get_rule_name(label)
+                    if rule_name:
+                        self._add_segment(html="<h3>{}</h3>", label=f"{label}-name", segment=rule_name)
             else:
                 text_to_process = para
                 label = self.labeler.get_label()
@@ -167,7 +177,8 @@ class ContentProcessor:
         # ==========================================
         label_totals = defaultdict(int)
         for item in self.raw_segments:
-            if item["segment"].strip() and not item["label"].startswith("note-"):
+            # Loại bỏ label có chữ "-name" khỏi bộ đếm tần suất
+            if item["segment"].strip() and not item["label"].startswith("note-") and not item["label"].endswith("-name"):
                 label_totals[item["label"]] += 1
                 
         # Nạp tổng số lượng vào TTS Generator

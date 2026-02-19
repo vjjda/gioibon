@@ -84,9 +84,10 @@ class TTSGenerator:
             logger.error(f"❌ Lỗi thêm metadata vào {filepath}: {e}")
 
     def process_segment(self, uid: int, label: str, segment_text: str) -> str:
-        """Xử lý đoạn văn, trả về tên file MP3 cuối cùng."""
-        if not segment_text.strip() or label.startswith("note-"):
-            return ""
+        """Xử lý đoạn văn, trả về tên file MP3 cuối cùng, hoặc 'skip' nếu được loại trừ."""
+        # Trả về 'skip' cho các segment trống, ghi chú, hoặc tiêu đề tiếng Pali
+        if not segment_text.strip() or label.startswith("note-") or label.endswith("-name"):
+            return "skip"
 
         # Tăng biến đếm hiện tại cho label này
         self.label_counts[label] += 1
