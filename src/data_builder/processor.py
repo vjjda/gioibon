@@ -36,9 +36,10 @@ class ContentProcessor:
         return [s.strip() for s in sentences if s.strip()]
 
     def segment_sentence(self, sentence: str) -> List[str]:
-        """Tách câu dựa trên dấu nháy đơn giống với logic cũ."""
+        """Tách câu dựa trên dấu nháy đơn, giữ lại dấu câu liền kề nháy đóng."""
         s = re.sub(r"(\s|^)'", r"\1<SPLIT>'", sentence)
-        s = re.sub(r"'(?=[\s.,;:]|$)", r"'<SPLIT>", s)
+        # Bắt dấu nháy đóng kèm theo dấu câu (nếu có) và theo sau là khoảng trắng hoặc hết chuỗi
+        s = re.sub(r"'([.,;:]*)(?=\s|$)", r"'\1<SPLIT>", s)
         parts = s.split("<SPLIT>")
         return [p.strip() for p in parts if p.strip()]
 
