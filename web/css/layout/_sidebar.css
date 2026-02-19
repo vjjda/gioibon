@@ -104,7 +104,7 @@
 .toc-rule-list {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 4px; /* Tighter gap */
+    gap: 6px; 
     padding: 0.5rem 0.5rem 1rem 1.5rem;
     list-style: none;
     align-content: start;
@@ -116,8 +116,11 @@
 }
 
 .toc-rule-item .toc-link {
-    text-align: center;
-    padding: 4px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 0; /* Bỏ padding cũ vì đã căn giữa bằng Flex */
     background-color: transparent;
     border: 1px solid var(--border-color);
     font-size: 0.8rem;
@@ -127,7 +130,7 @@
     white-space: nowrap; 
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 1.2; /* Tighter line height for numbers */
+    line-height: 1;
 }
 
 .toc-rule-item .toc-link:hover {

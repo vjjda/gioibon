@@ -15,11 +15,10 @@ export class TocRenderer {
         mainList.className = 'toc-main-list';
         this.container.appendChild(mainList);
 
-        let currentSectionLi = null; // Keeps track of H2 or H3
+        let currentSectionLi = null;
         let currentRuleList = null;
 
         items.forEach(item => {
-            // Identify Header Level from HTML
             const match = item.html.match(/^<h(\d)>(.*?)<\/h\d>/i);
             const isRule = item.label.endsWith('-name');
             
@@ -27,29 +26,27 @@ export class TocRenderer {
                 let level = match ? parseInt(match[1]) : 4;
                 let text = item.segment.replace(/<[^>]*>?/gm, '').trim();
 
-                // Special case: "Giới bổn Tỳ kheo" is H1
+                // Sửa lỗi: Bỏ qua các heading rỗng để không làm đứt gãy Grid
+                if (!text && !isRule) return;
+
                 if (level === 1) {
-                     const li = this._createTocItem(item, 'Giới Bổn', 'level-title');
-                     mainList.appendChild(li);
-                     currentSectionLi = null;
-                     currentRuleList = null;
+                    const li = this._createTocItem(item, 'Giới Bổn', 'level-title');
+                    mainList.appendChild(li);
+                    currentSectionLi = null;
+                    currentRuleList = null;
                 }
-                // H2: Main Section (e.g. Nidana, Parajika)
                 else if (level === 2) {
                     const li = this._createTocItem(item, text, 'level-h2');
                     mainList.appendChild(li);
                     currentSectionLi = li;
-                    currentRuleList = null; // Reset rules for new main section
+                    currentRuleList = null;
                 }
-                // H3: Sub-section (e.g. Preparation)
                 else if (level === 3) {
                     const li = this._createTocItem(item, text, 'level-h3');
                     mainList.appendChild(li);
-                    // H3 can also contain rules (though rare), set context just in case
                     currentSectionLi = li;
                     currentRuleList = null;
                 }
-                // H4: Rule (e.g. Pj1)
                 else if (level === 4 || isRule) {
                     if (currentSectionLi) {
                         if (!currentRuleList) {
@@ -58,23 +55,18 @@ export class TocRenderer {
                             currentSectionLi.appendChild(currentRuleList);
                         }
 
-                        // Grid Display: Extract number only
                         let shortLabel = text;
-                        
-                        // Priority 1: Extract from label (e.g. pj1-name -> 1) - Most reliable
                         const labelMatch = item.label.match(/([a-z]+)(\d+)-name/i);
                         
                         if (labelMatch) {
                             shortLabel = labelMatch[2];
                         } else {
-                            // Priority 2: Extract from text (e.g. "1. Rule" or "Rule 1")
                             const digitMatch = text.match(/^(\d+)\./) || text.match(/^(\d+)$/) || text.match(/(\d+)$/);
                             if (digitMatch) {
                                 shortLabel = digitMatch[1];
                             }
                         }
                         
-                        // If still too long (>3 chars), truncate or use initial?
                         if (shortLabel.length > 3) shortLabel = shortLabel.substring(0, 3);
 
                         const li = document.createElement('li');
@@ -84,7 +76,8 @@ export class TocRenderer {
                         link.className = 'toc-link rule-link';
                         link.href = `#segment-${item.id}`; 
                         link.textContent = shortLabel;
-                        link.title = text; // Tooltip shows full text
+                        link.title = text;
+                        
                         link.onclick = (e) => this._handleLinkClick(e, item.id, link);
                         
                         li.appendChild(link);
@@ -93,7 +86,7 @@ export class TocRenderer {
                 }
             }
         });
-
+        
         this._setupToggle();
     }
 
@@ -118,11 +111,10 @@ export class TocRenderer {
     }
 
     _scrollTo(id) {
-        // ContentRenderer sets dataset.id on .segment
         const target = document.querySelector(`.segment[data-id="${id}"]`);
         if (target) {
             target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            window.scrollBy(0, -70); // Sticky header offset
+            window.scrollBy(0, -70); 
             if (window.innerWidth <= 1024 && this.sidebar) {
                 this.sidebar.classList.remove('visible');
             }
@@ -146,7 +138,7 @@ export class TocRenderer {
         this.toggle.addEventListener('click', () => {
             this.sidebar.classList.toggle('visible');
         });
-
+        
         document.addEventListener('click', (e) => {
             if (window.innerWidth <= 1024 && this.sidebar) {
                 if (!this.sidebar.contains(e.target) && !this.toggle.contains(e.target) && this.sidebar.classList.contains('visible')) {
