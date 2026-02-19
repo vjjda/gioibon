@@ -12,6 +12,11 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    outline: none; /* [FIX] Xóa viền mặc định */
+}
+
+.btn:focus {
+    outline: none; /* [FIX] Xóa viền khi gõ phím */
 }
 
 .btn.primary {
@@ -45,12 +50,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    outline: none; /* [FIX] */
+}
+
+.icon-btn:focus {
+    outline: none; /* [FIX] */
 }
 
 .play-btn {
-    font-size: 0.4rem; /* Very small dot */
+    font-size: 0.4rem;
+    /* Very small dot */
     opacity: 0.3; /* Low profile */
-    width: 20px; 
+    width: 20px;
     height: 20px;
     flex-shrink: 0;
 }
@@ -65,10 +76,12 @@
 .play-rule-btn {
     color: var(--primary-color);
     opacity: 0.5;
-    font-size: 1rem; /* Keep rule play larger */
+    font-size: 1rem;
+    /* Keep rule play larger */
     margin-left: -4px;
 }
 .play-rule-btn:hover {
     opacity: 1;
     transform: scale(1.1);
 }
+

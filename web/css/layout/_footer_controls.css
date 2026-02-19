@@ -35,6 +35,11 @@
     justify-content: center;
     font-size: 1.1rem; /* Icon size */
     transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    outline: none; /* [FIX] */
+}
+
+.global-controls .btn:focus {
+    outline: none; /* [FIX] */
 }
 
 /* Override existing btn styles if needed or rely on specificity */
@@ -85,6 +90,11 @@
     background: transparent;
     border: none;
     cursor: pointer;
+    outline: none; /* [FIX] */
+}
+
+.control-btn:focus {
+    outline: none; /* [FIX] */
 }
 
 .control-btn:hover {
@@ -93,7 +103,7 @@
     transform: rotate(15deg);
 }
 
-/* [NEW] Trạng thái được chọn (Active) cho Control Button */
+/* Trạng thái được chọn (Active) cho Control Button */
 .control-btn.active {
     color: var(--primary-color);
     background-color: rgba(139, 69, 19, 0.1);
@@ -116,6 +126,7 @@
     text-align: center;
     transition: color 0.2s;
     min-width: 50px;
+    outline: none;
 }
 
 .control-select:hover {
