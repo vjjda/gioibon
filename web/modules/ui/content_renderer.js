@@ -6,14 +6,14 @@ export class ContentRenderer {
     constructor(containerId, playSegmentCallback, playSequenceCallback) {
         this.container = document.getElementById(containerId);
         this.playSegmentCallback = playSegmentCallback;
-        this.playSequenceCallback = playSequenceCallback; // Callback này giờ sẽ nhận (sequence, parentId)
+        this.playSequenceCallback = playSequenceCallback;
         this.items = [];
         this.hoveredSegmentId = null;
 
         this.maskManager = new MaskManager(this.container);
         this.segmentFactory = new SegmentFactory({
             playSegment: this.playSegmentCallback,
-            playSequence: (index) => this._handlePlaySequence(index), // [UPDATED]
+            playSequence: (index) => this._handlePlaySequence(index),
             onMaskStart: (e, el, item) => this.maskManager.handleMaskStart(e, el, item),
             onMaskEnter: (e, el) => this.maskManager.handleMaskEnter(e, el),
             onHover: (id) => { this.hoveredSegmentId = id; }
@@ -82,13 +82,12 @@ export class ContentRenderer {
         });
     }
 
-    // [UPDATED] Hàm lấy toàn bộ sequence phụ thuộc vào cấp độ Heading (H1, H2, H3, H4)
     _handlePlaySequence(startIndex) {
         if (!this.playSequenceCallback) return;
         
         const startItem = this.items[startIndex];
         const match = startItem.html ? startItem.html.match(/^<h(\d)>/i) : null;
-        if (!match) return; // Không phải là thẻ heading
+        if (!match) return; 
         const startLevel = parseInt(match[1]);
 
         const sequence = [];
@@ -96,14 +95,11 @@ export class ContentRenderer {
         for (let i = startIndex + 1; i < this.items.length; i++) {
             const item = this.items[i];
             
-            // Luôn dừng nếu gặp thẻ End
             if (item.label === 'end') break; 
 
-            // Kiểm tra cấp độ của Heading tiếp theo
             const itemMatch = item.html ? item.html.match(/^<h(\d)>/i) : null;
             if (itemMatch) {
                 const itemLevel = parseInt(itemMatch[1]);
-                // Dừng lại nếu gặp Heading có cấp bậc ngang bằng hoặc to hơn (số nhỏ hơn = cấp cao hơn)
                 if (itemLevel <= startLevel) {
                     break;
                 }
@@ -126,7 +122,6 @@ export class ContentRenderer {
         const item = this.items.find(i => i.id === this.hoveredSegmentId);
         if (!item) return;
 
-        // Nếu là thẻ Heading bất kỳ, thì chơi cả đoạn dưới nó
         if (item.html && item.html.match(/^<h[1-6]/i)) {
             const index = this.items.indexOf(item);
             this._handlePlaySequence(index);
@@ -145,8 +140,10 @@ export class ContentRenderer {
         const segmentEl = this.container.querySelector(`.segment[data-id="${this.hoveredSegmentId}"]`);
         if (segmentEl) {
             const hasAudio = item.audio && item.audio !== 'skip';
-            const isRuleHeader = item.label.endsWith('-name');
-            if (hasAudio || isRuleHeader) {
+            // [UPDATED] Hỗ trợ lật thẻ bằng phím 'f' cho cả Heading
+            const isHeading = item.html && item.html.match(/^<h[1-6]/i) && item.label !== 'title' && item.label !== 'subtitle';
+            
+            if (hasAudio || isHeading) {
                 this.maskManager.toggleMask(segmentEl, item);
             }
         }
@@ -169,16 +166,13 @@ export class ContentRenderer {
         this.container.querySelectorAll('.segment').forEach(el => el.classList.remove('active'));
     }
 
-    // [UPDATED] Hỗ trợ thay đổi Icon cho thẻ Heading làm cha
     updatePlaybackState(state, activeSegmentId, isSequence, sequenceParentId) {
-        // Reset tất cả các nút play segment
         this.container.querySelectorAll('.play-btn:not(.play-sequence-btn)').forEach(btn => {
             btn.classList.remove('active-play');
             btn.innerHTML = '<i class="fas fa-circle"></i>';
             btn.title = "Nghe đoạn này";
         });
         
-        // Reset tất cả các nút play sequence
         this.container.querySelectorAll('.play-sequence-btn').forEach(btn => {
             btn.classList.remove('active-play');
             btn.innerHTML = '<i class="fas fa-play-circle"></i>';
@@ -197,7 +191,6 @@ export class ContentRenderer {
             segmentBtn.title = state === 'playing' ? "Tạm dừng" : "Tiếp tục";
         }
 
-        // Cập nhật icon cho nút của thẻ Heading cha đang làm chủ sequence
         if (isSequence && sequenceParentId) {
             const parentEl = this.container.querySelector(`.segment[data-id="${sequenceParentId}"]`);
             if (parentEl) {

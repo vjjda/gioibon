@@ -40,7 +40,6 @@ export class SegmentFactory {
             el.classList.add('main-title');
         }
 
-        // Gắn cờ heading cho mọi thẻ Hx
         if (item.html && item.html.match(/^<h[1-6]/i)) {
             el.classList.add('heading-segment');
         }
@@ -51,7 +50,6 @@ export class SegmentFactory {
     }
 
     _addPlayButtons(wrapper, item, index) {
-        // Play Segment Button
         if (item.audio && item.audio !== 'skip') {
             const playBtn = document.createElement('button');
             playBtn.className = 'play-btn icon-btn';
@@ -64,7 +62,6 @@ export class SegmentFactory {
             wrapper.appendChild(playBtn);
         }
 
-        // [FIX] Play Sequence Button (Render cho tất cả các Heading nhưng bỏ qua Title và Subtitle)
         if (item.html && item.html.match(/^<h[1-6]/i) && item.label !== 'title' && item.label !== 'subtitle') {
             const playSeqBtn = document.createElement('button');
             playSeqBtn.className = 'play-btn icon-btn play-sequence-btn';
@@ -88,10 +85,11 @@ export class SegmentFactory {
     }
 
     _addMaskToggle(segmentEl, item) {
-        const isRuleHeader = item.label.endsWith('-name');
+        // [UPDATED] Thay isRuleHeader bằng isHeading (bỏ qua title/subtitle)
+        const isHeading = item.html && item.html.match(/^<h[1-6]/i) && item.label !== 'title' && item.label !== 'subtitle';
         const hasAudio = item.audio && item.audio !== 'skip';
 
-        if (hasAudio || isRuleHeader) {
+        if (hasAudio || isHeading) {
             const toggleArea = document.createElement('div');
             toggleArea.className = 'segment-mask-toggle';
             toggleArea.title = "Nhấp để che/hiện text";
@@ -109,3 +107,4 @@ export class SegmentFactory {
         }
     }
 }
+

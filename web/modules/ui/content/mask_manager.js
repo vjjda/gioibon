@@ -23,13 +23,18 @@ export class MaskManager {
         document.addEventListener('touchend', endDrag);
     }
 
-    // [NEW] Phương thức xử lý ẩn/hiện tách biệt, sử dụng cho Keyboard Shortcut
+    // Helper kiểm tra xem có phải là thẻ heading (ngoại trừ title/subtitle)
+    _isHeading(item) {
+        return item.html && item.html.match(/^<h[1-6]/i) && item.label !== 'title' && item.label !== 'subtitle';
+    }
+
     toggleMask(segmentEl, item) {
         const textEl = segmentEl.querySelector('.segment-text');
         if (!textEl) return;
 
-        if (item.label.endsWith('-name')) {
-            this._toggleRuleMask(segmentEl, item);
+        // [UPDATED] Thay vì chỉ check rule-name, giờ check mọi Heading
+        if (this._isHeading(item)) {
+            this._toggleHeadingMask(segmentEl, item);
             return;
         }
 
@@ -42,13 +47,12 @@ export class MaskManager {
         this.isDraggingMask = true;
         const textEl = segmentEl.querySelector('.segment-text');
         
-        // Special logic for Rule Header: Toggle ALL segments in the rule
-        if (item.label.endsWith('-name')) {
-            this._toggleRuleMask(segmentEl, item);
+        // [UPDATED] Toggle cho toàn bộ các thẻ thuộc Heading
+        if (this._isHeading(item)) {
+            this._toggleHeadingMask(segmentEl, item);
             return;
         }
 
-        // Normal toggle
         const isMasked = textEl.classList.contains('masked');
         this.dragMaskAction = isMasked ? 'unmask' : 'mask'; 
         
@@ -57,8 +61,11 @@ export class MaskManager {
 
     handleMaskEnter(e, segmentEl) {
         if (!this.isDraggingMask || !this.dragMaskAction) return;
-        // Prevent masking rule headers during drag
-        if (segmentEl.classList.contains('rule-header')) return;
+        // Bỏ qua không mask các thẻ heading khi đang kéo chuột
+        const itemId = segmentEl.dataset.id;
+        const item = this.items.find(i => String(i.id) === String(itemId));
+        if (item && this._isHeading(item)) return;
+
         const textEl = segmentEl.querySelector('.segment-text');
         this._applyMaskAction(textEl, this.dragMaskAction);
     }
@@ -71,14 +78,26 @@ export class MaskManager {
         }
     }
 
-    _toggleRuleMask(headerSegmentEl, headerItem) {
+    // [NEW] Logic mới bao quát tất cả các cấp độ Heading
+    _toggleHeadingMask(headerSegmentEl, headerItem) {
         const startIndex = parseInt(headerSegmentEl.dataset.index);
+        const match = headerItem.html.match(/^<h(\d)>/i);
+        if (!match) return;
+        const startLevel = parseInt(match[1]);
+
         let action = 'mask'; 
         
-        // Determine action based on first content segment
+        // Bước 1: Quyết định action dựa trên segment con ĐẦU TIÊN hợp lệ (không phải heading)
         for (let i = startIndex + 1; i < this.items.length; i++) {
             const nextItem = this.items[i];
-            if (this._isStopCondition(nextItem)) break;
+            if (nextItem.label === 'end') break;
+            
+            const itemMatch = nextItem.html ? nextItem.html.match(/^<h(\d)>/i) : null;
+            if (itemMatch) {
+                const itemLevel = parseInt(itemMatch[1]);
+                if (itemLevel <= startLevel) break; // Thoát nếu gặp Heading cấp cao hơn hoặc bằng
+                continue; // Bỏ qua sub-heading, tiếp tục tìm nội dung
+            }
             
             const nextEl = this._findElement(nextItem.id);
             if (nextEl) {
@@ -90,10 +109,17 @@ export class MaskManager {
             }
         }
 
-        // Apply action
+        // Bước 2: Thực thi action lên toàn bộ content con
         for (let i = startIndex + 1; i < this.items.length; i++) {
             const nextItem = this.items[i];
-            if (this._isStopCondition(nextItem)) break;
+            if (nextItem.label === 'end') break;
+
+            const itemMatch = nextItem.html ? nextItem.html.match(/^<h(\d)>/i) : null;
+            if (itemMatch) {
+                const itemLevel = parseInt(itemMatch[1]);
+                if (itemLevel <= startLevel) break; // Thoát nếu ra khỏi phạm vi
+                continue; // [QUAN TRỌNG] Ngoại trừ các segment heading
+            }
 
             const nextEl = this._findElement(nextItem.id);
             if (nextEl) {
@@ -105,11 +131,8 @@ export class MaskManager {
         }
     }
 
-    _isStopCondition(item) {
-        return item.label.endsWith('-name') || item.label.endsWith('-chapter') || item.label === 'end';
-    }
-
     _findElement(id) {
         return this.container.querySelector(`.segment[data-id="${id}"]`);
     }
 }
+
