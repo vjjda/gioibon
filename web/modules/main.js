@@ -41,6 +41,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         },
         (newRate) => { // Speed Change
             ttsPlayer.setRate(newRate);
+        },
+        (isLooping) => { // [NEW] Loop Change
+            ttsPlayer.isLooping = isLooping;
         }
     );
     
@@ -85,3 +88,4 @@ document.addEventListener('DOMContentLoaded', async () => {
             `<div class="error">Không thể tải dữ liệu. Vui lòng thử lại sau.<br><small>${error.message}</small></div>`;
     }
 });
+

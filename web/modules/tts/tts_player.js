@@ -9,7 +9,11 @@ export class TTSPlayer {
         this.isPaused = false;
         this.currentAudio = null;
         this.currentSegmentId = null;
-        this.isSequence = false; // Track if playing a sequence
+        this.isSequence = false;
+        
+        // [NEW] Theo dõi trạng thái lặp và lưu trữ playlist ban đầu
+        this.isLooping = false;
+        this.currentPlaylist = [];
 
         // Events
         this.onSegmentStart = null;
@@ -32,7 +36,11 @@ export class TTSPlayer {
     playSegment(segmentId, audio, text) {
         this.stop();
         this.isSequence = false;
-        this.audioQueue = [{ id: segmentId, audio: audio, text: text }];
+        
+        const item = { id: segmentId, audio: audio, text: text };
+        this.audioQueue = [item];
+        this.currentPlaylist = [item]; // Lưu trữ để loop
+
         this._processQueue();
     }
 
@@ -41,6 +49,8 @@ export class TTSPlayer {
         this.isSequence = true;
         // segments is array of { id, audio, text }
         this.audioQueue = [...segments];
+        this.currentPlaylist = [...segments]; // Lưu trữ để loop
+
         this._processQueue();
     }
 
@@ -74,6 +84,7 @@ export class TTSPlayer {
 
     stop() {
         this.audioQueue = [];
+        this.currentPlaylist = []; // Xóa playlist khi user chủ động stop
         if (this.currentAudio) {
             this.currentAudio.pause();
             this.currentAudio = null;
@@ -82,6 +93,7 @@ export class TTSPlayer {
         this.isPaused = false;
         this.currentSegmentId = null;
         this.isSequence = false;
+
         if (this.onPlaybackEnd) this.onPlaybackEnd();
         if (this.onPlaybackStateChange) this.onPlaybackStateChange('stopped');
     }
@@ -98,8 +110,13 @@ export class TTSPlayer {
 
     async _processQueue() {
         if (this.audioQueue.length === 0) {
-            this.stop();
-            return;
+            // [NEW] Logic Loop tự động khi hết bài
+            if (this.isLooping && this.currentPlaylist.length > 0) {
+                this.audioQueue = [...this.currentPlaylist];
+            } else {
+                this.stop();
+                return;
+            }
         }
 
         if (this.isPaused) return;
@@ -114,7 +131,7 @@ export class TTSPlayer {
 
         try {
             let audioSrc = null;
-            
+
             // Priority: Pre-generated Audio File > Text-to-Speech
             if (item.audio && item.audio !== 'skip') {
                 audioSrc = `data/audio/${item.audio}`;
@@ -167,3 +184,4 @@ export class TTSPlayer {
         }
     }
 }
+

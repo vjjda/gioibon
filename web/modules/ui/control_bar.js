@@ -1,16 +1,18 @@
 // Path: web/modules/ui/control_bar.js
 
 export class ControlBar {
-    constructor(playCallback, pauseCallback, stopCallback, speedChangeCallback) {
+    constructor(playCallback, pauseCallback, stopCallback, speedChangeCallback, loopToggleCallback) {
         this.playBtn = document.getElementById('play-all-btn');
         this.pauseBtn = document.getElementById('pause-btn');
         this.stopBtn = document.getElementById('stop-btn');
         this.speedSelect = document.getElementById('speed-select');
+        this.loopBtn = document.getElementById('loop-btn');
         
         this.playCallback = playCallback;
         this.pauseCallback = pauseCallback;
         this.stopCallback = stopCallback;
         this.speedChangeCallback = speedChangeCallback;
+        this.loopToggleCallback = loopToggleCallback;
 
         this._setupListeners();
     }
@@ -37,6 +39,14 @@ export class ControlBar {
                 if (this.speedChangeCallback) this.speedChangeCallback(newRate);
             });
         }
+        // [NEW] Xử lý sự kiện nút Loop
+        if (this.loopBtn) {
+            this.loopBtn.addEventListener('click', () => {
+                this.loopBtn.classList.toggle('active');
+                const isLooping = this.loopBtn.classList.contains('active');
+                if (this.loopToggleCallback) this.loopToggleCallback(isLooping);
+            });
+        }
     }
 
     // Initialize speed select with current rate
@@ -48,7 +58,6 @@ export class ControlBar {
 
     updateState(state) {
         if (!this.playBtn || !this.pauseBtn || !this.stopBtn) return;
-
         // state: 'playing', 'paused', 'stopped'
         if (state === 'playing') {
             this.playBtn.disabled = true;
@@ -59,7 +68,7 @@ export class ControlBar {
             this.pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
             this.pauseBtn.title = "Tạm dừng";
         } else if (state === 'paused') {
-            this.playBtn.disabled = false; 
+            this.playBtn.disabled = false;
             this.pauseBtn.disabled = false;
             this.stopBtn.disabled = false;
             
@@ -75,3 +84,4 @@ export class ControlBar {
         }
     }
 }
+

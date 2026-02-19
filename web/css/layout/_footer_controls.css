@@ -1,3 +1,4 @@
+/* Path: web/css/layout/_footer_controls.css */
 /* Footer Controls */
 .global-controls {
     position: fixed;
@@ -26,7 +27,8 @@
 .global-controls .btn {
     width: 44px; 
     height: 44px;
-    padding: 0; /* Remove text padding */
+    padding: 0;
+    /* Remove text padding */
     border-radius: 50%; /* Circle */
     display: flex;
     align-items: center;
@@ -68,7 +70,7 @@
     color: var(--text-muted);
 }
 
-/* Settings Button (uses .control-btn class in HTML) */
+/* Settings & Loop Button (uses .control-btn class in HTML) */
 .control-btn {
     width: 44px; 
     height: 44px;
@@ -84,10 +86,19 @@
     border: none;
     cursor: pointer;
 }
+
 .control-btn:hover {
     background-color: rgba(0,0,0,0.06);
     color: var(--text-main);
     transform: rotate(15deg);
+}
+
+/* [NEW] Trạng thái được chọn (Active) cho Control Button */
+.control-btn.active {
+    color: var(--primary-color);
+    background-color: rgba(139, 69, 19, 0.1);
+    opacity: 1;
+    transform: scale(1.05);
 }
 
 /* Speed Select Styling */
@@ -120,3 +131,4 @@
     padding: 4px;
     font-weight: normal;
 }
+
