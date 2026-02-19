@@ -1,3 +1,4 @@
+// Path: web/modules/services/sqlite_connection.js
 import { initSQLite, withExistDB } from 'libs/wa-sqlite-index.js';
 import { useIdbStorage } from 'libs/wa-sqlite-idb.js';
 

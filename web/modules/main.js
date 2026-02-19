@@ -1,3 +1,4 @@
+// Path: web/modules/main.js
 import { TTSPlayer } from 'tts/tts_player.js';
 import { ContentLoader } from 'data/content_loader.js';
 import { TocRenderer } from 'ui/toc_renderer.js';

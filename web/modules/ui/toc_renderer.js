@@ -1,3 +1,4 @@
+// Path: web/modules/ui/toc_renderer.js
 export class TocRenderer {
     constructor(containerId, sidebarId, sidebarToggleId) {
         this.container = document.getElementById(containerId);
