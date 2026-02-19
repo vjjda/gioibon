@@ -17,20 +17,26 @@ class ContentProcessor:
         self.segments_output: List[SegmentData] = []
 
     def clean_text(self, text: str) -> str:
-        # Xóa chú thích dạng footnote [^1], [^2] (nếu có)
+        # Xóa chú thích dạng footnote [^1], [^2]
         cleaned = re.sub(r'\[\^.*?\]', '', text)
-        
-        # Đã lược bỏ lệnh re.sub(r'\[.*?\]', '', cleaned) để không xóa nhầm chữ trong ngoặc vuông
-        
         cleaned = cleaned.replace(r'\.', '.')
         return cleaned.strip()
 
     def split_sentences(self, text: str) -> List[str]:
+        if not text:
+            return []
         if "Sādhu!" in text:
             return [text]
         # Tách theo dấu kết thúc câu
         sentences = re.split(r'(?<=[.?!])\s+', text)
         return [s.strip() for s in sentences if s.strip()]
+
+    def segment_sentence(self, sentence: str) -> List[str]:
+        """Tách câu dựa trên dấu nháy đơn giống với logic cũ."""
+        s = re.sub(r"(\s|^)'", r"\1<SPLIT>'", sentence)
+        s = re.sub(r"'(?=[\s.,;:]|$)", r"'<SPLIT>", s)
+        parts = s.split("<SPLIT>")
+        return [p.strip() for p in parts if p.strip()]
 
     def _add_segment(self, html: str, label: str, segment: str) -> None:
         """Hàm hỗ trợ thêm segment và tự động tăng UID."""
@@ -48,6 +54,9 @@ class ContentProcessor:
         paragraphs = re.split(r'\n\s*\n', content)
         
         rule_pattern = re.compile(RULE_PATTERN_REGEX, re.DOTALL)
+
+        # Chuỗi ngoại lệ không được cắt nháy đơn
+        SILENCE_EXCEPTION = "Do thái độ im lặng, tôi sẽ nhận biết về các đại đức rằng: '(Các vị) được trong sạch.'"
 
         for para in paragraphs:
             para = para.strip()
@@ -135,18 +144,35 @@ class ContentProcessor:
                 if not clean_l:
                     continue
                 
-                # Không tách nhỏ câu đối với một số phần đặc thù (sk, nidana, sadhu)
-                if any(x in label.lower() for x in ["sk", "nidana", "sadhu"]):
-                    sentences = [clean_l]
+                is_sadhu = "sadhu" in clean_l.lower()
+                is_sekhiya = "sk" in label.lower()
+                
+                line_segments = []
+                # 1. Tách thành các câu dựa trên dấu chấm/hỏi/than
+                sentences = self.split_sentences(clean_l)
+                
+                # 2. Xử lý tách theo dấu nháy đơn (giống hệt backend cũ)
+                if is_sekhiya or is_sadhu:
+                    # Sk và Sadhu chỉ tách câu, KHÔNG tách nháy đơn
+                    line_segments = sentences
                 else:
-                    sentences = self.split_sentences(clean_l)
+                    # Các phần khác (bao gồm nidana, pj, ss, v.v.) sẽ tách thêm nháy đơn
+                    for sent in sentences:
+                        # Bổ sung ngoại lệ giữ nguyên câu đặc thù không cắt nháy đơn
+                        if SILENCE_EXCEPTION in sent:
+                            line_segments.append(sent)
+                        else:
+                            line_segments.extend(self.segment_sentence(sent))
 
-                for j, sent in enumerate(sentences):
+                # 3. Gắn HTML Template và Add
+                num_segs = len(line_segments)
+                for j, seg in enumerate(line_segments):
                     prefix = "<p>" if (i == 0 and j == 0) else ""
-                    suffix = "</p>" if (i == len(lines)-1 and j == len(sentences)-1) else " "
-                    if j == len(sentences)-1 and i < len(lines)-1:
+                    suffix = "</p>" if (i == len(lines)-1 and j == num_segs-1) else " "
+                    
+                    if j == num_segs-1 and i < len(lines)-1:
                         suffix = "<br>"
                     
-                    self._add_segment(html=f"{prefix}{{}}{suffix}", label=label, segment=sent)
+                    self._add_segment(html=f"{prefix}{{}}{suffix}", label=label, segment=seg)
 
         return self.segments_output
