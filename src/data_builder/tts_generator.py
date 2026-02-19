@@ -78,7 +78,7 @@ class TTSGenerator:
                 audio.add_tags()
                 
             audio.tags.add(USLT(encoding=3, lang='vie', desc='', text=text))
-            audio.tags.add(TIT2(encoding=3, text=title)) # Title truyền vào ở đây sẽ sạch sẽ, không chứa hash
+            audio.tags.add(TIT2(encoding=3, text=title))
             audio.tags.add(TALB(encoding=3, text="Giới bổn Patimokkha Việt"))
             audio.tags.add(TPE1(encoding=3, text="Vi-Charon"))
             audio.tags.add(TRCK(encoding=3, text=track_no))
@@ -94,6 +94,11 @@ class TTSGenerator:
         # 1. Tạo bản Text sạch dành riêng cho việc sinh Audio (xóa (), [], *)
         tts_text = re.sub(r'[()\[\]*]', ' ', segment_text)
         tts_text = re.sub(r'\s+', ' ', tts_text).strip()
+
+        # Xử lý ngoại lệ: Chuyển chuỗi in hoa toàn bộ thành in hoa chữ cái đầu 
+        # để tránh việc AI đọc đánh vần từng chữ cái (Ví dụ: "MỞ ĐẦU" -> "Mở đầu")
+        if tts_text.isupper():
+            tts_text = tts_text.capitalize()
 
         if not tts_text:
             return "skip"
@@ -113,6 +118,7 @@ class TTSGenerator:
         else:
             title_base = f"{uid_padded}_{label}"
             
+        filename = f"{title_base}___str__{text_hash}.mp3" # Điều chỉnh nếu muốn, giữ định dạng cũ là __
         filename = f"{title_base}__{text_hash}.mp3"
         
         final_filepath = os.path.join(self.output_dir, filename)
@@ -121,7 +127,6 @@ class TTSGenerator:
         # 4. Kiểm tra cache
         if os.path.exists(tmp_filepath):
             shutil.copy2(tmp_filepath, final_filepath)
-            # Truyền title_base (không chứa hash và .mp3) vào metadata
             self._add_metadata(final_filepath, segment_text, title_base, uid_padded)
         else:
             # 5. Gọi API với bản text sạch (tts_text)
