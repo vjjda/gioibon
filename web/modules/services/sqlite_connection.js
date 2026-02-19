@@ -13,7 +13,7 @@ export class SqliteConnection {
         if (this.db) return this.db;
 
         try {
-            console.log(`Initializing SQLite DB: ${this.dbName}`);
+            // console.log(`Initializing SQLite DB: ${this.dbName}`);
             
             // Try to open first to check if it exists and has tables
             // Note: useIdbStorage will return a VFS that persists to IDB
@@ -42,7 +42,7 @@ export class SqliteConnection {
                 db = await initSQLite(useIdbStorage(this.dbName, withExistDB(file)));
                 console.log("Database initialized from server file.");
             } else {
-                console.log("Database loaded from IndexedDB cache.");
+                // console.log("Database loaded from IndexedDB cache.");
             }
 
             this.db = db;

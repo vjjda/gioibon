@@ -186,13 +186,18 @@ class ContentProcessor:
                     # Khởi tạo thẻ <p> với class tương ứng
                     p_tag = f"<p class='{css_class}'>" if css_class else "<p>"
 
+                    # Clean underscores if it's an end section segment
+                    final_seg = seg
+                    if css_class in ["endsutta", "endsection", "endvagga"]:
+                        final_seg = seg.replace("_", "").strip()
+
                     prefix = p_tag if (i == 0 and j == 0) else ""
                     suffix = "</p>" if (i == len(lines)-1 and j == num_segs-1) else " "
                     
                     if j == num_segs-1 and i < len(lines)-1:
                         suffix = "<br>"
                     
-                    self._add_segment(html=f"{prefix}{{}}{suffix}", label=label, segment=seg)
+                    self._add_segment(html=f"{prefix}{{}}{suffix}", label=label, segment=final_seg)
 
         # ==========================================
         # BƯỚC 2: THỐNG KÊ LABEL VÀ SINH AUDIO

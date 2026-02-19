@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:,">
     
     <script type="importmap">
     {
@@ -42,21 +43,23 @@
             <div class="modal-content">
                 <span class="close-modal">&times;</span>
                 <h2>Cài đặt</h2>
-                <div class="form-group">
-                    <label for="api-key">Google Cloud API Key:</label>
-                    <input type="password" id="api-key" placeholder="Nhập API Key của bạn">
-                    <small>API Key được lưu trên trình duyệt của bạn.</small>
-                </div>
-                <div class="form-group">
-                    <label for="voice-select">Giọng đọc:</label>
-                    <div class="voice-control-group">
-                        <select id="voice-select">
-                            <option value="" disabled selected>Đang tải giọng...</option>
-                        </select>
-                        <button id="refresh-voices-btn" class="icon-btn" title="Tải lại danh sách giọng"><i class="fas fa-sync-alt"></i></button>
+                <form id="settings-form">
+                    <div class="form-group">
+                        <label for="api-key">Google Cloud API Key:</label>
+                        <input type="password" id="api-key" placeholder="Nhập API Key của bạn" autocomplete="on">
+                        <small>API Key được lưu trên trình duyệt của bạn.</small>
                     </div>
-                </div>
-                <button id="save-settings" class="btn primary">Lưu</button>
+                    <div class="form-group">
+                        <label for="voice-select">Giọng đọc:</label>
+                        <div class="voice-control-group">
+                            <select id="voice-select">
+                                <option value="" disabled selected>Đang tải giọng...</option>
+                            </select>
+                            <button type="button" id="refresh-voices-btn" class="icon-btn" title="Tải lại danh sách giọng"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                    </div>
+                    <button type="submit" id="save-settings" class="btn primary">Lưu</button>
+                </form>
             </div>
         </div>
 

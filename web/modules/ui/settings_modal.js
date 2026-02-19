@@ -6,7 +6,7 @@ export class SettingsModal {
         this.modal = document.getElementById('settings-modal');
         this.openBtn = document.getElementById('settings-btn');
         this.closeBtn = document.querySelector('.close-modal');
-        this.saveBtn = document.getElementById('save-settings');
+        this.form = document.getElementById('settings-form');
         this.apiKeyInput = document.getElementById('api-key');
         this.voiceSelect = document.getElementById('voice-select');
         this.refreshVoicesBtn = document.getElementById('refresh-voices-btn');
@@ -27,17 +27,13 @@ export class SettingsModal {
                 e.preventDefault();
                 this._close();
             });
-        } else {
-            console.error("SettingsModal: Close button not found");
         }
 
-        if (this.saveBtn) {
-            this.saveBtn.addEventListener('click', (e) => {
+        if (this.form) {
+            this.form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 this._save();
             });
-        } else {
-            console.error("SettingsModal: Save button not found");
         }
 
         if (this.refreshVoicesBtn) {
