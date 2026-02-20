@@ -29,7 +29,7 @@ html, body {
     scroll-behavior: auto; /* Nhảy TOC tức thì, không chuyển động lướt */
     
     /* Đổi padding sang giá trị cố định thay vì % để dễ dàng áp dụng max-width */
-    padding: 2rem 20px;
+    padding: 2rem 40px;
     padding-bottom: 120px; /* Chừa không gian dưới đáy cho nút Control */
 }
 
