@@ -1,6 +1,6 @@
 # Path: pyproject.toml
 [project]
-name = "tung-gioi-bon"
+name = "gioi-bon"
 version = "0.1.0"
 description = "Web app for memorizing Bhikkhu Patimokkha with TTS support"
 readme = "README.md"
