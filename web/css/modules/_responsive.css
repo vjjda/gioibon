@@ -37,7 +37,7 @@
         display: flex;
     }
     #content {
-        padding: 2rem 15px 10rem 15px; /* Fixed padding for better control */
+        padding: 2rem 20px 10rem 20px; /* Increased gutter for better readability */
         overflow-x: hidden;
     }
     header {
@@ -46,13 +46,10 @@
         align-items: center; 
         text-align: center;
         width: 100%;
-        overflow: hidden;
     }
     header h1 {
         font-size: 1rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        line-height: 1.3;
         width: 100%;
     }
     .toc-rule-list {

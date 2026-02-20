@@ -2,10 +2,10 @@
 /* Segment Styling */
 .segment {
     position: relative;
-    padding: 0.25rem 0.5rem;
+    padding: 0.4rem 0.75rem; /* Increased padding */
     margin-bottom: 0.75rem;
     transition: background-color 0.2s;
-    border-radius: 6px;
+    border-radius: 8px;
     border-left: 3px solid transparent;
     /* Ensure overflow visible so mask toggle can extend outside */
     overflow: visible;
@@ -21,7 +21,13 @@
     align-items: flex-start;
     gap: 0.75rem;
     position: relative;
-    z-index: 1; /* Content lower than mask toggle */
+    z-index: 1; 
+}
+
+.segment-text {
+    flex: 1;
+    /* Add extra space on the right to balance the play button on the left */
+    padding-right: 0.5rem; 
 }
 
 /* Play Buttons Default Alignment (for body text) */
