@@ -9,9 +9,10 @@ node_modules/
 
 .env
 
-# Frontend Assets (Ignore audio source to save repo space)
+# Frontend Assets (Ignore audio source and DB to save repo space)
 /web/public/app-content/audio/
 /web/public/app-content/audio/*.mp3
+/web/public/app-content/content.db
 
 # Python cache
 __pycache__/
