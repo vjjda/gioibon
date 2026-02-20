@@ -64,7 +64,7 @@
 /* --- PWA Update Toast (Hỗ trợ Dark Theme) --- */
 .pwa-toast {
     position: fixed;
-    bottom: 20px;
+    top: 20px;
     right: 20px;
     background-color: var(--bg-sidebar); /* Lấy màu nền theo theme hiện tại */
     border: 1px solid var(--border-color);
@@ -77,18 +77,20 @@
     gap: 12px;
     transition: opacity 0.3s ease, transform 0.3s ease;
     font-family: var(--font-ui);
-    pointer-events: auto; /* Đảm bảo luôn nhận click */
+    pointer-events: auto;
+    /* Đảm bảo luôn nhận click */
 }
 
 .pwa-toast.hidden {
     opacity: 0;
     pointer-events: none;
-    transform: translateY(20px);
+    transform: translateY(-20px);
 }
 
 .pwa-toast .message {
     font-size: 0.95rem;
-    color: var(--text-main); /* Chữ thay đổi theo theme */
+    color: var(--text-main);
+    /* Chữ thay đổi theo theme */
     font-weight: 500;
     margin-bottom: 5px;
 }
@@ -127,5 +129,6 @@
 
 #pwa-close:hover {
     color: var(--text-main);
-    background-color: rgba(128, 128, 128, 0.1); /* Nền mờ tương thích cả 2 theme */
+    background-color: rgba(128, 128, 128, 0.1);
+    /* Nền mờ tương thích cả 2 theme */
 }
