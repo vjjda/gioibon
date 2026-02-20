@@ -65,6 +65,7 @@ export class ControlBar {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
             const key = e.key.toLowerCase();
             if (key === 'g' && this.loopBtn) this.loopBtn.click();
+            if (key === 'h' && this.hintToggleBtn) this.hintToggleBtn.click();
             if (key === 't') this._changeSpeedIndex(1, onSpeedChange);
             if (key === 'e') this._changeSpeedIndex(-1, onSpeedChange);
         });
@@ -122,4 +123,3 @@ export class ControlBar {
         }
     }
 }
-
