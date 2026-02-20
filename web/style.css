@@ -17,6 +17,13 @@
 @import "css/layout/_header.css";
 @import "css/layout/_container.css";
 @import "css/layout/_footer_controls.css";
+@import "css/layout/drawer/_drawer_container.css";
+@import "css/layout/drawer/_drawer_footer.css";
 
 /* Modules */
 @import "css/modules/_responsive.css";
+
+html {
+    filter: sepia(var(--sepia-val, 0));
+}
+

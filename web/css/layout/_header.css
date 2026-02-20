@@ -6,7 +6,7 @@ header {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: rgba(253, 251, 247, 0.95);
+    background-color: var(--bg-body);
     backdrop-filter: blur(5px);
     position: sticky;
     top: 0;

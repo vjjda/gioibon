@@ -26,4 +26,44 @@
   
   --sidebar-width: 280px;
   --header-height: 70px;
+
+  /* --- UI COMPONENT VARS (Added for Drawer/Widgets) --- */
+  --bg-drawer: #ffffff;
+  --bg-hover: rgba(0, 0, 0, 0.05);
+  --highlight-color-background: rgba(0, 0, 0, 0.1);
+  
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  
+  /* Text Scaling */
+  --text-scale: 1;
+  --sepia-val: 0;
+}
+
+/* --- DARK THEME OVERRIDES --- */
+[data-theme="dark"] {
+  --bg-body: #1a1918;
+  --bg-sidebar: #201e1d;
+  --bg-card: #262423;
+  --bg-modal: #262423;
+  --bg-drawer: #201e1d;
+  
+  --text-main: #d0d0d0;
+  --text-muted: #a09c98;
+  --text-light: #757575;
+  --text-pali: #ae7e68;
+  
+  --primary-color: #a0522d;
+  --primary-hover: #ba6b45;
+  --accent-color: #d29476;
+  
+  --border-color: #383533;
+  --border-light: #33302e;
+  
+  --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-float: 0 12px 30px rgba(0, 0, 0, 0.8);
+  
+  --bg-hover: rgba(255, 255, 255, 0.12);
+  --highlight-color-background: rgba(255, 255, 255, 0.08);
 }

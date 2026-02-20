@@ -1,7 +1,7 @@
 /* Text Typography */
 .segment-text {
     flex: 1;
-    font-size: 1.15rem;
+    font-size: calc(1.15rem * var(--text-scale, 1));
     color: var(--text-main);
     line-height: 1.7;
     font-weight: 300;
@@ -16,7 +16,7 @@
 
 /* Specific Heading Styles */
 .main-title .segment-text h1 {
-    font-size: 2.2rem;
+    font-size: calc(2.2rem * var(--text-scale, 1));
     font-weight: 400;
     text-align: center;
     color: var(--primary-color);
@@ -25,7 +25,7 @@
 }
 
 .segment[data-label="subtitle"] .segment-text h2 {
-    font-size: 1.1rem;
+    font-size: calc(1.1rem * var(--text-scale, 1));
     font-weight: 300;
     text-align: center;
     color: var(--text-muted);
@@ -36,7 +36,7 @@
 
 .chapter-header .segment-text h2,
 .segment-text h2 {
-    font-size: 1.6rem;
+    font-size: calc(1.6rem * var(--text-scale, 1));
     font-weight: 400;
     color: var(--text-main);
     margin-top: 4rem;
@@ -49,7 +49,7 @@
 }
 
 .segment-text h3 {
-    font-size: 1.3rem;
+    font-size: calc(1.3rem * var(--text-scale, 1));
     font-weight: 400;
     color: var(--primary-color);
     margin-top: 2.5rem;
@@ -63,7 +63,7 @@
 .rule-header .segment-text h4,
 .segment-text h4 {
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: calc(1.1rem * var(--text-scale, 1));
     color: var(--accent-color);
     font-family: var(--font-ui);
     margin-top: 1.5rem;
@@ -83,7 +83,7 @@
 /* [NEW] Note Styling (Low Profile) */
 .note {
     font-family: var(--font-ui);
-    font-size: 0.9rem;
+    font-size: calc(0.9rem * var(--text-scale, 1));
     color: var(--text-muted);
     background-color: rgba(0, 0, 0, 0.02); /* Very subtle bg */
     border-left: 3px solid var(--border-color);
@@ -102,7 +102,7 @@
     letter-spacing: 1px;
     margin: 2rem 0;
     font-family: var(--font-ui);
-    font-size: 1rem;
+    font-size: calc(1rem * var(--text-scale, 1));
 }
 
 /* [NEW] Sadhu Styling */
@@ -112,7 +112,7 @@
     color: var(--primary-color);
     font-style: italic;
     margin: 2rem 0;
-    font-size: 1.1rem;
+    font-size: calc(1.1rem * var(--text-scale, 1));
 }
 
 /* [NEW] End Sections (Centered, Low Profile) */
@@ -120,7 +120,7 @@
     text-align: center;
     font-style: italic;
     color: var(--text-light); /* Lighter text */
-    font-size: 0.9rem;
+    font-size: calc(0.9rem * var(--text-scale, 1));
     /* Margins removed here to be handled by segment container alignment logic */
     margin: 0; 
     font-family: var(--font-ui);

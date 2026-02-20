@@ -20,7 +20,7 @@
 }
 
 .modal-content {
-    background: #fff;
+    background: var(--bg-modal);
     padding: 2.5rem;
     border-radius: 20px;
     width: 90%;
@@ -48,7 +48,7 @@
     top: 1.5rem;
     right: 1.5rem;
     font-size: 1.2rem;
-    color: #ccc;
+    color: var(--text-light);
     cursor: pointer;
     transition: color 0.2s;
 }

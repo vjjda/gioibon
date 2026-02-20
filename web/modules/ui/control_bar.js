@@ -36,7 +36,11 @@ export class ControlBar {
         if (this.speedSelect) {
             this.speedSelect.addEventListener('change', (e) => {
                 const newRate = parseFloat(e.target.value);
-                if (this.speedChangeCallback) this.speedChangeCallback(newRate);
+                if (this.speedChangeCallback) {
+                    this.speedChangeCallback(newRate);
+                }
+                // [FIX] Blur focus after selection so global shortcuts work immediately
+                e.target.blur();
             });
         }
         // Xử lý sự kiện nút Loop
@@ -51,16 +55,55 @@ export class ControlBar {
         // [NEW] Global keyboard shortcuts cho Control Bar
         document.addEventListener('keydown', (e) => {
             // Ngăn việc kích hoạt phím tắt khi đang nhập liệu (ví dụ: trong form cài đặt)
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+            // Note: We removed SELECT from the check above so shortcuts work even if focused (though blur handles it)
+            // but strict check: if user is actively changing dropdown with arrows, we might want to let them.
+            // However, our request is for 't' and 'e' to work globally.
 
             const key = e.key.toLowerCase();
+            
+            // Loop Toggle
             if (key === 'g') {
-                e.preventDefault(); // Ngăn hành vi mặc định của trình duyệt nếu có
+                e.preventDefault(); 
                 if (this.loopBtn) {
-                    this.loopBtn.click(); // Gọi trực tiếp logic click của nút Loop
+                    this.loopBtn.click(); 
                 }
             }
+
+            // Speed Control Shortcuts
+            // 't' -> Increase Speed
+            if (key === 't') {
+                e.preventDefault();
+                this._changeSpeedIndex(1);
+            }
+
+            // 'e' -> Decrease Speed
+            if (key === 'e') {
+                e.preventDefault();
+                this._changeSpeedIndex(-1);
+            }
         });
+    }
+
+    _changeSpeedIndex(direction) {
+        if (!this.speedSelect) return;
+
+        const currentIndex = this.speedSelect.selectedIndex;
+        const newIndex = currentIndex + direction;
+
+        // Check bounds
+        if (newIndex >= 0 && newIndex < this.speedSelect.options.length) {
+            this.speedSelect.selectedIndex = newIndex;
+            const newRate = parseFloat(this.speedSelect.value);
+            
+            // Trigger callback
+            if (this.speedChangeCallback) {
+                this.speedChangeCallback(newRate);
+            }
+            
+            // Visual feedback (optional but helpful)
+            // We could briefly show the new speed, but the select updates itself.
+        }
     }
 
     // Initialize speed select with current rate

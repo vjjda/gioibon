@@ -134,11 +134,11 @@
 .toc-rule-item .toc-link:hover {
     border-color: var(--primary-color);
     color: var(--primary-color);
-    background-color: #fff;
+    background-color: var(--bg-card);
 }
 
 .toc-rule-item .toc-link.active {
     background-color: var(--primary-color);
-    color: #fff;
+    color: var(--bg-card); /* Use background color for text contrast */
     border-color: var(--primary-color);
 }

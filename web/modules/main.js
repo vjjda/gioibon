@@ -5,6 +5,9 @@ import { TocRenderer } from 'ui/toc_renderer.js';
 import { ContentRenderer } from 'ui/content_renderer.js';
 import { ControlBar } from 'ui/control_bar.js';
 import { SettingsModal } from 'ui/settings_modal.js';
+import { HeaderDrawer } from 'ui/header_drawer.js';
+import { ThemeSettings } from 'ui/theme_settings.js';
+import { FontSettings } from 'ui/font_settings.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     // --- Initialize Core Components ---
@@ -12,6 +15,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const contentLoader = new ContentLoader();
     
     // --- Initialize UI Components ---
+    HeaderDrawer.init();
+    ThemeSettings.init();
+    FontSettings.init();
+
     const tocRenderer = new TocRenderer('toc-list', 'sidebar', 'sidebar-toggle');
     const controlBar = new ControlBar(
         () => { // Play All
