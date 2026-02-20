@@ -8,16 +8,15 @@
     transition: background-color 0.2s;
     border-radius: 8px;
     border-left: 3px solid transparent;
-    /* Ensure overflow visible so mask toggle can extend outside */
     overflow: visible;
     
-    /* [UPDATED] Giảm khoảng cách đệm để text hiện sát mép Header hơn */
-    scroll-margin-top: 70px; 
+    /* [UPDATED] Vừa vặn sát mép dưới của Header (Khoảng 60px header + 5px khoảng trống) */
+    scroll-margin-top: 65px; 
 }
 
-/* [UPDATED] Căn lề cho các Segment chứa Tiêu đề */
+/* [UPDATED] Thêm chút xíu cho tiêu đề để không bị ngộp */
 .segment:has(h1, h2, h3, h4) {
-    scroll-margin-top: 80px;
+    scroll-margin-top: 70px;
 }
 
 .segment.active {
@@ -35,13 +34,12 @@
 
 .segment-text {
     flex: 1;
-    /* Add extra space on the right to balance the play button on the left */
     padding-right: 0.5rem;
 }
 
-/* Play Buttons Default Alignment (for body text) */
+/* Play Buttons Default Alignment */
 .play-btn {
-    margin-top: 5px; /* Align with ~1.7 line-height of body text */
+    margin-top: 5px; 
 }
 
 /* Alignment for ALL headers and end sections */
@@ -52,7 +50,7 @@
 
 .heading-segment .play-btn,
 .end-segment .play-btn {
-    margin-top: 0; /* Reset top margin when centered */
+    margin-top: 0; 
 }
 
 /* Move vertical spacing to segment container */
@@ -88,15 +86,15 @@
     margin: 0 !important;
 }
 
-/* Base Mask Toggle Area (Hidden by default) */
+/* Base Mask Toggle Area */
 .segment-mask-toggle {
     position: absolute;
     top: -5px;
     right: -20px;
     bottom: 0;
-    width: 40px; /* Smaller hit area to avoid overflow */
+    width: 40px; 
     cursor: pointer;
-    z-index: 20; /* Ensure on top of content */
+    z-index: 20; 
 }
 
 @media (max-width: 600px) {
