@@ -6,7 +6,10 @@ LOCAL_IP = $(shell ifconfig | grep "inet " | grep -v 127.0.0.1 | awk '{print $$2
 # Base URL từ cấu hình dự án
 BASE_URL = /gioibon/
 
-.PHONY: data icons dev simple build preview deploy clean setup help qr-dev qr-preview
+.PHONY: data icons dev simple build preview deploy clean setup help qr-dev qr-preview merge
+
+# Biến Git (Dùng cho lệnh merge)
+BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
 
 # Lệnh mặc định
 help:
@@ -15,11 +18,21 @@ help:
 	@echo "  make icons     : Sinh bộ icons PWA (yêu cầu Pillow)"
 	@echo "  make dev       : Chạy Vite dev server (có QR Code mạng LAN)"
 	@echo "  make simple    : Chạy Python HTTP Server đơn giản (Port 3456)"
+	@echo "  make merge     : Merge nhánh hiện tại vào main và xóa nhánh (vd: make merge BRANCH=feature/hinting)"
 	@echo "  make build     : Build bản production cho Web"
 	@echo "  make preview   : Xem trước bản build cục bộ (có QR Code mạng LAN)"
 	@echo "  make deploy    : Build và Deploy lên GitHub Pages"
 	@echo "  make clean     : Dọn dẹp cache và thư mục build"
 	@echo "  make setup     : Cài đặt dependencies (NPM & Pip)"
+
+# Git Utilities
+merge:
+	@if [ "$(BRANCH)" = "main" ]; then echo "❌ Lỗi: Bạn đang ở nhánh main. Hãy chỉ định nhánh cần merge (vd: make merge BRANCH=feature/abc)"; exit 1; fi
+	@echo "🔄 Đang merge nhánh [$(BRANCH)] vào main..."
+	git checkout main
+	git merge $(BRANCH)
+	git branch -d $(BRANCH)
+	@echo "✅ Đã merge và xóa nhánh [$(BRANCH)] thành công."
 
 # Backend & Data
 data:
