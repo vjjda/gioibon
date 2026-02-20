@@ -3,6 +3,35 @@ import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import basicSsl from '@vitejs/plugin-basic-ssl';
 import path from 'path';
+import fs from 'fs';
+
+// --- HỆ THỐNG AUTO-ALIAS TỰ ĐỘNG ---
+// Hàm tiện ích để lấy danh sách tên các thư mục con
+function getDirectories(source) {
+    if (!fs.existsSync(source)) return [];
+    return fs.readdirSync(source, { withFileTypes: true })
+        .filter(dirent => dirent.isDirectory())
+        .map(dirent => dirent.name);
+}
+
+const aliases = {};
+const webDir = path.resolve(__dirname, 'web');
+const modulesDir = path.resolve(__dirname, 'web/modules');
+
+// 1. Quét và tự động thêm alias cho các folder ở root của 'web' (ví dụ: utils, libs, css...)
+getDirectories(webDir).forEach(dir => {
+    if (dir !== 'modules') { // Bỏ qua folder modules để xử lý riêng bên dưới
+        aliases[dir] = path.resolve(webDir, dir);
+    }
+});
+
+// 2. Quét và tự động thêm alias cho các sub-folder bên trong 'web/modules' (ví dụ: core, ui, tts...)
+if (fs.existsSync(modulesDir)) {
+    getDirectories(modulesDir).forEach(dir => {
+        aliases[dir] = path.resolve(modulesDir, dir);
+    });
+}
+// -----------------------------------
 
 export default defineConfig({
     root: 'web', // Root folder for Vite is 'web'
@@ -11,16 +40,12 @@ export default defineConfig({
         outDir: '../dist', // Output to project root 'dist' folder
         emptyOutDir: true,
     },
+    css: {
+        devSourcemap: true, // Kích hoạt Source Map cho CSS (Hỗ trợ trình duyệt Workspace)
+    },
     resolve: {
-        alias: {
-            'core': path.resolve(__dirname, 'web/modules/core'),
-            'data': path.resolve(__dirname, 'web/modules/data'),
-            'tts': path.resolve(__dirname, 'web/modules/tts'),
-            'ui': path.resolve(__dirname, 'web/modules/ui'),
-            'libs': path.resolve(__dirname, 'web/libs'),
-            'services': path.resolve(__dirname, 'web/modules/services'),
-            'utils': path.resolve(__dirname, 'web/utils'), // Thêm alias cho utils
-        },
+        // Áp dụng danh sách tự động tạo ở trên
+        alias: aliases,
     },
     plugins: [
         basicSsl(), // Kích hoạt SSL ảo để test trên thiết bị LAN (điện thoại)
