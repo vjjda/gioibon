@@ -8,8 +8,12 @@ import { SettingsModal } from 'ui/settings_modal.js';
 import { HeaderDrawer } from 'ui/header_drawer.js';
 import { ThemeSettings } from 'ui/theme_settings.js';
 import { FontSettings } from 'ui/font_settings.js';
+import { setupPWA } from 'utils/pwa.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // --- Khởi tạo PWA (Lắng nghe cập nhật & Nút dọn dẹp) ---
+    setupPWA();
+
     // --- Initialize Core Components ---
     const ttsPlayer = new TTSPlayer();
     const contentLoader = new ContentLoader();
@@ -18,18 +22,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     HeaderDrawer.init();
     ThemeSettings.init();
     FontSettings.init();
-
+    
     const tocRenderer = new TocRenderer('toc-list', 'sidebar', 'sidebar-toggle');
+    
     const controlBar = new ControlBar(
         () => { // Play All
             if (ttsPlayer.isPaused) {
                 ttsPlayer.resume();
             } else {
                 const startId = contentRenderer.getFirstVisibleSegmentId();
-                const segments = startId 
-                    ? contentLoader.getSegmentsStartingFrom(startId)
-                    : contentLoader.getAllSegments();
-                
+                const segments = startId ? contentLoader.getSegmentsStartingFrom(startId) : contentLoader.getAllSegments();
                 if (segments.length > 0) {
                     ttsPlayer.playSequence(segments);
                 }
@@ -57,23 +59,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const contentRenderer = new ContentRenderer(
         'content',
-        (segmentId, audio, text) => { 
+        (segmentId, audio, text) => {
             ttsPlayer.playSegment(segmentId, audio, text);
         },
-        (sequence, parentId) => { // [UPDATED] Lấy thêm parentId
+        (sequence, parentId) => {
             ttsPlayer.playSequence(sequence, parentId);
         }
     );
 
-    const settingsModal = new SettingsModal(ttsPlayer);
+    const settingsModal = new SettingsModal(ttsPlayer.engine);
 
-    // --- Wire up TTS Events to UI ---
+    // --- Connect Events ---
     ttsPlayer.onSegmentStart = (id, isSequence) => {
         contentRenderer.highlightSegment(id, isSequence);
         // Cập nhật Icon nút phát
         contentRenderer.updatePlaybackState(ttsPlayer.isPlaying ? 'playing' : 'paused', id, isSequence, ttsPlayer.sequenceParentId);
     };
-
+    
     ttsPlayer.onPlaybackEnd = () => {
         contentRenderer.clearHighlight();
         controlBar.updateState('stopped');
@@ -94,8 +96,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         tocRenderer.render(data);
     } catch (error) {
         console.error("Initialization Error:", error);
-        document.getElementById('content').innerHTML = 
-            `<div class="error">Không thể tải dữ liệu. Vui lòng thử lại sau.<br><small>${error.message}</small></div>`;
+        document.getElementById('content').innerHTML = `<div class="error">Không thể tải dữ liệu. Vui lòng thử lại sau.<br><small>${error.message}</small></div>`;
     }
 });
 
