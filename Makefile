@@ -44,7 +44,7 @@ icons:
 simple:
 	@echo "🚀 Khởi chạy Browser-sync Server tại http://localhost:3456"
 	@echo "✨ CSS Injection: ✅ | Auto-reload: ✅ | Multi-root: ✅"
-	npx browser-sync start --server "web" --serveStatic "web/public" --files "web/**/*" --port 3456 --no-notify --no-ui
+	npx browser-sync start --server "web" --serveStatic "web/public" --files "web/**/*" --port 3456 --no-notify --no-ui --no-open
 
 # Frontend
 dev:
