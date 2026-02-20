@@ -28,7 +28,7 @@ export default defineConfig({
             manifest: {
                 name: 'Giới Bổn Tỳ Kheo',
                 short_name: 'Giới Bổn',
-                description: 'Ứng dụng đọc và nghe Giới Bổn Tỳ Kheo (Pātimokkha Bhikkhu) offline.',
+                description: 'Tập tụng Giới Bổn Tỳ Kheo (Pātimokkha Bhikkhu) tiếng Việt offline.',
                 theme_color: '#fdfbf7',
                 background_color: '#fdfbf7',
                 display: 'standalone', // Chạy như app native, không có thanh địa chỉ
