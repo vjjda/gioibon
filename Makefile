@@ -30,12 +30,12 @@ icons:
 # Frontend
 dev:
 	@echo "📱 Quét mã QR để mở trên điện thoại (LAN):"
-	@npx qrcode "http://$(LOCAL_IP):5173$(BASE_URL)" -e L --small
+	@npx qrcode "https://$(LOCAL_IP):5173$(BASE_URL)" -e L --small
 	$(NPM) run dev -- --host
 
 preview:
 	@echo "📱 Quét mã QR để xem trước trên điện thoại (LAN):"
-	@npx qrcode "http://$(LOCAL_IP):4173$(BASE_URL)" -e L --small
+	@npx qrcode "https://$(LOCAL_IP):4173$(BASE_URL)" -e L --small
 	$(NPM) run preview -- --host
 
 build:
@@ -47,6 +47,7 @@ deploy: build
 # Tiện ích
 setup:
 	$(NPM) install
+	$(NPM) install --save-dev @vitejs/plugin-basic-ssl
 	pip install Pillow requests mutagen
 
 clean:

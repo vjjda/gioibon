@@ -1,6 +1,7 @@
 // Path: vite.config.js
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import basicSsl from '@vitejs/plugin-basic-ssl';
 import path from 'path';
 
 export default defineConfig({
@@ -22,6 +23,7 @@ export default defineConfig({
         },
     },
     plugins: [
+        basicSsl(), // Kích hoạt SSL ảo để test trên thiết bị LAN (điện thoại)
         VitePWA({
             registerType: 'prompt', // Thay đổi từ autoUpdate sang prompt để hiện Toast thông báo
             includeAssets: ['assets/icons/favicon.ico', 'assets/icons/apple-touch-icon.png'],
@@ -55,12 +57,11 @@ export default defineConfig({
                 ]
             },
             workbox: {
-                // Cấu hình cache cho Workbox
-                globPatterns: ['**/*.{js,css,html,json}'], // Chỉ cache code và data cấu trúc
-                globIgnores: ['**/node_modules/**/*', 'sw.js', 'workbox-*.js'],
+                globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,db,wasm}'], // Đảm bảo cache .db và .wasm
+                maximumFileSizeToCacheInBytes: 15 * 1024 * 1024, // Tăng limit lên 15MB cho DB
                 runtimeCaching: [
                     {
-                        // Cache Google Fonts
+                        // Cache Google Fonts (stylesheets)
                         urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
                         handler: 'CacheFirst',
                         options: {
@@ -109,4 +110,3 @@ export default defineConfig({
         })
     ]
 });
-
