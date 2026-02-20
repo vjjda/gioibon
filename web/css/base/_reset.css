@@ -11,3 +11,10 @@ body {
     overflow-x: hidden;
     font-weight: 300;
 }
+
+/* Loại bỏ hiệu ứng chớp xanh (tap highlight) mặc định khi nhấn trên Android */
+*,
+*::before,
+*::after {
+    -webkit-tap-highlight-color: transparent;
+}
