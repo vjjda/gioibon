@@ -115,23 +115,5 @@
     color: #333;
 }
 
-/* Nút Clear Cache tinh tế trong Drawer */
-.btn-clear-cache-subtle {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    cursor: pointer;
-    font-family: var(--font-ui);
-    padding: 4px 8px;
-    transition: color 0.2s ease;
-    margin: 0 auto;
-    display: inline-block;
-}
-
-.btn-clear-cache-subtle:hover {
-    color: var(--primary-color);
-}
+/* [REMOVED] Class .btn-clear-cache-subtle đã bị xóa vì không còn sử dụng */
 
