@@ -4,7 +4,7 @@ import { useIdbStorage } from 'libs/wa-sqlite-idb.js';
 import { BASE_URL } from 'core/config.js';
 
 export class SqliteConnection {
-    constructor(dbName = "content.db", dbUrl = `${BASE_URL}data/content.db`) {
+    constructor(dbName = "content.db", dbUrl = `${BASE_URL}app-content/content.db`) {
         this.dbName = dbName;
         this.dbUrl = dbUrl;
         this.db = null;

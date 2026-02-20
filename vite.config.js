@@ -86,7 +86,7 @@ export default defineConfig({
           {
              // Chiến lược cache cho Audio/Data: StaleWhileRevalidate 
              // (Dùng cache cũ nếu có, đồng thời tải mới ngầm để lần sau dùng)
-            urlPattern: ({ url }) => url.pathname.startsWith('/data/'),
+            urlPattern: ({ url }) => url.pathname.includes('/app-content/'),
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'app-data-cache',
