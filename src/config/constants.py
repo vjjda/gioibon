@@ -9,7 +9,7 @@ WEB_DIR = PROJECT_ROOT / "web"
 
 # Input/Output Paths
 INPUT_MARKDOWN_PATTERN = str(DATA_DIR / "Gioi bon Viet/*.md")
-OUTPUT_JSON_PATH = str(WEB_DIR / "data/content.json")
+OUTPUT_JSON_PATH = str(WEB_DIR / "app-content/content.json")
 
 # Regex Patterns
 RULE_PATTERN_REGEX = r'^\s*(\d+)\\?\.\s+(.*)'

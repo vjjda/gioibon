@@ -35,7 +35,7 @@ class TTSGenerator:
 
     def _load_rules(self) -> None:
         """Đọc quy tắc tiền xử lý Text từ file JSON dùng chung."""
-        rules_path = "web/data/tts_rules.json"
+        rules_path = "web/public/app-content/tts_rules.json"
         if os.path.exists(rules_path):
             try:
                 with open(rules_path, 'r', encoding='utf-8') as f:

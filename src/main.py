@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 # Cấu hình đường dẫn
 DATA_CONTENT_DIR = "data/content"
-WEB_DATA_DIR = "web/public/data"
+WEB_DATA_DIR = "web/public/app-content"
 TSV_OUT = os.path.join(DATA_CONTENT_DIR, "content.tsv")
 DB_OUT = os.path.join(WEB_DATA_DIR, "content.db")
 AUDIO_FINAL_DIR = os.path.join(WEB_DATA_DIR, "audio")
