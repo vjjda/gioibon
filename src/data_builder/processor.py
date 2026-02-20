@@ -3,6 +3,7 @@ import re
 import logging
 from typing import List, Dict, Any
 from collections import defaultdict
+
 from src.config.constants import RULE_24_IDENTIFIER, RULE_PATTERN_REGEX
 from src.data_builder.models import SegmentData
 from src.data_builder.labeler import ContentLabeler
@@ -26,6 +27,10 @@ class ContentProcessor:
     def clean_text(self, text: str) -> str:
         # Xóa chú thích dạng footnote [^1], [^2]
         cleaned = re.sub(r'\[\^.*?\]', '', text)
+        
+        # Chuyển đổi **text** thành <b>text</b>
+        cleaned = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', cleaned)
+        
         cleaned = cleaned.replace(r'\.', '.')
         return cleaned.strip()
 
@@ -34,6 +39,7 @@ class ContentProcessor:
             return []
         if "Sādhu!" in text:
             return [text]
+            
         # Tách theo dấu kết thúc câu
         sentences = re.split(r'(?<=[.?!])\s+', text)
         return [s.strip() for s in sentences if s.strip()]
@@ -60,13 +66,12 @@ class ContentProcessor:
         self.raw_segments = []
         self.uid_counter = 1
         self.last_rule_label = ""
-        
+
         # Loại bỏ metadata đầu file (YAML frontmatter)
         content = re.sub(r'^---.*?---', '', raw_md, flags=re.DOTALL)
         paragraphs = re.split(r'\n\s*\n', content)
         
         rule_pattern = re.compile(RULE_PATTERN_REGEX, re.DOTALL)
-
         # Chuỗi ngoại lệ không được cắt nháy đơn
         SILENCE_EXCEPTION = "Do thái độ im lặng, tôi sẽ nhận biết về các đại đức rằng: '(Các vị) được trong sạch.'"
 
@@ -77,44 +82,46 @@ class ContentProcessor:
             para = para.strip()
             if not para:
                 continue
-
-            # Bỏ qua các phân cách *** hoặc \*\*\*
+                
+            # Bỏ qua dòng chỉ chứa *** hoặc \*\*\*
             if re.match(r'^\\?\*\\?\*\\?\*$', para):
                 continue
-
+                
             if para == "# GIỚI BỔN TỲ KHƯU":
                 self._add_segment(html="<h1 class=\"title\">{}</h1>", label="title", segment="GIỚI BỔN TỲ KHƯU")
                 continue
-            
+                
             if para == "**PĀTIMOKKHA BHIKKHU**":
                 self._add_segment(html="<h2 class=\"subtitle\">{}</h2>", label="subtitle", segment="PĀTIMOKKHA BHIKKHU")
                 continue
-            
+                
             if para == "**PHẬT GIÁO NGUYÊN THUỶ THERAVĀDA**":
-                continue  
-
+                continue
+                
             if para.startswith("|"):
                 clean_note = para.replace('|', '').replace('*', '').strip()
                 note_label = f"note-{self.uid_counter - 1}"
                 self._add_segment(html="<p class=\"note\">{}</p>", label=note_label, segment=clean_note)
                 continue
-
+                
             if para.startswith('#'):
                 level_match = re.match(r'^(#+)', para)
                 level = len(level_match.group(1))
                 text = para.lstrip('#').strip()
-                self.labeler.update_context(text, level)
                 
+                self.labeler.update_context(text, level)
                 label = self.labeler.get_label()
+                
                 if re.match(r'^PHẨM\s+\d+', text, re.IGNORECASE):
                     label = f"{self.labeler.current_prefix}-chapter"
-
+                
                 # User requested headings to start from h2 (offset by +1)
                 adjusted_level = level + 1
                 tmpl = f"<h{adjusted_level}>{{}}</h{adjusted_level}>"
+                
                 self._add_segment(html=tmpl, label=label, segment=text)
                 continue
-
+                
             match = rule_pattern.match(para)
             if match:
                 rule_no = match.group(1)
@@ -151,26 +158,21 @@ class ContentProcessor:
                     continue
                 
                 is_sadhu = "sadhu" in clean_l.lower()
-                is_namo = "NAMO TASSA BHAGAVATO ARAHATO SAMMĀSAMBUDDHASSA" in clean_l
-                is_sekhiya = "sk" in label.lower()
+                is_sekhiya = self.labeler.current_main_section == "sk"
                 
                 line_segments = []
-                sentences = self.split_sentences(clean_l)
-                
-                if is_sekhiya or is_sadhu or is_namo:
-                    line_segments = sentences
+                if is_sekhiya or is_sadhu or SILENCE_EXCEPTION in clean_l:
+                    line_segments = [clean_l]
                 else:
-                    for sent in sentences:
-                        if SILENCE_EXCEPTION in sent:
-                            line_segments.append(sent)
-                        else:
-                            line_segments.extend(self.segment_sentence(sent))
+                    sentences = self.split_sentences(clean_l)
+                    for sentence in sentences:
+                        segs = self.segment_sentence(sentence)
+                        line_segments.extend(segs)
 
                 num_segs = len(line_segments)
                 for j, seg in enumerate(line_segments):
-                    # Logic xác định class kết thúc đoạn
                     css_class = ""
-                    if "Sādhu! Sādhu!! Sādhu!!!" in seg:
+                    if "Sādhu" in seg:
                         css_class = "sadhu"
                     elif "NAMO TASSA BHAGAVATO ARAHATO SAMMĀSAMBUDDHASSA" in seg:
                         css_class = "namo"
@@ -195,10 +197,9 @@ class ContentProcessor:
 
                     prefix = p_tag if (i == 0 and j == 0) else ""
                     suffix = "</p>" if (i == len(lines)-1 and j == num_segs-1) else " "
-                    
                     if j == num_segs-1 and i < len(lines)-1:
                         suffix = "<br>"
-                    
+                        
                     self._add_segment(html=f"{prefix}{{}}{suffix}", label=label, segment=final_seg)
 
         # ==========================================
@@ -206,17 +207,18 @@ class ContentProcessor:
         # ==========================================
         label_totals = defaultdict(int)
         for item in self.raw_segments:
-            # [FIX] Loại bỏ các đoạn note và tất cả các thẻ Heading (bắt đầu bằng <h) khỏi thống kê số lượng
+            # Loại bỏ các đoạn note và tất cả các thẻ Heading (bắt đầu bằng <h) khỏi thống kê số lượng
             if item["segment"].strip() and not item["label"].startswith("note-") and not item["html"].startswith("<h"):
                 label_totals[item["label"]] += 1
-            
+
         # Nạp tổng số lượng vào TTS Generator
         self.tts_generator.set_label_totals(label_totals)
-        
+
         # Chạy vòng lặp để tạo Audio và xuất dữ liệu chuẩn
         for item in self.raw_segments:
-            # [FIX] Truyền thêm trường item["html"] vào quá trình xử lý segment
-            audio_filename = self.tts_generator.process_segment(item["uid"], item["label"], item["segment"], item["html"])
+            audio_filename = self.tts_generator.process_segment(
+                item["uid"], item["label"], item["segment"], item["html"]
+            )
             self.segments_output.append(SegmentData(
                 uid=item["uid"],
                 html=item["html"],
