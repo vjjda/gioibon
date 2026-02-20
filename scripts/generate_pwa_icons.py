@@ -42,7 +42,7 @@ def create_disciplined_icon(size):
     return image
 
 def main():
-    icons_dir = 'web/assets/icons'
+    icons_dir = 'web/public/assets/icons'
     os.makedirs(icons_dir, exist_ok=True)
     
     targets = {

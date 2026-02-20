@@ -57,7 +57,8 @@ export default defineConfig({
       },
       workbox: {
         // Cấu hình cache cho Workbox
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'], // Cache các file này
+        globPatterns: ['**/*.{js,css,html,json}'], // Chỉ cache code và data cấu trúc, tránh trùng lặp với includeAssets/icons
+        globIgnores: ['**/node_modules/**/*', 'sw.js', 'workbox-*.js'],
         runtimeCaching: [
           {
             // Cache Google Fonts
