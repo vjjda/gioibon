@@ -49,6 +49,9 @@ export class MaskManager {
     }
 
     handleMaskStart(e, segmentEl, item) {
+        // Chỉ cho phép nút chuột trái (button 0) hoặc touch events
+        if (e.type === 'mousedown' && e.button !== 0) return;
+
         const now = Date.now();
         if (now - this.lastActionTime < this.cooldownMs) {
             if (e && e.cancelable) e.preventDefault();
