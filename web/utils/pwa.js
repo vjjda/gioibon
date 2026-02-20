@@ -20,7 +20,8 @@ export function setupPWA() {
                         'sutta_theme',
                         'sutta_sepia_light',
                         'sutta_sepia_dark',
-                        'sutta_loop_enabled'
+                        'sutta_loop_enabled',
+                        'sutta_hint_mode_enabled' // Cấu hình Hint mới
                     ];
 
                     // Bước 1: Sao lưu
@@ -59,7 +60,7 @@ export function setupPWA() {
                     Object.entries(backup).forEach(([key, val]) => {
                         localStorage.setItem(key, val);
                     });
-
+                    
                     // Bước 6: Tải lại trang từ server
                     window.location.reload(true);
                 } catch (error) {
@@ -79,7 +80,6 @@ export function setupPWA() {
 
     if (toast && refreshBtn && closeBtn) {
         let registration;
-
         // Lắng nghe event từ Service Worker (thông qua Vite PWA plugin)
         window.addEventListener('load', () => {
             if ('serviceWorker' in navigator) {
@@ -93,17 +93,17 @@ export function setupPWA() {
                             }
                         });
                     });
-                });
+                 });
             }
         });
-
+        
         refreshBtn.addEventListener('click', () => {
             if (registration && registration.waiting) {
                 registration.waiting.postMessage({ type: 'SKIP_WAITING' });
             }
             window.location.reload();
         });
-
+        
         closeBtn.addEventListener('click', () => {
             toast.classList.add('hidden');
         });

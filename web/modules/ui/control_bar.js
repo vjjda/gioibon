@@ -7,14 +7,16 @@ export class ControlBar {
         this.stopBtn = document.getElementById('stop-btn');
         this.speedSelect = document.getElementById('speed-select');
         this.loopBtn = document.getElementById('loop-btn');
+        this.hintToggleBtn = document.getElementById('hint-toggle-btn');
         
         const STORAGE_KEY_LOOP = 'sutta_loop_enabled';
         const STORAGE_KEY_RATE = 'tts_rate';
+        const STORAGE_KEY_HINT = 'sutta_hint_mode_enabled';
 
         if (this.playBtn) this.playBtn.addEventListener('click', onPlayAll);
         if (this.pauseBtn) this.pauseBtn.addEventListener('click', onPause);
         if (this.stopBtn) this.stopBtn.addEventListener('click', onStop);
-        
+
         if (this.speedSelect) {
             // Nạp giá trị speed từ bộ nhớ
             const savedRate = localStorage.getItem(STORAGE_KEY_RATE);
@@ -36,6 +38,25 @@ export class ControlBar {
                 const isActive = this.loopBtn.classList.toggle('active');
                 localStorage.setItem(STORAGE_KEY_LOOP, isActive); // Lưu cấu hình
                 if (onLoopToggle) onLoopToggle(isActive);
+            });
+        }
+
+        if (this.hintToggleBtn) {
+            // Nạp trạng thái hint mode từ bộ nhớ
+            const savedHintMode = localStorage.getItem(STORAGE_KEY_HINT) === 'true';
+            if (savedHintMode) {
+                this.hintToggleBtn.classList.add('active');
+                document.body.classList.add('hint-mode-active');
+            }
+
+            this.hintToggleBtn.addEventListener('click', () => {
+                const isActive = this.hintToggleBtn.classList.toggle('active');
+                if (isActive) {
+                    document.body.classList.add('hint-mode-active');
+                } else {
+                    document.body.classList.remove('hint-mode-active');
+                }
+                localStorage.setItem(STORAGE_KEY_HINT, isActive);
             });
         }
 
