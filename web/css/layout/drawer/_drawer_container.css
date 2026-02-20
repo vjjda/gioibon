@@ -45,7 +45,8 @@
   position: absolute;
   top: 100%; /* Below the trigger button */
   right: 0;
-  width: 300px; /* Fixed width for the drawer */
+  width: 300px; /* Target width */
+  max-width: calc(100vw - 40px); /* Avoid overflow on very small screens */
   background-color: var(--bg-card);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-md);

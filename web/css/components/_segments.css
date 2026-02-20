@@ -80,11 +80,18 @@
     position: absolute;
     top: 0;
     /* Extend outside to right margin for easier click */
-    right: -30px; 
+    right: -20px; 
     bottom: 0;
-    width: 60px; /* Wider hit area */
+    width: 40px; /* Smaller hit area to avoid overflow */
     cursor: pointer;
     z-index: 20; /* Ensure on top of content */
+}
+
+@media (max-width: 600px) {
+    .segment-mask-toggle {
+        right: 0;
+        width: 30px;
+    }
 }
 
 /* Visual cue on hover/active */

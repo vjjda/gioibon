@@ -31,21 +31,29 @@
     }
     .container {
         margin-left: 0;
+        overflow-x: hidden;
     }
     #sidebar-toggle {
         display: flex;
     }
     #content {
-        padding: 2rem 5% 10rem 5%;
+        padding: 2rem 15px 10rem 15px; /* Fixed padding for better control */
+        overflow-x: hidden;
     }
     header {
         /* Center text even on mobile, with padding to avoid button overlap */
-        padding: 0 60px; 
+        padding: 0 50px; 
         align-items: center; 
         text-align: center;
+        width: 100%;
+        overflow: hidden;
     }
     header h1 {
         font-size: 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
     }
     .toc-rule-list {
         grid-template-columns: repeat(5, 1fr);
