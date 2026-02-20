@@ -117,14 +117,18 @@ export class TocRenderer {
     }
 
     _scrollTo(id) {
-        // Find segment by data-id
+        // [UPDATED] Sửa lỗi PWA scroll làm nhảy header bằng cách tính khoảng cách thủ công
         const target = document.querySelector(`.segment[data-id="${id}"]`);
+        const contentContainer = document.getElementById('content');
         
-        if (target) {
-            // Simply use scrollIntoView. 
-            // Because #content has overflow-y:auto and header is a sibling outside #content,
-            // aligning to top of #content is correct and won't be obscured.
-            target.scrollIntoView({ block: 'start' });
+        if (target && contentContainer) {
+            // Lấy toạ độ tuyệt đối của target và container
+            const targetRect = target.getBoundingClientRect();
+            const containerRect = contentContainer.getBoundingClientRect();
+            
+            // Tính toán khoảng cách chênh lệch và cuộn chính xác vùng content.
+            // Trừ đi khoảng 20px để phần tử không dính chặt vào mép trên của view.
+            contentContainer.scrollTop += (targetRect.top - containerRect.top) - 20;
 
             if (window.innerWidth <= 1024 && this.sidebar) {
                 this.sidebar.classList.remove('visible');
