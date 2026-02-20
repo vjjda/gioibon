@@ -6,13 +6,13 @@ node_modules/
 
 .env
 
-# Audio files (Locally available for build, but not in git source)
-web/public/data/audio/
-web/data/audio/
-*.mp3
-
-# Python cache
-__pycache__/
+# Audio files (Chỉ ignore ở source, không ignore ở dist)
+/web/public/data/audio/
+/web/data/audio/
+/data/audio/
+# Thay vì *.mp3 chung chung, ta chỉ ignore ở các folder source
+/web/public/data/audio/*.mp3
+/web/data/audio/*.mp3
 
 # Python cache
 __pycache__/
@@ -22,12 +22,13 @@ __pycache__/
 # OS metadata
 .DS_Store
 
+# Ignore source data folders
 /data/
-
-# Generated output
-output/
 /web/data/
 !/web/data/tts_rules.json
+
+# Generated output
+/output/
 
 # Build artifacts
 build/
