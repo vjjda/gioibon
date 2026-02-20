@@ -24,7 +24,7 @@ __pycache__/
 
 # Ignore source data folders
 /data/
-/web/data/
+/web/public/data/*
 !/web/data/tts_rules.json
 
 # Generated output
