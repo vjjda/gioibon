@@ -1,6 +1,7 @@
 // Path: web/modules/core/config.js
 
-export const BASE_URL = import.meta.env.BASE_URL;
+// [UPDATED] Hỗ trợ cả Vite (import.meta.env) và môi trường phát triển đơn giản (make simple)
+export const BASE_URL = (import.meta.env && import.meta.env.BASE_URL) ? import.meta.env.BASE_URL : '/';
 
 export const CONFIG_KEYS = {
     API_KEY: 'google_cloud_api_key',

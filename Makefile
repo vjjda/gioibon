@@ -6,7 +6,7 @@ LOCAL_IP = $(shell ifconfig | grep "inet " | grep -v 127.0.0.1 | awk '{print $$2
 # Base URL từ cấu hình dự án
 BASE_URL = /gioibon/
 
-.PHONY: data icons dev build preview deploy clean setup help qr-dev qr-preview
+.PHONY: data icons dev simple build preview deploy clean setup help qr-dev qr-preview
 
 # Lệnh mặc định
 help:
@@ -14,6 +14,7 @@ help:
 	@echo "  make data      : Xây dựng dữ liệu SQLite từ Markdown"
 	@echo "  make icons     : Sinh bộ icons PWA (yêu cầu Pillow)"
 	@echo "  make dev       : Chạy Vite dev server (có QR Code mạng LAN)"
+	@echo "  make simple    : Chạy Python HTTP Server đơn giản (Port 3456)"
 	@echo "  make build     : Build bản production cho Web"
 	@echo "  make preview   : Xem trước bản build cục bộ (có QR Code mạng LAN)"
 	@echo "  make deploy    : Build và Deploy lên GitHub Pages"
@@ -26,6 +27,9 @@ data:
 
 icons:
 	$(PYTHON) scripts/generate_pwa_icons.py
+
+simple:
+	@$(PYTHON) scripts/simple_server.py
 
 # Frontend
 dev:
