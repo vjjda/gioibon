@@ -1,19 +1,15 @@
-/* Path: web/css/components/_segments.css */
+# Path: web/css/components/_segments.css
 
-/* Segment Styling */
 .segment {
-    position: relative;
-    padding: 0.4rem 0.75rem;
-    margin-bottom: 0.75rem;
-    transition: background-color 0.2s;
-    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem 1rem;
     border-left: 3px solid transparent;
-    overflow: visible; /* Quan trọng: Cho phép mask-toggle tràn ra ngoài */
+    transition: all 0.2s ease;
+    margin-bottom: 0.25rem;
+    position: relative;
+    border-radius: 0 8px 8px 0;
 }
-
-/* Căn lề cho các Segment chứa Tiêu đề (Bỏ scroll-margin-top nếu đã dùng App Layout) */
-/* Nếu bạn đã áp dụng App Layout (100dvh) ở bước trước thì không cần scroll-margin-top nữa.
-   Nhưng tôi giữ lại dự phòng ở đây để không làm vỡ code nếu bạn chưa cập nhật. */
 
 .segment.active {
     background-color: rgba(139, 69, 19, 0.04);
@@ -22,7 +18,7 @@
 
 .segment-content-wrapper {
     display: flex;
-    align-items: flex-start;
+    align-items: flex-start; /* Luôn căn lên đầu để kiểm soát vị trí nút */
     gap: 0.75rem;
     position: relative;
     z-index: 1;
@@ -33,20 +29,40 @@
     padding-right: 0.5rem;
 }
 
-/* Play Buttons Default Alignment */
+/* Play Buttons Alignment */
 .play-btn {
-    margin-top: 5px; 
+    margin-top: 6px; /* Căn chỉnh cho khớp với dòng đầu tiên của text thường (line-height 1.7) */
 }
 
-/* Alignment for ALL headers and end sections */
+/* Đặc trị cho các segment Heading và đoạn kết thúc */
 .heading-segment .segment-content-wrapper,
 .end-segment .segment-content-wrapper {
-    align-items: center;
+    align-items: flex-start; /* Không dùng center nữa để tránh bị sụt nút khi text dài hoặc font lớn */
 }
 
-.heading-segment .play-btn,
+/* Chapter Headers (H2) - Font size 1.6rem */
+.chapter-header .play-btn {
+    margin-top: 0.55rem; /* Đẩy xuống để khớp với tâm thị giác của H2 */
+}
+
+/* Rule Headers (H4) - Font size 1.1rem */
+.rule-header .play-btn {
+    margin-top: 0.35rem; /* H4 nhỏ hơn nên margin thấp hơn */
+}
+
+/* End Segments (endvagga, namo, sadhu...) */
 .end-segment .play-btn {
-    margin-top: 0; 
+    margin-top: 0.5rem;
+}
+
+/* Reset margins của headers bên trong để không làm vỡ layout flex */
+.segment-text h1:first-child,
+.segment-text h2:first-child,
+.segment-text h3:first-child,
+.segment-text h4:first-child {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    display: block; /* Chuyển về block để nhất quán layout */
 }
 
 /* Move vertical spacing to segment container */
@@ -60,53 +76,28 @@
     margin-top: 1.5rem;
 }
 
-/* Reset internal margins for headers inside segments */
-.segment-text h1:first-child,
-.segment-text h2:first-child,
-.segment-text h3:first-child,
-.segment-text h4:first-child {
-    margin-top: 0 !important;
-}
-
-.chapter-header .segment-text h2,
-.rule-header .segment-text h4 {
-    margin-bottom: 0 !important;
-}
-
-/* Reset margins for end sections inside segments */
-.end-segment .segment-text .endsection,
-.end-segment .segment-text .endvagga,
-.end-segment .segment-text .endsutta,
-.end-segment .segment-text .namo,
-.end-segment .segment-text .sadhu {
-    margin: 0 !important;
-}
-
-/* --- [UPDATED] Vùng chạm (Touch Target) cho tính năng Mask --- */
+/* --- Vùng chạm (Touch Target) cho tính năng Mask --- */
 .segment-mask-toggle {
     position: absolute;
-    top: -10px;    /* Kéo dài lên trên 10px */
-    bottom: -10px; /* Kéo dài xuống dưới 10px */
-    right: -20px;  /* Tràn ra mép phải 20px (Tận dụng padding của #content) */
-    width: 60px;   /* Chiều rộng khổng lồ để dễ click (40px ăn vào trong, 20px tràn ra ngoài) */
+    top: -10px;
+    bottom: -10px;
+    right: -20px;
+    width: 60px;
     cursor: pointer;
-    z-index: 20; 
+    z-index: 20;
 }
 
 @media (max-width: 600px) {
     .segment-mask-toggle {
-        right: -20px; /* Tràn sát rạt ra mép lề màn hình di động */
-        width: 50px;  /* Đảm bảo vùng chạm > 44px chuẩn Mobile UX */
+        right: -20px;
+        width: 50px;
     }
 }
 
-/* Visual cue on hover/active */
-.segment-mask-toggle:hover,
-.segment-mask-toggle:active {
+.segment-mask-toggle:hover, .segment-mask-toggle:active {
     background: linear-gradient(to left, rgba(0,0,0,0.05), transparent);
 }
 
-/* Masked State (Hide Text) */
 .segment-text.masked {
     color: transparent !important;
     background-color: transparent !important;
@@ -114,7 +105,6 @@
     box-shadow: none;
 }
 
-/* Hide children */
 .segment-text.masked * {
     color: transparent !important;
     border-color: transparent !important;

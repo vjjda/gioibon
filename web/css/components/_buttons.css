@@ -1,4 +1,5 @@
-/* Path: web/css/components/_buttons.css */
+# Path: web/css/components/_buttons.css
+
 /* Buttons */
 .btn {
     padding: 8px 20px;
@@ -35,6 +36,7 @@
     background-color: transparent;
     color: var(--text-main);
 }
+
 .btn.secondary:hover {
     background-color: rgba(0,0,0,0.04);
 }
@@ -59,7 +61,7 @@
 
 .play-btn {
     font-size: 0.4rem;
-    opacity: 0.3; 
+    opacity: 0.3;
     width: 20px;
     height: 20px;
     flex-shrink: 0;
@@ -71,7 +73,7 @@
     color: var(--accent-color);
 }
 
-/* [UPDATED] Sequence/Heading Play Button distinct style */
+/* Sequence/Heading Play Button distinct style */
 .play-sequence-btn {
     color: var(--primary-color);
     opacity: 0.5;
@@ -86,7 +88,7 @@
 
 /* Trạng thái nút Play đang chạy */
 .play-btn.active-play {
-    font-size: 0.9rem; /* Phóng to nút pause/play thay vì dấu chấm */
+    font-size: 0.9rem;
     opacity: 1;
     color: var(--accent-color);
 }
@@ -94,4 +96,3 @@
 .play-sequence-btn.active-play {
     font-size: 1.1rem;
 }
-
