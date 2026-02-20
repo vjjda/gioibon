@@ -25,7 +25,7 @@ export default defineConfig({
   plugins: [
     VitePWA({
       registerType: 'autoUpdate', // Tự động cập nhật Service Worker khi có phiên bản mới
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'], // Các file cần cache ngay lập tức
+      includeAssets: ['assets/icons/favicon.ico', 'assets/icons/apple-touch-icon.png'], // Các file cần cache ngay lập tức
       manifest: {
         name: 'Giới Bổn Tỳ Kheo',
         short_name: 'Giới Bổn',
@@ -46,6 +46,12 @@ export default defineConfig({
             src: 'assets/icons/android-chrome-512x512.png',
             sizes: '512x512',
             type: 'image/png'
+          },
+          {
+            src: 'assets/icons/android-chrome-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable'
           }
         ]
       },
