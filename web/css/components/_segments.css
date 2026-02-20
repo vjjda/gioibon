@@ -120,12 +120,8 @@
     transition: all 0.3s ease;
 }
 
-/* Khi di chuột vào vùng toggle */
-.segment-mask-toggle:hover {
-    background-color: rgba(128, 128, 128, 0.03);
-}
 
 .segment-mask-toggle:hover::after {
-    background-color: rgba(128, 128, 128, 0.5); /* Hiện rõ hơn khi hover */
+    background-color: rgba(128, 128, 128, 0.6); /* Hiện rõ hơn khi hover */
     width: 2px;
 }
