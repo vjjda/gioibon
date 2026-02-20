@@ -34,8 +34,8 @@ export default defineConfig({
         background_color: '#fdfbf7',
         display: 'standalone', // Chạy như app native, không có thanh địa chỉ
         orientation: 'portrait',
-        scope: '/',
-        start_url: '/',
+        scope: '/gioibon/',
+        start_url: '/gioibon/',
         icons: [
           {
             src: 'assets/icons/android-chrome-192x192.png',
