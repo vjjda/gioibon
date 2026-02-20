@@ -1,9 +1,10 @@
 // Path: web/modules/services/sqlite_connection.js
 import { initSQLite, withExistDB } from 'libs/wa-sqlite-index.js';
 import { useIdbStorage } from 'libs/wa-sqlite-idb.js';
+import { BASE_URL } from 'core/config.js';
 
 export class SqliteConnection {
-    constructor(dbName = "content.db", dbUrl = "data/content.db") {
+    constructor(dbName = "content.db", dbUrl = `${BASE_URL}data/content.db`) {
         this.dbName = dbName;
         this.dbUrl = dbUrl;
         this.db = null;
@@ -19,7 +20,7 @@ export class SqliteConnection {
             // Note: useIdbStorage will return a VFS that persists to IDB
             // [UPDATED] Pass the URL to the WASM file explicitly (served from public/)
             let db = await initSQLite(useIdbStorage(this.dbName, {
-                url: './wa-sqlite-async.wasm'
+                url: `${BASE_URL}wa-sqlite-async.wasm`
             }));
             
             // Check if valid by querying tables
@@ -44,7 +45,7 @@ export class SqliteConnection {
                 // Re-init with the downloaded file
                 db = await initSQLite(useIdbStorage(this.dbName, {
                     ...withExistDB(file),
-                    url: './wa-sqlite-async.wasm'
+                    url: `${BASE_URL}wa-sqlite-async.wasm`
                 }));
                 console.log("Database initialized from server file.");
             } else {

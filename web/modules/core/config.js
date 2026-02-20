@@ -1,5 +1,7 @@
 // Path: web/modules/core/config.js
 
+export const BASE_URL = import.meta.env.BASE_URL;
+
 export const CONFIG_KEYS = {
     API_KEY: 'google_cloud_api_key',
     TTS_VOICE: 'tts_voice_name',

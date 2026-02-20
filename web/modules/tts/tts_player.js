@@ -1,5 +1,6 @@
 // Path: web/modules/tts/tts_player.js
 import { TTSEngine } from 'tts/tts_engine.js';
+import { BASE_URL } from 'core/config.js';
 
 export class TTSPlayer {
     constructor() {
@@ -22,7 +23,7 @@ export class TTSPlayer {
 
         // [NEW] Nạp bộ rules cấu hình
         this.ttsRules = null;
-        this.rulesPromise = fetch('data/tts_rules.json')
+        this.rulesPromise = fetch(`${BASE_URL}data/tts_rules.json`)
             .then(res => res.json())
             .then(data => { this.ttsRules = data; })
             .catch(err => console.warn("Không tìm thấy tts_rules.json", err));
@@ -179,7 +180,7 @@ export class TTSPlayer {
             let audioSrc = null;
 
             if (item.audio && item.audio !== 'skip') {
-                audioSrc = `data/audio/${item.audio}`;
+                audioSrc = `${BASE_URL}data/audio/${item.audio}`;
             } else if (item.text) {
                 // Áp dụng bộ rules chuẩn hóa Text
                 const ttsText = await this._applyTTSRules(item.text);
