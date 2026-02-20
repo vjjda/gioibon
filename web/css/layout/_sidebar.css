@@ -143,3 +143,38 @@
     color: var(--bg-card); /* Use background color for text contrast */
     border-color: var(--primary-color);
 }
+
+
+/* --- Tái thiết kế nút mở Sidebar (Ghost Button) --- */
+#sidebar-toggle {
+    position: fixed;
+    top: 15px; 
+    left: 15px;
+    z-index: 1001;
+    background: transparent !important; /* Xóa nền */
+    border: none !important; /* Xóa viền */
+    box-shadow: none !important; /* Xóa đổ bóng */
+    color: var(--text-muted); /* Chữ màu mờ, chìm vào nền */
+    font-size: 1.6rem; /* Tăng kích thước 3 vạch to hơn */
+    padding: 10px; /* Tăng vùng chạm (touch target) cho mobile */
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Hiệu ứng khi người dùng chạm hoặc hover */
+#sidebar-toggle:hover,
+#sidebar-toggle:active {
+    color: var(--text-main); /* Rõ nét, đậm lên khi tương tác */
+    background: transparent !important; 
+    transform: scale(1.05); /* Phóng to nhẹ một chút */
+}
+
+/* Ẩn trên thiết bị Desktop (Tuỳ thuộc vào logic responsive hiện tại của bạn) */
+@media (min-width: 1025px) {
+    #sidebar-toggle {
+        display: none;
+    }
+}
