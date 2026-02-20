@@ -99,7 +99,7 @@
     right: 0;
     top: 0;
     bottom: 0;
-    width: 30px; 
+    width: 50px; 
     cursor: pointer;
     z-index: 10;
     border-right: none; /* Loại bỏ border mặc định hoặc dashed cũ */
