@@ -3,7 +3,7 @@
 /* Segment Styling */
 .segment {
     position: relative;
-    padding: 0.4rem 0.75rem; /* Increased padding */
+    padding: 0.4rem 0.75rem;
     margin-bottom: 0.75rem;
     transition: background-color 0.2s;
     border-radius: 8px;
@@ -11,13 +11,13 @@
     /* Ensure overflow visible so mask toggle can extend outside */
     overflow: visible;
     
-    /* [NEW] Tránh Header đè lên nội dung khi nhảy từ Mục lục */
-    scroll-margin-top: 110px; 
+    /* [UPDATED] Giảm khoảng cách đệm để text hiện sát mép Header hơn */
+    scroll-margin-top: 70px; 
 }
 
-/* [NEW] Căn lề rộng hơn một chút cho các Segment chứa Tiêu đề */
+/* [UPDATED] Căn lề cho các Segment chứa Tiêu đề */
 .segment:has(h1, h2, h3, h4) {
-    scroll-margin-top: 120px;
+    scroll-margin-top: 80px;
 }
 
 .segment.active {
@@ -44,7 +44,7 @@
     margin-top: 5px; /* Align with ~1.7 line-height of body text */
 }
 
-/* [UPDATED] Alignment for ALL headers and end sections */
+/* Alignment for ALL headers and end sections */
 .heading-segment .segment-content-wrapper,
 .end-segment .segment-content-wrapper {
     align-items: center;
