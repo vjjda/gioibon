@@ -1,10 +1,19 @@
 /* Path: web/css/layout/_container.css */
 
+/* Khóa toàn trang bằng 100dvh để trị lỗi thanh địa chỉ trên Android */
+html, body {
+    height: 100dvh; 
+    overflow: hidden; /* Cấm cuộn toàn trang */
+    margin: 0;
+    padding: 0;
+}
+
 /* --- Main Layout --- */
 .container {
     flex: 1;
     margin-left: var(--sidebar-width);
-    height: 100vh;
+    height: 100dvh; /* Đổi từ 100vh sang 100dvh */
+    width: auto;
     display: flex;
     flex-direction: column;
     background-color: var(--bg-body);
@@ -12,19 +21,22 @@
     transition: margin-left 0.3s ease;
 }
 
-/* Content Area */
+/* Content Area - Biến thành khu vực cuộn độc lập */
 #content {
-    flex: 1;
-    overflow-y: auto;
+    flex: 1; /* Chiếm toàn bộ không gian còn lại sau Header */
+    overflow-y: auto; /* Chỉ cuộn nội dung ở đây */
+    overflow-x: hidden;
+    scroll-behavior: auto; /* Nhảy TOC tức thì, không chuyển động lướt */
+    
     /* Đổi padding sang giá trị cố định thay vì % để dễ dàng áp dụng max-width */
-    padding: 2rem 20px; 
-    padding-bottom: 120px;
+    padding: 2rem 20px;
+    padding-bottom: 120px; /* Chừa không gian dưới đáy cho nút Control */
 }
 
 .section {
     width: 100%;
     /* Giới hạn độ rộng tối đa của đoạn văn để đọc dễ nhất */
-    max-width: 600px; 
+    max-width: 600px;
     /* margin left/right auto để căn giữa khối văn bản bên trong #content */
-    margin: 0 auto 4rem auto; 
+    margin: 0 auto 4rem auto;
 }

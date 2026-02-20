@@ -9,14 +9,6 @@
     border-radius: 8px;
     border-left: 3px solid transparent;
     overflow: visible;
-    
-    /* [UPDATED] Vừa vặn sát mép dưới của Header (Khoảng 60px header + 5px khoảng trống) */
-    scroll-margin-top: 65px; 
-}
-
-/* [UPDATED] Thêm chút xíu cho tiêu đề để không bị ngộp */
-.segment:has(h1, h2, h3, h4) {
-    scroll-margin-top: 70px;
 }
 
 .segment.active {
