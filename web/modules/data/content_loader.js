@@ -1,3 +1,4 @@
+// Path: web/modules/data/content_loader.js
 import { SqliteConnection } from '../services/sqlite_connection.js';
 
 export class ContentLoader {
