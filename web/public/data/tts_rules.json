@@ -1,0 +1,10 @@
+{
+    "remove_html": true,
+    "remove_chars_regex": "[()\\[\\]*]",
+    "collapse_spaces": true,
+    "capitalize_upper": true,
+    "phonetics": {
+        "pācittiya": "pa chít ti ya"
+    }
+}
+

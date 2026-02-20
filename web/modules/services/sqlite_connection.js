@@ -17,7 +17,10 @@ export class SqliteConnection {
             
             // Try to open first to check if it exists and has tables
             // Note: useIdbStorage will return a VFS that persists to IDB
-            let db = await initSQLite(useIdbStorage(this.dbName));
+            // [UPDATED] Pass the URL to the WASM file explicitly (served from public/)
+            let db = await initSQLite(useIdbStorage(this.dbName, {
+                url: './wa-sqlite-async.wasm'
+            }));
             
             // Check if valid by querying tables
             let tables = [];
@@ -39,7 +42,10 @@ export class SqliteConnection {
                 const file = new File([buffer], this.dbName);
 
                 // Re-init with the downloaded file
-                db = await initSQLite(useIdbStorage(this.dbName, withExistDB(file)));
+                db = await initSQLite(useIdbStorage(this.dbName, {
+                    ...withExistDB(file),
+                    url: './wa-sqlite-async.wasm'
+                }));
                 console.log("Database initialized from server file.");
             } else {
                 // console.log("Database loaded from IndexedDB cache.");
