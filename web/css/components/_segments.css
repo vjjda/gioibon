@@ -8,8 +8,12 @@
     transition: background-color 0.2s;
     border-radius: 8px;
     border-left: 3px solid transparent;
-    overflow: visible;
+    overflow: visible; /* Quan trọng: Cho phép mask-toggle tràn ra ngoài */
 }
+
+/* Căn lề cho các Segment chứa Tiêu đề (Bỏ scroll-margin-top nếu đã dùng App Layout) */
+/* Nếu bạn đã áp dụng App Layout (100dvh) ở bước trước thì không cần scroll-margin-top nữa.
+   Nhưng tôi giữ lại dự phòng ở đây để không làm vỡ code nếu bạn chưa cập nhật. */
 
 .segment.active {
     background-color: rgba(139, 69, 19, 0.04);
@@ -78,21 +82,21 @@
     margin: 0 !important;
 }
 
-/* Base Mask Toggle Area */
+/* --- [UPDATED] Vùng chạm (Touch Target) cho tính năng Mask --- */
 .segment-mask-toggle {
     position: absolute;
-    top: -5px;
-    right: -20px;
-    bottom: 0;
-    width: 40px; 
+    top: -10px;    /* Kéo dài lên trên 10px */
+    bottom: -10px; /* Kéo dài xuống dưới 10px */
+    right: -20px;  /* Tràn ra mép phải 20px (Tận dụng padding của #content) */
+    width: 60px;   /* Chiều rộng khổng lồ để dễ click (40px ăn vào trong, 20px tràn ra ngoài) */
     cursor: pointer;
     z-index: 20; 
 }
 
 @media (max-width: 600px) {
     .segment-mask-toggle {
-        right: 0;
-        width: 30px;
+        right: -20px; /* Tràn sát rạt ra mép lề màn hình di động */
+        width: 50px;  /* Đảm bảo vùng chạm > 44px chuẩn Mobile UX */
     }
 }
 
