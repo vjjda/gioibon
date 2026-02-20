@@ -10,6 +10,7 @@ import requests
 import unicodedata
 import base64
 from typing import Dict, Any, Optional
+from dotenv import load_dotenv
 
 from mutagen.mp3 import MP3
 from mutagen.id3 import ID3, USLT, TIT2, TALB, TPE1, TRCK
@@ -17,7 +18,12 @@ from mutagen.id3 import ID3, USLT, TIT2, TALB, TPE1, TRCK
 __all__ = ["slugify", "get_audio_hash", "generate_audio", "add_metadata", "main"]
 
 # --- CẤU HÌNH ---
-API_KEY: str = "AIzaSyDzbBD8W-om1b77m48lsJoaZNHKAIXUpSQ"
+load_dotenv() # Load variables from .env file
+API_KEY: Optional[str] = os.getenv("GOOGLE_API_KEY")
+
+if not API_KEY:
+    raise ValueError("GOOGLE_API_KEY not found in environment variables. Please check your .env file.")
+
 VOICE_NAME: str = "vi-VN-Chirp3-HD-Charon"
 LANGUAGE_CODE: str = "vi-VN"
 INPUT_TSV: str = "output/sentences/viet_patimokkha_segments.tsv"
