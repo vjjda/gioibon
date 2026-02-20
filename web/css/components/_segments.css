@@ -99,11 +99,12 @@
     right: 0;
     top: 0;
     bottom: 0;
-    width: 50px; 
+    width: 40px; 
     cursor: pointer;
     z-index: 10;
     border-right: none; /* Loại bỏ border mặc định hoặc dashed cũ */
     transition: background-color 0.3s ease;
+    touch-action: manipulation; /* Tối ưu cho tap, tránh delay 300ms và nhạy quá mức */
 }
 
 /* Đường border thực tế (Low-profile Border) 

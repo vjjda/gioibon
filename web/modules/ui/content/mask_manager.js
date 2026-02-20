@@ -6,6 +6,8 @@ export class MaskManager {
         this.items = [];
         this.isDraggingMask = false;
         this.dragMaskAction = null; // 'mask' or 'unmask'
+        this.lastActionTime = 0;
+        this.cooldownMs = 250; // Tránh double tap quá nhanh
 
         this._setupGlobalListeners();
     }
@@ -29,6 +31,10 @@ export class MaskManager {
     }
 
     toggleMask(segmentEl, item) {
+        const now = Date.now();
+        if (now - this.lastActionTime < this.cooldownMs) return;
+        this.lastActionTime = now;
+
         const textEl = segmentEl.querySelector('.segment-text');
         if (!textEl) return;
 
@@ -43,6 +49,13 @@ export class MaskManager {
     }
 
     handleMaskStart(e, segmentEl, item) {
+        const now = Date.now();
+        if (now - this.lastActionTime < this.cooldownMs) {
+            if (e && e.cancelable) e.preventDefault();
+            return;
+        }
+        this.lastActionTime = now;
+
         if (e && e.cancelable) e.preventDefault();
         this.isDraggingMask = true;
         const textEl = segmentEl.querySelector('.segment-text');
