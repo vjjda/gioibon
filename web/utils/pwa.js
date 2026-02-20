@@ -1,72 +1,36 @@
 // Path: web/utils/pwa.js
-import { registerSW } from 'virtual:pwa-register';
 
 export function setupPWA() {
-    let updateSWFunc;
-
-    // 1. Lắng nghe cập nhật tự động từ Vite PWA
-    try {
-        updateSWFunc = registerSW({
-            onNeedRefresh() {
-                const toast = document.getElementById('pwa-toast');
-                if (toast) {
-                    toast.classList.remove('hidden');
-                }
-            },
-            onOfflineReady() {
-                console.log('App is ready to work offline');
-            },
-        });
-    } catch (e) {
-        console.warn("Lỗi đăng ký Service Worker:", e);
-    }
-
-    // Nút "Tải lại ngay" trên Toast
-    const refreshBtn = document.getElementById('pwa-refresh');
-    if (refreshBtn) {
-        refreshBtn.addEventListener('click', async (e) => {
-            // Ngăn sự kiện click nổi bọt lọt ra ngoài (nếu có)
-            e.preventDefault();
-            e.stopPropagation();
-            
-            refreshBtn.innerHTML = 'Đang tải...';
-            refreshBtn.disabled = true;
-
-            try {
-                if (updateSWFunc) {
-                    await updateSWFunc(true); // Yêu cầu workbox nhảy sang bản mới
-                }
-            } catch (err) {
-                console.error("Lỗi khi updateSW:", err);
-            } finally {
-                // Luôn ép tải lại trang dù cập nhật SW có lỗi hay không
-                window.location.reload(true);
-            }
-        });
-    }
-
-    // Nút "Đóng" Toast
-    const closeBtn = document.getElementById('pwa-close');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const toast = document.getElementById('pwa-toast');
-            if (toast) toast.classList.add('hidden');
-        });
-    }
-
-    // 2. Nút "Làm mới dữ liệu" thủ công trong Sidebar
+    // 1. Logic dọn dẹp cache và dữ liệu (Cập nhật: Giữ lại cấu hình)
     const clearCacheBtn = document.getElementById('btn-clear-cache');
     if (clearCacheBtn) {
-        clearCacheBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            if (confirm('Hệ thống sẽ xóa dữ liệu cũ và tải lại. Bạn có chắc chắn không?')) {
-                // Vô hiệu hóa nút để tránh click nhiều lần
+        clearCacheBtn.addEventListener('click', async () => {
+            if (confirm('Bạn có chắc chắn muốn làm mới toàn bộ dữ liệu? Các cấu hình như API Key, font size và tốc độ đọc sẽ được giữ lại.')) {
+                // Vô hiệu hóa nút
                 clearCacheBtn.disabled = true;
                 clearCacheBtn.style.opacity = '0.5';
 
                 try {
+                    // Danh sách các phím cần bảo lưu
+                    const keysToPreserve = [
+                        'google_cloud_api_key',
+                        'tts_voice_name',
+                        'tts_rate',
+                        'sutta_font_scale',
+                        'sutta_theme',
+                        'sutta_sepia_light',
+                        'sutta_sepia_dark',
+                        'sutta_loop_enabled'
+                    ];
+
+                    // Bước 1: Sao lưu
+                    const backup = {};
+                    keysToPreserve.forEach(key => {
+                        const val = localStorage.getItem(key);
+                        if (val !== null) backup[key] = val;
+                    });
+
+                    // Bước 2: Dọn dẹp Service Workers
                     if ('serviceWorker' in navigator) {
                         const registrations = await navigator.serviceWorker.getRegistrations();
                         for (let registration of registrations) {
@@ -74,11 +38,13 @@ export function setupPWA() {
                         }
                     }
 
+                    // Bước 3: Dọn dẹp Cache API
                     if ('caches' in window) {
                         const keys = await caches.keys();
                         await Promise.all(keys.map(key => caches.delete(key)));
                     }
 
+                    // Bước 4: Dọn dẹp IndexedDB (Database nội dung)
                     if (indexedDB.databases) {
                         const dbs = await indexedDB.databases();
                         dbs.forEach(db => {
@@ -86,9 +52,15 @@ export function setupPWA() {
                         });
                     }
 
+                    // Bước 5: Dọn dẹp LocalStorage và khôi phục cấu hình
                     localStorage.clear();
                     sessionStorage.clear();
+                    
+                    Object.entries(backup).forEach(([key, val]) => {
+                        localStorage.setItem(key, val);
+                    });
 
+                    // Bước 6: Tải lại trang từ server
                     window.location.reload(true);
                 } catch (error) {
                     console.error('Lỗi khi xóa cache:', error);
@@ -99,4 +71,42 @@ export function setupPWA() {
             }
         });
     }
+
+    // 2. Logic thông báo cập nhật PWA (Toast)
+    const toast = document.getElementById('pwa-toast');
+    const refreshBtn = document.getElementById('pwa-refresh');
+    const closeBtn = document.getElementById('pwa-close');
+
+    if (toast && refreshBtn && closeBtn) {
+        let registration;
+
+        // Lắng nghe event từ Service Worker (thông qua Vite PWA plugin)
+        window.addEventListener('load', () => {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js').then(reg => {
+                    registration = reg;
+                    reg.addEventListener('updatefound', () => {
+                        const newWorker = reg.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                toast.classList.remove('hidden');
+                            }
+                        });
+                    });
+                });
+            }
+        });
+
+        refreshBtn.addEventListener('click', () => {
+            if (registration && registration.waiting) {
+                registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+            }
+            window.location.reload();
+        });
+
+        closeBtn.addEventListener('click', () => {
+            toast.classList.add('hidden');
+        });
+    }
 }
+

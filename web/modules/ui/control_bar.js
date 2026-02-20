@@ -1,143 +1,104 @@
 // Path: web/modules/ui/control_bar.js
 
 export class ControlBar {
-    constructor(playCallback, pauseCallback, stopCallback, speedChangeCallback, loopToggleCallback) {
+    constructor(onPlayAll, onPause, onStop, onSpeedChange, onLoopToggle) {
         this.playBtn = document.getElementById('play-all-btn');
         this.pauseBtn = document.getElementById('pause-btn');
         this.stopBtn = document.getElementById('stop-btn');
         this.speedSelect = document.getElementById('speed-select');
         this.loopBtn = document.getElementById('loop-btn');
         
-        this.playCallback = playCallback;
-        this.pauseCallback = pauseCallback;
-        this.stopCallback = stopCallback;
-        this.speedChangeCallback = speedChangeCallback;
-        this.loopToggleCallback = loopToggleCallback;
+        const STORAGE_KEY_LOOP = 'sutta_loop_enabled';
+        const STORAGE_KEY_RATE = 'tts_rate';
 
-        this._setupListeners();
-    }
-
-    _setupListeners() {
-        if (this.playBtn) {
-            this.playBtn.addEventListener('click', () => {
-                if (this.playCallback) this.playCallback();
-            });
-        }
-        if (this.pauseBtn) {
-            this.pauseBtn.addEventListener('click', () => {
-                if (this.pauseCallback) this.pauseCallback();
-            });
-        }
-        if (this.stopBtn) {
-            this.stopBtn.addEventListener('click', () => {
-                if (this.stopCallback) this.stopCallback();
-            });
-        }
+        if (this.playBtn) this.playBtn.addEventListener('click', onPlayAll);
+        if (this.pauseBtn) this.pauseBtn.addEventListener('click', onPause);
+        if (this.stopBtn) this.stopBtn.addEventListener('click', onStop);
+        
         if (this.speedSelect) {
+            // Nạp giá trị speed từ bộ nhớ
+            const savedRate = localStorage.getItem(STORAGE_KEY_RATE);
+            if (savedRate) this.speedSelect.value = savedRate;
+
             this.speedSelect.addEventListener('change', (e) => {
-                const newRate = parseFloat(e.target.value);
-                if (this.speedChangeCallback) {
-                    this.speedChangeCallback(newRate);
-                }
-                // [FIX] Blur focus after selection so global shortcuts work immediately
-                e.target.blur();
+                const rate = parseFloat(e.target.value);
+                localStorage.setItem(STORAGE_KEY_RATE, rate); // Lưu cấu hình
+                onSpeedChange(rate);
             });
         }
-        // Xử lý sự kiện nút Loop
+
         if (this.loopBtn) {
+            // Nạp trạng thái loop từ bộ nhớ
+            const savedLoop = localStorage.getItem(STORAGE_KEY_LOOP) === 'true';
+            if (savedLoop) this.loopBtn.classList.add('active');
+
             this.loopBtn.addEventListener('click', () => {
-                this.loopBtn.classList.toggle('active');
-                const isLooping = this.loopBtn.classList.contains('active');
-                if (this.loopToggleCallback) this.loopToggleCallback(isLooping);
+                const isActive = this.loopBtn.classList.toggle('active');
+                localStorage.setItem(STORAGE_KEY_LOOP, isActive); // Lưu cấu hình
+                if (onLoopToggle) onLoopToggle(isActive);
             });
         }
 
-        // [NEW] Global keyboard shortcuts cho Control Bar
+        // Shortcut Keys
         document.addEventListener('keydown', (e) => {
-            // Ngăn việc kích hoạt phím tắt khi đang nhập liệu (ví dụ: trong form cài đặt)
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
-            // Note: We removed SELECT from the check above so shortcuts work even if focused (though blur handles it)
-            // but strict check: if user is actively changing dropdown with arrows, we might want to let them.
-            // However, our request is for 't' and 'e' to work globally.
-
             const key = e.key.toLowerCase();
-            
-            // Loop Toggle
-            if (key === 'g') {
-                e.preventDefault(); 
-                if (this.loopBtn) {
-                    this.loopBtn.click(); 
-                }
-            }
-
-            // Speed Control Shortcuts
-            // 't' -> Increase Speed
-            if (key === 't') {
-                e.preventDefault();
-                this._changeSpeedIndex(1);
-            }
-
-            // 'e' -> Decrease Speed
-            if (key === 'e') {
-                e.preventDefault();
-                this._changeSpeedIndex(-1);
-            }
+            if (key === 'g' && this.loopBtn) this.loopBtn.click();
+            if (key === 't') this._changeSpeedIndex(1, onSpeedChange);
+            if (key === 'e') this._changeSpeedIndex(-1, onSpeedChange);
         });
     }
 
-    _changeSpeedIndex(direction) {
+    _changeSpeedIndex(direction, callback) {
         if (!this.speedSelect) return;
-
-        const currentIndex = this.speedSelect.selectedIndex;
-        const newIndex = currentIndex + direction;
-
-        // Check bounds
+        const newIndex = this.speedSelect.selectedIndex + direction;
         if (newIndex >= 0 && newIndex < this.speedSelect.options.length) {
             this.speedSelect.selectedIndex = newIndex;
             const newRate = parseFloat(this.speedSelect.value);
-            
-            // Trigger callback
-            if (this.speedChangeCallback) {
-                this.speedChangeCallback(newRate);
-            }
-            
-            // Visual feedback (optional but helpful)
-            // We could briefly show the new speed, but the select updates itself.
-        }
-    }
-
-    // Initialize speed select with current rate
-    setSpeed(rate) {
-        if (this.speedSelect) {
-            this.speedSelect.value = rate.toString();
+            localStorage.setItem('tts_rate', newRate); // Lưu cấu hình
+            if (callback) callback(newRate);
         }
     }
 
     updateState(state) {
         if (!this.playBtn || !this.pauseBtn || !this.stopBtn) return;
-        // state: 'playing', 'paused', 'stopped'
-        if (state === 'playing') {
-            this.playBtn.disabled = true;
-            this.pauseBtn.disabled = false;
-            this.stopBtn.disabled = false;
-            
-            // Icon only
-            this.pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            this.pauseBtn.title = "Tạm dừng";
-        } else if (state === 'paused') {
-            this.playBtn.disabled = false;
-            this.pauseBtn.disabled = false;
-            this.stopBtn.disabled = false;
-            
-            this.pauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-            this.pauseBtn.title = "Tiếp tục";
-        } else {
-            this.playBtn.disabled = false;
-            this.pauseBtn.disabled = true;
-            this.stopBtn.disabled = true;
-            
-            this.pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            this.pauseBtn.title = "Tạm dừng";
+        const pauseIcon = this.pauseBtn.querySelector('i');
+
+        switch (state) {
+            case 'playing':
+                this.playBtn.disabled = true;
+                this.pauseBtn.disabled = false;
+                this.stopBtn.disabled = false;
+                if (pauseIcon) {
+                    pauseIcon.classList.remove('fa-play');
+                    pauseIcon.classList.add('fa-pause');
+                }
+                break;
+            case 'paused':
+                this.playBtn.disabled = true;
+                this.pauseBtn.disabled = false;
+                this.stopBtn.disabled = false;
+                if (pauseIcon) {
+                    pauseIcon.classList.remove('fa-pause');
+                    pauseIcon.classList.add('fa-play');
+                }
+                break;
+            case 'stopped':
+                this.playBtn.disabled = false;
+                this.pauseBtn.disabled = true;
+                this.stopBtn.disabled = true;
+                if (pauseIcon) {
+                    pauseIcon.classList.remove('fa-play');
+                    pauseIcon.classList.add('fa-pause');
+                }
+                break;
+        }
+    }
+
+    setSpeed(rate) {
+        if (this.speedSelect) {
+            this.speedSelect.value = rate.toString();
         }
     }
 }
+
