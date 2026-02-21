@@ -99,7 +99,21 @@ body.hint-mode-active .segment-text.masked .hint-tail {
 /* Play Buttons Alignment */
 .play-btn {
     margin-top: 6px;
-    /* Căn chỉnh cho khớp với dòng đầu tiên của text thường */
+    position: relative; /* [UPDATED] Anchor for expanded hit area */
+}
+
+/* [NEW] Expanded Hit Area for Play Button */
+/* Tạo vùng bấm vô hình mở rộng ra xung quanh nút play */
+.play-btn::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    bottom: -10px;
+    left: -20px; /* Mở rộng sang trái để cover vùng padding của segment */
+    right: -10px; /* Mở rộng sang phải một chút */
+    z-index: 1;
+    cursor: pointer;
+    /* background-color: rgba(255, 0, 0, 0.1); */ /* Uncomment để debug vùng bấm */
 }
 
 /* Đặc trị cho các segment Heading và đoạn kết thúc */
@@ -111,13 +125,11 @@ body.hint-mode-active .segment-text.masked .hint-tail {
 /* Chapter Headers (H2) - Font size 1.6rem */
 .chapter-header .play-btn {
     margin-top: 0.55rem;
-    /* Đẩy xuống để khớp với tâm thị giác của H2 */
 }
 
 /* Rule Headers (H4) - Font size 1.1rem */
 .rule-header .play-btn {
     margin-top: 0.35rem;
-    /* H4 nhỏ hơn nên margin thấp hơn */
 }
 
 /* End Segments (endvagga, namo, sadhu...) */
@@ -156,27 +168,38 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     cursor: pointer;
     z-index: 10;
     border-right: none;
-    /* Loại bỏ border mặc định hoặc dashed cũ */
     transition: background-color 0.3s ease;
     touch-action: manipulation;
-    /* Tối ưu cho tap, tránh delay 300ms và nhạy quá mức */
 }
 
-/* Đường border thực tế (Low-profile Border) 
-   Tách biệt theo từng segment bằng cách dùng pseudo-element với top/bottom offset
-*/
+/* Đường border thực tế (Low-profile Border) */
 .segment-mask-toggle::after {
     content: "";
     position: absolute;
     right: 0;
-    top: 8px;    /* Tạo khoảng trống phía trên mỗi đoạn */
-    bottom: 8px; /* Tạo khoảng trống phía dưới mỗi đoạn */
-    width: 1.5px;
-    background-color: rgba(128, 128, 128, 0.15); /* Màu rất nhạt, low-profile */
+    top: 8px;
+    bottom: 8px;
+    width: 2px; /* [UPDATED] Tăng độ dày mặc định lên chút cho dễ nhìn */
+    background-color: rgba(128, 128, 128, 0.15);
     transition: all 0.3s ease;
+    border-radius: 2px;
 }
 
 .segment-mask-toggle:hover::after {
-    background-color: rgba(128, 128, 128, 0.6); /* Hiện rõ hơn khi hover */
-    width: 2px;
+    background-color: rgba(128, 128, 128, 0.6);
+    width: 3px;
+}
+
+/* [NEW] Accent Highlight for Heading Segments */
+/* Các segment là heading sẽ có đường gạch bên phải màu đậm hơn */
+.heading-segment .segment-mask-toggle::after {
+    background-color: var(--primary-color); /* Hoặc accent-color tùy theme */
+    opacity: 0.6;
+    width: 3px;
+}
+
+.heading-segment .segment-mask-toggle:hover::after {
+    background-color: var(--primary-color);
+    opacity: 1;
+    width: 4px;
 }
