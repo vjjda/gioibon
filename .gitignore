@@ -21,6 +21,8 @@ __pycache__/
 
 # Backend Data
 /data/*
+!/data/content/
+/data/content/*
 !/data/content/content_source.tsv
 /output/
 

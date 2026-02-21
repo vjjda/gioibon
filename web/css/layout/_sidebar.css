@@ -102,11 +102,12 @@
 
 /* H3: Sub-section */
 .level-h3 > .toc-link {
-    font-weight: 400;
+    font-weight: 500;
     font-size: 0.85rem;
     color: var(--text-muted);
     padding-left: 1.2rem;
-    margin-top: 0.1rem;
+    margin-top: 0.15rem;
+    letter-spacing: 0.2px;
 }
 
 /* TOC Grid for Rules */
