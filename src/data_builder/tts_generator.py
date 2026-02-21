@@ -131,3 +131,35 @@ class TTSGenerator:
                 return "skip"
 
         return filename
+
+    def get_garbage_files(self, active_filenames: list[str]) -> list[str]:
+        """Trả về danh sách các file trong thư mục cache không được sử dụng."""
+        if not os.path.exists(self.tmp_dir):
+            return []
+            
+        active_set = set(active_filenames)
+        garbage_files = []
+        
+        # Lấy danh sách file trong thư mục tmp
+        files = os.listdir(self.tmp_dir)
+        for f in files:
+            file_path = os.path.join(self.tmp_dir, f)
+            # Chỉ check file (bỏ qua folder con và file ẩn như .DS_Store)
+            if os.path.isfile(file_path) and not f.startswith('.'):
+                if f not in active_set:
+                    garbage_files.append(f)
+                    
+        return garbage_files
+
+    def remove_files(self, filenames: list[str]) -> int:
+        """Xóa danh sách file được chỉ định trong tmp_dir."""
+        count = 0
+        for f in filenames:
+            file_path = os.path.join(self.tmp_dir, f)
+            try:
+                os.remove(file_path)
+                count += 1
+                logger.debug(f"Đã xóa file rác: {f}")
+            except OSError as e:
+                logger.warning(f"Không thể xóa file {f}: {e}")
+        return count

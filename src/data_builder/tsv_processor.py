@@ -47,7 +47,7 @@ class TsvContentProcessor:
                         audio=audio_filename
                     ))
                     
-                    if (i + 1) % 100 == 0:
+                    if (i + 1) % 200 == 0:
                         logger.info(f"Đã xử lý {i + 1}/{total} segments...")
 
         except Exception as e:

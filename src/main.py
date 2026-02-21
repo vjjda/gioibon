@@ -29,7 +29,7 @@ AUDIO_FINAL_DIR = os.path.join(WEB_DATA_DIR, "audio")
 AUDIO_TMP_DIR = os.path.join(DATA_CONTENT_DIR, "audio-tmp")
 
 
-def run_data_builder() -> None:
+def run_data_builder(clean: bool = False) -> None:
     """Thực thi logic build dữ liệu từ TSV Source sang DB/TSV kèm theo việc sinh Audio TTS."""
     logger.info("🚀 Khởi động quy trình xây dựng dữ liệu và Audio từ TSV Source...")
 
@@ -53,6 +53,36 @@ def run_data_builder() -> None:
             f"🏁 Hoàn tất! Đã xử lý {len(segments)} segments và tạo/cache Audio thành công."
         )
 
+        # 4. Thực hiện dọn dẹp nếu có cờ --clean
+        if clean:
+            # Lấy danh sách file audio đang được sử dụng
+            active_filenames = [seg.audio for seg in segments if seg.audio and seg.audio != "skip"]
+            
+            logger.info("🔍 Đang kiểm tra thư mục audio-tmp để tìm file rác...")
+            garbage_files = tts_generator.get_garbage_files(active_filenames)
+            
+            if not garbage_files:
+                logger.info("✨ Thư mục audio-tmp đã sạch sẽ, không có file thừa.")
+            else:
+                total_garbage = len(garbage_files)
+                print(f"\n⚠️  Tìm thấy {total_garbage} file thừa trong audio-tmp:")
+                
+                # Hiển thị tối đa 10 file đầu tiên
+                for f in garbage_files[:10]:
+                    print(f"  - {f}")
+                
+                if total_garbage > 10:
+                    print(f"  ... và {total_garbage - 10} file khác.")
+                
+                # Hỏi xác nhận người dùng
+                confirm = input(f"\n❓ Bạn có chắc chắn muốn xóa {total_garbage} file này không? (y/N): ").strip().lower()
+                
+                if confirm == 'y':
+                    deleted_count = tts_generator.remove_files(garbage_files)
+                    logger.info(f"✨ Đã xóa thành công {deleted_count} file rác.")
+                else:
+                    logger.info("🚫 Đã hủy thao tác dọn dẹp.")
+
     except Exception as e:
         logger.exception(f"❌ Lỗi: {e}")
         sys.exit(1)
@@ -67,12 +97,18 @@ def cli() -> None:
     parser_data = subparsers.add_parser(
         "data", help="Xây dựng dữ liệu & tạo Audio TTS (Markdown -> DB/TSV)"
     )
+    # Thêm cờ --clean
+    parser_data.add_argument(
+        "--clean",
+        action="store_true",
+        help="Dọn dẹp thư mục audio-tmp (xóa các file audio cũ không còn sử dụng)."
+    )
 
     args = parser.parse_args()
 
     # Điều hướng logic dựa trên lệnh
     if args.command == "data":
-        run_data_builder()
+        run_data_builder(clean=args.clean)
     else:
         # Nếu gõ `gioibon` không kèm argument, hiển thị hướng dẫn
         parser.print_help()
