@@ -8,10 +8,6 @@ import logging
 import re
 import json
 from typing import Dict, Any, Optional
-from collections import defaultdict
-
-from mutagen.mp3 import MP3
-from mutagen.id3 import ID3, USLT, TIT2, TALB, TPE1, TRCK
 
 logger = logging.getLogger(__name__)
 
@@ -24,9 +20,6 @@ class TTSGenerator:
         self.api_key = os.getenv("GOOGLE_TTS_API_KEY")
         self.voice_name = "vi-VN-Chirp3-HD-Charon"
         self.language_code = "vi-VN"
-        
-        self.label_counts: Dict[str, int] = defaultdict(int)
-        self.label_totals: Dict[str, int] = defaultdict(int)
         
         self.tts_rules: Dict[str, Any] = {}
         
@@ -50,10 +43,6 @@ class TTSGenerator:
             shutil.rmtree(self.output_dir)
         os.makedirs(self.output_dir, exist_ok=True)
         os.makedirs(self.tmp_dir, exist_ok=True)
-
-    def set_label_totals(self, totals: Dict[str, int]) -> None:
-        """Nhận tổng số lượng của từng label để xử lý việc đặt tên file."""
-        self.label_totals = totals
 
     def _get_hash(self, text: str) -> str:
         """Tạo mã băm SHA-256 bao gồm cả nội dung và cấu hình giọng đọc."""
@@ -85,22 +74,6 @@ class TTSGenerator:
             logger.error(f"❌ Lỗi sinh audio cho '{text[:30]}...': {e}")
         return False
 
-    def _add_metadata(self, filepath: str, text: str, title: str, track_no: str) -> None:
-        """Gắn thẻ ID3 cho file MP3."""
-        try:
-            audio = MP3(filepath, ID3=ID3)
-            if audio.tags is None:
-                audio.add_tags()
-                
-            audio.tags.add(USLT(encoding=3, lang='vie', desc='', text=text))
-            audio.tags.add(TIT2(encoding=3, text=title))
-            audio.tags.add(TALB(encoding=3, text="Giới bổn Patimokkha Việt"))
-            audio.tags.add(TPE1(encoding=3, text="Vi-Charon"))
-            audio.tags.add(TRCK(encoding=3, text=track_no))
-            audio.save()
-        except Exception as e:
-            logger.error(f"❌ Lỗi thêm metadata vào {filepath}: {e}")
-
     def _apply_tts_rules(self, text: str) -> str:
         """Áp dụng quy tắc từ tts_rules.json chung của cả Frontend và Backend."""
         rules = self.tts_rules
@@ -125,8 +98,9 @@ class TTSGenerator:
             
         return text
 
-    def process_segment(self, uid: int, label: str, segment_text: str, html: str = "") -> str:
-        """Xử lý đoạn văn, trả về tên file MP3 cuối cùng, hoặc 'skip' nếu được loại trừ."""
+    def process_segment(self, segment_text: str, html: str = "", label: str = "") -> str:
+        """Xử lý đoạn văn, trả về tên file MP3 (hash) hoặc 'skip'."""
+        # Logic skip dựa trên label và html structure
         if not segment_text.strip() or label.startswith("note-") or label.endswith("-name") or label in ["title", "subtitle"] or html.startswith("<h"):
             return "skip"
 
@@ -136,37 +110,24 @@ class TTSGenerator:
         if not tts_text:
             return "skip"
 
-        self.label_counts[label] += 1
-        count = self.label_counts[label]
-        total = self.label_totals.get(label, 0)
-        
-        uid_padded = f"{uid:03d}"
-        
-        # 2. Sinh Hash
-        text_hash = self._get_hash(tts_text)[:16] 
-        
-        # 3. Phân tách title metadata và filename
-        if total > 1:
-            title_base = f"{uid_padded}_{label}_{count}"
-        else:
-            title_base = f"{uid_padded}_{label}"
-            
-        filename = f"{title_base}____{text_hash}.mp3"
+        # 2. Sinh Hash (chỉ dùng hash làm tên file)
+        text_hash = self._get_hash(tts_text)[:16]
+        filename = f"{text_hash}.mp3"
         
         final_filepath = os.path.join(self.output_dir, filename)
-        tmp_filepath = os.path.join(self.tmp_dir, f"{text_hash}.mp3")
+        tmp_filepath = os.path.join(self.tmp_dir, filename)
 
-        # 4. Kiểm tra cache
+        # 3. Kiểm tra cache/tồn tại
         if os.path.exists(tmp_filepath):
-            shutil.copy2(tmp_filepath, final_filepath)
-            self._add_metadata(final_filepath, segment_text, title_base, uid_padded)
+            if not os.path.exists(final_filepath):
+                 shutil.copy2(tmp_filepath, final_filepath)
         else:
-            # 5. Gọi API với bản text sạch
+            # 4. Gọi API với bản text sạch
             if self._fetch_audio_from_api(tts_text, tmp_filepath):
                 shutil.copy2(tmp_filepath, final_filepath)
-                self._add_metadata(tmp_filepath, segment_text, title_base, uid_padded)
-                self._add_metadata(final_filepath, segment_text, title_base, uid_padded)
                 logger.debug(f"✅ Đã tạo mới Audio: {filename}")
+            else:
+                # Nếu lỗi API, trả về skip để tránh lỗi frontend
+                return "skip"
 
         return filename
-

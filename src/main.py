@@ -10,10 +10,9 @@ from dotenv import load_dotenv
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 from src.config.logging_config import setup_logging
-from src.data_builder.processor import ContentProcessor
 from src.data_builder.writer import DataWriter
 from src.data_builder.tts_generator import TTSGenerator
-from src.data_builder.rule_mapper import RuleMapper
+from src.data_builder.tsv_processor import TsvContentProcessor
 
 # Load Environment Variables (.env)
 load_dotenv()
@@ -23,6 +22,7 @@ logger = logging.getLogger(__name__)
 # Cấu hình đường dẫn
 DATA_CONTENT_DIR = "data/content"
 WEB_DATA_DIR = "web/public/app-content"
+TSV_SOURCE = os.path.join(DATA_CONTENT_DIR, "content_source.tsv")
 TSV_OUT = os.path.join(DATA_CONTENT_DIR, "content.tsv")
 DB_OUT = os.path.join(WEB_DATA_DIR, "content.db")
 AUDIO_FINAL_DIR = os.path.join(WEB_DATA_DIR, "audio")
@@ -30,33 +30,20 @@ AUDIO_TMP_DIR = os.path.join(DATA_CONTENT_DIR, "audio-tmp")
 
 
 def run_data_builder() -> None:
-    """Thực thi logic build dữ liệu từ Markdown sang DB/TSV kèm theo việc sinh Audio TTS."""
-    logger.info("🚀 Khởi động quy trình xây dựng dữ liệu và Audio...")
+    """Thực thi logic build dữ liệu từ TSV Source sang DB/TSV kèm theo việc sinh Audio TTS."""
+    logger.info("🚀 Khởi động quy trình xây dựng dữ liệu và Audio từ TSV Source...")
 
-    # Tìm file markdown Tiếng Việt
-    viet_files = glob.glob("data/Gioi bon Viet/*.md")
-    if not viet_files:
-        viet_files = glob.glob("data/*Pātimokkha Bhikhu*.md")
-
-    if not viet_files:
-        logger.error("❌ Không tìm thấy file markdown Tiếng Việt đầu vào.")
+    if not os.path.exists(TSV_SOURCE):
+        logger.error(f"❌ Không tìm thấy file nguồn: {TSV_SOURCE}")
         return
 
-    # Tìm file markdown Tiếng Pali
-    pali_files = glob.glob("data/Bu Bhikkhu*.md")
-    pali_path = pali_files[0] if pali_files else ""
-
     try:
-        # 1. Đọc nội dung file Tiếng Việt
-        with open(viet_files[0], "r", encoding="utf-8") as f:
-            raw_md = f.read()
-
-        # 2. Khởi tạo Logic
-        rule_mapper = RuleMapper(pali_path)
+        # 1. Khởi tạo Logic
         tts_generator = TTSGenerator(AUDIO_FINAL_DIR, AUDIO_TMP_DIR)
-        processor = ContentProcessor(tts_generator, rule_mapper)
+        processor = TsvContentProcessor(tts_generator)
 
-        segments = processor.process_content(raw_md)
+        # 2. Xử lý nội dung từ TSV
+        segments = processor.process_tsv(TSV_SOURCE)
 
         # 3. Ghi dữ liệu (TSV & SQLite)
         writer = DataWriter(TSV_OUT, DB_OUT)
