@@ -69,8 +69,11 @@
 
 .play-btn:hover {
     opacity: 1;
-    transform: scale(1.2);
     color: var(--accent-color);
+}
+
+.play-btn:hover i {
+    transform: scale(1.2);
 }
 
 /* Sequence/Heading Play Button distinct style */

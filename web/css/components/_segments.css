@@ -99,7 +99,8 @@ body.hint-mode-active .segment-text.masked .hint-tail {
 }
 
 /* [NEW] Full-height Left Hit Area for Play Button */
-.play-btn::before {
+/* Only apply to the main segment play button, not the sequence button */
+.play-btn:not(.play-sequence-btn)::before {
     content: '';
     position: absolute; /* Neo vào .segment (relative) */
     top: 0;
