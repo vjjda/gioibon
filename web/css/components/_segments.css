@@ -11,6 +11,26 @@
     border-radius: 0 8px 8px 0;
 }
 
+/* [NEW] Note Segment Logic: Closer to previous segment */
+.segment[data-label^="note"] {
+    margin-top: -0.25rem; /* Pull up closer */
+    margin-bottom: 1rem; /* Push down next content */
+    padding-top: 0.25rem;
+    padding-bottom: 0.5rem;
+    background-color: transparent !important; /* Avoid background override */
+}
+
+/* Ensure note content is styled appropriately */
+.segment[data-label^="note"] .segment-text {
+    font-size: 0.9em;
+    color: var(--text-muted);
+}
+
+/* Hide play button for notes if any (redundant check) */
+.segment[data-label^="note"] .play-btn {
+    display: none;
+}
+
 .segment.active {
     background-color: rgba(139, 69, 19, 0.04);
     border-left-color: var(--primary-color);
@@ -160,4 +180,3 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     background-color: rgba(128, 128, 128, 0.6); /* Hiện rõ hơn khi hover */
     width: 2px;
 }
-

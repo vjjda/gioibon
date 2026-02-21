@@ -86,11 +86,11 @@
     font-size: calc(0.9rem * var(--text-scale, 1));
     color: var(--text-muted);
     background-color: rgba(0, 0, 0, 0.02);
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    margin: 1.5rem 0;
-    line-height: 1.5;
-    border-left: 2px solid var(--border-color);
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    margin: 0.25rem 0; /* Reduced from 1.5rem */
+    line-height: 1.4;
+    border-left: 3px solid var(--border-color); /* Thicker border for better visibility */
 }
 
 /* [NEW] Namo Styling (Centered, Emphasized) */
