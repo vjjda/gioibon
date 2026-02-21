@@ -135,9 +135,14 @@ export class TTSPlayer {
         if (this.ttsRules.remove_html) {
             ttsText = ttsText.replace(/<[^>]*>?/gm, '');
         }
-        if (this.ttsRules.remove_chars_regex) {
-            ttsText = ttsText.replace(new RegExp(this.ttsRules.remove_chars_regex, 'g'), ' ');
+        
+        if (this.ttsRules.remove_chars) {
+            // Escape các ký tự đặc biệt cho Regex JS
+            const escapedChars = this.ttsRules.remove_chars.map(c => this._escapeRegExp(c)).join('');
+            const pattern = new RegExp(`[${escapedChars}]`, 'g');
+            ttsText = ttsText.replace(pattern, ' ');
         }
+
         if (this.ttsRules.collapse_spaces) {
             ttsText = ttsText.replace(/\s+/g, ' ').trim();
         }

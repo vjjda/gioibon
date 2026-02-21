@@ -83,8 +83,11 @@ class TTSGenerator:
         if rules.get("remove_html"):
             text = re.sub(r'<[^>]*>?', '', text)
             
-        if rules.get("remove_chars_regex"):
-            text = re.sub(rules["remove_chars_regex"], ' ', text)
+        if rules.get("remove_chars"):
+            # Escape từng ký tự và nối thành regex pattern [abc...]
+            escaped_chars = [re.escape(c) for c in rules["remove_chars"]]
+            pattern = f"[{''.join(escaped_chars)}]"
+            text = re.sub(pattern, ' ', text)
             
         if rules.get("collapse_spaces"):
             text = re.sub(r'\s+', ' ', text).strip()
