@@ -101,7 +101,8 @@ class TTSGenerator:
     def process_segment(self, segment_text: str, html: str = "", label: str = "") -> str:
         """Xử lý đoạn văn, trả về tên file MP3 (hash) hoặc 'skip'."""
         # Logic skip dựa trên label và html structure
-        if not segment_text.strip() or label.startswith("note-") or label.endswith("-name") or label in ["title", "subtitle"] or html.startswith("<h"):
+        # [UPDATE] label.startswith("note") sẽ bao gồm cả "note" và "note-123"
+        if not segment_text.strip() or label.startswith("note") or label.endswith("-name") or label in ["title", "subtitle"] or html.startswith("<h"):
             return "skip"
 
         # 1. Áp dụng toàn bộ quy tắc động từ file JSON
