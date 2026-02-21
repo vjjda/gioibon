@@ -55,7 +55,7 @@ export class ContentRenderer {
                 prefix = 'intro';
             } else if (item.label === 'end') {
                 prefix = 'outro';
-            } else if (item.label.startsWith('note-')) {
+            } else if (item.label.startsWith('note')) {
                 prefix = currentPrefix || 'intro'; 
             } else {
                 const match = item.label.match(/^([a-z]+)/);
