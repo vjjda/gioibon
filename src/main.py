@@ -1,7 +1,6 @@
 # Path: src/main.py
 import sys
 import os
-import glob
 import logging
 import argparse
 from dotenv import load_dotenv

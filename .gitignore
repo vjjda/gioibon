@@ -20,7 +20,8 @@ __pycache__/
 *$py.class
 
 # Backend Data
-/data/
+/data/*
+!/data/content/content_source.tsv
 /output/
 
 # Build artifacts
