@@ -51,6 +51,8 @@ export class SegmentFactory {
     _addPlayButtons(wrapper, item, index) {
         if (item.audio && item.audio !== 'skip') {
             const playBtn = document.createElement('button');
+            playBtn.id = `play-btn-${item.id}`;
+            playBtn.name = `play-btn-${item.id}`;
             playBtn.className = 'play-btn icon-btn';
             playBtn.innerHTML = '<i class="fas fa-circle"></i>';
             playBtn.title = "Nghe đoạn này";
@@ -63,6 +65,8 @@ export class SegmentFactory {
 
         if (item.html && item.html.match(/^<h[1-6]/i) && item.label !== 'title' && item.label !== 'subtitle') {
             const playSeqBtn = document.createElement('button');
+            playSeqBtn.id = `play-seq-btn-${item.id}`;
+            playSeqBtn.name = `play-seq-btn-${item.id}`;
             playSeqBtn.className = 'play-btn icon-btn play-sequence-btn';
             playSeqBtn.innerHTML = '<i class="fas fa-play-circle"></i>';
             playSeqBtn.title = "Nghe toàn bộ phần này";

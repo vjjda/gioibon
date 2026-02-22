@@ -31,7 +31,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
 </head>
 <body>
-    <button id="sidebar-toggle" title="Mục lục"><i class="fas fa-bars"></i></button>
+    <button id="sidebar-toggle" name="sidebar-toggle" title="Mục lục"><i class="fas fa-bars"></i></button>
 
         <aside id="sidebar">
             <div class="toc-header">Mục lục</div>
@@ -39,7 +39,7 @@
             </ul>
         </aside>
     
-        <button id="btn-toggle-drawer" class="icon-trigger" title="Cài đặt hiển thị">
+        <button id="btn-toggle-drawer" name="btn-toggle-drawer" class="icon-trigger" title="Cài đặt hiển thị">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(180deg); transform-origin: center">
                 <path d="M6 15l6-6 6 6" />
             </svg>
@@ -49,13 +49,13 @@
             <div id="control-drawer" class="hidden">
                 <div id="drawer-footer">
                     <div class="zoom-widget">
-                        <button id="btn-font-decrease" class="icon-only-btn" title="Giảm cỡ chữ">
+                        <button id="btn-font-decrease" name="btn-font-decrease" class="icon-only-btn" title="Giảm cỡ chữ">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                             </svg>
                         </button>
                         <span id="font-size-label" class="zoom-label" title="Đặt lại cỡ chữ">Aa</span>
-                        <button id="btn-font-increase" class="icon-only-btn" title="Tăng cỡ chữ">
+                        <button id="btn-font-increase" name="btn-font-increase" class="icon-only-btn" title="Tăng cỡ chữ">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="12" y1="5" x2="12" y2="19"></line>
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -64,13 +64,13 @@
                     </div>
     
                     <div class="maintenance-group">
-                        <button id="btn-clear-cache" class="icon-only-btn" title="Xóa toàn bộ dữ liệu & cache">
+                        <button id="btn-clear-cache" name="btn-clear-cache" class="icon-only-btn" title="Xóa toàn bộ dữ liệu & cache">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="3 6 5 6 21 6"></polyline>
                                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                             </svg>
                         </button>
-                        <button id="btn-update-app" class="icon-only-btn" title="Kiểm tra & Cập nhật">
+                        <button id="btn-update-app" name="btn-update-app" class="icon-only-btn" title="Kiểm tra & Cập nhật">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
                             </svg>
@@ -79,9 +79,9 @@
 
                     <div class="theme-toggle-group">
                         <div id="sepia-control-panel" class="hidden">
-                            <input type="range" id="sepia-slider" min="0" max="100" value="0" step="1" title="Điều chỉnh độ ám vàng">
+                            <input type="range" id="sepia-slider" name="sepia-slider" min="0" max="100" value="0" step="1" title="Điều chỉnh độ ám vàng">
                         </div>
-                        <button id="btn-theme-toggle" title="Chuyển đổi giao diện">
+                        <button id="btn-theme-toggle" name="btn-theme-toggle" title="Chuyển đổi giao diện">
                             <span class="icon-moon">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
@@ -101,7 +101,7 @@
                                 </svg>
                             </span>
                         </button>
-                        <button id="btn-sepia-indicator" class="text-btn sepia-indicator" title="Độ ám vàng">0%</button>
+                        <button id="btn-sepia-indicator" name="btn-sepia-indicator" class="text-btn sepia-indicator" title="Độ ám vàng">0%</button>
                     </div>
                 </div>
             </div>
@@ -120,31 +120,31 @@
                 <form id="settings-form">
                     <div class="form-group">
                         <label for="api-key">Google Cloud API Key:</label>
-                        <input type="password" id="api-key" placeholder="Nhập API Key của bạn" autocomplete="on">
+                        <input type="password" id="api-key" name="api-key" placeholder="Nhập API Key của bạn" autocomplete="on">
                         <small>API Key được lưu trên trình duyệt của bạn.</small>
                     </div>
                     <div class="form-group">
                         <label for="voice-select">Giọng đọc:</label>
                         <div class="voice-control-group">
-                            <select id="voice-select">
+                            <select id="voice-select" name="voice-select">
                                 <option value="" disabled selected>Đang tải giọng...</option>
                             </select>
-                            <button type="button" id="refresh-voices-btn" class="icon-btn" title="Tải lại danh sách giọng"><i class="fas fa-sync-alt"></i></button>
+                            <button type="button" id="refresh-voices-btn" name="refresh-voices-btn" class="icon-btn" title="Tải lại danh sách giọng"><i class="fas fa-sync-alt"></i></button>
                         </div>
                     </div>
-                    <button type="submit" id="save-settings" class="btn primary">Lưu</button>
+                    <button type="submit" id="save-settings" name="save-settings" class="btn primary">Lưu</button>
                 </form>
             </div>
         </div>
 
         <div class="global-controls">
-            <button id="play-all-btn" class="btn primary" title="Đọc tất cả"><i class="fas fa-play"></i></button>
-            <button id="pause-btn" class="btn secondary" disabled title="Tạm dừng"><i class="fas fa-pause"></i></button>
-            <button id="stop-btn" class="btn secondary" disabled title="Dừng"><i class="fas fa-stop"></i></button>
+            <button id="play-all-btn" name="play-all-btn" class="btn primary" title="Đọc tất cả"><i class="fas fa-play"></i></button>
+            <button id="pause-btn" name="pause-btn" class="btn secondary" disabled title="Tạm dừng"><i class="fas fa-pause"></i></button>
+            <button id="stop-btn" name="stop-btn" class="btn secondary" disabled title="Dừng"><i class="fas fa-stop"></i></button>
             
             <div class="divider"></div>
             
-            <select id="speed-select" class="control-select" title="Tốc độ đọc">
+            <select id="speed-select" name="speed-select" class="control-select" title="Tốc độ đọc">
                 <option value="0.5">0.5x</option>
                 <option value="0.75">0.75x</option>
                 <option value="1.0">1.0x</option>
@@ -154,9 +154,9 @@
                 <option value="2.0">2.0x</option>
             </select>
             
-            <button id="loop-btn" class="icon-btn control-btn" title="Lặp lại"><i class="fas fa-redo"></i></button>
-            <button id="hint-toggle-btn" class="icon-btn control-btn" title="Chế độ gợi ý (Chỉ hiện chữ cái đầu)"><i class="fas fa-lightbulb"></i></button>
-            <button id="settings-btn" class="icon-btn control-btn" title="Cài đặt"><i class="fas fa-cog"></i></button>
+            <button id="loop-btn" name="loop-btn" class="icon-btn control-btn" title="Lặp lại"><i class="fas fa-redo"></i></button>
+            <button id="hint-toggle-btn" name="hint-toggle-btn" class="icon-btn control-btn" title="Chế độ gợi ý (Chỉ hiện chữ cái đầu)"><i class="fas fa-lightbulb"></i></button>
+            <button id="settings-btn" name="settings-btn" class="icon-btn control-btn" title="Cài đặt"><i class="fas fa-cog"></i></button>
         </div>
 
         <main id="content">
@@ -167,8 +167,8 @@
     <div id="pwa-toast" class="pwa-toast hidden">
         <div class="message">✨ Có phiên bản ứng dụng / dữ liệu mới!</div>
         <div class="pwa-actions">
-            <button id="pwa-refresh" class="btn-primary">Tải lại ngay</button>
-            <button id="pwa-close" class="btn-secondary">Đóng</button>
+            <button id="pwa-refresh" name="pwa-refresh" class="btn-primary">Tải lại ngay</button>
+            <button id="pwa-close" name="pwa-close" class="btn-secondary">Đóng</button>
         </div>
     </div>
 
