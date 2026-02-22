@@ -64,13 +64,12 @@ export class SqliteConnection {
                 
                 this.db = db;
 
-                // [OPTIMIZATION] Cấu hình SQLite để tiết kiệm RAM và tăng tốc độ đọc
+                // [OPTIMIZATION] Cấu hình SQLite để tiết kiệm RAM
                 try {
-                    // cache_size: 500 pages * 4KB = ~2MB. Giảm từ 2000 (~8MB) để tránh crash iOS.
                     await db.run("PRAGMA cache_size = 500"); 
-                    await db.run("PRAGMA temp_store = MEMORY"); // Lưu bảng tạm trong RAM để nhanh hơn
-                    await db.run("PRAGMA synchronous = OFF"); // Tăng tốc ghi
-                    await db.run("PRAGMA mmap_size = 0"); // Disable mmap on iOS to prevent jetsam kills
+                    await db.run("PRAGMA synchronous = OFF"); 
+                    await db.run("PRAGMA mmap_size = 0"); // Disable mmap on iOS
+                    // Removed temp_store = MEMORY to save RAM
                 } catch (e) {
                     console.warn("⚠️ Cannot set PRAGMAs", e);
                 }
@@ -80,29 +79,34 @@ export class SqliteConnection {
                     url: `${BASE_URL}wa-sqlite-async.wasm`
                 }));
                 
-                // Integrity Check: Verify if table exists
-                try {
-                    // wa-sqlite tạo file trống nếu không tìm thấy, nên phải check bảng
-                    const tables = await db.run("SELECT name FROM sqlite_master WHERE type='table' AND name='contents'");
-                    if (tables.length === 0) {
-                        console.warn("❌ Cached DB is empty/corrupted. Force re-downloading.");
+                this.db = db;
+
+                // Integrity Check: Only if we didn't just verify version via network
+                // If we are offline or version check failed, we might want to verify.
+                // But if we have a local version string, we assume it's good to avoid heavy reads.
+                if (!localVersion) {
+                    try {
+                        const tables = await db.run("SELECT name FROM sqlite_master WHERE type='table' AND name='contents'");
+                        if (tables.length === 0) {
+                            console.warn("❌ Cached DB is empty/corrupted. Force re-downloading.");
+                            localStorage.removeItem(storageKey);
+                            this.db = null;
+                            return await this.forceDownload(); 
+                        }
+                    } catch (e) {
+                        console.warn("❌ DB integrity check failed.", e);
                         localStorage.removeItem(storageKey);
                         this.db = null;
-                        return await this.forceDownload(); 
+                        return await this.forceDownload();
                     }
-
-                    // [OPTIMIZATION] Cấu hình SQLite cho kết nối từ cache
-                    await db.run("PRAGMA cache_size = 500");
-                    await db.run("PRAGMA temp_store = MEMORY");
-                    await db.run("PRAGMA mmap_size = 0");
-                } catch (e) {
-                    console.warn("❌ DB integrity check failed.", e);
-                    localStorage.removeItem(storageKey);
-                    this.db = null;
-                    return await this.forceDownload();
                 }
-                
-                this.db = db;
+
+                // [OPTIMIZATION] Cấu hình SQLite cho kết nối từ cache
+                try {
+                    await db.run("PRAGMA cache_size = 500");
+                    await db.run("PRAGMA mmap_size = 0");
+                    // Removed temp_store = MEMORY
+                } catch (e) {}
             }
 
             return this.db;

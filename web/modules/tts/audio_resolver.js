@@ -8,51 +8,28 @@ export class AudioResolver {
         this.dbConnection = dbConnection;
     }
 
-    /**
-     * Resolve audio từ item (text/audio_path)
-     * @param {object} item - {text, audio}
-     * @param {string} sessionId - ID của session lúc bắt đầu gọi resolve
-     * @param {function} getCurrentSessionId - Callback để lấy ID session hiện tại (dùng để check hủy)
-     * @param {TextProcessor} textProcessor - Instance xử lý text
-     * @returns { url: string, isBlob: boolean }
-     */
     async resolve(item, sessionId, getCurrentSessionId, textProcessor) {
         // Normalize text
         const ttsText = await textProcessor.normalize(item.text);
-        
-        // Check session (early exit)
         if (sessionId !== getCurrentSessionId()) return null;
-
         if (!ttsText) return null;
 
         const currentVoice = this.engine.voice.name;
         const currentLang = this.engine.voice.languageCode;
-        
-        // Tính Hash
         const targetHash = await audioCache.generateHash(ttsText, currentVoice, currentLang);
         const targetFilename = `${targetHash}.mp3`;
 
         // 1. DB Match (Ưu tiên số 1 - Offline & Nhanh nhất)
-        // Nếu tên file trong DB khớp với targetHash, nghĩa là DB có chứa blob của giọng đọc này
         if (item.audio === targetFilename && this.dbConnection) {
             try {
-                // Query BLOB từ SQLite
-                // item.id chính là uid trong bảng contents (hoặc cần mapping nếu khác)
-                // Giả sử item.id khớp uid
+                // [FIX] Truy vấn vào bảng audios thông qua audio_name thay vì uid
                 const result = await this.dbConnection.query(
-                    "SELECT audio_blob FROM contents WHERE uid = ?", 
-                    [item.id]
+                    "SELECT audio_blob FROM audios WHERE audio_name = ?", 
+                    [item.audio]
                 );
                 
                 if (result && result.length > 0) {
-                    const row = result[0];
-                    // wa-sqlite trả về Uint8Array cho BLOB
-                    let blobData = row.audio_blob; 
-                    
-                    // Nếu trả về object {audio_blob: ...} thì lấy value, 
-                    // nếu là array [blob] (mode row) thì lấy index 0. 
-                    // SqliteConnection.query trả về mảng các rows (objects).
-                    
+                    let blobData = result[0].audio_blob;
                     if (blobData) {
                         const blob = new Blob([blobData], { type: 'audio/mp3' });
                         return { url: URL.createObjectURL(blob), isBlob: true };
@@ -63,18 +40,18 @@ export class AudioResolver {
             }
         }
 
-        // 2. Cache IDB Match (Cho các giọng đọc custom không có trong DB)
+        // 2. Cache IDB Match
         if (await audioCache.has(targetHash)) {
-            if (sessionId !== getCurrentSessionId()) return null; // Check session
+            if (sessionId !== getCurrentSessionId()) return null;
             const blob = await audioCache.get(targetHash);
             return { url: URL.createObjectURL(blob), isBlob: true };
         }
 
-        // 3. API Fetch (Nếu DB không có và Cache không có)
+        // 3. API Fetch
         if (this.engine.hasApiKey()) {
             try {
                 const blob = await this.engine.fetchAudioBlob(ttsText);
-                if (sessionId !== getCurrentSessionId()) return null; // Check session
+                if (sessionId !== getCurrentSessionId()) return null; 
 
                 await audioCache.set(targetHash, blob);
                 return { url: URL.createObjectURL(blob), isBlob: true };
@@ -84,12 +61,12 @@ export class AudioResolver {
         }
 
         // 4. Fallback (DB Audio Mismatch)
-        // Nếu không có API Key, và DB có audio (dù khác giọng/hash), hãy dùng nó từ BLOB
         if (item.audio && item.audio !== 'skip' && this.dbConnection) {
              try {
+                // [FIX] Truy vấn vào bảng audios
                 const result = await this.dbConnection.query(
-                    "SELECT audio_blob FROM contents WHERE uid = ?", 
-                    [item.id]
+                    "SELECT audio_blob FROM audios WHERE audio_name = ?", 
+                    [item.audio]
                 );
                 if (result && result.length > 0 && result[0].audio_blob) {
                     const blob = new Blob([result[0].audio_blob], { type: 'audio/mp3' });
@@ -103,3 +80,4 @@ export class AudioResolver {
         return null;
     }
 }
+

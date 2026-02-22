@@ -15,6 +15,9 @@ import { setupPWA } from 'utils/pwa.js';
 document.addEventListener('DOMContentLoaded', async () => {
     setupPWA();
 
+    // [iOS Fix] Delay khởi động nặng để tránh crash lúc mở app
+    await new Promise(resolve => setTimeout(resolve, 150));
+
     // Khởi tạo kết nối DB dùng chung
     const dbConnection = new SqliteConnection();
 

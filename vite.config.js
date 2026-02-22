@@ -87,8 +87,8 @@ export default defineConfig({
                 ]
             },
             workbox: {
-                globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,db,wasm}'], // Đảm bảo cache .db và .wasm
-                maximumFileSizeToCacheInBytes: 15 * 1024 * 1024, // Tăng limit lên 15MB cho DB
+                globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,wasm}'], // Đã loại bỏ .db để tránh precache file lớn
+                maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // Giới hạn 5MB cho các assets khác
                 runtimeCaching: [
                     {
                         // Cache Google Fonts (stylesheets)
@@ -122,7 +122,8 @@ export default defineConfig({
                     },
                     {
                         // Chiến lược cache cho Audio/Data: StaleWhileRevalidate
-                        urlPattern: ({ url }) => url.pathname.includes('/app-content/'),
+                        // CHÚ Ý: Loại trừ file .db ra khỏi cache runtime để tránh lỗi bộ nhớ SW
+                        urlPattern: ({ url }) => url.pathname.includes('/app-content/') && !url.pathname.endsWith('.db'),
                         handler: 'StaleWhileRevalidate',
                         options: {
                             cacheName: 'app-data-cache',
