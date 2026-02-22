@@ -182,7 +182,7 @@ uid	html	label	segment
 181	<h4>{}</h4>	np4-name	Np 4. Purāṇacīvara
 182	<p>{}</p>	np4	Vị tỳ khưu nào bảo tỳ khưu ni không phải là thân quyến giặt, hoặc bảo nhuộm, hoặc bảo đập giũ y cũ thì (y ấy) nên được xả bỏ và (vị ấy) phạm tội pācittiya.
 183	<h4>{}</h4>	np5-name	Np 5. Cīvarapaṭiggahaṇa
-184	<p>{}</p>	np5	Vị tỳ khưu nào nhận lãnh y từ tay tỳ khưu ni không phải là thân quyến thì (y ấy) nên được xả bỏ và (vị ấy) phạm tội pācittiya ngoại trừ sự trao đổi.
+184	<p>{}</p>	np5	Vị tỳ khưu nào nhận lãnh y từ tay tỳ khưu ni không phải là thân quyến thì (y ấy) nên được xả bỏ và (vị ấy) phạm tội pācittiya ngoại trừ có sự trao đổi.
 185	<h4>{}</h4>	np6-name	Np 6. Aññātakaviññatti
 186	<p>{}	np6	Vị tỳ khưu nào yêu cầu nam gia chủ hoặc nữ gia chủ không phải là thân quyến về y thì (y ấy) nên được xả bỏ và (vị ấy) phạm tội pācittiya ngoại trừ có duyên cớ.
 187	{}	np6	Duyên cớ trong trường hợp này là vị tỳ khưu có y bị cướp đoạt hoặc là có y bị hư hỏng.
@@ -360,7 +360,7 @@ uid	html	label	segment
 359	<h4>{}</h4>	pc24-name	Pc 24. Āmisa
 360	<p>{}</p>	pc24	Vị tỳ khưu nào nói như vầy: Các tỳ khưu giáo giới cho các tỳ khưu ni vì nguyên nhân vật chất' thì phạm tội pācittiya.
 363	<h4>{}</h4>	pc25-name	Pc 25. Cīvaradāna
-364	<p>{}</p>	pc25	Vị tỳ khưu nào cho y đến tỳ khưu ni không phải là thân quyến thì phạm tội pācittiya ngoại trừ sự trao đổi.
+364	<p>{}</p>	pc25	Vị tỳ khưu nào cho y đến tỳ khưu ni không phải là thân quyến thì phạm tội pācittiya ngoại trừ có sự trao đổi.
 365	<h4>{}</h4>	pc26-name	Pc 26. Cīvarasibbana
 366	<p>{}</p>	pc26	Vị tỳ khưu nào may y hoặc bảo may y cho tỳ khưu ni không phải là thân quyến thì phạm tội pācittiya.
 367	<h4>{}</h4>	pc27-name	Pc 27. Saṁvidhāna
