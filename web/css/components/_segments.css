@@ -87,8 +87,8 @@ body.hint-mode-active .segment-text.masked .pli {
 
 body.hint-mode-active .segment-text.masked .hint-tail {
     color: transparent !important;
-    border-bottom: 1px solid rgba(128, 128, 128, 0.4) !important;
-    border-bottom-color: rgba(128, 128, 128, 0.4) !important;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.8) !important;
+    border-bottom-color: rgba(128, 128, 128, 0.8) !important;
     user-select: none;
     pointer-events: none;
 }
