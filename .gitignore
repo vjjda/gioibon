@@ -13,6 +13,7 @@ node_modules/
 /web/public/app-content/audio/
 /web/public/app-content/audio/*.mp3
 /web/public/app-content/content.db
+/web/public/app-content/*_version.json
 
 # Python cache
 __pycache__/
