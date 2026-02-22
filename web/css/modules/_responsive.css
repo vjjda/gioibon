@@ -66,4 +66,10 @@
     .btn span { display: none; }
     .btn { padding: 10px; border-radius: 50%; }
     .divider { display: none; }
+
+    /* Adjust Control Drawer for Mobile */
+    #control-drawer {
+        width: calc(100% - 30px);
+        right: 15px;
+    }
 }
