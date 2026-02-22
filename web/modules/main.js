@@ -32,7 +32,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     ThemeSettings.init();
     FontSettings.init();
 
-    const tocRenderer = new TocRenderer('toc-list', 'sidebar', 'sidebar-toggle');
+    const contentRenderer = new ContentRenderer(
+        'content',
+        (segmentId, audio, text) => { ttsPlayer.playSegment(segmentId, audio, text); },
+        (sequence, parentId) => { ttsPlayer.playSequence(sequence, parentId); }
+    );
+
+    const tocRenderer = new TocRenderer('toc-list', 'sidebar', 'sidebar-toggle', contentRenderer);
     
     const controlBar = new ControlBar(
         () => { /* Play All */
@@ -59,12 +65,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     );
 
     controlBar.setSpeed(ttsPlayer.currentRate);
-
-    const contentRenderer = new ContentRenderer(
-        'content',
-        (segmentId, audio, text) => { ttsPlayer.playSegment(segmentId, audio, text); },
-        (sequence, parentId) => { ttsPlayer.playSequence(sequence, parentId); }
-    );
 
     const settingsModal = new SettingsModal(ttsPlayer.engine);
 

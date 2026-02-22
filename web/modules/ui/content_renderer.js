@@ -3,6 +3,8 @@ import { SegmentFactory } from 'ui/content/segment_factory.js';
 import { MaskManager } from 'ui/content/mask_manager.js';
 import { UI_CONFIG } from 'core/config.js';
 
+const BATCH_SIZE = 60; // Increased to ensure it covers viewport on large screens
+
 export class ContentRenderer {
     constructor(containerId, playSegmentCallback, playSequenceCallback) {
         this.container = document.getElementById(containerId); // This is #content
@@ -24,6 +26,13 @@ export class ContentRenderer {
             onHover: (id) => { this.hoveredSegmentId = id; }
         });
 
+        // Lazy Loading State
+        this.renderedCount = 0;
+        this.observer = null;
+        this.sentinel = null;
+        this.currentPrefix = null; 
+        this.isRendering = false; // Throttle flag
+
         this._setupKeyboardListeners();
     }
 
@@ -42,13 +51,21 @@ export class ContentRenderer {
 
     render(items) {
         if (!this.container) return;
-        this.container.innerHTML = '';
-        this.items = items || [];
         
-        // Reset cache
+        // Cleanup previous state
+        if (this.observer) {
+            this.observer.disconnect();
+            this.observer = null;
+        }
+        this.container.innerHTML = '';
         this.elementCache.clear();
         this.activeSegmentId = null;
-        
+        this.renderedCount = 0;
+        this.currentPrefix = null;
+        this.sentinel = null;
+        this.isRendering = false;
+
+        this.items = items || [];
         this.maskManager.setItems(this.items);
         
         if (!this.items || this.items.length === 0) {
@@ -56,17 +73,63 @@ export class ContentRenderer {
             return;
         }
 
-        let currentSection = null;
-        let currentPrefix = null;
+        // Create Sentinel for Infinite Scroll
+        this.sentinel = document.createElement('div');
+        this.sentinel.className = 'loading-sentinel';
+        this.sentinel.style.height = '50px';
+        this.sentinel.style.width = '100%';
+        this.container.appendChild(this.sentinel);
 
-        this.items.forEach((item, index) => {
+        // Setup Observer
+        this.observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                // Throttle rendering to next animation frame to prevent loops
+                if (!this.isRendering) {
+                    this.isRendering = true;
+                    requestAnimationFrame(() => this._renderNextBatch());
+                }
+            }
+        }, {
+            root: this.container,
+            rootMargin: '200px', 
+            threshold: 0.1
+        });
+
+        this.observer.observe(this.sentinel);
+
+        // Initial Batch
+        this._renderNextBatch();
+    }
+
+    _renderNextBatch() {
+        if (this.renderedCount >= this.items.length) {
+            if (this.sentinel) this.sentinel.remove();
+            if (this.observer) this.observer.disconnect();
+            this.isRendering = false;
+            return;
+        }
+
+        const batch = this.items.slice(this.renderedCount, this.renderedCount + BATCH_SIZE);
+        const fragment = document.createDocumentFragment();
+        
+        // Find or create current section
+        let currentSection = null;
+        
+        // Check strictly if the last element BEFORE sentinel is a section
+        if (this.sentinel && this.sentinel.previousElementSibling && 
+            this.sentinel.previousElementSibling.classList.contains('section')) {
+            currentSection = this.sentinel.previousElementSibling;
+        }
+
+        batch.forEach((item, batchIndex) => {
+            const globalIndex = this.renderedCount + batchIndex;
             let prefix = 'misc';
             if (['title', 'subtitle', 'nidana'].includes(item.label)) {
                 prefix = 'intro';
             } else if (item.label === 'end') {
                 prefix = 'outro';
             } else if (item.label.startsWith('note')) {
-                prefix = currentPrefix || 'intro'; 
+                prefix = this.currentPrefix || 'intro'; 
             } else {
                 const match = item.label.match(/^([a-z]+)/);
                 if (match) {
@@ -75,25 +138,39 @@ export class ContentRenderer {
             }
             
             const isSectionStart = 
-                (prefix !== currentPrefix) || 
+                (prefix !== this.currentPrefix) || 
                 (item.label.endsWith('-chapter')) ||
                 (item.label === 'title');
 
             if (isSectionStart || !currentSection) {
-                currentPrefix = prefix;
+                this.currentPrefix = prefix;
                 currentSection = document.createElement('section');
                 currentSection.className = `section section-${prefix}`;
                 currentSection.id = `section-${item.label}`;
-                this.container.appendChild(currentSection);
+                fragment.appendChild(currentSection);
             }
 
-            const segmentEl = this.segmentFactory.create(item, index);
-            
-            // Cache the element reference immediately
+            const segmentEl = this.segmentFactory.create(item, globalIndex);
             this.elementCache.set(item.id, segmentEl);
-            
             currentSection.appendChild(segmentEl);
         });
+
+        // Insert before sentinel
+        if (this.sentinel && this.sentinel.parentNode === this.container) {
+            this.container.insertBefore(fragment, this.sentinel);
+        } else {
+            // Fallback if sentinel missing
+            this.container.appendChild(fragment);
+        }
+        
+        this.renderedCount += batch.length;
+        this.isRendering = false;
+
+        // If we rendered everything, cleanup
+        if (this.renderedCount >= this.items.length) {
+            if (this.sentinel) this.sentinel.remove();
+            if (this.observer) this.observer.disconnect();
+        }
     }
 
     _handlePlaySequence(startIndex) {
@@ -163,8 +240,34 @@ export class ContentRenderer {
         }
     }
 
+    _ensureRendered(targetIndex) {
+        if (targetIndex === -1 || targetIndex < this.renderedCount) return;
+
+        // Force render batches synchronously until we cover this index
+        while (this.renderedCount <= targetIndex) {
+            this._renderNextBatch();
+            if (this.renderedCount >= this.items.length) break;
+        }
+    }
+
+    scrollToSegment(id) {
+        // Just delegate to highlightSegment which now handles rendering
+        this.highlightSegment(id, true);
+    }
+
     highlightSegment(id, shouldScroll = true) {
         if (!this.container) return;
+
+        // Check if item is rendered. If not, force render.
+        let activeEl = this.elementCache.get(id);
+
+        if (!activeEl) {
+             const index = this.items.findIndex(item => item.id === id);
+             if (index !== -1) {
+                 this._ensureRendered(index);
+                 activeEl = this.elementCache.get(id);
+             }
+        }
 
         // 1. Remove previous active class efficiently
         if (this.activeSegmentId !== null && this.activeSegmentId !== id) {
@@ -173,7 +276,6 @@ export class ContentRenderer {
         }
 
         // 2. Add new active class
-        const activeEl = this.elementCache.get(id);
         if (activeEl) {
             activeEl.classList.add('active');
             this.activeSegmentId = id;
@@ -196,7 +298,7 @@ export class ContentRenderer {
     }
 
     _smartScroll(el) {
-        if (!this.container) return;
+        if (!this.container || !el) return;
 
         // 1. Lấy thông số thực tế tại thời điểm gọi (để chống lỗi Safari Address Bar)
         const rect = el.getBoundingClientRect();
@@ -283,6 +385,8 @@ export class ContentRenderer {
 
     getFirstVisibleSegmentId() {
         if (!this.container) return null;
+        // Optimization: Only check rendered segments? 
+        // QuerySelectorAll gets ALL rendered segments, which is fine since we lazy load.
         const segments = this.container.querySelectorAll('.segment');
         for (const segment of segments) {
             const rect = segment.getBoundingClientRect();

@@ -66,9 +66,11 @@ export class SqliteConnection {
 
                 // [OPTIMIZATION] Cấu hình SQLite để tiết kiệm RAM và tăng tốc độ đọc
                 try {
-                    await db.run("PRAGMA cache_size = 2000"); // Giới hạn cache khoảng 2MB
+                    // cache_size: 500 pages * 4KB = ~2MB. Giảm từ 2000 (~8MB) để tránh crash iOS.
+                    await db.run("PRAGMA cache_size = 500"); 
                     await db.run("PRAGMA temp_store = MEMORY"); // Lưu bảng tạm trong RAM để nhanh hơn
-                    await db.run("PRAGMA synchronous = OFF"); // Tăng tốc ghi (dù ít ghi nhưng vẫn giúp ổn định)
+                    await db.run("PRAGMA synchronous = OFF"); // Tăng tốc ghi
+                    await db.run("PRAGMA mmap_size = 0"); // Disable mmap on iOS to prevent jetsam kills
                 } catch (e) {
                     console.warn("⚠️ Cannot set PRAGMAs", e);
                 }
@@ -90,8 +92,9 @@ export class SqliteConnection {
                     }
 
                     // [OPTIMIZATION] Cấu hình SQLite cho kết nối từ cache
-                    await db.run("PRAGMA cache_size = 2000");
+                    await db.run("PRAGMA cache_size = 500");
                     await db.run("PRAGMA temp_store = MEMORY");
+                    await db.run("PRAGMA mmap_size = 0");
                 } catch (e) {
                     console.warn("❌ DB integrity check failed.", e);
                     localStorage.removeItem(storageKey);

@@ -11,21 +11,34 @@ export class ContentLoader {
         if (this.data) return this.data;
 
         try {
-            // Fetch only text metadata, EXCLUDING audio_blob to save memory
-            // Chỉ lấy hint (đã xử lý) và segment (gốc), sau đó sẽ lọc bớt trong map
-            const rows = await this.db.query("SELECT uid, html, label, segment, audio_name, hint FROM contents ORDER BY uid ASC");
+            // Count total rows first
+            const countResult = await this.db.query("SELECT COUNT(*) as total FROM contents");
+            // Robust check for total
+            const total = countResult[0].total !== undefined ? countResult[0].total : (countResult[0]['COUNT(*)'] || 0);
+            const BATCH_SIZE = 500;
             
-            this.data = rows.map(row => {
-                const item = {
+            this.data = [];
+            
+            for (let offset = 0; offset < total; offset += BATCH_SIZE) {
+                // Fetch in batches to avoid OOM on iOS during large result set transfer
+                const rows = await this.db.query(
+                    `SELECT uid, html, label, segment, audio_name, hint FROM contents ORDER BY uid ASC LIMIT ${BATCH_SIZE} OFFSET ${offset}`
+                );
+                
+                const batchItems = rows.map(row => ({
                     id: row.uid,
                     html: row.html,
                     label: row.label,
                     audio: row.audio_name,
                     // Ưu tiên dùng hint, nếu không có mới dùng segment
                     text: row.hint || row.segment
-                };
-                return item;
-            });
+                }));
+                
+                this.data.push(...batchItems);
+                
+                // Small yield to allow GC/UI updates
+                await new Promise(resolve => setTimeout(resolve, 0));
+            }
 
             return this.data;
         } catch (error) {
