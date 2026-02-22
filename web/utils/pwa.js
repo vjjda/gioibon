@@ -89,11 +89,7 @@ export function setupPWA() {
         });
 
         refreshBtn.addEventListener('click', () => {
-            // [CRITICAL FIX] Xóa phiên bản DB cũ để ép tải DB mới nhất sau khi update
-            // Điều này đảm bảo Data luôn đồng bộ với App Code
-            localStorage.removeItem('db_version_content.db'); 
-            
-            // Gọi hàm update của plugin -> Nó sẽ postMessage SKIP_WAITING và reload
+            // Chỉ reload SW, để SqliteConnection tự kiểm tra version DB khi khởi động lại
             updateSW(true); 
         });
         
