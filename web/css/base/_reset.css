@@ -18,3 +18,8 @@ body {
 *::after {
     -webkit-tap-highlight-color: transparent;
 }
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
