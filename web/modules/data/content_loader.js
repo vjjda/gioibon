@@ -2,8 +2,8 @@
 import { SqliteConnection } from '../services/sqlite_connection.js';
 
 export class ContentLoader {
-    constructor() {
-        this.db = new SqliteConnection();
+    constructor(dbConnection) {
+        this.db = dbConnection || new SqliteConnection();
         this.data = null;
     }
 

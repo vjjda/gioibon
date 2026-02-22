@@ -38,11 +38,9 @@ class TTSGenerator:
                 logger.error(f"❌ Lỗi đọc file tts_rules.json: {e}")
 
     def _prepare_directories(self) -> None:
-        """Xóa thư mục output cũ để dọn rác, và tạo lại các thư mục cần thiết."""
-        if os.path.exists(self.output_dir):
-            shutil.rmtree(self.output_dir)
-        os.makedirs(self.output_dir, exist_ok=True)
+        """Tạo lại các thư mục cache cần thiết."""
         os.makedirs(self.tmp_dir, exist_ok=True)
+        # Không cần tạo output_dir nữa vì ta nhúng thẳng vào DB
 
     def _get_hash(self, text: str) -> str:
         """Tạo mã băm SHA-256 bao gồm cả nội dung và cấu hình giọng đọc."""
@@ -104,7 +102,6 @@ class TTSGenerator:
     def process_segment(self, segment_text: str, html: str = "", label: str = "") -> str:
         """Xử lý đoạn văn, trả về tên file MP3 (hash) hoặc 'skip'."""
         # Logic skip dựa trên label và html structure
-        # [UPDATE] label.startswith("note") sẽ bao gồm cả "note" và "note-123"
         if not segment_text.strip() or label.startswith("note") or label.endswith("-name") or label in ["title", "subtitle"] or html.startswith("<h"):
             return "skip"
 
@@ -118,20 +115,18 @@ class TTSGenerator:
         text_hash = self._get_hash(tts_text)[:16]
         filename = f"{text_hash}.mp3"
         
-        final_filepath = os.path.join(self.output_dir, filename)
         tmp_filepath = os.path.join(self.tmp_dir, filename)
 
         # 3. Kiểm tra cache/tồn tại
         if os.path.exists(tmp_filepath):
-            if not os.path.exists(final_filepath):
-                 shutil.copy2(tmp_filepath, final_filepath)
+             # Đã có trong cache, không làm gì cả
+             pass
         else:
             # 4. Gọi API với bản text sạch
             if self._fetch_audio_from_api(tts_text, tmp_filepath):
-                shutil.copy2(tmp_filepath, final_filepath)
                 logger.debug(f"✅ Đã tạo mới Audio: {filename}")
             else:
-                # Nếu lỗi API, trả về skip để tránh lỗi frontend
+                # Nếu lỗi API, trả về skip
                 return "skip"
 
         return filename

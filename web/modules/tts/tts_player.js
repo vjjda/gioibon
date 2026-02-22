@@ -4,10 +4,10 @@ import { TextProcessor } from 'tts/text_processor.js';
 import { AudioResolver } from 'tts/audio_resolver.js';
 
 export class TTSPlayer {
-    constructor() {
+    constructor(dbConnection) {
         this.engine = new TTSEngine();
         this.textProcessor = new TextProcessor();
-        this.audioResolver = new AudioResolver(this.engine);
+        this.audioResolver = new AudioResolver(this.engine, dbConnection);
         
         this.audioQueue = [];
         this.isPlaying = false;

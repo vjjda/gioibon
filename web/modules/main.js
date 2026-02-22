@@ -1,5 +1,6 @@
 // Path: web/modules/main.js
 
+import { SqliteConnection } from 'services/sqlite_connection.js';
 import { TTSPlayer } from 'tts/tts_player.js';
 import { ContentLoader } from 'data/content_loader.js';
 import { TocRenderer } from 'ui/toc_renderer.js';
@@ -14,8 +15,14 @@ import { setupPWA } from 'utils/pwa.js';
 document.addEventListener('DOMContentLoaded', async () => {
     setupPWA();
 
-    const ttsPlayer = new TTSPlayer();
-    const contentLoader = new ContentLoader();
+    // Khởi tạo kết nối DB dùng chung
+    const dbConnection = new SqliteConnection();
+
+    // Truyền DB vào ContentLoader để lấy text
+    const contentLoader = new ContentLoader(dbConnection);
+    
+    // Truyền DB vào TTSPlayer để lấy audio blob
+    const ttsPlayer = new TTSPlayer(dbConnection);
 
     // Đồng bộ trạng thái Loop từ localStorage
     const savedLoop = localStorage.getItem('sutta_loop_enabled') === 'true';
@@ -33,8 +40,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ttsPlayer.resume();
             } else {
                 const startId = contentRenderer.getFirstVisibleSegmentId();
-                const segments = startId ? contentLoader.getSegmentsStartingFrom(startId) : contentLoader.getAllSegments();
-                if (segments.length > 0) ttsPlayer.playSequence(segments);
+                if (startId) {
+                    // Logic lấy sequence từ startId -> hết bài
+                    // Cần lấy tất cả segments từ DB (đã lọc skip)
+                    const allSegments = contentLoader.getAllSegments();
+                    const startIndex = allSegments.findIndex(s => String(s.id) === String(startId));
+                    if (startIndex !== -1) {
+                        const sequence = allSegments.slice(startIndex);
+                        ttsPlayer.playSequence(sequence);
+                    }
+                } else {
+                    const allSegments = contentLoader.getAllSegments();
+                    if (allSegments.length > 0) ttsPlayer.playSequence(allSegments);
+                }
             }
         },
         () => { /* Pause */
@@ -74,11 +92,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
         const data = await contentLoader.load();
+        
+        // Render nội dung
         contentRenderer.render(data);
         tocRenderer.render(data);
+        
+        // Remove loading
+        const loadingEl = document.querySelector('.loading');
+        if (loadingEl) loadingEl.remove();
+
     } catch (error) {
         console.error("Initialization Error:", error);
         document.getElementById('content').innerHTML = `<div class="error">Không thể tải dữ liệu. Vui lòng thử lại sau.</div>`;
     }
 });
-
