@@ -46,7 +46,7 @@
 .segment-text {
     flex: 1;
     padding-right: 1rem;
-    transition: all 0.2s ease;
+    /* [REMOVED] Transition removed to make masking/hinting instant */
 }
 
 /* --- LOGIC MASKING --- */
