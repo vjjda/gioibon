@@ -6,7 +6,7 @@ LOCAL_IP = $(shell ifconfig | grep "inet " | grep -v 127.0.0.1 | awk '{print $$2
 # Base URL từ cấu hình dự án
 BASE_URL = /gioibon/
 
-.PHONY: data icons dev simple build preview deploy clean setup help qr-dev qr-preview merge
+.PHONY: data icons dev simple build preview deploy clean setup help qr-dev qr-preview merge amend
 
 # Biến Git (Dùng cho lệnh merge)
 BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
@@ -19,6 +19,7 @@ help:
 	@echo "  make dev       : Chạy Vite dev server (có QR Code mạng LAN)"
 	@echo "  make simple    : Chạy Python HTTP Server đơn giản (Port 3456)"
 	@echo "  make merge     : Merge nhánh hiện tại vào main và xóa nhánh (vd: make merge BRANCH=feature/hinting)"
+	@echo "  make amend     : Gộp nhanh thay đổi vào commit gần nhất (add . && amend)"
 	@echo "  make build     : Build bản production cho Web"
 	@echo "  make preview   : Xem trước bản build cục bộ (có QR Code mạng LAN)"
 	@echo "  make deploy    : Build và Deploy lên GitHub Pages"
@@ -33,6 +34,12 @@ merge:
 	git merge $(BRANCH)
 	git branch -d $(BRANCH)
 	@echo "✅ Đã merge và xóa nhánh [$(BRANCH)] thành công."
+
+amend:
+	@echo "🔄 Đang gộp thay đổi vào commit cuối..."
+	git add .
+	git commit --amend --no-edit
+	@echo "✅ Đã amend thành công."
 
 # Backend & Data
 data:
