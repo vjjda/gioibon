@@ -66,4 +66,14 @@
     .btn span { display: none; }
     .btn { padding: 10px; border-radius: 50%; }
     .divider { display: none; }
+
+    /* Fix Footer Layout for very small screens */
+    @media (max-width: 360px) {
+        #drawer-footer {
+            gap: 10px;
+        }
+        .zoom-widget, .maintenance-group, .theme-toggle-group {
+            gap: 4px;
+        }
+    }
 }

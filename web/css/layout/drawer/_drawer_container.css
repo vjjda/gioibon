@@ -1,13 +1,67 @@
 /* Path: web/css/layout/drawer/_drawer_container.css */
 
-/* 
- * Layout của Drawer và Nút Trigger đã được chuyển sang web/css/layout/_header.css 
- * để xử lý logic position: fixed tốt hơn.
- * File này được giữ lại để tránh lỗi import trong style.css, 
- * hoặc dùng để style các thành phần con bên trong Drawer nếu cần.
- */
+/* --- Control Bar & Drawer --- */
 
-/* Style cho nội dung bên trong Control Drawer nếu cần */
+/* Nút mở Settings (Ghost Button - Fixed Position) */
+#btn-toggle-drawer {
+    position: fixed;
+    top: 15px; 
+    right: 15px;
+    z-index: 1001; /* Đảm bảo nổi lên trên các thành phần khác */
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: var(--text-muted);
+    opacity: 0.6;
+    font-size: 1.3rem;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#btn-toggle-drawer:hover,
+#btn-toggle-drawer:active,
+#btn-toggle-drawer.open {
+    color: var(--text-main); 
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+/* Control Bar Anchor (Direct child of body) */
+#control-bar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Main Control Drawer */
 #control-drawer {
-    /* Các style chi tiết khác nếu chưa có trong _header.css */
+    position: fixed;
+    top: 60px; /* Dưới nút toggle một chút */
+    right: 15px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    padding: 0.75rem 1rem;
+    z-index: 1000;
+    width: 330px;
+    max-width: calc(100vw - 30px);
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: top right;
+}
+
+#control-drawer.hidden {
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+    pointer-events: none;
 }

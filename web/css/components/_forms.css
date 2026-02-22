@@ -66,7 +66,9 @@ input[type=range]::-webkit-slider-runnable-track {
 #save-settings {
     width: 100%;
     justify-content: center;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     font-size: 1rem;
-    padding: 12px;
+    padding: 14px;
+    border-radius: 12px; /* Fix: Tránh hình oval trên nút rộng, đồng bộ với Drawer */
+    font-weight: 600;
 }
