@@ -24,7 +24,17 @@
 /* Modules */
 @import "css/modules/_responsive.css";
 
-html {
-    filter: sepia(var(--sepia-val, 0));
+/* Lightweight Sepia Tint Overlay (Safari iOS Stable) */
+#sepia-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #704214; /* Warm brownish tint */
+    opacity: var(--sepia-overlay-opacity, 0);
+    pointer-events: none; /* Let clicks pass through */
+    z-index: 10000; /* On top of everything */
+    display: block;
 }
 

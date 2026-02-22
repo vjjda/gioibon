@@ -55,17 +55,17 @@ export const ThemeSettings = {
         };
 
         const sliderToCss = (sliderValue, theme) => {
-            const maxCss = theme === 'dark' 
-                ? SEPIA_CONFIG.MAX_CSS_DARK 
-                : SEPIA_CONFIG.MAX_CSS_LIGHT;
-            return (sliderValue / 100) * maxCss;
+            // [OPTIMIZED] Dùng opacity overlay thay cho filter để tránh crash iOS
+            // Giảm max opacity xuống (0.3 cho light, 0.2 cho dark) để dễ đọc
+            const maxOpacity = theme === 'dark' ? 0.2 : 0.3;
+            return (sliderValue / 100) * maxOpacity;
         };
 
         const updateSepiaVisuals = (sliderValue, theme) => {
             const cssValue = sliderToCss(sliderValue, theme);
             
-            // Pass raw value to CSS for calculation
-            document.documentElement.style.setProperty('--sepia-val', cssValue);
+            // Cập nhật biến số cho lớp phủ (overlay)
+            document.documentElement.style.setProperty('--sepia-overlay-opacity', cssValue);
             
             if (sepiaSlider && sepiaSlider.value != sliderValue) {
                 sepiaSlider.value = sliderValue;

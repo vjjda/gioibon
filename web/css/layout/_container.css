@@ -28,10 +28,6 @@ html, body {
     overflow-x: hidden;
     scroll-behavior: auto; /* Nhảy TOC tức thì, không chuyển động lướt */
     
-    /* [SAFARI FIX] Hardware acceleration & smooth touch scroll */
-    -webkit-overflow-scrolling: touch;
-    transform: translateZ(0); 
-    
     /* Đổi padding sang giá trị cố định thay vì % để dễ dàng áp dụng max-width */
     padding: 2rem 40px;
     padding-bottom: 120px; /* Chừa không gian dưới đáy cho nút Control */
