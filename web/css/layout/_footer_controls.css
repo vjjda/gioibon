@@ -5,7 +5,8 @@
     bottom: 30px;
     right: 30px;
     background: var(--bg-card);
-    backdrop-filter: blur(12px);
+    /* [SAFARI FIX] Remove backdrop-filter to prevent GPU memory crashes on scroll */
+    backdrop-filter: none; 
     padding: 8px 12px; /* Balanced padding */
     border-radius: 50px;
     box-shadow: var(--shadow-float);

@@ -11,8 +11,7 @@
     position: relative; /* Containing block cho play-btn::before và mask-toggle */
     border-radius: 0 8px 8px 0;
 
-    /* [OPTIMIZED] Safe layout containment for better performance on large lists */
-    contain: layout style; 
+    /* [REMOVED] contain: layout style; - Removed to prevent layer explosion crash on Safari iOS */
 }
 
 /* [NEW] Note Segment Logic: Closer to previous segment */

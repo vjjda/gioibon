@@ -9,7 +9,8 @@ header {
     align-items: center;
     justify-content: center;
     background-color: var(--bg-body);
-    backdrop-filter: blur(5px);
+    /* [SAFARI FIX] Disable backdrop-filter on mobile to prevent crashes */
+    backdrop-filter: none; 
     
     /* [UPDATED] Không dùng sticky hay fixed nữa vì đã có Flexbox App Layout */
     position: relative; 
