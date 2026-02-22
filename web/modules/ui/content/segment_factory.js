@@ -83,9 +83,8 @@ export class SegmentFactory {
         textEl.className = 'segment-text';
         const htmlTemplate = item.html || '{}';
         
-        // Sử dụng nội dung đã xử lý Hint từ Backend (nếu có), ngược lại dùng segment gốc
-        const content = item.hint || item.segment || '';
-        const renderedHtml = htmlTemplate.replace('{}', content);
+        // Sử dụng thuộc tính 'text' đã được ContentLoader tối ưu (chứa hint hoặc segment)
+        const renderedHtml = htmlTemplate.replace('{}', item.text || '');
         
         textEl.innerHTML = renderedHtml;
         wrapper.appendChild(textEl);

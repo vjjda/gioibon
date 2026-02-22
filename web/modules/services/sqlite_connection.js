@@ -63,6 +63,15 @@ export class SqliteConnection {
                 }
                 
                 this.db = db;
+
+                // [OPTIMIZATION] Cấu hình SQLite để tiết kiệm RAM và tăng tốc độ đọc
+                try {
+                    await db.run("PRAGMA cache_size = 2000"); // Giới hạn cache khoảng 2MB
+                    await db.run("PRAGMA temp_store = MEMORY"); // Lưu bảng tạm trong RAM để nhanh hơn
+                    await db.run("PRAGMA synchronous = OFF"); // Tăng tốc ghi (dù ít ghi nhưng vẫn giúp ổn định)
+                } catch (e) {
+                    console.warn("⚠️ Cannot set PRAGMAs", e);
+                }
             } else {
                 // Open existing DB from IDB without overwriting
                 const db = await initSQLite(useIdbStorage(this.dbName, {
@@ -71,16 +80,18 @@ export class SqliteConnection {
                 
                 // Integrity Check: Verify if table exists
                 try {
-                    // wa-sqlite creates a basic empty file if not found, so we must check for tables
+                    // wa-sqlite tạo file trống nếu không tìm thấy, nên phải check bảng
                     const tables = await db.run("SELECT name FROM sqlite_master WHERE type='table' AND name='contents'");
                     if (tables.length === 0) {
                         console.warn("❌ Cached DB is empty/corrupted. Force re-downloading.");
-                        // Force download next time or immediately
                         localStorage.removeItem(storageKey);
-                        // Recursive retry (simple implementation)
                         this.db = null;
                         return await this.forceDownload(); 
                     }
+
+                    // [OPTIMIZATION] Cấu hình SQLite cho kết nối từ cache
+                    await db.run("PRAGMA cache_size = 2000");
+                    await db.run("PRAGMA temp_store = MEMORY");
                 } catch (e) {
                     console.warn("❌ DB integrity check failed.", e);
                     localStorage.removeItem(storageKey);
