@@ -31,6 +31,7 @@ export class TTSPlayer {
         // Session & Preload Management
         this.playbackSessionId = 0; 
         this.preloadMap = new Map(); 
+        this.preloadDepth = 2; // [NEW] Preload 2 items ahead for smoother playback
     }
 
     // --- Configuration Proxies ---
@@ -137,26 +138,26 @@ export class TTSPlayer {
     // --- Queue Processing ---
 
     async _preloadNextItem() {
-        // [iOS Optimization] Limit Preload
-        // Nếu đang trên thiết bị mobile yếu, có thể disable preload hoặc chỉ preload 1 item
-        // Hiện tại code chỉ preload 1 nextItem, nên logic này OK.
-        
         if (this.audioQueue.length === 0) return;
 
-        const nextItem = this.audioQueue[0];
-        if (!this.preloadMap.has(nextItem.id)) {
-            const currentSession = this.playbackSessionId;
+        const currentSession = this.playbackSessionId;
+        
+        // Preload up to preloadDepth items
+        for (let i = 0; i < Math.min(this.preloadDepth, this.audioQueue.length); i++) {
+            const nextItem = this.audioQueue[i];
             
-            // Delegate resolution to AudioResolver
-            const result = await this.audioResolver.resolve(
-                nextItem, 
-                currentSession, 
-                () => this.playbackSessionId,
-                this.textProcessor
-            );
-            
-            if (result && result.isBlob && this.playbackSessionId === currentSession) {
-                this.preloadMap.set(nextItem.id, result.url);
+            if (!this.preloadMap.has(nextItem.id)) {
+                // Delegate resolution to AudioResolver
+                const result = await this.audioResolver.resolve(
+                    nextItem, 
+                    currentSession, 
+                    () => this.playbackSessionId,
+                    this.textProcessor
+                );
+                
+                if (result && result.isBlob && this.playbackSessionId === currentSession) {
+                    this.preloadMap.set(nextItem.id, result.url);
+                }
             }
         }
     }

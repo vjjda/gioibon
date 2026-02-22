@@ -40,7 +40,7 @@ export class ContentLoader {
         return this.data.filter(item => item.audio !== 'skip').map(item => ({
             id: item.id,
             audio: item.audio,
-            text: item.segment
+            text: item.text
         }));
     }
 
@@ -60,7 +60,7 @@ export class ContentLoader {
         return slice.filter(item => item.audio !== 'skip').map(item => ({
             id: item.id,
             audio: item.audio,
-            text: item.segment
+            text: item.text
         }));
     }
 
