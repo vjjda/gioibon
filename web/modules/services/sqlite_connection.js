@@ -14,50 +14,113 @@ export class SqliteConnection {
         if (this.db) return this.db;
 
         try {
-            // console.log(`Initializing SQLite DB: ${this.dbName}`);
+            const versionUrl = this.dbUrl.replace(/\.db$/, '_version.json');
+            const storageKey = `db_version_${this.dbName}`;
+            const localVersion = localStorage.getItem(storageKey);
             
-            // Try to open first to check if it exists and has tables
-            // Note: useIdbStorage will return a VFS that persists to IDB
-            // [UPDATED] Pass the URL to the WASM file explicitly (served from public/)
-            let db = await initSQLite(useIdbStorage(this.dbName, {
-                url: `${BASE_URL}wa-sqlite-async.wasm`
-            }));
-            
-            // Check if valid by querying tables
-            let tables = [];
+            let shouldDownload = false;
+            let remoteVersionData = null;
+
             try {
-                tables = await db.run("SELECT name FROM sqlite_master WHERE type='table' AND name='contents'");
+                // 1. Fetch version file with timestamp to bypass browser cache
+                const res = await fetch(`${versionUrl}?t=${Date.now()}`);
+                if (res.ok) {
+                    remoteVersionData = await res.json();
+                    if (remoteVersionData.version !== localVersion) {
+                        console.log(`♻️ DB updated. Old: ${localVersion}, New: ${remoteVersionData.version}`);
+                        shouldDownload = true;
+                    } else {
+                        console.log("✅ DB is up-to-date. Using local cache.");
+                    }
+                } else {
+                    console.warn(`⚠️ Cannot fetch version file (${res.status}). Force checking integrity.`);
+                    // If no version file, rely on integrity check or force download if missing
+                    shouldDownload = !localVersion; 
+                }
             } catch (e) {
-                console.warn("DB check failed, might be empty or corrupted", e);
+                console.warn("⚠️ Error checking DB version. Proceeding with caution.", e);
+                shouldDownload = !localVersion;
             }
 
-            // If 'contents' table missing, we download and restore
-            if (tables.length === 0) {
-                console.log("DB empty or missing 'contents' table. Downloading...");
-                await db.close(); // Close the empty one
-
-                const response = await fetch(this.dbUrl);
-                if (!response.ok) throw new Error(`Failed to fetch DB: ${response.status}`);
+            // 2. Initialize DB based on check result
+            if (shouldDownload) {
+                console.log("⬇️ Downloading fresh DB...");
+                const response = await fetch(`${this.dbUrl}?t=${Date.now()}`);
+                if (!response.ok) throw new Error(`Failed to download DB: ${response.status}`);
                 
                 const buffer = await response.arrayBuffer();
                 const file = new File([buffer], this.dbName);
 
-                // Re-init with the downloaded file
-                db = await initSQLite(useIdbStorage(this.dbName, {
+                // withExistDB(file) will truncate and overwrite existing IDB data
+                const db = await initSQLite(useIdbStorage(this.dbName, {
                     ...withExistDB(file),
                     url: `${BASE_URL}wa-sqlite-async.wasm`
                 }));
-                console.log("Database initialized from server file.");
+
+                // Update version in localStorage only after successful init
+                if (remoteVersionData) {
+                    localStorage.setItem(storageKey, remoteVersionData.version);
+                }
+                
+                this.db = db;
             } else {
-                // console.log("Database loaded from IndexedDB cache.");
+                // Open existing DB from IDB without overwriting
+                const db = await initSQLite(useIdbStorage(this.dbName, {
+                    url: `${BASE_URL}wa-sqlite-async.wasm`
+                }));
+                
+                // Integrity Check: Verify if table exists
+                try {
+                    // wa-sqlite creates a basic empty file if not found, so we must check for tables
+                    const tables = await db.run("SELECT name FROM sqlite_master WHERE type='table' AND name='contents'");
+                    if (tables.length === 0) {
+                        console.warn("❌ Cached DB is empty/corrupted. Force re-downloading.");
+                        // Force download next time or immediately
+                        localStorage.removeItem(storageKey);
+                        // Recursive retry (simple implementation)
+                        this.db = null;
+                        return await this.forceDownload(); 
+                    }
+                } catch (e) {
+                    console.warn("❌ DB integrity check failed.", e);
+                    localStorage.removeItem(storageKey);
+                    this.db = null;
+                    return await this.forceDownload();
+                }
+                
+                this.db = db;
             }
 
-            this.db = db;
             return this.db;
         } catch (e) {
-            console.error("SqliteConnection Init Error:", e);
+            console.error("❌ SqliteConnection Init Error:", e);
             throw e;
         }
+    }
+
+    async forceDownload() {
+        console.log("🔄 Force downloading DB...");
+        const response = await fetch(`${this.dbUrl}?t=${Date.now()}`);
+        if (!response.ok) throw new Error(`Failed to download DB: ${response.status}`);
+        const buffer = await response.arrayBuffer();
+        const file = new File([buffer], this.dbName);
+        
+        this.db = await initSQLite(useIdbStorage(this.dbName, {
+            ...withExistDB(file),
+            url: `${BASE_URL}wa-sqlite-async.wasm`
+        }));
+        
+        // Try to fetch version to update storage if possible, else leave empty to check next time
+        try {
+             const versionUrl = this.dbUrl.replace(/\.db$/, '_version.json');
+             const res = await fetch(`${versionUrl}?t=${Date.now()}`);
+             if(res.ok) {
+                 const data = await res.json();
+                 localStorage.setItem(`db_version_${this.dbName}`, data.version);
+             }
+        } catch(e) {}
+        
+        return this.db;
     }
 
     async query(sql, params = []) {
