@@ -2,6 +2,7 @@
 /* --- IMPORTS --- */
 
 /* Base */
+@import "css/base/_fonts.css";
 @import "css/base/_variables.css";
 @import "css/base/_reset.css";
 
