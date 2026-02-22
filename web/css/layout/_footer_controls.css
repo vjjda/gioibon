@@ -27,6 +27,7 @@
 .global-controls .btn {
     width: 44px; 
     height: 44px;
+    flex-shrink: 0; /* [FIX] Tránh bị bóp méo trên màn hình nhỏ */
     padding: 0;
     /* Remove text padding */
     border-radius: 50%; /* Circle */
@@ -79,6 +80,7 @@
 .control-btn {
     width: 44px; 
     height: 44px;
+    flex-shrink: 0; /* [FIX] Tránh bị bóp méo trên màn hình nhỏ */
     border-radius: 50%;
     opacity: 0.8;
     font-size: 1.2rem;
@@ -126,6 +128,7 @@
     text-align: center;
     transition: color 0.2s;
     min-width: 50px;
+    flex-shrink: 0; /* [FIX] Tránh bị bóp méo */
     outline: none;
 }
 
