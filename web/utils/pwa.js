@@ -75,6 +75,7 @@ export function setupPWA() {
     const toast = document.getElementById('pwa-toast');
     const refreshBtn = document.getElementById('pwa-refresh');
     const closeBtn = document.getElementById('pwa-close');
+    const manualUpdateBtn = document.getElementById('btn-update-app');
 
     if (toast && refreshBtn && closeBtn) {
         // Hàm này sẽ được gọi khi có update hoặc offline ready
@@ -82,16 +83,55 @@ export function setupPWA() {
             onNeedRefresh() {
                 // Hiển thị Toast khi có phiên bản mới
                 toast.classList.remove('hidden');
+                // Nếu người dùng đang trong drawer, cho nút manual update hiệu ứng lung linh
+                if (manualUpdateBtn) manualUpdateBtn.classList.add('update-available');
             },
             onOfflineReady() {
                 console.log('App ready to work offline');
             }
         });
 
-        refreshBtn.addEventListener('click', () => {
+        const handleUpdate = () => {
             // Chỉ reload SW, để SqliteConnection tự kiểm tra version DB khi khởi động lại
             updateSW(true); 
-        });
+        };
+
+        refreshBtn.addEventListener('click', handleUpdate);
+        
+        if (manualUpdateBtn) {
+            manualUpdateBtn.addEventListener('click', async () => {
+                // 1. Nếu toast đang hiện (nghĩa là đã có update chờ sẵn)
+                if (!toast.classList.contains('hidden')) {
+                    handleUpdate();
+                    return;
+                }
+
+                // 2. Nếu chưa có update, thực hiện check thủ công
+                manualUpdateBtn.classList.add('rotating');
+                manualUpdateBtn.title = "Đang kiểm tra...";
+
+                try {
+                    if ('serviceWorker' in navigator) {
+                        const registration = await navigator.serviceWorker.getRegistration();
+                        if (registration) {
+                            await registration.update();
+                            // Sau khi update, nếu có bản mới, onNeedRefresh sẽ tự kích hoạt toast
+                            // Chúng ta đợi 2s để tạo cảm giác "đang check"
+                            setTimeout(() => {
+                                manualUpdateBtn.classList.remove('rotating');
+                                manualUpdateBtn.title = "Kiểm tra & Cập nhật";
+                                if (toast.classList.contains('hidden')) {
+                                    alert("Ứng dụng và dữ liệu đã ở phiên bản mới nhất.");
+                                }
+                            }, 1500);
+                        }
+                    }
+                } catch (e) {
+                    console.error("Manual update check failed:", e);
+                    manualUpdateBtn.classList.remove('rotating');
+                }
+            });
+        }
         
         closeBtn.addEventListener('click', () => {
             toast.classList.add('hidden');

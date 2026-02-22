@@ -21,6 +21,14 @@
   gap: 4px;
 }
 
+/* --- [NEW] CENTER GROUP: MAINTENANCE --- */
+.maintenance-group {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .zoom-label {
   font-size: 0.8rem;
   color: var(--text-muted);
@@ -54,6 +62,27 @@
 .icon-only-btn:active {
   transform: scale(0.9);
   background-color: var(--highlight-color-background);
+}
+
+/* Update Button Feedback */
+.icon-only-btn.rotating svg {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.icon-only-btn.update-available {
+  color: var(--primary-color);
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 0 0 rgba(139, 69, 19, 0.2); }
+  70% { box-shadow: 0 0 0 10px rgba(139, 69, 19, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(139, 69, 19, 0); }
 }
 
 /* --- CENTER GROUP: SPACER (If needed) --- */
