@@ -21,6 +21,10 @@ export class TTSEngine {
     
     getApiKey() { return this.apiKey; }
 
+    hasApiKey() {
+        return !!this.apiKey && this.apiKey.length > 0;
+    }
+
     setVoice(name, languageCode = 'vi-VN') {
         this.voice = { name, languageCode };
         localStorage.setItem(CONFIG_KEYS.TTS_VOICE, name);
@@ -84,7 +88,7 @@ export class TTSEngine {
     }
 
     // --- Audio Synthesis ---
-    async fetchAudio(text) {
+    async fetchAudioBlob(text) {
         if (!this.apiKey) {
             throw new Error("Vui lòng nhập Google Cloud API Key trong phần Cài đặt.");
         }
@@ -116,12 +120,29 @@ export class TTSEngine {
 
             const data = await response.json();
             if (data.audioContent) {
-                return "data:audio/mp3;base64," + data.audioContent;
+                 // Convert Base64 string to Blob manually to avoid browser compatibility issues with fetch(data:url)
+                 const binaryString = atob(data.audioContent);
+                 const bytes = new Uint8Array(binaryString.length);
+                 for (let i = 0; i < binaryString.length; i++) {
+                     bytes[i] = binaryString.charCodeAt(i);
+                 }
+                 return new Blob([bytes], { type: 'audio/mp3' });
             }
             throw new Error("No audio content received");
         } catch (error) {
             console.error("TTS Fetch Error:", error);
             throw error;
         }
+    }
+
+    async fetchAudio(text) {
+        // Wrapper for backward compatibility (returns Data URI)
+        const blob = await this.fetchAudioBlob(text);
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
     }
 }

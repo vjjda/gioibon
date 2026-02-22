@@ -1,6 +1,7 @@
 // Path: web/modules/tts/tts_player.js
 import { TTSEngine } from 'tts/tts_engine.js';
 import { BASE_URL } from 'core/config.js';
+import { audioCache } from 'services/audio_cache.js';
 
 export class TTSPlayer {
     constructor() {
@@ -28,6 +29,8 @@ export class TTSPlayer {
             .then(data => { this.ttsRules = data; })
             .catch(err => console.warn("Không tìm thấy tts_rules.json", err));
     }
+    
+    // ... (rest of configuration methods) ...
 
     setApiKey(key) { this.engine.setApiKey(key); }
     getApiKey() { return this.engine.getApiKey(); }
@@ -137,7 +140,6 @@ export class TTSPlayer {
         }
         
         if (this.ttsRules.remove_chars) {
-            // Escape các ký tự đặc biệt cho Regex JS
             const escapedChars = this.ttsRules.remove_chars.map(c => this._escapeRegExp(c)).join('');
             const pattern = new RegExp(`[${escapedChars}]`, 'g');
             ttsText = ttsText.replace(pattern, ' ');
@@ -183,19 +185,63 @@ export class TTSPlayer {
 
         try {
             let audioSrc = null;
+            let blobToRevoke = null; // Để cleanup memory nếu dùng createObjectURL
 
-            if (item.audio && item.audio !== 'skip') {
+            // 1. Chuẩn bị thông tin Hash
+            const ttsText = await this._applyTTSRules(item.text);
+            const currentVoice = this.engine.voice.name;
+            const currentLang = this.engine.voice.languageCode;
+            
+            // Nếu không có text để đọc thì bỏ qua
+            if (!ttsText) {
+                console.warn("Skipping empty TTS text for segment:", item.id);
+                 if (this.onSegmentEnd) this.onSegmentEnd(item.id);
+                this._processQueue();
+                return;
+            }
+
+            // Tính Hash (sha256 16 chars)
+            const targetHash = await audioCache.generateHash(ttsText, currentVoice, currentLang);
+            const targetFilename = `${targetHash}.mp3`;
+
+            // --- STRATEGY: 1. DB Match ---
+            // Nếu file trong DB trùng với hash mong muốn (tức là giọng đọc + text khớp với lúc build)
+            if (item.audio === targetFilename) {
+                // console.log(`[TTS] Playing from DB Match: ${item.audio}`);
                 audioSrc = `${BASE_URL}app-content/audio/${item.audio}`;
-            } else if (item.text) {
-                // Áp dụng bộ rules chuẩn hóa Text
-                const ttsText = await this._applyTTSRules(item.text);
-
-                if (ttsText) {
-                    audioSrc = await this.engine.fetchAudio(ttsText);
+            } 
+            // --- STRATEGY: 2. Cache IDB Match ---
+            else if (await audioCache.has(targetHash)) {
+                console.log(`[TTS] Cache Hit for hash: ${targetHash}`);
+                const blob = await audioCache.get(targetHash);
+                audioSrc = URL.createObjectURL(blob);
+                blobToRevoke = audioSrc;
+            }
+            // --- STRATEGY: 3. API Fetch (Only if Key exists) ---
+            else if (this.engine.hasApiKey()) {
+                console.log(`[TTS] Fetching from API (Voice: ${currentVoice})...`);
+                try {
+                    const blob = await this.engine.fetchAudioBlob(ttsText);
+                    // Cache lại ngay lập tức
+                    await audioCache.set(targetHash, blob);
+                    audioSrc = URL.createObjectURL(blob);
+                    blobToRevoke = audioSrc;
+                } catch (apiErr) {
+                    console.error("API Fetch failed:", apiErr);
+                    // Fallback xuống dưới
                 }
             }
 
+            // --- STRATEGY: 4. Fallback (DB Audio Mismatch) ---
+            // Nếu không có API Key, hoặc API lỗi, và DB có audio (dù khác giọng), hãy dùng nó.
+            if (!audioSrc && item.audio && item.audio !== 'skip') {
+                console.warn(`[TTS] Fallback to DB audio (Hash mismatch). Wanted: ${targetHash}, Got: ${item.audio}`);
+                audioSrc = `${BASE_URL}app-content/audio/${item.audio}`;
+            }
+
+            // --- FINAL CHECK ---
             if (!audioSrc) {
+                // console.warn("[TTS] No audio source found. Skipping.");
                 if (this.onSegmentEnd) this.onSegmentEnd(item.id);
                 this._processQueue();
                 return;
@@ -211,6 +257,7 @@ export class TTSPlayer {
             }
 
             audio.onended = () => {
+                if (blobToRevoke) URL.revokeObjectURL(blobToRevoke);
                 this.currentAudio = null;
                 if (this.onSegmentEnd) this.onSegmentEnd(item.id);
                 this._processQueue();
@@ -218,6 +265,7 @@ export class TTSPlayer {
 
             audio.onerror = (e) => {
                 console.error("Audio Playback Error:", e, audioSrc);
+                if (blobToRevoke) URL.revokeObjectURL(blobToRevoke);
                 this.currentAudio = null;
                 if (this.onSegmentEnd) this.onSegmentEnd(item.id);
                 this._processQueue();
