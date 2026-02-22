@@ -58,7 +58,7 @@
     }
     .global-controls {
         width: 80%;
-        max-width: 500px; /* Giới hạn độ dài tối đa để không bị quá thưa */
+        max-width: 580px; /* Giới hạn độ dài tối đa để không bị quá thưa */
         left: 50%;
         transform: translateX(-50%);
         right: auto;
@@ -71,8 +71,8 @@
     /* Kích thước nút cho Tablet */
     .global-controls .btn, 
     .global-controls .control-btn {
-        width: 42px;
-        height: 42px;
+        width: 45px;
+        height: 45px;
         font-size: 1.1rem;
     }
 
