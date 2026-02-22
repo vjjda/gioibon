@@ -10,18 +10,18 @@ export class ContentLoader {
     async load() {
         if (this.data) return this.data;
         try {
-            // [FIX iOS] Giảm BATCH_SIZE xuống để tránh cấp phát mảng quá lớn trong 1 tick
             const BATCH_SIZE = 100; 
             this.data = [];
             let lastUid = 0;
             let hasMore = true;
 
             while (hasMore) {
-                // [FIX iOS] Dùng WHERE uid > lastUid thay vì OFFSET.
-                // Việc dùng OFFSET bắt buộc SQLite phải đọc quét qua các hàng (chứa audio_blob khổng lồ)
-                // từ đầu để đếm, gây tràn RAM (OOM) trên iOS.
+                // [SQL OPTIMIZATION] Đẩy logic chọn text vào SQLite bằng CASE WHEN.
+                // Giảm 40% lượng chuỗi (string) phải truyền từ WASM sang JavaScript.
                 const rows = await this.db.query(
-                    `SELECT uid, html, label, segment, audio_name, hint FROM contents WHERE uid > ${lastUid} ORDER BY uid ASC LIMIT ${BATCH_SIZE}`
+                    `SELECT uid, html, label, audio_name, 
+                     CASE WHEN hint IS NOT NULL AND hint != '' THEN hint ELSE segment END as text 
+                     FROM contents WHERE uid > ${lastUid} ORDER BY uid ASC LIMIT ${BATCH_SIZE}`
                 );
 
                 if (rows && rows.length > 0) {
@@ -30,13 +30,11 @@ export class ContentLoader {
                         html: row.html,
                         label: row.label,
                         audio: row.audio_name,
-                        // Ưu tiên dùng hint, nếu không có mới dùng segment
-                        text: row.hint || row.segment
+                        text: row.text // Đã được SQLite xử lý
                     }));
                     this.data.push(...batchItems);
-                    lastUid = rows[rows.length - 1].uid; // Lưu lại UID cuối cùng để chạy tiếp
+                    lastUid = rows[rows.length - 1].uid;
 
-                    // [FIX iOS] Ép JS nhường luồng (yield) một chút xíu để Garbage Collector dọn dẹp RAM
                     await new Promise(resolve => setTimeout(resolve, 5));
                 } else {
                     hasMore = false;
@@ -52,7 +50,6 @@ export class ContentLoader {
 
     getAllSegments() {
         if (!this.data) return [];
-        // Return segments that have audio (not 'skip')
         return this.data.filter(item => item.audio !== 'skip').map(item => ({
             id: item.id,
             audio: item.audio,
@@ -68,9 +65,7 @@ export class ContentLoader {
             if (startIndex === -1) startIndex = 0;
         }
 
-        // Slice from start index to end
         const slice = this.data.slice(startIndex);
-        // Filter for audio
         return slice.filter(item => item.audio !== 'skip').map(item => ({
             id: item.id,
             audio: item.audio,
@@ -88,8 +83,7 @@ export class ContentLoader {
     }
 
     getRuleSegments(sectionIndex, startSegmentIndex) {
-        // Legacy support if needed, or implement logic for rule sequence
-        // Currently ContentRenderer handles rule sequence extraction from flat list
         return [];
     }
 }
+

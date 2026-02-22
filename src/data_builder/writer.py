@@ -43,7 +43,6 @@ class DataWriter:
         conn = sqlite3.connect(temp_db_path)
         cursor = conn.cursor()
         
-        # [REFACTOR] Tách riêng 2 bảng: contents (Text nhẹ) và audios (BLOB nặng)
         cursor.execute("""
             CREATE TABLE contents (
                 uid INTEGER PRIMARY KEY,
@@ -62,7 +61,8 @@ class DataWriter:
             )
         """)
         
-        cursor.execute("CREATE INDEX IF NOT EXISTS idx_label ON contents(label)")
+        # [DB OPTIMIZATION] Đã xóa dòng tạo CREATE INDEX idx_label
+        # Giúp DB nhẹ đi vì JavaScript lo việc filter mảng trên RAM
         
         insert_contents: List[tuple] = []
         insert_audios: Dict[str, bytes] = {}
@@ -79,7 +79,6 @@ class DataWriter:
                 item.hint
             ))
             
-            # Đọc file audio nhúng vào bảng audios (sử dụng Dict để tránh duplicate blob)
             if self.audio_dir and audio_name and audio_name != 'skip':
                 if audio_name not in insert_audios:
                     audio_path: str = os.path.join(self.audio_dir, audio_name)
@@ -97,7 +96,6 @@ class DataWriter:
         conn.commit()
         conn.close()
 
-        # Logic so sánh và cập nhật file
         if os.path.exists(self.db_path) and self._files_are_identical(self.db_path, temp_db_path):
             logger.info("💤 DB nội dung không thay đổi. Giữ nguyên file cũ (để bảo toàn timestamp).")
             os.remove(temp_db_path)

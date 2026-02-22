@@ -20,7 +20,6 @@ export class SqliteConnection {
             let shouldDownload = false;
             let remoteVersionData = null;
             try {
-                // [PWA OFFLINE FIX] Thêm cache: 'no-store' để trình duyệt bỏ qua mọi bộ nhớ đệm, luôn check Server thật
                 const res = await fetch(`${versionUrl}?t=${Date.now()}`, { cache: 'no-store' });
                 if (res.ok) {
                     remoteVersionData = await res.json();
@@ -41,7 +40,6 @@ export class SqliteConnection {
 
             if (shouldDownload) {
                 console.log("⬇️ Downloading fresh DB...");
-                // [PWA OFFLINE FIX] Ép tải DB mới không qua cache
                 const response = await fetch(`${this.dbUrl}?t=${Date.now()}`, { cache: 'no-store' });
                 if (!response.ok) throw new Error(`Failed to download DB: ${response.status}`);
                 
@@ -62,6 +60,8 @@ export class SqliteConnection {
                     await db.run("PRAGMA temp_store = MEMORY");
                     await db.run("PRAGMA synchronous = OFF");
                     await db.run("PRAGMA mmap_size = 0");
+                    // [SQL OPTIMIZATION] Báo cho SQLite đây là DB chỉ đọc, tiết kiệm RAM khóa
+                    await db.run("PRAGMA query_only = 1");
                 } catch (e) {
                     console.warn("⚠️ Cannot set PRAGMAs", e);
                 }
@@ -81,6 +81,8 @@ export class SqliteConnection {
                     await db.run("PRAGMA cache_size = 500");
                     await db.run("PRAGMA temp_store = MEMORY");
                     await db.run("PRAGMA mmap_size = 0");
+                    // [SQL OPTIMIZATION] Báo cho SQLite đây là DB chỉ đọc
+                    await db.run("PRAGMA query_only = 1");
                 } catch (e) {
                     console.warn("❌ DB integrity check failed.", e);
                     localStorage.removeItem(storageKey);
@@ -117,6 +119,14 @@ export class SqliteConnection {
                  localStorage.setItem(`db_version_${this.dbName}`, data.version);
              }
         } catch(e) {}
+        
+        // Cài đặt PRAGMA cho bản force download
+        try {
+            await this.db.run("PRAGMA cache_size = 500");
+            await this.db.run("PRAGMA temp_store = MEMORY");
+            await this.db.run("PRAGMA mmap_size = 0");
+            await this.db.run("PRAGMA query_only = 1");
+        } catch (e) {}
         
         return this.db;
     }
