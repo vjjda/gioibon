@@ -82,65 +82,13 @@ export class SegmentFactory {
         const textEl = document.createElement('div');
         textEl.className = 'segment-text';
         const htmlTemplate = item.html || '{}';
-        const renderedHtml = htmlTemplate.replace('{}', item.segment || '');
+        
+        // Sử dụng nội dung đã xử lý Hint từ Backend (nếu có), ngược lại dùng segment gốc
+        const content = item.hint || item.segment || '';
+        const renderedHtml = htmlTemplate.replace('{}', content);
+        
         textEl.innerHTML = renderedHtml;
-
-        // Xử lý bao bọc phần đuôi các từ cho tính năng Hint Mode
-        this._prepareHinting(textEl);
-
         wrapper.appendChild(textEl);
-    }
-
-    _prepareHinting(element) {
-        const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
-        const nodesToReplace = [];
-        let node;
-        while (node = walker.nextNode()) {
-            if (node.nodeValue.trim() !== '') {
-                nodesToReplace.push(node);
-            }
-        }
-
-        // Regex: \p{L} lấy chữ cái đầu, \p{L}+ lấy các chữ cái tiếp theo của một từ. 
-        // Flag 'u' hỗ trợ đầy đủ Unicode (ví dụ tiếng Việt có dấu).
-        const regex = /(\p{L})(\p{L}+)/gu;
-
-        nodesToReplace.forEach(textNode => {
-            const text = textNode.nodeValue;
-            if (!regex.test(text)) return;
-            
-            regex.lastIndex = 0; // Reset index do flag 'g'
-            
-            const fragment = document.createDocumentFragment();
-            let lastIndex = 0;
-            let match;
-            
-            while ((match = regex.exec(text)) !== null) {
-                // Thêm phần ký tự không phải chữ (khoảng trắng, dấu câu...) phía trước
-                if (match.index > lastIndex) {
-                    fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
-                }
-                
-                // Thêm chữ cái đầu tiên
-                fragment.appendChild(document.createTextNode(match[1]));
-                
-                // Bọc phần còn lại của từ vào thẻ span.hint-tail
-                const tailSpan = document.createElement('span');
-                tailSpan.className = 'hint-tail';
-                tailSpan.textContent = match[2];
-                fragment.appendChild(tailSpan);
-                
-                lastIndex = regex.lastIndex;
-            }
-            
-            // Thêm phần còn lại sau khi khớp hết
-            if (lastIndex < text.length) {
-                fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
-            }
-            
-            // Thay thế textNode cũ bằng cấu trúc fragment vừa tạo an toàn
-            textNode.parentNode.replaceChild(fragment, textNode);
-        });
     }
 
     _addMaskToggle(segmentEl, item) {

@@ -12,7 +12,7 @@ export class ContentLoader {
 
         try {
             // Fetch only text metadata, EXCLUDING audio_blob to save memory
-            const rows = await this.db.query("SELECT uid, html, label, segment, audio_name FROM contents ORDER BY uid ASC");
+            const rows = await this.db.query("SELECT uid, html, label, segment, audio_name, hint FROM contents ORDER BY uid ASC");
             
             // Map rows to a cleaner format if necessary, or use as is.
             this.data = rows.map(row => ({
@@ -20,7 +20,8 @@ export class ContentLoader {
                 html: row.html,
                 label: row.label,
                 segment: row.segment,
-                audio: row.audio_name // Map từ cột audio_name trong DB
+                audio: row.audio_name, // Map từ cột audio_name trong DB
+                hint: row.hint
             }));
 
             return this.data;

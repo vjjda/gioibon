@@ -10,6 +10,11 @@
     margin-bottom: 0.25rem;
     position: relative; /* Containing block cho play-btn::before và mask-toggle */
     border-radius: 0 8px 8px 0;
+
+    /* [PERFORMANCE] Rendering Optimizations */
+    content-visibility: auto; /* Skip rendering for out-of-view segments */
+    contain-intrinsic-size: 1px 100px; /* Placeholder size for better scrollbar behavior */
+    contain: content; /* Isolate layout/paint from siblings */
 }
 
 /* [NEW] Note Segment Logic: Closer to previous segment */

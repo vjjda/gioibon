@@ -11,3 +11,4 @@ class SourceSegmentData(BaseModel):
 
 class SegmentData(SourceSegmentData):
     audio: str = Field(description="Tên file audio (ví dụ: 001_title_1.mp3)")
+    hint: str = Field(description="Nội dung văn bản đã bọc thẻ span cho Hint Mode")

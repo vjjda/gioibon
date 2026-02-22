@@ -26,7 +26,7 @@ class DataWriter:
     def _save_tsv(self, data: List[SegmentData]) -> None:
         os.makedirs(os.path.dirname(self.tsv_path), exist_ok=True)
         with open(self.tsv_path, 'w', encoding='utf-8', newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=["uid", "html", "label", "segment", "audio"], delimiter='\t')
+            writer = csv.DictWriter(f, fieldnames=["uid", "html", "label", "segment", "audio", "hint"], delimiter='\t')
             writer.writeheader()
             for item in data:
                 # Chỉ lưu tên file audio vào TSV (để debug dễ hơn)
@@ -51,7 +51,8 @@ class DataWriter:
                 label TEXT,
                 segment TEXT,
                 audio_name TEXT,
-                audio_blob BLOB
+                audio_blob BLOB,
+                hint TEXT
             )
         """)
         
@@ -79,10 +80,11 @@ class DataWriter:
                 item.label,
                 item.segment,
                 audio_name,
-                audio_blob
+                audio_blob,
+                item.hint
             ))
 
-        cursor.executemany("INSERT INTO contents VALUES (?, ?, ?, ?, ?, ?)", insert_data)
+        cursor.executemany("INSERT INTO contents VALUES (?, ?, ?, ?, ?, ?, ?)", insert_data)
         
         conn.commit()
         conn.close()
