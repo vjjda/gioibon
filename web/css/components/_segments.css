@@ -5,7 +5,8 @@
     flex-direction: column;
     padding: 0.75rem 1rem;
     border-left: 3px solid transparent;
-    transition: all 0.2s ease;
+    /* [OPTIMIZED] Instant border highlight to sync with audio, smooth background */
+    transition: background-color 0.15s ease-out, border-left-color 0s, color 0.15s ease-out;
     margin-bottom: 0.25rem;
     position: relative; /* Containing block cho play-btn::before và mask-toggle */
     border-radius: 0 8px 8px 0;
