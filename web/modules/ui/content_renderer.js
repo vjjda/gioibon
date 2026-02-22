@@ -189,11 +189,8 @@ export class ContentRenderer {
         if (typeof val === 'number') return val;
         if (typeof val !== 'string') return 0;
         if (val.endsWith('vh')) {
-            // Sử dụng clientHeight để an toàn hơn cho iOS/Safari
+            // Dùng clientHeight của root để tính % vh chuẩn
             return (parseFloat(val) / 100) * document.documentElement.clientHeight;
-        }
-        if (val.endsWith('px')) {
-            return parseFloat(val);
         }
         return parseFloat(val) || 0;
     }
@@ -201,35 +198,36 @@ export class ContentRenderer {
     _smartScroll(el) {
         if (!this.container) return;
 
+        // 1. Lấy thông số thực tế tại thời điểm gọi (để chống lỗi Safari Address Bar)
         const rect = el.getBoundingClientRect();
-        // clientHeight ổn định hơn innerHeight trên trình duyệt di động
-        const windowHeight = document.documentElement.clientHeight;
-
-        // 1. Tính toán vùng Sight View an toàn
+        const containerRect = this.container.getBoundingClientRect();
+        
+        // 2. Lấy ngưỡng cấu hình
         const thresholdTop = this._parseThreshold(UI_CONFIG.SCROLL_THRESHOLD_TOP);
         const thresholdBottom = this._parseThreshold(UI_CONFIG.SCROLL_THRESHOLD_BOTTOM);
 
-        const sightTop = UI_CONFIG.HEADER_HEIGHT + thresholdTop;
-        const sightBottom = windowHeight - UI_CONFIG.FOOTER_OFFSET - thresholdBottom;
+        // 3. Xác định vùng Sight View (tọa độ so với Viewport)
+        // sightTop: điểm bắt đầu vùng nhìn (ngay dưới Header + khoảng đệm)
+        const sightTop = containerRect.top + thresholdTop;
+        // sightBottom: điểm kết thúc vùng nhìn (trên Global Controls + khoảng đệm)
+        const sightBottom = containerRect.bottom - thresholdBottom;
 
-        // 2. Kiểm tra xem element có đang nằm trong Sight View không
-        const isInView = (
-            rect.top >= sightTop &&
-            rect.bottom <= sightBottom
-        );
+        // 4. Kiểm tra xem Segment có nằm ngoài vùng Sight View không
+        const isOutOfSightTop = rect.top < sightTop;
+        const isOutOfSightBottom = rect.bottom > sightBottom;
 
-        // 3. Nếu out-of-sight, thực hiện cuộn về MÉP TRÊN của Sight View
-        // Điều này giúp segment luôn xuất hiện ở cùng một vị trí ổn định phía trên.
-        if (!isInView) {
+        if (isOutOfSightTop || isOutOfSightBottom) {
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            // Với iOS, 'auto' thường mượt hơn 'smooth' khi cuộn nhanh liên tục
+            // Safari iOS hoạt động ổn định nhất với 'auto' khi xử lý audio liên tục
             const behavior = isMobile ? 'auto' : UI_CONFIG.SCROLL_BEHAVIOR;
             
-            // Tính toán vị trí cần cuộn: Đưa rect.top về đúng sightTop
-            const offset = rect.top - sightTop;
+            // 5. Tính toán vị trí cuộn Tuyệt đối
+            // Target: Đưa mép trên của segment về đúng vị trí sightTop
+            // Công thức: scrollTop hiện tại + (khoảng cách hiện tại của segment tới sightTop)
+            const targetScrollTop = this.container.scrollTop + (rect.top - sightTop);
             
-            this.container.scrollBy({
-                top: offset,
+            this.container.scrollTo({
+                top: targetScrollTop,
                 behavior: behavior
             });
         }
