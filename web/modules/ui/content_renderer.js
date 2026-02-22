@@ -9,6 +9,10 @@ export class ContentRenderer {
         this.playSequenceCallback = playSequenceCallback;
         this.items = [];
         this.hoveredSegmentId = null;
+        
+        // Cache DOM elements for O(1) access
+        this.elementCache = new Map();
+        this.activeSegmentId = null;
 
         this.maskManager = new MaskManager(this.container);
         this.segmentFactory = new SegmentFactory({
@@ -39,6 +43,11 @@ export class ContentRenderer {
         if (!this.container) return;
         this.container.innerHTML = '';
         this.items = items || [];
+        
+        // Reset cache
+        this.elementCache.clear();
+        this.activeSegmentId = null;
+        
         this.maskManager.setItems(this.items);
         
         if (!this.items || this.items.length === 0) {
@@ -78,6 +87,10 @@ export class ContentRenderer {
             }
 
             const segmentEl = this.segmentFactory.create(item, index);
+            
+            // Cache the element reference immediately
+            this.elementCache.set(item.id, segmentEl);
+            
             currentSection.appendChild(segmentEl);
         });
     }
@@ -137,10 +150,10 @@ export class ContentRenderer {
         const item = this.items.find(i => i.id === this.hoveredSegmentId);
         if (!item) return;
 
-        const segmentEl = this.container.querySelector(`.segment[data-id="${this.hoveredSegmentId}"]`);
+        // Use cached element for flip as well
+        const segmentEl = this.elementCache.get(this.hoveredSegmentId);
         if (segmentEl) {
             const hasAudio = item.audio && item.audio !== 'skip';
-            // [UPDATED] Hỗ trợ lật thẻ bằng phím 'f' cho cả Heading
             const isHeading = item.html && item.html.match(/^<h[1-6]/i) && item.label !== 'title' && item.label !== 'subtitle';
             
             if (hasAudio || isHeading) {
@@ -151,28 +164,57 @@ export class ContentRenderer {
 
     highlightSegment(id, shouldScroll = true) {
         if (!this.container) return;
-        const prevActive = this.container.querySelector('.segment.active');
-        if (prevActive) prevActive.classList.remove('active');
 
-        const activeEl = this.container.querySelector(`.segment[data-id="${id}"]`);
+        // 1. Remove previous active class efficiently
+        if (this.activeSegmentId !== null && this.activeSegmentId !== id) {
+            const prevEl = this.elementCache.get(this.activeSegmentId);
+            if (prevEl) prevEl.classList.remove('active');
+        }
+
+        // 2. Add new active class
+        const activeEl = this.elementCache.get(id);
         if (activeEl) {
             activeEl.classList.add('active');
+            this.activeSegmentId = id;
+
+            // 3. Smart Scroll: Only scroll if out of view
             if (shouldScroll) {
-                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-                activeEl.scrollIntoView({ 
-                    behavior: isMobile ? 'auto' : 'smooth', 
-                    block: 'center' 
-                });
+                this._smartScroll(activeEl);
             }
         }
     }
 
+    _smartScroll(el) {
+        const rect = el.getBoundingClientRect();
+        // Define "Safe Zone" (viewport minus header/footer)
+        const headerHeight = 80; 
+        const footerHeight = 100;
+        const windowHeight = window.innerHeight;
+
+        const isInView = (
+            rect.top >= headerHeight &&
+            rect.bottom <= (windowHeight - footerHeight)
+        );
+
+        if (!isInView) {
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            el.scrollIntoView({ 
+                behavior: isMobile ? 'auto' : 'smooth', 
+                block: 'center' 
+            });
+        }
+    }
+
     clearHighlight() {
-        if (!this.container) return;
-        this.container.querySelectorAll('.segment').forEach(el => el.classList.remove('active'));
+        if (this.activeSegmentId !== null) {
+            const prevEl = this.elementCache.get(this.activeSegmentId);
+            if (prevEl) prevEl.classList.remove('active');
+            this.activeSegmentId = null;
+        }
     }
 
     updatePlaybackState(state, activeSegmentId, isSequence, sequenceParentId) {
+        // Reset global buttons (could be optimized further but less critical)
         this.container.querySelectorAll('.play-btn:not(.play-sequence-btn)').forEach(btn => {
             btn.classList.remove('active-play');
             btn.innerHTML = '<i class="fas fa-circle"></i>';
@@ -187,7 +229,8 @@ export class ContentRenderer {
 
         if (!activeSegmentId || state === 'stopped') return;
 
-        const activeEl = this.container.querySelector(`.segment[data-id="${activeSegmentId}"]`);
+        // Efficient lookup using cache
+        const activeEl = this.elementCache.get(activeSegmentId);
         if (!activeEl) return;
 
         const segmentBtn = activeEl.querySelector('.play-btn:not(.play-sequence-btn)');
@@ -198,7 +241,7 @@ export class ContentRenderer {
         }
 
         if (isSequence && sequenceParentId) {
-            const parentEl = this.container.querySelector(`.segment[data-id="${sequenceParentId}"]`);
+            const parentEl = this.elementCache.get(sequenceParentId);
             if (parentEl) {
                 const seqBtn = parentEl.querySelector('.play-sequence-btn');
                 if (seqBtn) {

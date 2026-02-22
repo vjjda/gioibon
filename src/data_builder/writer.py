@@ -55,6 +55,9 @@ class DataWriter:
             )
         """)
         
+        # [OPTIMIZATION] Tạo Index cho cột label để tăng tốc độ filter
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_label ON contents(label)")
+        
         insert_data = []
         for item in data:
             audio_name = item.audio
