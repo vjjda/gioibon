@@ -25,7 +25,8 @@ export class TocRenderer {
             
             if (match || isRule) {
                 let level = match ? parseInt(match[1]) : 4;
-                let text = item.segment.replace(/<[^>]*>?/gm, '').trim();
+                // [FIX] Sử dụng item.text (đã tối ưu) thay vì item.segment đã bị loại bỏ
+                let text = (item.text || '').replace(/<[^>]*>?/gm, '').trim();
 
                 // Sửa lỗi: Bỏ qua các heading rỗng
                 if (!text && !isRule) return;

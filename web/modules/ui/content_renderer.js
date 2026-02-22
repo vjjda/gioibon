@@ -120,7 +120,7 @@ export class ContentRenderer {
             }
 
             if (item.audio && item.audio !== 'skip') {
-                sequence.push({ id: item.id, audio: item.audio, text: item.segment });
+                sequence.push({ id: item.id, audio: item.audio, text: item.text });
             }
         }
         
@@ -141,7 +141,7 @@ export class ContentRenderer {
             this._handlePlaySequence(index);
         } else {
             if (item.audio && item.audio !== 'skip' && this.playSegmentCallback) {
-                this.playSegmentCallback(item.id, item.audio, item.segment);
+                this.playSegmentCallback(item.id, item.audio, item.text);
             }
         }
     }

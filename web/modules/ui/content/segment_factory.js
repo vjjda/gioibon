@@ -58,7 +58,7 @@ export class SegmentFactory {
             playBtn.title = "Nghe đoạn này";
             playBtn.onclick = (e) => {
                 e.stopPropagation();
-                if (this.callbacks.playSegment) this.callbacks.playSegment(item.id, item.audio, item.segment);
+                if (this.callbacks.playSegment) this.callbacks.playSegment(item.id, item.audio, item.text);
             };
             wrapper.appendChild(playBtn);
         }
