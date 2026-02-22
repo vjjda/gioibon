@@ -1,17 +1,18 @@
 // Path: web/utils/pwa.js
+// Sử dụng module ảo của vite-plugin-pwa để quản lý Service Worker chuẩn xác
+// @ts-ignore
+import { registerSW } from 'virtual:pwa-register';
 
 export function setupPWA() {
-    // 1. Logic dọn dẹp cache và dữ liệu (Cập nhật: Giữ lại cấu hình)
+    // 1. Logic dọn dẹp cache và dữ liệu (Giữ nguyên logic cũ)
     const clearCacheBtn = document.getElementById('btn-clear-cache');
     if (clearCacheBtn) {
         clearCacheBtn.addEventListener('click', async () => {
             if (confirm('Bạn có chắc chắn muốn làm mới toàn bộ dữ liệu? Các cấu hình như API Key, font size và tốc độ đọc sẽ được giữ lại.')) {
-                // Vô hiệu hóa nút
                 clearCacheBtn.disabled = true;
                 clearCacheBtn.style.opacity = '0.5';
 
                 try {
-                    // Danh sách các phím cần bảo lưu
                     const keysToPreserve = [
                         'google_cloud_api_key',
                         'tts_voice_name',
@@ -21,17 +22,16 @@ export function setupPWA() {
                         'sutta_sepia_light',
                         'sutta_sepia_dark',
                         'sutta_loop_enabled',
-                        'sutta_hint_mode_enabled' // Cấu hình Hint mới
+                        'sutta_hint_mode_enabled'
                     ];
 
-                    // Bước 1: Sao lưu
                     const backup = {};
                     keysToPreserve.forEach(key => {
                         const val = localStorage.getItem(key);
                         if (val !== null) backup[key] = val;
                     });
 
-                    // Bước 2: Dọn dẹp Service Workers
+                    // Unregister SW
                     if ('serviceWorker' in navigator) {
                         const registrations = await navigator.serviceWorker.getRegistrations();
                         for (let registration of registrations) {
@@ -39,13 +39,13 @@ export function setupPWA() {
                         }
                     }
 
-                    // Bước 3: Dọn dẹp Cache API
+                    // Clear Caches
                     if ('caches' in window) {
                         const keys = await caches.keys();
                         await Promise.all(keys.map(key => caches.delete(key)));
                     }
 
-                    // Bước 4: Dọn dẹp IndexedDB (Database nội dung)
+                    // Clear IDB
                     if (indexedDB.databases) {
                         const dbs = await indexedDB.databases();
                         dbs.forEach(db => {
@@ -53,7 +53,6 @@ export function setupPWA() {
                         });
                     }
 
-                    // Bước 5: Dọn dẹp LocalStorage và khôi phục cấu hình
                     localStorage.clear();
                     sessionStorage.clear();
                     
@@ -61,8 +60,7 @@ export function setupPWA() {
                         localStorage.setItem(key, val);
                     });
                     
-                    // Bước 6: Tải lại trang từ server
-                    window.location.reload(true);
+                    window.location.reload();
                 } catch (error) {
                     console.error('Lỗi khi xóa cache:', error);
                     alert('Đã xảy ra lỗi khi làm mới dữ liệu. Vui lòng thử lại.');
@@ -73,35 +71,30 @@ export function setupPWA() {
         });
     }
 
-    // 2. Logic thông báo cập nhật PWA (Toast)
+    // 2. Logic thông báo cập nhật PWA (Sử dụng virtual:pwa-register)
     const toast = document.getElementById('pwa-toast');
     const refreshBtn = document.getElementById('pwa-refresh');
     const closeBtn = document.getElementById('pwa-close');
 
     if (toast && refreshBtn && closeBtn) {
-        let registration;
-        // Lắng nghe event từ Service Worker (thông qua Vite PWA plugin)
-        window.addEventListener('load', () => {
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./sw.js').then(reg => {
-                    registration = reg;
-                    reg.addEventListener('updatefound', () => {
-                        const newWorker = reg.installing;
-                        newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                toast.classList.remove('hidden');
-                            }
-                        });
-                    });
-                 });
+        // Hàm này sẽ được gọi khi có update hoặc offline ready
+        const updateSW = registerSW({
+            onNeedRefresh() {
+                // Hiển thị Toast khi có phiên bản mới
+                toast.classList.remove('hidden');
+            },
+            onOfflineReady() {
+                console.log('App ready to work offline');
             }
         });
-        
+
         refreshBtn.addEventListener('click', () => {
-            if (registration && registration.waiting) {
-                registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-            }
-            window.location.reload();
+            // [CRITICAL FIX] Xóa phiên bản DB cũ để ép tải DB mới nhất sau khi update
+            // Điều này đảm bảo Data luôn đồng bộ với App Code
+            localStorage.removeItem('db_version_content.db'); 
+            
+            // Gọi hàm update của plugin -> Nó sẽ postMessage SKIP_WAITING và reload
+            updateSW(true); 
         });
         
         closeBtn.addEventListener('click', () => {
@@ -109,4 +102,3 @@ export function setupPWA() {
         });
     }
 }
-

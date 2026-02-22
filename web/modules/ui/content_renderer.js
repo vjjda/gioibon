@@ -151,12 +151,18 @@ export class ContentRenderer {
 
     highlightSegment(id, shouldScroll = true) {
         if (!this.container) return;
-        this.container.querySelectorAll('.segment').forEach(el => el.classList.remove('active'));
+        const prevActive = this.container.querySelector('.segment.active');
+        if (prevActive) prevActive.classList.remove('active');
+
         const activeEl = this.container.querySelector(`.segment[data-id="${id}"]`);
         if (activeEl) {
             activeEl.classList.add('active');
             if (shouldScroll) {
-                activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                activeEl.scrollIntoView({ 
+                    behavior: isMobile ? 'auto' : 'smooth', 
+                    block: 'center' 
+                });
             }
         }
     }
