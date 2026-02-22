@@ -24,7 +24,7 @@ extensions = ["", "bash", "cfg", "cfg.py", "gitignore", "ini", "js", "json", "md
 
 format_extensions = ["py"]
 
-ignore = [".DS_Store", ".git", ".hg", ".pcode.toml", ".ruff_cache", ".svn", ".venv", "__pycache__", "venv", "/web/libs", "package-lock.json", "node_modules"]
+ignore = [".DS_Store", ".git", ".hg", ".pcode.toml", ".ruff_cache", ".svn", ".venv", "__pycache__", "venv", "/web/libs", "package-lock.json", "node_modules", "/data/*"]
 
 include = []
 
