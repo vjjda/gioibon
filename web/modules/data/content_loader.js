@@ -20,7 +20,7 @@ export class ContentLoader {
                 html: row.html,
                 label: row.label,
                 segment: row.segment,
-                audio: row.audio
+                audio: row.audio_name // Map từ cột audio_name trong DB
             }));
 
             return this.data;

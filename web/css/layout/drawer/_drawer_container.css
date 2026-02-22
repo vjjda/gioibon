@@ -1,77 +1,13 @@
 /* Path: web/css/layout/drawer/_drawer_container.css */
 
-/* --- TRIGGER BUTTON --- */
-#filter-container {
-  /* Position absolute to place it on the right of header */
-  position: absolute;
-  right: 1.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 101;
-}
+/* 
+ * Layout của Drawer và Nút Trigger đã được chuyển sang web/css/layout/_header.css 
+ * để xử lý logic position: fixed tốt hơn.
+ * File này được giữ lại để tránh lỗi import trong style.css, 
+ * hoặc dùng để style các thành phần con bên trong Drawer nếu cần.
+ */
 
-.icon-trigger {
-  background: transparent;
-  border: none;
-  color: var(--text-light);
-  padding: 8px; /* Slightly larger touch target */
-  opacity: 0.6; /* Increased visibility */
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border-radius: 50%;
-}
-
-.icon-trigger:hover,
-.icon-trigger.open {
-  color: var(--primary-color);
-  opacity: 1;
-  background-color: var(--bg-hover);
-}
-
-.icon-trigger.open {
-  transform: rotate(180deg);
-}
-
-.icon-trigger svg {
-  width: 24px;
-  height: 24px;
-}
-
-/* --- DRAWER MAIN SHELL --- */
-#filter-drawer {
-  position: absolute;
-  top: 100%; /* Below the trigger button */
-  right: 0;
-  width: 300px; /* Target width */
-  max-width: calc(100vw - 40px); /* Avoid overflow on very small screens */
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-float);
-  padding: 15px;
-  margin-top: 10px;
-  
-  /* Animation */
-  animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  transform-origin: top right;
-  z-index: 1000;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Helper */
-.hidden {
-  display: none !important;
+/* Style cho nội dung bên trong Control Drawer nếu cần */
+#control-drawer {
+    /* Các style chi tiết khác nếu chưa có trong _header.css */
 }

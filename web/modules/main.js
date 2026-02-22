@@ -41,14 +41,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else {
                 const startId = contentRenderer.getFirstVisibleSegmentId();
                 if (startId) {
-                    // Logic lấy sequence từ startId -> hết bài
-                    // Cần lấy tất cả segments từ DB (đã lọc skip)
-                    const allSegments = contentLoader.getAllSegments();
-                    const startIndex = allSegments.findIndex(s => String(s.id) === String(startId));
-                    if (startIndex !== -1) {
-                        const sequence = allSegments.slice(startIndex);
-                        ttsPlayer.playSequence(sequence);
-                    }
+                    const sequence = contentLoader.getSegmentsStartingFrom(startId);
+                    if (sequence.length > 0) ttsPlayer.playSequence(sequence);
                 } else {
                     const allSegments = contentLoader.getAllSegments();
                     if (allSegments.length > 0) ttsPlayer.playSequence(allSegments);
