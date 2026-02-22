@@ -57,15 +57,15 @@
         grid-template-columns: repeat(5, 1fr);
     }
     .global-controls {
-        width: auto;
-        max-width: calc(100% - 30px);
+        width: 80%;
+        max-width: 500px; /* Giới hạn độ dài tối đa để không bị quá thưa */
         left: 50%;
         transform: translateX(-50%);
         right: auto;
         bottom: 20px;
-        justify-content: center;
-        padding: 10px 16px;
-        gap: 12px; /* Khoảng cách rộng rãi cho Tablet */
+        justify-content: space-between; /* Dàn đều các nút ra hai bên */
+        padding: 10px 24px; /* Tăng padding để nút kịch biên không sát mép cong */
+        gap: 10px;
     }
 
     /* Kích thước nút cho Tablet */
