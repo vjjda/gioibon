@@ -11,27 +11,30 @@ export class TTSPlayer {
         
         // Audio Element Reuse (Critical for Safari iOS Memory)
         this.audioElement = new Audio();
-        
         this.audioQueue = [];
         this.isPlaying = false;
         this.isPaused = false;
-        this.currentAudio = this.audioElement; // Alias for compatibility
+        this.currentAudio = this.audioElement;
+        
         this.currentSegmentId = null;
         this.isSequence = false;
         
-        this.sequenceParentId = null; 
+        this.sequenceParentId = null;
         this.isLooping = false;
         this.currentPlaylist = [];
 
         this.onSegmentStart = null;
         this.onSegmentEnd = null;
         this.onPlaybackEnd = null;
-        this.onPlaybackStateChange = null; 
-
+        this.onPlaybackStateChange = null;
+        
         // Session & Preload Management
         this.playbackSessionId = 0; 
-        this.preloadMap = new Map(); 
-        this.preloadDepth = 2; // [NEW] Preload 2 items ahead for smoother playback
+        this.preloadMap = new Map();
+        this.preloadDepth = 2;
+        
+        // [FIX iOS MEMORY LEAK] Theo dõi Blob URL đang phát để hủy bỏ khi bị ngắt quãng
+        this.currentBlobUrl = null; 
     }
 
     // --- Configuration Proxies ---
@@ -105,8 +108,11 @@ export class TTSPlayer {
         // Reset Audio Element
         this.audioElement.pause();
         this.audioElement.currentTime = 0;
-        this.audioElement.removeAttribute('src'); // Detach source
-        this.audioElement.load(); // Force reset
+        this.audioElement.removeAttribute('src'); 
+        this.audioElement.load();
+        
+        // [FIX iOS MEMORY LEAK] Xóa Blob file đang phát dở dang khỏi RAM
+        this._revokeCurrentBlob();
         
         this.isPlaying = false;
         this.isPaused = false;
@@ -120,7 +126,7 @@ export class TTSPlayer {
     // --- Session & Preload Management ---
 
     _startNewSession() {
-        this._cleanupSession(); 
+        this._cleanupSession();
         this.playbackSessionId++; 
     }
 
@@ -131,6 +137,13 @@ export class TTSPlayer {
         this.preloadMap.clear();
     }
 
+    _revokeCurrentBlob() {
+        if (this.currentBlobUrl) {
+            URL.revokeObjectURL(this.currentBlobUrl);
+            this.currentBlobUrl = null;
+        }
+    }
+
     _getCurrentSessionId() {
         return this.playbackSessionId;
     }
@@ -139,22 +152,17 @@ export class TTSPlayer {
 
     async _preloadNextItem() {
         if (this.audioQueue.length === 0) return;
-
         const currentSession = this.playbackSessionId;
         
-        // Preload up to preloadDepth items
         for (let i = 0; i < Math.min(this.preloadDepth, this.audioQueue.length); i++) {
             const nextItem = this.audioQueue[i];
-            
             if (!this.preloadMap.has(nextItem.id)) {
-                // Delegate resolution to AudioResolver
                 const result = await this.audioResolver.resolve(
                     nextItem, 
                     currentSession, 
                     () => this.playbackSessionId,
                     this.textProcessor
                 );
-                
                 if (result && result.isBlob && this.playbackSessionId === currentSession) {
                     this.preloadMap.set(nextItem.id, result.url);
                 }
@@ -163,7 +171,6 @@ export class TTSPlayer {
     }
 
     async _processQueue() {
-        // 1. Check Queue Empty
         if (this.audioQueue.length === 0) {
             if (this.isLooping && this.currentPlaylist.length > 0) {
                 this.audioQueue = [...this.currentPlaylist];
@@ -174,7 +181,10 @@ export class TTSPlayer {
         }
 
         if (this.isPaused) return;
-
+        
+        // [FIX iOS MEMORY LEAK] Xóa file ảo của câu trước đó trước khi phát câu mới
+        this._revokeCurrentBlob();
+        
         this.isPlaying = true;
         this._emitState('playing');
 
@@ -182,26 +192,22 @@ export class TTSPlayer {
         this.currentSegmentId = item.id;
 
         if (this.onSegmentStart) this.onSegmentStart(item.id, this.isSequence);
-
         try {
             const currentSession = this.playbackSessionId;
             let audioSrc = null;
             let isBlob = false;
 
-            // 2. Check Preload Map
             if (this.preloadMap.has(item.id)) {
                 audioSrc = this.preloadMap.get(item.id);
                 isBlob = true;
                 this.preloadMap.delete(item.id); 
             } else {
-                // 3. Resolve On-Demand via AudioResolver
                 const result = await this.audioResolver.resolve(
                     item, 
                     currentSession, 
                     () => this.playbackSessionId,
                     this.textProcessor
                 );
-                
                 if (result) {
                     audioSrc = result.url;
                     isBlob = result.isBlob;
@@ -209,26 +215,26 @@ export class TTSPlayer {
             }
 
             if (currentSession !== this.playbackSessionId) return;
-
             if (!audioSrc) {
                 this._handleSegmentEnd(item.id, null);
                 return;
             }
 
-            // 4. Play using Reused Audio Element
+            // [FIX iOS MEMORY LEAK] Lưu lại reference để xóa khi Stop hoặc sang câu mới
+            if (isBlob) {
+                this.currentBlobUrl = audioSrc;
+            }
+
             this.audioElement.src = audioSrc;
-            
             if (this.engine.rate) {
                 this.audioElement.playbackRate = this.engine.rate;
             }
 
-            // Define cleanup callback
             const onEnd = () => {
-                if (isBlob) URL.revokeObjectURL(audioSrc);
+                this._revokeCurrentBlob();
                 this._handleSegmentEnd(item.id);
             };
 
-            // Remove old listeners to avoid stacking
             this.audioElement.onended = onEnd;
             this.audioElement.onerror = (e) => {
                 console.error("Audio Playback Error:", e, audioSrc);
@@ -236,10 +242,7 @@ export class TTSPlayer {
             };
 
             await this.audioElement.play();
-
-            // 5. Trigger Preload Next
             this._preloadNextItem();
-
         } catch (error) {
             console.error("Playback error", error);
             this._handleSegmentEnd(item.id);
@@ -255,3 +258,4 @@ export class TTSPlayer {
         if (this.onPlaybackStateChange) this.onPlaybackStateChange(state);
     }
 }
+

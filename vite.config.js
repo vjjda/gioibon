@@ -6,7 +6,6 @@ import path from 'path';
 import fs from 'fs';
 
 // --- HỆ THỐNG AUTO-ALIAS TỰ ĐỘNG ---
-// Hàm tiện ích để lấy danh sách tên các thư mục con
 function getDirectories(source) {
     if (!fs.existsSync(source)) return [];
     return fs.readdirSync(source, { withFileTypes: true })
@@ -18,14 +17,12 @@ const aliases = {};
 const webDir = path.resolve(__dirname, 'web');
 const modulesDir = path.resolve(__dirname, 'web/modules');
 
-// 1. Quét và tự động thêm alias cho các folder ở root của 'web' (ví dụ: utils, libs, css...)
 getDirectories(webDir).forEach(dir => {
-    if (dir !== 'modules') { // Bỏ qua folder modules để xử lý riêng bên dưới
+    if (dir !== 'modules') { 
         aliases[dir] = path.resolve(webDir, dir);
     }
 });
 
-// 2. Quét và tự động thêm alias cho các sub-folder bên trong 'web/modules' (ví dụ: core, ui, tts...)
 if (fs.existsSync(modulesDir)) {
     getDirectories(modulesDir).forEach(dir => {
         aliases[dir] = path.resolve(modulesDir, dir);
@@ -34,23 +31,22 @@ if (fs.existsSync(modulesDir)) {
 // -----------------------------------
 
 export default defineConfig({
-    root: 'web', // Root folder for Vite is 'web'
-    base: '/gioibon/', // Base path for GitHub Pages deployment
+    root: 'web', 
+    base: '/gioibon/', 
     build: {
-        outDir: '../dist', // Output to project root 'dist' folder
+        outDir: '../dist', 
         emptyOutDir: true,
     },
     css: {
-        devSourcemap: true, // Kích hoạt Source Map cho CSS (Hỗ trợ trình duyệt Workspace)
+        devSourcemap: true, 
     },
     resolve: {
-        // Áp dụng danh sách tự động tạo ở trên
         alias: aliases,
     },
     plugins: [
-        basicSsl(), // Kích hoạt SSL ảo để test trên thiết bị LAN (điện thoại)
+        basicSsl(), 
         VitePWA({
-            registerType: 'prompt', // Thay đổi từ autoUpdate sang prompt để hiện Toast thông báo
+            registerType: 'prompt', 
             includeAssets: [
                 'assets/icons/favicon.ico', 
                 'assets/icons/apple-touch-icon.png',
@@ -63,7 +59,7 @@ export default defineConfig({
                 description: 'Tập tụng Giới Bổn Tỳ Kheo (Pātimokkha Bhikkhu) tiếng Việt offline.',
                 theme_color: '#fdfbf7',
                 background_color: '#fdfbf7',
-                display: 'standalone', // Chạy như app native, không có thanh địa chỉ
+                display: 'standalone', 
                 orientation: 'portrait',
                 scope: '/gioibon/',
                 start_url: '/gioibon/',
@@ -87,57 +83,38 @@ export default defineConfig({
                 ]
             },
             workbox: {
-                globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,wasm}'], // Đã loại bỏ .db để tránh precache file lớn
-                maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // Giới hạn 5MB cho các assets khác
+                // [PWA OFFLINE FIX] Thêm 'json' vào globPatterns để precache tts_rules.json
+                globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,wasm,json}'], 
+                // [PWA OFFLINE FIX] Ngăn không cho Service Worker precache file version và DB
+                globIgnores: ['**/node_modules/**/*', 'sw.js', 'workbox-*.js', '**/*_version.json', '**/*.db'],
+                maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, 
                 runtimeCaching: [
                     {
-                        // Cache Google Fonts (stylesheets)
                         urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
                         handler: 'CacheFirst',
                         options: {
                             cacheName: 'google-fonts-cache',
-                            expiration: {
-                                maxEntries: 10,
-                                maxAgeSeconds: 60 * 60 * 24 * 365 // 365 days
-                            },
-                            cacheableResponse: {
-                                statuses: [0, 200]
-                            }
+                            expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
+                            cacheableResponse: { statuses: [0, 200] }
                         }
                     },
                     {
-                        // Cache Google Fonts (gstatic)
                         urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
                         handler: 'CacheFirst',
                         options: {
                             cacheName: 'gstatic-fonts-cache',
-                            expiration: {
-                                maxEntries: 10,
-                                maxAgeSeconds: 60 * 60 * 24 * 365 // 365 days
-                            },
-                            cacheableResponse: {
-                                statuses: [0, 200]
-                            }
+                            expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
+                            cacheableResponse: { statuses: [0, 200] }
                         }
                     },
                     {
-                        // Chiến lược cache cho Audio/Data: StaleWhileRevalidate
-                        // CHÚ Ý: Loại trừ file .db ra khỏi cache runtime để tránh lỗi bộ nhớ SW
-                        urlPattern: ({ url }) => url.pathname.includes('/app-content/') && !url.pathname.endsWith('.db'),
-                        handler: 'StaleWhileRevalidate',
-                        options: {
-                            cacheName: 'app-data-cache',
-                            expiration: {
-                                maxEntries: 100,
-                                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
-                            },
-                            cacheableResponse: {
-                                statuses: [0, 200]
-                            }
-                        }
+                        // [PWA OFFLINE FIX] Ép trình duyệt LUÔN đòi mạng khi tải file _version.json
+                        urlPattern: ({ url }) => url.pathname.endsWith('_version.json'),
+                        handler: 'NetworkOnly'
                     }
                 ]
             }
         })
     ]
 });
+
