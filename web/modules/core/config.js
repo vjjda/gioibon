@@ -22,3 +22,17 @@ export const API_URLS = {
     TTS: "https://texttospeech.googleapis.com/v1/text:synthesize",
     VOICES: "https://texttospeech.googleapis.com/v1/voices"
 };
+
+export const UI_CONFIG = {
+    // Khoảng cách an toàn (Sight View) - hỗ trợ 'px' hoặc '%vh'
+    // SCROLL_THRESHOLD_TOP: Tính từ mép dưới của Header
+    SCROLL_THRESHOLD_TOP: '10vh', 
+    // SCROLL_THRESHOLD_BOTTOM: Tính từ mép trên của Global Controls
+    SCROLL_THRESHOLD_BOTTOM: '15vh',
+    
+    // Chiều cao thành phần cố định (dùng để trừ hao)
+    HEADER_HEIGHT: 70, // khớp với --header-height
+    FOOTER_OFFSET: 100, // Khoảng cách trừ hao cho Global Controls ở dưới
+    
+    SCROLL_BEHAVIOR: 'smooth'
+};

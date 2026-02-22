@@ -1,10 +1,11 @@
 // Path: web/modules/ui/content_renderer.js
 import { SegmentFactory } from 'ui/content/segment_factory.js';
 import { MaskManager } from 'ui/content/mask_manager.js';
+import { UI_CONFIG } from 'core/config.js';
 
 export class ContentRenderer {
     constructor(containerId, playSegmentCallback, playSequenceCallback) {
-        this.container = document.getElementById(containerId);
+        this.container = document.getElementById(containerId); // This is #content
         this.playSegmentCallback = playSegmentCallback;
         this.playSequenceCallback = playSequenceCallback;
         this.items = [];
@@ -184,23 +185,48 @@ export class ContentRenderer {
         }
     }
 
+    _parseThreshold(val) {
+        if (typeof val === 'number') return val;
+        if (typeof val !== 'string') return 0;
+        if (val.endsWith('vh')) {
+            return (parseFloat(val) / 100) * window.innerHeight;
+        }
+        if (val.endsWith('px')) {
+            return parseFloat(val);
+        }
+        return parseFloat(val) || 0;
+    }
+
     _smartScroll(el) {
+        if (!this.container) return;
+
         const rect = el.getBoundingClientRect();
-        // Define "Safe Zone" (viewport minus header/footer)
-        const headerHeight = 80; 
-        const footerHeight = 100;
         const windowHeight = window.innerHeight;
 
+        // 1. Tính toán vùng Sight View an toàn
+        const thresholdTop = this._parseThreshold(UI_CONFIG.SCROLL_THRESHOLD_TOP);
+        const thresholdBottom = this._parseThreshold(UI_CONFIG.SCROLL_THRESHOLD_BOTTOM);
+
+        const sightTop = UI_CONFIG.HEADER_HEIGHT + thresholdTop;
+        const sightBottom = windowHeight - UI_CONFIG.FOOTER_OFFSET - thresholdBottom;
+
+        // 2. Kiểm tra xem element có đang nằm trong Sight View không
         const isInView = (
-            rect.top >= headerHeight &&
-            rect.bottom <= (windowHeight - footerHeight)
+            rect.top >= sightTop &&
+            rect.bottom <= sightBottom
         );
 
+        // 3. Nếu out-of-sight, thực hiện cuộn về mép trên của Sight View
         if (!isInView) {
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            el.scrollIntoView({ 
-                behavior: isMobile ? 'auto' : 'smooth', 
-                block: 'center' 
+            const behavior = isMobile ? 'auto' : UI_CONFIG.SCROLL_BEHAVIOR;
+            
+            // Tính toán vị trí cần cuộn: Đưa rect.top về đúng sightTop
+            const offset = rect.top - sightTop;
+            
+            this.container.scrollBy({
+                top: offset,
+                behavior: behavior
             });
         }
     }
