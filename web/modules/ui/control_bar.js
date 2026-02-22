@@ -42,9 +42,11 @@ export class ControlBar {
         }
 
         if (this.hintToggleBtn) {
-            // Nạp trạng thái hint mode từ bộ nhớ
-            const savedHintMode = localStorage.getItem(STORAGE_KEY_HINT) === 'true';
-            if (savedHintMode) {
+            // Nạp trạng thái hint mode từ bộ nhớ (Mặc định là TRUE nếu chưa thiết lập)
+            const savedHintModeValue = localStorage.getItem(STORAGE_KEY_HINT);
+            const isHintModeActive = savedHintModeValue === null ? true : savedHintModeValue === 'true';
+
+            if (isHintModeActive) {
                 this.hintToggleBtn.classList.add('active');
                 document.body.classList.add('hint-mode-active');
             }
