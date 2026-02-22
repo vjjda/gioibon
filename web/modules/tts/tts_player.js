@@ -1,11 +1,14 @@
 // Path: web/modules/tts/tts_player.js
 import { TTSEngine } from 'tts/tts_engine.js';
-import { BASE_URL } from 'core/config.js';
-import { audioCache } from 'services/audio_cache.js';
+import { TextProcessor } from 'tts/text_processor.js';
+import { AudioResolver } from 'tts/audio_resolver.js';
 
 export class TTSPlayer {
     constructor() {
         this.engine = new TTSEngine();
+        this.textProcessor = new TextProcessor();
+        this.audioResolver = new AudioResolver(this.engine);
+        
         this.audioQueue = [];
         this.isPlaying = false;
         this.isPaused = false;
@@ -22,16 +25,12 @@ export class TTSPlayer {
         this.onPlaybackEnd = null;
         this.onPlaybackStateChange = null; 
 
-        // [NEW] Nạp bộ rules cấu hình
-        this.ttsRules = null;
-        this.rulesPromise = fetch(`${BASE_URL}app-content/tts_rules.json`)
-            .then(res => res.json())
-            .then(data => { this.ttsRules = data; })
-            .catch(err => console.warn("Không tìm thấy tts_rules.json", err));
+        // Session & Preload Management
+        this.playbackSessionId = 0; 
+        this.preloadMap = new Map(); 
     }
-    
-    // ... (rest of configuration methods) ...
 
+    // --- Configuration Proxies ---
     setApiKey(key) { this.engine.setApiKey(key); }
     getApiKey() { return this.engine.getApiKey(); }
     setVoice(name) { this.engine.setVoice(name); }
@@ -40,12 +39,14 @@ export class TTSPlayer {
     get currentVoice() { return this.engine.voice; }
     get currentRate() { return this.engine.rate; }
 
+    // --- Playback Control ---
+
     playSegment(segmentId, audio, text) {
         if (String(this.currentSegmentId) === String(segmentId) && (this.isPlaying || this.isPaused)) {
             this.togglePause();
             return;
         }
-        this.stop();
+        this._startNewSession();
         this.isSequence = false;
         const item = { id: segmentId, audio: audio, text: text };
         this.audioQueue = [item];
@@ -59,7 +60,7 @@ export class TTSPlayer {
             this.togglePause();
             return;
         }
-        this.stop();
+        this._startNewSession();
         this.isSequence = true;
         this.sequenceParentId = parentId; 
         this.audioQueue = [...segments];
@@ -72,7 +73,7 @@ export class TTSPlayer {
             this.currentAudio.pause();
             this.isPaused = true;
             this.isPlaying = false;
-            if (this.onPlaybackStateChange) this.onPlaybackStateChange('paused');
+            this._emitState('paused');
         }
     }
 
@@ -81,89 +82,79 @@ export class TTSPlayer {
             this.currentAudio.play();
             this.isPaused = false;
             this.isPlaying = true;
-            if (this.onPlaybackStateChange) this.onPlaybackStateChange('playing');
+            this._emitState('playing');
         } else if (this.audioQueue.length > 0 && !this.isPlaying && !this.isPaused) {
             this._processQueue();
         }
     }
 
     togglePause() {
-        if (this.isPaused) {
-            this.resume();
-        } else {
-            this.pause();
-        }
+        this.isPaused ? this.resume() : this.pause();
     }
 
     stop() {
+        this._cleanupSession();
         this.audioQueue = [];
         this.currentPlaylist = [];
         this.sequenceParentId = null;
+        
         if (this.currentAudio) {
             this.currentAudio.pause();
             this.currentAudio = null;
         }
+        
         this.isPlaying = false;
         this.isPaused = false;
         this.currentSegmentId = null;
         this.isSequence = false;
 
         if (this.onPlaybackEnd) this.onPlaybackEnd();
-        if (this.onPlaybackStateChange) this.onPlaybackStateChange('stopped');
+        this._emitState('stopped');
     }
 
-    // --- Format Text Helpers ---
+    // --- Session & Preload Management ---
 
-    _escapeRegExp(string) {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    _startNewSession() {
+        this._cleanupSession(); 
+        this.playbackSessionId++; 
     }
 
-    _isUpper(text) {
-        return text === text.toUpperCase() && text !== text.toLowerCase();
-    }
-
-    _capitalize(text) {
-        if (!text) return text;
-        return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-    }
-
-    // [NEW] Áp dụng rules engine từ JSON
-    async _applyTTSRules(text) {
-        if (!text) return "";
-        await this.rulesPromise;
-        if (!this.ttsRules) return text;
-
-        let ttsText = text;
-
-        if (this.ttsRules.remove_html) {
-            ttsText = ttsText.replace(/<[^>]*>?/gm, '');
+    _cleanupSession() {
+        for (const url of this.preloadMap.values()) {
+            URL.revokeObjectURL(url);
         }
-        
-        if (this.ttsRules.remove_chars) {
-            const escapedChars = this.ttsRules.remove_chars.map(c => this._escapeRegExp(c)).join('');
-            const pattern = new RegExp(`[${escapedChars}]`, 'g');
-            ttsText = ttsText.replace(pattern, ' ');
-        }
+        this.preloadMap.clear();
+    }
 
-        if (this.ttsRules.collapse_spaces) {
-            ttsText = ttsText.replace(/\s+/g, ' ').trim();
-        }
+    _getCurrentSessionId() {
+        return this.playbackSessionId;
+    }
 
-        if (this.ttsRules.phonetics) {
-            for (const [word, replacement] of Object.entries(this.ttsRules.phonetics)) {
-                const regex = new RegExp(this._escapeRegExp(word), 'gi');
-                ttsText = ttsText.replace(regex, replacement);
+    // --- Queue Processing ---
+
+    async _preloadNextItem() {
+        if (this.audioQueue.length === 0) return;
+
+        const nextItem = this.audioQueue[0];
+        if (!this.preloadMap.has(nextItem.id)) {
+            const currentSession = this.playbackSessionId;
+            
+            // Delegate resolution to AudioResolver
+            const result = await this.audioResolver.resolve(
+                nextItem, 
+                currentSession, 
+                () => this.playbackSessionId,
+                this.textProcessor
+            );
+            
+            if (result && result.isBlob && this.playbackSessionId === currentSession) {
+                this.preloadMap.set(nextItem.id, result.url);
             }
         }
-
-        if (this.ttsRules.capitalize_upper && this._isUpper(ttsText)) {
-            ttsText = this._capitalize(ttsText);
-        }
-
-        return ttsText;
     }
 
     async _processQueue() {
+        // 1. Check Queue Empty
         if (this.audioQueue.length === 0) {
             if (this.isLooping && this.currentPlaylist.length > 0) {
                 this.audioQueue = [...this.currentPlaylist];
@@ -176,7 +167,7 @@ export class TTSPlayer {
         if (this.isPaused) return;
 
         this.isPlaying = true;
-        if (this.onPlaybackStateChange) this.onPlaybackStateChange('playing');
+        this._emitState('playing');
 
         const item = this.audioQueue.shift();
         this.currentSegmentId = item.id;
@@ -184,71 +175,38 @@ export class TTSPlayer {
         if (this.onSegmentStart) this.onSegmentStart(item.id, this.isSequence);
 
         try {
+            const currentSession = this.playbackSessionId;
             let audioSrc = null;
-            let blobToRevoke = null; // Để cleanup memory nếu dùng createObjectURL
+            let isBlob = false;
 
-            // 1. Chuẩn bị thông tin Hash
-            const ttsText = await this._applyTTSRules(item.text);
-            const currentVoice = this.engine.voice.name;
-            const currentLang = this.engine.voice.languageCode;
-            
-            // Nếu không có text để đọc thì bỏ qua
-            if (!ttsText) {
-                console.warn("Skipping empty TTS text for segment:", item.id);
-                 if (this.onSegmentEnd) this.onSegmentEnd(item.id);
-                this._processQueue();
-                return;
-            }
-
-            // Tính Hash (sha256 16 chars)
-            const targetHash = await audioCache.generateHash(ttsText, currentVoice, currentLang);
-            const targetFilename = `${targetHash}.mp3`;
-
-            // --- STRATEGY: 1. DB Match ---
-            // Nếu file trong DB trùng với hash mong muốn (tức là giọng đọc + text khớp với lúc build)
-            if (item.audio === targetFilename) {
-                // console.log(`[TTS] Playing from DB Match: ${item.audio}`);
-                audioSrc = `${BASE_URL}app-content/audio/${item.audio}`;
-            } 
-            // --- STRATEGY: 2. Cache IDB Match ---
-            else if (await audioCache.has(targetHash)) {
-                console.log(`[TTS] Cache Hit for hash: ${targetHash}`);
-                const blob = await audioCache.get(targetHash);
-                audioSrc = URL.createObjectURL(blob);
-                blobToRevoke = audioSrc;
-            }
-            // --- STRATEGY: 3. API Fetch (Only if Key exists) ---
-            else if (this.engine.hasApiKey()) {
-                console.log(`[TTS] Fetching from API (Voice: ${currentVoice})...`);
-                try {
-                    const blob = await this.engine.fetchAudioBlob(ttsText);
-                    // Cache lại ngay lập tức
-                    await audioCache.set(targetHash, blob);
-                    audioSrc = URL.createObjectURL(blob);
-                    blobToRevoke = audioSrc;
-                } catch (apiErr) {
-                    console.error("API Fetch failed:", apiErr);
-                    // Fallback xuống dưới
+            // 2. Check Preload Map
+            if (this.preloadMap.has(item.id)) {
+                audioSrc = this.preloadMap.get(item.id);
+                isBlob = true;
+                this.preloadMap.delete(item.id); 
+            } else {
+                // 3. Resolve On-Demand via AudioResolver
+                const result = await this.audioResolver.resolve(
+                    item, 
+                    currentSession, 
+                    () => this.playbackSessionId,
+                    this.textProcessor
+                );
+                
+                if (result) {
+                    audioSrc = result.url;
+                    isBlob = result.isBlob;
                 }
             }
 
-            // --- STRATEGY: 4. Fallback (DB Audio Mismatch) ---
-            // Nếu không có API Key, hoặc API lỗi, và DB có audio (dù khác giọng), hãy dùng nó.
-            if (!audioSrc && item.audio && item.audio !== 'skip') {
-                console.warn(`[TTS] Fallback to DB audio (Hash mismatch). Wanted: ${targetHash}, Got: ${item.audio}`);
-                audioSrc = `${BASE_URL}app-content/audio/${item.audio}`;
-            }
+            if (currentSession !== this.playbackSessionId) return;
 
-            // --- FINAL CHECK ---
             if (!audioSrc) {
-                // console.warn("[TTS] No audio source found. Skipping.");
-                if (this.onSegmentEnd) this.onSegmentEnd(item.id);
-                this._processQueue();
+                this._handleSegmentEnd(item.id, null);
                 return;
             }
-            
-            if (!this.isPlaying && !this.isPaused && this.audioQueue.length === 0 && !this.currentSegmentId) return;
 
+            // 4. Create Audio & Play
             const audio = new Audio(audioSrc);
             this.currentAudio = audio;
 
@@ -256,27 +214,36 @@ export class TTSPlayer {
                 audio.playbackRate = this.engine.rate;
             }
 
-            audio.onended = () => {
-                if (blobToRevoke) URL.revokeObjectURL(blobToRevoke);
+            // Define cleanup callback
+            const onEnd = () => {
+                if (isBlob) URL.revokeObjectURL(audioSrc);
                 this.currentAudio = null;
-                if (this.onSegmentEnd) this.onSegmentEnd(item.id);
-                this._processQueue();
+                this._handleSegmentEnd(item.id);
             };
 
+            audio.onended = onEnd;
             audio.onerror = (e) => {
                 console.error("Audio Playback Error:", e, audioSrc);
-                if (blobToRevoke) URL.revokeObjectURL(blobToRevoke);
-                this.currentAudio = null;
-                if (this.onSegmentEnd) this.onSegmentEnd(item.id);
-                this._processQueue();
+                onEnd();
             };
 
             await audio.play();
+
+            // 5. Trigger Preload Next
+            this._preloadNextItem();
+
         } catch (error) {
             console.error("Playback error", error);
-            if (this.onSegmentEnd) this.onSegmentEnd(item.id);
-            this._processQueue();
+            this._handleSegmentEnd(item.id);
         }
     }
-}
 
+    _handleSegmentEnd(itemId) {
+        if (this.onSegmentEnd) this.onSegmentEnd(itemId);
+        this._processQueue();
+    }
+
+    _emitState(state) {
+        if (this.onPlaybackStateChange) this.onPlaybackStateChange(state);
+    }
+}
