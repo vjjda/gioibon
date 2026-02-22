@@ -29,8 +29,8 @@
         }
     }
     </script>
-  <script type="module" crossorigin src="/gioibon/assets/index-C2uGPTER.js"></script>
-  <link rel="stylesheet" crossorigin href="/gioibon/assets/index-Bi9tnqhG.css">
+  <script type="module" crossorigin src="/gioibon/assets/index-CcZcbde8.js"></script>
+  <link rel="stylesheet" crossorigin href="/gioibon/assets/index-DN8Pn7HA.css">
 <link rel="manifest" href="/gioibon/manifest.webmanifest"></head>
 <body>
     <button id="sidebar-toggle" title="Mục lục"><i class="fas fa-bars"></i></button>
@@ -65,15 +65,23 @@
                         </button>
                     </div>
     
-                    <button id="btn-clear-cache" class="icon-only-btn" title="Cập nhật dữ liệu mới">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
-                        </svg>
-                    </button>
-                        
+                    <div class="maintenance-group">
+                        <button id="btn-clear-cache" class="icon-only-btn" title="Xóa toàn bộ dữ liệu & cache">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                        </button>
+                        <button id="btn-update-app" class="icon-only-btn" title="Kiểm tra & Cập nhật">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                            </svg>
+                        </button>
+                    </div>
+
                     <div class="theme-toggle-group">
                         <div id="sepia-control-panel" class="hidden">
-                            <input type="range" id="sepia-slider" min="0" max="100" value="0" step="1" title="Điều chỉnh độ ám vàng">
+                            <input type="range" id="sepia-slider" name="sepia-slider" min="0" max="100" value="0" step="1" title="Điều chỉnh độ ám vàng">
                         </div>
                         <button id="btn-theme-toggle" title="Chuyển đổi giao diện">
                             <span class="icon-moon">
