@@ -11,8 +11,8 @@ export class ContentLoader {
         if (this.data) return this.data;
 
         try {
-            // Fetch all contents ordered by UID
-            const rows = await this.db.query("SELECT * FROM contents ORDER BY uid ASC");
+            // Fetch only text metadata, EXCLUDING audio_blob to save memory
+            const rows = await this.db.query("SELECT uid, html, label, segment, audio_name FROM contents ORDER BY uid ASC");
             
             // Map rows to a cleaner format if necessary, or use as is.
             this.data = rows.map(row => ({

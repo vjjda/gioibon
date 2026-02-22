@@ -9,10 +9,13 @@ export class TTSPlayer {
         this.textProcessor = new TextProcessor();
         this.audioResolver = new AudioResolver(this.engine, dbConnection);
         
+        // Audio Element Reuse (Critical for Safari iOS Memory)
+        this.audioElement = new Audio();
+        
         this.audioQueue = [];
         this.isPlaying = false;
         this.isPaused = false;
-        this.currentAudio = null;
+        this.currentAudio = this.audioElement; // Alias for compatibility
         this.currentSegmentId = null;
         this.isSequence = false;
         
@@ -69,8 +72,8 @@ export class TTSPlayer {
     }
 
     pause() {
-        if (this.currentAudio && !this.currentAudio.paused) {
-            this.currentAudio.pause();
+        if (!this.audioElement.paused) {
+            this.audioElement.pause();
             this.isPaused = true;
             this.isPlaying = false;
             this._emitState('paused');
@@ -78,8 +81,8 @@ export class TTSPlayer {
     }
 
     resume() {
-        if (this.currentAudio && this.currentAudio.paused && this.isPaused) {
-            this.currentAudio.play();
+        if (this.audioElement.paused && this.isPaused) {
+            this.audioElement.play();
             this.isPaused = false;
             this.isPlaying = true;
             this._emitState('playing');
@@ -98,10 +101,11 @@ export class TTSPlayer {
         this.currentPlaylist = [];
         this.sequenceParentId = null;
         
-        if (this.currentAudio) {
-            this.currentAudio.pause();
-            this.currentAudio = null;
-        }
+        // Reset Audio Element
+        this.audioElement.pause();
+        this.audioElement.currentTime = 0;
+        this.audioElement.removeAttribute('src'); // Detach source
+        this.audioElement.load(); // Force reset
         
         this.isPlaying = false;
         this.isPaused = false;
@@ -133,6 +137,10 @@ export class TTSPlayer {
     // --- Queue Processing ---
 
     async _preloadNextItem() {
+        // [iOS Optimization] Limit Preload
+        // Nếu đang trên thiết bị mobile yếu, có thể disable preload hoặc chỉ preload 1 item
+        // Hiện tại code chỉ preload 1 nextItem, nên logic này OK.
+        
         if (this.audioQueue.length === 0) return;
 
         const nextItem = this.audioQueue[0];
@@ -206,28 +214,27 @@ export class TTSPlayer {
                 return;
             }
 
-            // 4. Create Audio & Play
-            const audio = new Audio(audioSrc);
-            this.currentAudio = audio;
-
+            // 4. Play using Reused Audio Element
+            this.audioElement.src = audioSrc;
+            
             if (this.engine.rate) {
-                audio.playbackRate = this.engine.rate;
+                this.audioElement.playbackRate = this.engine.rate;
             }
 
             // Define cleanup callback
             const onEnd = () => {
                 if (isBlob) URL.revokeObjectURL(audioSrc);
-                this.currentAudio = null;
                 this._handleSegmentEnd(item.id);
             };
 
-            audio.onended = onEnd;
-            audio.onerror = (e) => {
+            // Remove old listeners to avoid stacking
+            this.audioElement.onended = onEnd;
+            this.audioElement.onerror = (e) => {
                 console.error("Audio Playback Error:", e, audioSrc);
                 onEnd();
             };
 
-            await audio.play();
+            await this.audioElement.play();
 
             // 5. Trigger Preload Next
             this._preloadNextItem();

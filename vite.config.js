@@ -51,7 +51,12 @@ export default defineConfig({
         basicSsl(), // Kích hoạt SSL ảo để test trên thiết bị LAN (điện thoại)
         VitePWA({
             registerType: 'prompt', // Thay đổi từ autoUpdate sang prompt để hiện Toast thông báo
-            includeAssets: ['assets/icons/favicon.ico', 'assets/icons/apple-touch-icon.png'],
+            includeAssets: [
+                'assets/icons/favicon.ico', 
+                'assets/icons/apple-touch-icon.png',
+                'assets/icons/android-chrome-192x192.png',
+                'assets/icons/android-chrome-512x512.png'
+            ],
             manifest: {
                 name: 'Giới Bổn Tỳ Kheo',
                 short_name: 'Giới Bổn',
