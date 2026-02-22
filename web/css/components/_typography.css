@@ -4,9 +4,10 @@
 .segment-text {
     flex: 1;
     font-size: calc(1.15rem * var(--text-scale, 1));
+    font-family: var(--font-mono); /* [TESTING] Switch to Monospace */
     color: var(--text-main);
     line-height: 1.7;
-    font-weight: 300;
+    font-weight: 400; /* Monospace thường cần weight dày hơn một chút để dễ đọc */
 }
 
 /* Heading Typography Override */

@@ -23,6 +23,7 @@
   
   --font-main: "Merriweather", "Times New Roman", serif;
   --font-ui: "Inter", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   
   --sidebar-width: 280px;
   --header-height: 70px;
