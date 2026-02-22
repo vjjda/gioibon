@@ -24,15 +24,15 @@ export const API_URLS = {
 };
 
 export const UI_CONFIG = {
-    // Khoảng cách an toàn (Sight View) - hỗ trợ 'px' hoặc '%vh'
-    // SCROLL_THRESHOLD_TOP: Tính từ mép dưới của Header
-    SCROLL_THRESHOLD_TOP: '10vh', 
-    // SCROLL_THRESHOLD_BOTTOM: Tính từ mép trên của Global Controls
-    SCROLL_THRESHOLD_BOTTOM: '15vh',
+    // Khoảng cách an toàn (Sight View) - Đã chuyển sang PX để ổn định trên iOS
+    // SCROLL_THRESHOLD_TOP: Khoảng đệm dưới Header
+    SCROLL_THRESHOLD_TOP: 80, 
+    // SCROLL_THRESHOLD_BOTTOM: Khoảng đệm trên Global Controls
+    SCROLL_THRESHOLD_BOTTOM: 80,
     
-    // Chiều cao thành phần cố định (dùng để trừ hao)
-    HEADER_HEIGHT: 70, // khớp với --header-height
-    FOOTER_OFFSET: 100, // Khoảng cách trừ hao cho Global Controls ở dưới
+    // Chiều cao thành phần cố định (trừ hao)
+    HEADER_HEIGHT: 70, 
+    FOOTER_OFFSET: 130, // Trừ hao cho vùng nút điều khiển ở dưới
     
     SCROLL_BEHAVIOR: 'smooth'
 };

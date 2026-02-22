@@ -189,7 +189,8 @@ export class ContentRenderer {
         if (typeof val === 'number') return val;
         if (typeof val !== 'string') return 0;
         if (val.endsWith('vh')) {
-            return (parseFloat(val) / 100) * window.innerHeight;
+            // Sử dụng clientHeight để an toàn hơn cho iOS/Safari
+            return (parseFloat(val) / 100) * document.documentElement.clientHeight;
         }
         if (val.endsWith('px')) {
             return parseFloat(val);
@@ -201,7 +202,8 @@ export class ContentRenderer {
         if (!this.container) return;
 
         const rect = el.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
+        // clientHeight ổn định hơn innerHeight trên trình duyệt di động
+        const windowHeight = document.documentElement.clientHeight;
 
         // 1. Tính toán vùng Sight View an toàn
         const thresholdTop = this._parseThreshold(UI_CONFIG.SCROLL_THRESHOLD_TOP);
@@ -216,9 +218,11 @@ export class ContentRenderer {
             rect.bottom <= sightBottom
         );
 
-        // 3. Nếu out-of-sight, thực hiện cuộn về mép trên của Sight View
+        // 3. Nếu out-of-sight, thực hiện cuộn về MÉP TRÊN của Sight View
+        // Điều này giúp segment luôn xuất hiện ở cùng một vị trí ổn định phía trên.
         if (!isInView) {
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            // Với iOS, 'auto' thường mượt hơn 'smooth' khi cuộn nhanh liên tục
             const behavior = isMobile ? 'auto' : UI_CONFIG.SCROLL_BEHAVIOR;
             
             // Tính toán vị trí cần cuộn: Đưa rect.top về đúng sightTop
