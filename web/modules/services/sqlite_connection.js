@@ -1,6 +1,6 @@
 // Path: web/modules/services/sqlite_connection.js
-import { initSQLite, withExistDB } from 'libs/wa-sqlite-index.js';
-import { useIdbStorage } from 'libs/wa-sqlite-idb.js';
+import { initSQLite, withExistDB } from 'libs/wa-sqlite/wa-sqlite-index.js';
+import { useIdbStorage } from 'libs/wa-sqlite/wa-sqlite-idb.js';
 import { BASE_URL } from 'core/config.js';
 
 export class SqliteConnection {
@@ -48,7 +48,7 @@ export class SqliteConnection {
 
                 const db = await initSQLite(useIdbStorage(this.dbName, {
                     ...withExistDB(file),
-                    url: `${BASE_URL}wa-sqlite-async.wasm`
+                    url: `${BASE_URL}libs/wa-sqlite/wa-sqlite-async.wasm`
                 }));
                 if (remoteVersionData) {
                     localStorage.setItem(storageKey, remoteVersionData.version);
@@ -67,7 +67,7 @@ export class SqliteConnection {
                 }
             } else {
                 const db = await initSQLite(useIdbStorage(this.dbName, {
-                    url: `${BASE_URL}wa-sqlite-async.wasm`
+                    url: `${BASE_URL}libs/wa-sqlite/wa-sqlite-async.wasm`
                 }));
                 try {
                     const tables = await db.run("SELECT name FROM sqlite_master WHERE type='table' AND name='contents'");
@@ -109,7 +109,7 @@ export class SqliteConnection {
         
         this.db = await initSQLite(useIdbStorage(this.dbName, {
             ...withExistDB(file),
-            url: `${BASE_URL}wa-sqlite-async.wasm`
+            url: `${BASE_URL}libs/wa-sqlite/wa-sqlite-async.wasm`
         }));
         try {
              const versionUrl = this.dbUrl.replace(/\.db$/, '_version.json');
