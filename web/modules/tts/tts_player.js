@@ -18,7 +18,6 @@ export class TTSPlayer {
         
         this.currentSegmentId = null;
         this.isSequence = false;
-        
         this.sequenceParentId = null;
         this.isLooping = false;
         this.currentPlaylist = [];
@@ -29,12 +28,12 @@ export class TTSPlayer {
         this.onPlaybackStateChange = null;
         
         // Session & Preload Management
-        this.playbackSessionId = 0; 
+        this.playbackSessionId = 0;
         this.preloadMap = new Map();
         this.preloadDepth = 2;
         
         // [FIX iOS MEMORY LEAK] Theo dõi Blob URL đang phát để hủy bỏ khi bị ngắt quãng
-        this.currentBlobUrl = null; 
+        this.currentBlobUrl = null;
     }
 
     // --- Configuration Proxies ---
@@ -54,6 +53,10 @@ export class TTSPlayer {
             return;
         }
         this._startNewSession();
+        
+        // [FIX] Reset cờ pause để có thể ngắt (interrupt) bài đang pause và chạy bài mới
+        this.isPaused = false; 
+
         this.isSequence = false;
         const item = { id: segmentId, audio: audio, text: text };
         this.audioQueue = [item];
@@ -68,6 +71,10 @@ export class TTSPlayer {
             return;
         }
         this._startNewSession();
+        
+        // [FIX] Reset cờ pause để có thể ngắt (interrupt) chuỗi đang pause và chạy chuỗi mới
+        this.isPaused = false;
+
         this.isSequence = true;
         this.sequenceParentId = parentId; 
         this.audioQueue = [...segments];
@@ -163,6 +170,7 @@ export class TTSPlayer {
                     () => this.playbackSessionId,
                     this.textProcessor
                 );
+                
                 if (result && result.isBlob && this.playbackSessionId === currentSession) {
                     this.preloadMap.set(nextItem.id, result.url);
                 }
@@ -192,6 +200,7 @@ export class TTSPlayer {
         this.currentSegmentId = item.id;
 
         if (this.onSegmentStart) this.onSegmentStart(item.id, this.isSequence);
+        
         try {
             const currentSession = this.playbackSessionId;
             let audioSrc = null;
@@ -208,6 +217,7 @@ export class TTSPlayer {
                     () => this.playbackSessionId,
                     this.textProcessor
                 );
+                
                 if (result) {
                     audioSrc = result.url;
                     isBlob = result.isBlob;
@@ -215,6 +225,7 @@ export class TTSPlayer {
             }
 
             if (currentSession !== this.playbackSessionId) return;
+            
             if (!audioSrc) {
                 this._handleSegmentEnd(item.id, null);
                 return;
@@ -226,6 +237,7 @@ export class TTSPlayer {
             }
 
             this.audioElement.src = audioSrc;
+            
             if (this.engine.rate) {
                 this.audioElement.playbackRate = this.engine.rate;
             }
@@ -258,4 +270,3 @@ export class TTSPlayer {
         if (this.onPlaybackStateChange) this.onPlaybackStateChange(state);
     }
 }
-
