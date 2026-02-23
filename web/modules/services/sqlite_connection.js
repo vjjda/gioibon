@@ -15,6 +15,7 @@ export class SqliteConnection {
 
     async init() {
         if (this.db) return this.db;
+
         try {
             const versionUrl = this.dbUrl.replace(/\.db$/, '_version.json');
             const storageKey = `db_version_${this.dbName}`;
@@ -22,9 +23,20 @@ export class SqliteConnection {
             
             let shouldDownload = false;
             let remoteVersionData = null;
-            
+
+            // [FIX] Áp dụng AbortController với thời gian chờ 1.5 giây
+            // Tránh trình duyệt bị "treo" khi mạng chập chờn hoặc tắt mạng
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 1500);
+
             try {
-                const res = await fetch(`${versionUrl}?t=${Date.now()}`, { cache: 'no-store' });
+                const res = await fetch(`${versionUrl}?t=${Date.now()}`, { 
+                    cache: 'no-store',
+                    signal: controller.signal // Ép fetch tuân thủ Timeout
+                });
+                
+                clearTimeout(timeoutId); // Xóa timeout nếu thành công sớm
+                
                 if (res.ok) {
                     remoteVersionData = await res.json();
                     if (remoteVersionData.version !== localVersion) {
@@ -38,7 +50,8 @@ export class SqliteConnection {
                     shouldDownload = !localVersion;
                 }
             } catch (e) {
-                console.warn("⚠️ Error checking DB version (Likely offline). Proceeding with local DB.", e);
+                clearTimeout(timeoutId); // Dọn dẹp bộ đếm
+                console.warn("⚠️ Mạng không ổn định hoặc Offline. Chuyển sang dùng Local DB ngay lập tức.");
                 shouldDownload = !localVersion;
             }
 
@@ -99,7 +112,7 @@ export class SqliteConnection {
             }
 
             return this.db;
-            
+
         } catch (e) {
             console.error("❌ SqliteConnection Init Error:", e);
             throw e;
