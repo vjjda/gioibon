@@ -12,6 +12,7 @@ import { ThemeSettings } from 'ui/theme_settings.js';
 import { FontSettings } from 'ui/font_settings.js';
 import { setupPWA } from 'utils/pwa.js';
 import { AudioZipLoader } from 'services/audio_zip_loader.js';
+import { SplashManager } from 'utils/splash.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     setupPWA();
@@ -89,15 +90,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     try {
+        SplashManager.updateStatus("Đang tải cơ sở dữ liệu...");
         const data = await contentLoader.load();
         
+        SplashManager.updateStatus("Đang sắp xếp nội dung...");
         // Render nội dung
         contentRenderer.render(data);
         tocRenderer.render(data);
 
-        // Remove loading
-        const loadingEl = document.querySelector('.loading');
-        if (loadingEl) loadingEl.remove();
+        // Xóa Màn hình chờ (Splash Screen)
+        SplashManager.hide();
 
         // Kích hoạt tiến trình tải audio.zip và giải nén (Sau khi giao diện đã sẵn sàng)
         if ('requestIdleCallback' in window) {
@@ -114,7 +116,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     } catch (error) {
         console.error("Initialization Error:", error);
-        document.getElementById('content').innerHTML = `<div class="error">Không thể tải dữ liệu. Vui lòng thử lại sau.</div>`;
+        SplashManager.hide();
+        document.getElementById('content').innerHTML = `<div class="error" style="text-align: center; margin-top: 50px; color: red;">Không thể tải dữ liệu. Vui lòng kiểm tra lại đường truyền và thử lại sau.</div>`;
     }
 });
 

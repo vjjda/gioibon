@@ -12,6 +12,7 @@
 @import "css/components/_segments.css";
 @import "css/components/_forms.css";
 @import "css/components/_modal.css";
+@import "css/components/_splash.css"; /* Thêm hiệu ứng cho Splash Screen */
 
 /* Layout */
 @import "css/layout/_sidebar.css";
@@ -33,8 +34,8 @@
     height: 100vh;
     background-color: #704214; /* Warm brownish tint */
     opacity: var(--sepia-overlay-opacity, 0);
-    pointer-events: none; /* Let clicks pass through */
-    z-index: 10000; /* On top of everything */
+    pointer-events: none;
+    z-index: 10000;
     display: block;
 }
 
