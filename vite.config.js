@@ -90,7 +90,8 @@ export default defineConfig(({ mode }) => {
                     icons: [
                         { src: 'assets/icons/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
                         { src: 'assets/icons/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },
-                        { src: 'assets/icons/android-chrome-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
+                        { src: 'assets/icons/android-chrome-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
+                        { src: 'assets/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }
                     ]
                 },
                 workbox: {
@@ -121,3 +122,4 @@ export default defineConfig(({ mode }) => {
         ]
     };
 });
+
