@@ -4,6 +4,7 @@
 import { registerSW } from 'virtual:pwa-register';
 
 export function setupPWA() {
+    console.log('[PWA] setupPWA called');
     // 1. Logic dọn dẹp cache và dữ liệu (Giữ nguyên logic cũ)
     const clearCacheBtn = document.getElementById('btn-clear-cache');
     if (clearCacheBtn) {
@@ -77,6 +78,7 @@ export function setupPWA() {
     const manualUpdateBtn = document.getElementById('btn-update-app');
 
     if (toast && refreshBtn && closeBtn) {
+        console.log('[PWA] Found toast elements, attempting to register SW...');
         // Hàm này sẽ được gọi khi có update hoặc offline ready
         const updateSW = registerSW({
             onNeedRefresh() {
