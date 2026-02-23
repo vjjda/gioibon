@@ -331,34 +331,36 @@ uid	html	label	segment
 330	<h4>{}</h4>	pc13-name	Pc 13. Ujjhāpanaka
 331	<p>{}</p>	pc13	Khi phàn nàn, phê phán thì phạm tội pācittiya.
 332	<h4>{}</h4>	pc14-name	Pc 14. Paṭhamasenāsana
-333	<p>{}</p>	pc14	Vị tỳ khưu nào sau khi tự trải ra hoặc bảo trải ra giường, hoặc ghế, hoặc nệm, hoặc gối kê thuộc về hội chúng ở ngoài trời, trong lúc rời đi không thu dọn cũng không bảo thu dọn vật ấy, hoặc ra đi không thông báo thì phạm tội pācittiya.
-334	<h4>{}</h4>	pc15-name	Pc 15. Dutiyasenāsana
-335	<p>{}</p>	pc15	Vị tỳ khưu nào sau khi tự trải ra hoặc bảo trải ra chỗ nằm trong trú xá thuộc về hội chúng, trong lúc rời đi không thu dọn cũng không bảo thu dọn vật ấy, hoặc ra đi không thông báo thì phạm tội pācittiya.
-336	<h4>{}</h4>	pc16-name	Pc 16. Anupakhajja
-337	<p>{}	pc16	Vị tỳ khưu nào ở trong trú xá thuộc về hội chúng dầu biết vẫn chen vào (chỗ) của vị tỳ khưu đã đến trước rồi nằm xuống (nghĩ rằng):
-338	{}	pc16	Người nào bực bội thì sẽ ra đi.'
-339	{}</p>	pc16	Sau khi thực hiện chỉ nguyên nhân ấy không điều nào khác thì phạm tội pācittiya.
-340	<h4>{}</h4>	pc17-name	Pc 17. Nikkaḍḍhana
-341	<p>{}</p>	pc17	Vị tỳ khưu nào nổi giận, bất bình rồi lôi kéo hoặc bảo lôi kéo vị tỳ khưu ra khỏi trú xá thuộc về hội chúng thì phạm tội pācittiya.
-342	<h4>{}</h4>	pc18-name	Pc 18. Vehāsakuṭi
-343	<p>{}</p>	pc18	Vị tỳ khưu nào ngồi xuống hoặc nằm xuống ở chiếc giường hoặc ghế loại có chân tháo rời được ở căn gác lầu trong trú xá của hội chúng thì phạm tội pācittiya.
-344	<h4>{}</h4>	pc19-name	Pc 19. Mahallakavihāra
-345	<p>{}	pc19	Trong lúc cho xây dựng trú xá lớn, vị tỳ khưu nên đứng ở chỗ không trồng trọt mà quyết định cách thức về hai ba lớp tô đắp đối với việc lắp đặt chốt cửa, đối với việc trang hoàng các lỗ thông hơi, cho đến khung cửa lớn.
-346	{}</p>	pc19	Nếu vượt quá điều ấy, cho dầu vị đứng ở chỗ không trồng trọt mà quyết định vẫn phạm tội pācittiya.
-347	<h4>{}</h4>	pc20-name	Pc 20. Sappāṇaka
-348	<p>{}</p>	pc20	Vị tỳ khưu nào trong khi biết nước có sinh vật vẫn tưới hoặc bảo tưới lên cỏ hay đất sét thì phạm tội pācittiya.
-349	<p class='endvagga'>{}</p>	pc-ending	Phẩm Thảo Mộc là thứ nhì.
-350	<h3>{}</h3>	pc-chapter	Phẩm 3: Giáo Giới
-351	<h4>{}</h4>	pc21-name	Pc 21. Ovāda
-352	<p>{}</p>	pc21	Vị tỳ khưu nào chưa được chỉ định mà giáo giới tỳ khưu ni thì phạm tội pācittiya.
-353	<h4>{}</h4>	pc22-name	Pc 22. Atthaṅgata
-354	<p>{}</p>	pc22	Dầu đã được chỉ định, nếu vị tỳ khưu giáo giới tỳ khưu ni khi mặt trời đã lặn thì phạm tội pācittiya.
-355	<h4>{}</h4>	pc23-name	Pc 23. Bhikkhunupassaya
-356	<p>{}	pc23	Vị tỳ khưu nào sau khi đi đến chỗ ngụ của tỳ khưu ni rồi giáo giới cho các tỳ khưu ni thì phạm tội pācittiya, ngoại trừ có duyên cớ.
-357	{}	pc23	Duyên cớ trong trường hợp ấy là vị tỳ khưu ni bị bệnh.
-358	{}</p>	pc23	Đây là duyên cớ trong trường hợp ấy.
-359	<h4>{}</h4>	pc24-name	Pc 24. Āmisa
-360	<p>{}</p>	pc24	Vị tỳ khưu nào nói như vầy: Các tỳ khưu giáo giới cho các tỳ khưu ni vì nguyên nhân vật chất' thì phạm tội pācittiya.
+333	<p>{}	pc14	Vị tỳ khưu nào sau khi tự trải ra hoặc bảo trải ra giường, hoặc ghế, hoặc nệm, hoặc gối kê thuộc về hội chúng ở ngoài trời,
+334	{}</p>	pc14	trong lúc rời đi không thu dọn cũng không bảo thu dọn vật ấy, hoặc ra đi không thông báo thì phạm tội pācittiya.
+335	<h4>{}</h4>	pc15-name	Pc 15. Dutiyasenāsana
+336	<p>{}	pc15	Vị tỳ khưu nào sau khi tự trải ra hoặc bảo trải ra chỗ nằm trong trú xá thuộc về hội chúng,
+337	{}</p>	pc15	trong lúc rời đi không thu dọn cũng không bảo thu dọn vật ấy, hoặc ra đi không thông báo thì phạm tội pācittiya.
+338	<h4>{}</h4>	pc16-name	Pc 16. Anupakhajja
+339	<p>{}	pc16	Vị tỳ khưu nào ở trong trú xá thuộc về hội chúng dầu biết vẫn chen vào (chỗ) của vị tỳ khưu đã đến trước rồi nằm xuống (nghĩ rằng):
+340	{}	pc16	Người nào bực bội thì sẽ ra đi.'
+341	{}</p>	pc16	Sau khi thực hiện chỉ nguyên nhân ấy không điều nào khác thì phạm tội pācittiya.
+342	<h4>{}</h4>	pc17-name	Pc 17. Nikkaḍḍhana
+343	<p>{}</p>	pc17	Vị tỳ khưu nào nổi giận, bất bình rồi lôi kéo hoặc bảo lôi kéo vị tỳ khưu ra khỏi trú xá thuộc về hội chúng thì phạm tội pācittiya.
+344	<h4>{}</h4>	pc18-name	Pc 18. Vehāsakuṭi
+345	<p>{}</p>	pc18	Vị tỳ khưu nào ngồi xuống hoặc nằm xuống ở chiếc giường hoặc ghế loại có chân tháo rời được ở căn gác lầu trong trú xá của hội chúng thì phạm tội pācittiya.
+346	<h4>{}</h4>	pc19-name	Pc 19. Mahallakavihāra
+347	<p>{}	pc19	Trong lúc cho xây dựng trú xá lớn, vị tỳ khưu nên đứng ở chỗ không trồng trọt mà quyết định cách thức về hai ba lớp tô đắp đối với việc lắp đặt chốt cửa, đối với việc trang hoàng các lỗ thông hơi, cho đến khung cửa lớn.
+348	{}</p>	pc19	Nếu vượt quá điều ấy, cho dầu vị đứng ở chỗ không trồng trọt mà quyết định vẫn phạm tội pācittiya.
+349	<h4>{}</h4>	pc20-name	Pc 20. Sappāṇaka
+350	<p>{}</p>	pc20	Vị tỳ khưu nào trong khi biết nước có sinh vật vẫn tưới hoặc bảo tưới lên cỏ hay đất sét thì phạm tội pācittiya.
+351	<p class='endvagga'>{}</p>	pc-ending	Phẩm Thảo Mộc là thứ nhì.
+352	<h3>{}</h3>	pc-chapter	Phẩm 3: Giáo Giới
+353	<h4>{}</h4>	pc21-name	Pc 21. Ovāda
+354	<p>{}</p>	pc21	Vị tỳ khưu nào chưa được chỉ định mà giáo giới tỳ khưu ni thì phạm tội pācittiya.
+355	<h4>{}</h4>	pc22-name	Pc 22. Atthaṅgata
+356	<p>{}</p>	pc22	Dầu đã được chỉ định, nếu vị tỳ khưu giáo giới tỳ khưu ni khi mặt trời đã lặn thì phạm tội pācittiya.
+357	<h4>{}</h4>	pc23-name	Pc 23. Bhikkhunupassaya
+358	<p>{}	pc23	Vị tỳ khưu nào sau khi đi đến chỗ ngụ của tỳ khưu ni rồi giáo giới cho các tỳ khưu ni thì phạm tội pācittiya, ngoại trừ có duyên cớ.
+359	{}	pc23	Duyên cớ trong trường hợp ấy là vị tỳ khưu ni bị bệnh.
+360	{}</p>	pc23	Đây là duyên cớ trong trường hợp ấy.
+361	<h4>{}</h4>	pc24-name	Pc 24. Āmisa
+362	<p>{}</p>	pc24	Vị tỳ khưu nào nói như vầy: Các tỳ khưu giáo giới cho các tỳ khưu ni vì nguyên nhân vật chất' thì phạm tội pācittiya.
 363	<h4>{}</h4>	pc25-name	Pc 25. Cīvaradāna
 364	<p>{}</p>	pc25	Vị tỳ khưu nào cho y đến tỳ khưu ni không phải là thân quyến thì phạm tội pācittiya ngoại trừ có sự trao đổi.
 365	<h4>{}</h4>	pc26-name	Pc 26. Cīvarasibbana
@@ -395,439 +397,439 @@ uid	html	label	segment
 396	<p>{}</p>	pc35	Vị tỳ khưu nào thọ thực xong và đã ngăn (vật thực dâng thêm) lại nhai hoặc ăn vật thực cứng hoặc vật thực mềm không phải là thức ăn thừa thì phạm tội pācittiya.
 397	<h4>{}</h4>	pc36-name	Pc 36. Dutiyapavāraṇā
 398	<p>{}	pc36	Vị tỳ khưu nào có ý muốn bới móc lỗi lầm, trong khi biết rõ vị tỳ khưu đã thọ thực xong và đã ngăn (vật thực dâng thêm) vẫn yêu cầu nhận lãnh vật thực cứng hoặc vật thực mềm không phải là thức ăn thừa (nói rằng):
-400	{}</p>	pc36	Này tỳ khưu, hãy nhai hoặc hãy ăn đi;' khi vị kia đã ăn thì phạm tội pācittiya.
-401	<h4>{}</h4>	pc37-name	Pc 37. Vikālabhojana
-402	<p>{}</p>	pc37	Vị tỳ khưu nào nhai hoặc ăn vật thực cứng hoặc vật thực mềm vào lúc sái thời thì phạm tội pācittiya.
-403	<h4>{}</h4>	pc38-name	Pc 38. Sannidhikāraka
-404	<p>{}</p>	pc38	Vị tỳ khưu nào nhai hoặc ăn vật thực cứng hoặc vật thực mềm đã được tích trữ thì phạm tội pācittiya.
-405	<h4>{}</h4>	pc39-name	Pc 39. Paṇītabhojana
-406	<p>{}</p>	pc39	Các loại vật thực thượng hạng như là bơ lỏng, bơ đặc, dầu ăn, mật ong, đường mía, cá, thịt, sữa tươi, sữa đông, vị tỳ khưu nào không bị bệnh mà yêu cầu các loại vật thực thượng hạng như thế cho nhu cầu của bản thân rồi thọ dụng thì phạm tội pācittiya.
-407	<h4>{}</h4>	pc40-name	Pc 40. Dantapona
-408	<p>{}</p>	pc40	Vị tỳ khưu nào đưa thức ăn chưa được bố thí vào miệng ngoại trừ nước và tăm xỉa răng thì phạm tội pācittiya.
-409	<p class='endvagga'>{}</p>	pc-ending	Phẩm Vật Thực là thứ tư.
-410	<h3>{}</h3>	pc-chapter	Phẩm 5: Đạo Sĩ Loã Thể
-411	<h4>{}</h4>	pc41-name	Pc 41. Acelaka
-412	<p>{}</p>	pc41	Vị tỳ khưu nào tự tay cho vật thực cứng hoặc vật thực mềm đến đạo sĩ lõa thể, hoặc nam du sĩ ngoại đạo, hoặc nữ du sĩ ngoại đạo thì phạm tội pācittiya.
-413	<h4>{}</h4>	pc42-name	Pc 42. Uyyojana
-414	<p>{}	pc42	Vị tỳ khưu nào nói với vị tỳ khưu như vầy:
-415	{}	pc42	Này đại đức, hãy đến.
-416	{}	pc42	Chúng ta sẽ đi vào làng hoặc thị trấn để khất thực,'
-417	{}	pc42	sau khi bảo (thí chủ) bố thí hoặc không bảo (thí chủ) bố thí cho vị ấy rồi đuổi đi (nói rằng):
-418	{}	pc42	Này đại đức, hãy đi đi.
-419	{}	pc42	Nói chuyện hoặc ngồi với ngươi ta không được thoải mái.
-420	{}	pc42	Nói chuyện hoặc ngồi mỗi một mình ta còn có sự an lạc.'
-421	{}</p>	pc42	Sau khi thực hiện chỉ nguyên nhân ấy không điều nào khác thì phạm tội pācittiya.
-422	<h4>{}</h4>	pc43-name	Pc 43. Sabhojana
-423	<p>{}</p>	pc43	Vị tỳ khưu nào sau khi đi vào gia đình chỉ có cặp vợ chồng rồi ngồi xuống thì phạm tội pācittiya.
-424	<h4>{}</h4>	pc44-name	Pc 44. Rahopaṭicchanna
-425	<p>{}</p>	pc44	Vị tỳ khưu nào cùng với người nữ ngồi xuống ở chỗ ngồi kín đáo, được che khuất thì phạm tội pācittiya.
-426	<h4>{}</h4>	pc45-name	Pc 45. Rahonisajja
-427	<p>{}</p>	pc45	Vị tỳ khưu nào cùng với người nữ một nam một nữ ngồi ở nơi kín đáo thì phạm tội pācittiya.
-428	<h4>{}</h4>	pc46-name	Pc 46. Cāritta
-429	<p>{}	pc46	Vị tỳ khưu nào khi đã được thỉnh mời, khi đã có bữa trai phạn, chưa có sự thông báo đến vị tỳ khưu hiện diện lại đi thăm viếng các gia đình trước bữa ăn hoặc sau bữa ăn thì phạm tội pācittiya ngoại trừ có duyên cớ.
-430	{}	pc46	Duyên cớ trong trường hợp ấy là: trong thời hạn dâng y, trong lúc may y.
-431	{}</p>	pc46	Đây là duyên cớ trong trường hợp ấy.
-432	<h4>{}</h4>	pc47-name	Pc 47. Mahānāma
-433	<p>{}	pc47	Vị tỳ khưu không bị bệnh nên chấp nhận sự thỉnh cầu về (việc dâng) vật dụng trong bốn tháng, ngoại trừ có sự thỉnh cầu tiếp tục, ngoại trừ có sự thỉnh cầu đến trọn đời.
-434	{}</p>	pc47	Nếu chấp nhận vượt quá hạn ấy thì phạm tội pācittiya.
-435	<h4>{}</h4>	pc48-name	Pc 48. Uyyuttasenā
-436	<p>{}</p>	pc48	Vị tỳ khưu nào đi để xem quân đội động binh thì phạm tội pācittiya ngoại trừ có nhân duyên như thế.
-437	<h4>{}</h4>	pc49-name	Pc 49. Senāvāsa
-438	<p>{}</p>	pc49	Nếu có nhân duyên nào đó khiến vị tỳ khưu ấy đi đến nơi binh đội, vị tỳ khưu ấy nên trú ngụ trong binh đội hai ba đêm; nếu vượt hơn số ấy thì phạm tội pācittiya.
-439	<h4>{}</h4>	pc50-name	Pc 50. Uyyodhika
-440	<p>{}</p>	pc50	Nếu trong khi trú ngụ ở binh đội hai ba đêm vị tỳ khưu đi đến nơi tập trận, hoặc nơi đóng quân, hoặc nơi dàn binh, hoặc đội chủ lực thì phạm tội pācittiya.
-441	<p class='endvagga'>{}</p>	pc-ending	Phẩm Đạo Sĩ Lõa Thể là thứ năm.
-442	<h3>{}</h3>	pc-chapter	Phẩm 6: Uống Rượu
-443	<h4>{}</h4>	pc51-name	Pc 51. Surāpāna
-444	<p>{}</p>	pc51	Khi uống rượu và men say thì phạm tội pācittiya.
-445	<h4>{}</h4>	pc52-name	Pc 52. Aṅgulipatodaka
-446	<p>{}</p>	pc52	Khi thọt léc bằng ngón tay thì phạm tội pācittiya.
-447	<h4>{}</h4>	pc53-name	Pc 53. Hasadhamma
-448	<p>{}</p>	pc53	Khi chơi giỡn ở trong nước thì phạm tội pācittiya.
-449	<h4>{}</h4>	pc54-name	Pc 54. Anādariya
-450	<p>{}</p>	pc54	Khi có sự không tôn trọng thì phạm tội pācittiya.
-451	<h4>{}</h4>	pc55-name	Pc 55. Bhiṁsāpana
-452	<p>{}</p>	pc55	Vị tỳ khưu nào làm vị tỳ khưu kinh sợ thì phạm tội pācittiya.
-453	<h4>{}</h4>	pc56-name	Pc 56. Joti
-454	<p>{}</p>	pc56	Vị tỳ khưu nào không bị bệnh có ý định sưởi ấm rồi đốt lên hoặc bảo đốt lên ngọn lửa thì phạm tội pācittiya ngoại trừ có nhân duyên như thế.
-455	<h4>{}</h4>	pc57-name	Pc 57. Nahāna
-456	<p>{}	pc57	Vị tỳ khưu nào tắm khi chưa đủ nửa tháng thì phạm tội pācittiya ngoại trừ có duyên cớ.
-457	{}	pc57	Duyên cớ trong trường hợp ấy là: (Nghĩ rằng): Một tháng rưỡi còn lại của mùa nóng'
-459	{}</p>	pc57	và tháng đầu tiên của mùa mưa, như vậy thành hai tháng rưỡi là lúc trời nóng nực là lúc trời oi bức, trường hợp bị bệnh, trường hợp có công việc, trường hợp đi đường xa, trường hợp mưa gió; đây là duyên cớ trong trường hợp ấy.
-460	<h4>{}</h4>	pc58-name	Pc 58. Dubbaṇṇakaraṇa
-461	<p>{}	pc58	Vị tỳ khưu nhận được y mới nên áp dụng một cách hoại sắc nào đó trong ba cách hoại sắc là màu xanh, màu bùn, màu đen sẫm.
-462	{}</p>	pc58	Nếu vị tỳ khưu không áp dụng một cách hoại sắc nào đó trong ba cách hoại sắc mà sử dụng y mới thì phạm tội pācittiya.
-463	<h4>{}</h4>	pc59-name	Pc 59. Vikappana
-464	<p>{}</p>	pc59	Vị tỳ khưu nào sau khi đích thân chú nguyện để dùng chung y đến vị tỳ khưu hoặc đến vị tỳ khưu ni hoặc đến vị ni tu tập sự hoặc đến vị sa di hoặc đến vị sa di ni lại sử dụng khi chưa có sự xả lời nguyện thì phạm tội pācittiya.
-465	<h4>{}</h4>	pc60-name	Pc 60. Apanidhāna
-466	<p>{}</p>	pc60	Vị tỳ khưu nào thu giấu hoặc bảo thu giấu bình bát hoặc y hoặc tấm lót ngồi hoặc ống đựng kim hoặc dây thắt lưng của vị tỳ khưu cho dầu chỉ muốn cười giỡn thì phạm tội pācittiya.
-467	<p class='endvagga'>{}</p>	pc-ending	Phẩm Uống Rượu là thứ sáu.
-468	<h3>{}</h3>	pc-chapter	Phẩm 7: Có Sinh Vật
-469	<h4>{}</h4>	pc61-name	Pc 61. Sañcicca
-470	<p>{}</p>	pc61	Vị tỳ khưu nào cố ý đoạt lấy mạng sống sinh vật thì phạm tội pācittiya.
-471	<h4>{}</h4>	pc62-name	Pc 62. Sappāṇaka
-472	<p>{}</p>	pc62	Vị tỳ khưu nào trong khi biết nước có sinh vật vẫn sử dụng thì phạm tội pācittiya.
-473	<h4>{}</h4>	pc63-name	Pc 63. Ukkoṭana
-474	<p>{}</p>	pc63	Vị tỳ khưu nào trong khi biết sự tranh tụng đã được giải quyết đúng theo pháp vẫn khơi lại để làm hành sự lần nữa thì phạm tội pācittiya.
-475	<h4>{}</h4>	pc64-name	Pc 64. Duṭṭhulla
-476	<p>{}</p>	pc64	Vị tỳ khưu nào trong khi biết tội xấu xa của vị tỳ khưu vẫn che giấu thì phạm tội pācittiya.
-477	<h4>{}</h4>	pc65-name	Pc 65. Ūnavīsativassa
-478	<p>{}</p>	pc65	Vị tỳ khưu nào trong khi biết người chưa đủ hai mươi tuổi vẫn cho tu lên bậc trên thì người ấy chưa được tu lên bậc trên và các vị tỳ khưu ấy bị chê trách; đây là tội pācittiya trong trường hợp ấy.
-479	<h4>{}</h4>	pc66-name	Pc 66. Theyyasattha
-480	<p>{}</p>	pc66	Vị tỳ khưu nào trong khi biết vẫn hẹn trước rồi đi chung đường xa với đám người đạo tặc ngay cả từ làng này sang làng khác thì phạm tội pācittiya.
-481	<h4>{}</h4>	pc67-name	Pc 67. Saṁvidhāna
-482	<p>{}</p>	pc67	Vị tỳ khưu nào hẹn trước rồi đi chung đường xa với người nữ ngay cả từ làng này sang làng khác thì phạm tội pācittiya.
-483	<h4>{}</h4>	pc68-name	Pc 68. Ariṭṭha
-484	<p>{}	pc68	Vị tỳ khưu nào nói như vầy:
-485	{}	pc68	Theo như ta hiểu về Pháp đã được đức Thế Tôn thuyết giảng thì những pháp chướng ngại được đức Thế Tôn giảng giải không có khả năng đem đến sự chướng ngại cho người thực hành.'
-486	{}	pc68	Vị tỳ khưu ấy nên được nói bởi các tỳ khưu như vầy:
-487	{}	pc68	Đại đức chớ có nói như thế.
-488	{}	pc68	Chớ có vu khống đức Thế Tôn bởi vì việc vu khống đức Thế Tôn là không tốt.
-489	{}	pc68	Bởi vì đức Thế Tôn không có nói như thế.
-490	{}	pc68	Này đại đức, đức Thế Tôn đã giảng giải bằng nhiều phương thức rằng các pháp chướng ngại có khả năng đem đến sự chướng ngại cho người thực hành.'
-491	{}	pc68	Và khi được nói như vậy bởi các tỳ khưu mà vị tỳ khưu ấy vẫn chấp giữ y như thế, thì vị tỳ khưu ấy nên được các tỳ khưu nhắc nhở đến lần thứ ba để từ bỏ việc ấy.
-492	{}</p>	pc68	Nếu được nhắc nhở đến lần thứ ba mà dứt bỏ việc ấy, như thế việc này là tốt đẹp; nếu không dứt bỏ thì phạm tội pācittiya.
-493	<h4>{}</h4>	pc69-name	Pc 69. Ukkhittasambhoga
-494	<p>{}</p>	pc69	Vị tỳ khưu nào trong khi biết vị tỳ khưu là vị phát ngôn như thế, là vị không thực hành thuận pháp, và không dứt bỏ tà kiến ấy mà vẫn hưởng thụ chung, hoặc vẫn cộng trú, hoặc vẫn nằm chung chỗ ngụ thì phạm tội pācittiya.
-495	<h4>{}</h4>	pc70-name	Pc 70. Kaṇṭaka
-496	<p>{}	pc70	Nếu có vị sa di nói như vầy:
-497	{}	pc70	Theo như ta hiểu về Pháp đã được đức Thế Tôn thuyết giảng thì những pháp chướng ngại được đức Thế Tôn giảng giải không có khả năng đem đến sự chướng ngại cho người thực hành.'
-498	{}	pc70	Vị sa di ấy nên được nói bởi các tỳ khưu như sau:
-499	{}	pc70	Này ông sa di, ngươi chớ có nói như thế.
-500	{}	pc70	Chớ có vu khống đức Thế Tôn bởi vì việc vu khống đức Thế Tôn là không tốt.
-501	{}	pc70	Bởi vì đức Thế Tôn không có nói như thế.
-502	{}	pc70	Này ông sa di, đức Thế Tôn đã giảng giải bằng nhiều phương thức rằng các pháp chướng ngại có khả năng đem đến sự chướng ngại cho người thực hành.'
-503	{}	pc70	Và khi được các tỳ khưu nói như vậy mà vị sa di ấy vẫn chấp giữ y như thế, vị sa di ấy nên được nói bởi các tỳ khưu như sau:
-504	{}	pc70	Này ông sa di, kể từ hôm nay không được tuyên bố đức Thế Tôn ấy là bậc Đạo sư của ngươi nữa.
-505	{}	pc70	Ngay cả việc các sa di khác được hưởng là việc nằm chung chỗ ngụ với các tỳ khưu hai ba đêm, việc ấy không có cho ngươi nữa.
-506	{}	pc70	Hãy đi chỗ khác, hãy biến mất đi.'
-507	{}</p>	pc70	Vị tỳ khưu nào trong khi biết vị sa di là kẻ đã bị trục xuất như thế mà vẫn dụ dỗ, hoặc vẫn bảo phục vụ, hoặc vẫn hưởng thụ chung, hoặc vẫn nằm chung chỗ ngụ thì phạm tội pācittiya.
-508	<p class='endvagga'>{}</p>	pc-ending	Phẩm Có Sinh Vật là thứ bảy.
-509	<h3>{}</h3>	pc-chapter	Phẩm 8: Theo Pháp
-510	<h4>{}</h4>	pc71-name	Pc 71. Sahadhammika
-511	<p>{}	pc71	Vị tỳ khưu nào khi được các tỳ khưu nói theo Pháp lại nói như vầy:
-512	{}	pc71	Này các đại đức, tôi sẽ không thực hành điều học này cho đến khi nào tôi còn chưa hỏi vị tỳ khưu khác kinh nghiệm rành rẽ về Luật'
-513	{}	pc71	thì phạm tội pācittiya.'
-514	{}	pc71	Này các tỳ khưu, vị tỳ khưu trong lúc học tập nên hiểu rõ, nên thắc mắc, nên suy xét.
-515	{}</p>	pc71	Đây là sự đúng đắn trong trường hợp ấy.
-516	<h4>{}</h4>	pc72-name	Pc 72. Vilekhana
-517	<p>{}	pc72	Khi giới bổn Pātimokkha đang được đọc tụng, vị tỳ khưu nào nói như vầy:
-518	{}	pc72	Được việc gì với các điều học nhỏ nhặt và ít quan trọng được đọc tụng này?
-519	{}	pc72	Chúng chỉ đem lại sự ăn năn, sự bực bội, sự bối rối thôi!'
-520	{}</p>	pc72	Khi có sự chê bai điều học thì phạm tội pācittiya.
-521	<h4>{}</h4>	pc73-name	Pc 73. Mohana
-522	<p>{}	pc73	Vị tỳ khưu nào trong lúc giới bổn Pātimokkha đang được đọc tụng vào mỗi nửa tháng lại nói như vầy:
-523	{}	pc73	Ngay giờ đây tôi mới hay biết rằng điều học này đã được truyền lại trong giới bổn, đã được đầy đủ trong giới bổn, và được đưa ra đọc tụng vào mỗi nửa tháng.'
-524	{}	pc73	Nếu các vị tỳ khưu khác biết rõ về vị tỳ khưu ấy rằng:
-525	{}	pc73	Vị tỳ khưu này trước đây đã có ngồi hai hoặc ba lần trong lúc giới bổn Pātimokkha đang được đọc tụng, nói nhiều hơn nữa làm gì.'
-526	{}	pc73	Vị tỳ khưu ấy không có được sự vô tội vì không biết.
-527	{}	pc73	Và trong trường hợp đó, (vị ấy) đã vi phạm tội nào thì nên được hành xử theo pháp về tội ấy.
-528	{}	pc73	Hơn nữa, sự ngu dốt nên được khẳng định đối với vị ấy rằng:
-529	{}	pc73	Này đại đức, ngươi đây không có sự lợi ích, ngươi đây đã nhận lãnh điều xấu là việc trong lúc giới bổn Pātimokkha đang được đọc tụng ngươi lại không khéo chăm chú và tác ý.'
-530	{}</p>	pc73	Đây là tội pācittiya trong sự ngu dốt ấy.
-531	<h4>{}</h4>	pc74-name	Pc 74. Pahāra
-532	<p>{}</p>	pc74	Vị tỳ khưu nào nổi giận, bất bình rồi tung cú đánh vào vị tỳ khưu thì phạm tội pācittiya.
-533	<h4>{}</h4>	pc75-name	Pc 75. Talasattika
-534	<p>{}</p>	pc75	Vị tỳ khưu nào nổi giận, bất bình rồi giá tay dọa đánh vị tỳ khưu thì phạm tội pācittiya.
-535	<h4>{}</h4>	pc76-name	Pc 76. Amūlaka
-536	<p>{}</p>	pc76	Vị tỳ khưu nào bôi nhọ vị tỳ khưu về tội saṅghādisesa không có nguyên cớ thì phạm tội pācittiya.
-537	<h4>{}</h4>	pc77-name	Pc 77. Sañcicca
-538	<p>{}	pc77	Vị tỳ khưu nào cố ý gợi lên nỗi nghi hoặc ở nơi vị tỳ khưu (nghĩ rằng):
-539	{}	pc77	Như thế sẽ làm cho vị này không được thoải mái dầu chỉ trong chốc lát,'
-540	{}</p>	pc77	sau khi thực hiện chỉ nguyên nhân ấy không điều nào khác thì phạm tội pācittiya.
-541	<h4>{}</h4>	pc78-name	Pc 78. Upassuti
-542	<p>{}	pc78	Vị tỳ khưu nào đứng nghe lén các tỳ khưu đã nảy sanh sự xung đột, đã nảy sanh sự cãi cọ, đã tiến đến sự tranh luận (nghĩ rằng):
-543	{}	pc78	Những người này nói điều gì, ta sẽ nghe lời ấy,'
-544	{}</p>	pc78	sau khi thực hiện chỉ nguyên nhân ấy không điều nào khác thì phạm tội pācittiya.
-545	<h4>{}</h4>	pc79-name	Pc 79. Kammappaṭibāhana
-546	<p>{}</p>	pc79	Vị tỳ khưu nào sau khi trao ra sự tùy thuận cho những hành sự đúng pháp sau đó lại tiến hành việc phê phán thì phạm tội pācittiya.
-547	<h4>{}</h4>	pc80-name	Pc 80. Chandaṁadatvāgamana
-548	<p>{}</p>	pc80	Vị tỳ khưu nào, trong khi lời quyết định đang được tuyên bố ở hội chúng, không trao ra sự tùy thuận rồi từ chỗ ngồi đứng dậy và bỏ đi thì phạm tội pācittiya.
-549	<h4>{}</h4>	pc81-name	Pc 81. Dubbala
-550	<p>{}	pc81	Vị tỳ khưu nào cùng với hội chúng hợp nhất đã cho y sau đó lại tiến hành việc phê phán rằng:
-551	{}	pc81	Các tỳ khưu trao phần lợi lộc thuộc về hội chúng thuận theo sự quen biết'
-552	{}</p>	pc81	thì phạm tội pācittiya.
-553	<h4>{}</h4>	pc82-name	Pc 82. Pariṇāmana
-554	<p>{}</p>	pc82	Vị tỳ khưu nào trong khi biết lợi lộc đã được khẳng định là dành riêng cho hội chúng vẫn thuyết phục dâng cho cá nhân thì phạm tội pācittiya.
-555	<p class='endvagga'>{}</p>	pc-ending	Phẩm (Nói) Theo Pháp là thứ tám.
-556	<h3>{}</h3>	pc-chapter	Phẩm 9: Báu Vật
-557	<h4>{}</h4>	pc83-name	Pc 83. Antepura
-558	<p>{}</p>	pc83	Vị tỳ khưu nào khi chưa được báo tin trước mà vượt qua ngưỡng cửa (phòng ngủ) của đức vua dòng Sát- đế-lỵ đã được đội lên vương miện trong lúc đức vua chưa đi khỏi trong lúc vật báu (hoàng hậu) chưa lui ra thì phạm tội pācittiya.
-559	<h4>{}</h4>	pc84-name	Pc 84. Ratana
-560	<p>{}	pc84	Vị tỳ khưu nào nhặt lấy hoặc bảo nhặt lấy vật quý giá hoặc vật được xem là quý giá thì phạm tội pācittiya ngoại trừ trong khuôn viên tu viện hoặc trong khuôn viên chỗ ngụ.
-561	{}	pc84	Vị tỳ khưu sau khi nhặt lấy hoặc bảo nhặt lấy vật quý giá hoặc vật được xem là quý giá ở trong khuôn viên tu viện hoặc ở trong khuôn viên chỗ ngụ nên để riêng ra (nghĩ rằng):
-562	{}	pc84	Là của ai, người ấy sẽ đem đi.'
-563	{}</p>	pc84	Đây là điều đúng đắn trong trường hợp ấy.
-564	<h4>{}</h4>	pc85-name	Pc 85. Vikālagāmappavesana
-565	<p>{}</p>	pc85	Vị tỳ khưu nào đi vào làng lúc sái thời không thông báo vị tỳ khưu hiện diện thì phạm tội pācittiya ngoại trừ trường hợp có việc cần làm khẩn cấp như thế.
-566	<h4>{}</h4>	pc86-name	Pc 86. Sūcighara
-567	<p>{}</p>	pc86	Vị tỳ khưu nào cho làm ống đựng kim bằng xương, hoặc bằng ngà, hoặc bằng sừng thì (ống đựng kim ấy) nên được đập vỡ và phạm tội pācittiya.
-568	<h4>{}</h4>	pc87-name	Pc 87. Mañcapīṭha
-569	<p>{}	pc87	Trong lúc cho làm giường hoặc ghế mới, vị tỳ khưu nên bảo làm chân cao tám ngón tay theo ngón tay của đức Thiện Thệ ngoại trừ phần khung giường ở bên dưới.
-570	{}</p>	pc87	Nếu vượt quá mức ấy thì nên cắt bớt và phạm tội pācittiya.
-571	<h4>{}</h4>	pc88-name	Pc 88. Tūlonaddha
-572	<p>{}</p>	pc88	Vị tỳ khưu nào cho làm giường ghế độn bông gòn thì (bông gòn) nên được móc ra và phạm tội pācittiya.
-573	<h4>{}</h4>	pc89-name	Pc 89. Nisīdana
-574	<p>{}	pc89	Trong lúc cho làm tấm lót ngồi, vị tỳ khưu nên bảo làm theo kích thước.
-575	{}	pc89	Ở đây, kích thước này là chiều dài hai gang tay, chiều rộng một gang rưỡi, đường viền một gang theo gang tay của đức Thiện Thệ.
-576	{}</p>	pc89	Nếu vượt quá mức ấy thì (tấm lót ngồi) nên được cắt bớt và phạm tội pācittiya.
-577	<h4>{}</h4>	pc90-name	Pc 90. Kaṇḍuppaṭicchādi
-578	<p>{}	pc90	Trong lúc cho làm y đắp ghẻ, vị tỳ khưu nên bảo làm theo kích thước.
-579	{}	pc90	Ở đây, kích thước này là chiều dài bốn gang tay, chiều rộng hai gang theo gang tay của đức Thiện Thệ.
-580	{}</p>	pc90	Nếu vượt quá mức ấy thì (y đắp ghẻ) nên được cắt bớt và phạm tội pācittiya.
-581	<h4>{}</h4>	pc91-name	Pc 91. Vassikasāṭika
-582	<p>{}	pc91	Trong lúc cho làm vải choàng tắm mưa, vị tỳ khưu nên bảo làm theo kích thước.
-583	{}	pc91	Ở đây, kích thước này là chiều dài sáu gang tay, chiều rộng hai gang rưỡi theo gang tay của đức Thiện Thệ.
-584	{}</p>	pc91	Nếu vượt quá mức ấy thì (vải choàng tắm mưa) nên được cắt bớt và phạm tội pācittiya.
-585	<h4>{}</h4>	pc92-name	Pc 92. Nanda
-586	<p>{}	pc92	Vị tỳ khưu nào cho làm y có kích thước y của đức Thiện Thệ hoặc rộng hơn thì (y ấy) nên được cắt bớt và phạm tội pācittiya.
-587	{}	pc92	Trong trường hợp này, kích thước y của đức Thiện Thệ dành cho đức Thiện Thệ là chiều dài chín gang tay, chiều rộng sáu gang theo gang tay của đức Thiện Thệ.
-588	{}</p>	pc92	Đây là kích thước y của đức Thiện Thệ dành cho đức Thiện Thệ.
-589	<p class='endvagga'>{}</p>	pc-ending	Phẩm Đức Vua là thứ chín.
-590	<h3>{}</h3>	pc-ending	Dứt Giới Ưng Đối Trị
-591	<p>{}</p>	pc-ending	Bạch chư đại đức, chín mươi hai điều pācittiya đã được đọc tụng xong.
-592	<p>{}	pc-ending	Trong các điều ấy, tôi hỏi các đại đức rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
-593	{}	pc-ending	Đến lần thứ nhì, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
-594	{}	pc-ending	Đến lần thứ ba, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
-595	{}</p>	pc-ending	Các đại đức được thanh tịnh nên mới im lặng. Tôi ghi nhận sự việc này là như vậy.
-596	<p class='endsection'>{}</p>	pc-ending	Dứt Các Điều Pācittiyā
-597	<h2>{}</h2>	pd-opening	THUYẾT GIỚI ƯNG PHÁT LỘ
-598	<p>{}</p>	pd-opening	Bạch chư đại đức, bốn điều pāṭidesanīya này được đưa ra đọc tụng.
-599	<h4>{}</h4>	pd1-name	Pd 1. Paṭhamapāṭidesanīya
-600	<p>{}	pd1	Vị tỳ khưu nào tự tay nhận lãnh vật thực cứng hoặc vật thực mềm từ tay tỳ khưu ni không phải là thân quyến đã đi vào xóm nhà, rồi nhai hoặc ăn thì vị tỳ khưu ấy nên thú nhận rằng:
-601	{}</p>	pd1	Bạch chư đại đức, tôi đã vi phạm tội đáng chê trách, không có lợi ích, cần phải thú nhận; tôi xin thú nhận tội ấy.'
-602	<h4>{}</h4>	pd2-name	Pd 2. Dutiyapāṭidesanīya
-603	<p>{}	pd2	Trường hợp các tỳ khưu được thỉnh mời thọ thực ở các gia đình.
-604	{}	pd2	Nếu tại nơi ấy có vị tỳ khưu ni đứng hướng dẫn sự phục vụ (nói rằng):
-605	{}	pd2	Hãy dâng xúp ở đây, hãy dâng cơm ở chỗ này.'
-606	{}	pd2	Vị tỳ khưu ni ấy nên bị từ chối bởi các tỳ khưu ấy (nói rằng):
-607	{}	pd2	Này sư tỷ, hãy lui ra cho đến khi nào các tỳ khưu thọ thực xong.'
-608	{}	pd2	Nếu không một vị tỳ khưu nào lên tiếng để từ chối tỳ khưu ni ấy (nói rằng):
-609	{}	pd2	Này sư tỷ, hãy lui ra cho đến khi nào các tỳ khưu thọ thực xong'
-610	{}	pd2	thì các tỳ khưu ấy nên thú nhận rằng:
-611	{}</p>	pd2	Bạch chư đại đức, chúng tôi đã vi phạm tội đáng chê trách, không có lợi ích, cần phải thú nhận; chúng tôi xin thú nhận tội ấy.'
-612	<h4>{}</h4>	pd3-name	Pd 3. Tatiyapāṭidesanīya
-613	<p>{}	pd3	Trường hợp các gia đình đã được công nhận là bậc hữu học, vị tỳ khưu nào không được thỉnh mời trước, không bị bệnh, tự tay nhận lãnh vật thực cứng hoặc vật thực mềm ở các gia đình đã được công nhận là bậc hữu học theo hình thức như thế, rồi nhai hoặc ăn thì vị tỳ khưu ấy nên thú nhận rằng:
-614	{}</p>	pd3	Bạch chư đại đức, tôi đã vi phạm tội đáng chê trách, không có lợi ích, cần phải thú nhận; tôi xin thú nhận tội ấy.'
-615	<h4>{}</h4>	pd4-name	Pd 4. Catutthapāṭidesanīya
-616	<p>{}	pd4	Trường hợp những chỗ trú ngụ ở trong rừng được xác định là có sự nguy hiểm, có sự kinh hoàng, vị tỳ khưu nào trong khi đang sống ở những chỗ trú ngụ có hình thức như thế, sau khi tự tay nhận lãnh vật thực cứng hoặc vật thực mềm chưa được báo tin trước ở trong khuôn viên tu viện, không bị bệnh rồi nhai hoặc ăn thì vị tỳ khưu ấy nên thú nhận rằng:
-617	{}</p>	pd4	Bạch chư đại đức, tôi đã vi phạm tội đáng chê trách, không có lợi ích, cần phải thú nhận; tôi xin thú nhận tội ấy.'
-618	<h3>{}</h3>	pd-ending	Dứt Giới Ưng Phát Lộ
-619	<p>{}	pd-ending	Bạch chư đại đức, bốn điều pāṭidesanīya đã được đọc tụng xong.
-620	{}	pd-ending	Trong các điều ấy, tôi hỏi các đại đức rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
-621	{}	pd-ending	Đến lần thứ nhì, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
-622	{}	pd-ending	Đến lần thứ ba, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
-623	{}</p>	pd-ending	Các đại đức được thanh tịnh nên mới im lặng. Tôi ghi nhận sự việc này là như vậy.
-624	<p class='endsection'>{}</p>	pd-ending	Dứt Các Điều Pāṭidesanīya
-625	<h2>{}</h2>	sk-opening	THUYẾT GIỚI ƯNG HỌC PHÁP
-626	<p>{}</p>	sk-opening	Bạch chư đại đức, các pháp sekhiyā này được đưa ra đọc tụng.
-627	<h3>{}</h3>	sk-chapter	Phẩm 1: Tròn Đều
-628	<h4>{}</h4>	sk1-name	Sk 1. Parimaṇḍala
-629	<p>{}</p>	sk1	Ta sẽ quấn y (nội) tròn đều' là việc học tập nên được thực hành.
-630	<h4>{}</h4>	sk2-name	Sk 2
-631	<p>{}</p>	sk2	Ta sẽ trùm y (vai trái) tròn đều' là việc học tập nên được thực hành.
-632	<h4>{}</h4>	sk3-name	Sk 3. Suppaṭicchanna
-633	<p>{}</p>	sk3	Mặc y che kín đáo, ta sẽ đi ở nơi xóm nhà' là việc học tập nên được thực hành.
-634	<h4>{}</h4>	sk4-name	Sk 4
-635	<p>{}</p>	sk4	Mặc y che kín đáo, ta sẽ ngồi ở nơi xóm nhà' là việc học tập nên được thực hành.
-636	<h4>{}</h4>	sk5-name	Sk 5. Susaṁvuta
-637	<p>{}</p>	sk5	Khéo thu thúc, ta sẽ đi ở nơi xóm nhà' là việc học tập nên được thực hành.
-638	<h4>{}</h4>	sk6-name	Sk 6
-639	<p>{}</p>	sk6	Khéo thu thúc, ta sẽ ngồi ở nơi xóm nhà' là việc học tập nên được thực hành.
-640	<h4>{}</h4>	sk7-name	Sk 7. Okkhittacakkhu
-641	<p>{}</p>	sk7	Ta sẽ đi ở nơi xóm nhà với mắt nhìn xuống' là việc học tập nên được thực hành.
-642	<h4>{}</h4>	sk8-name	Sk 8
-643	<p>{}</p>	sk8	Ta sẽ ngồi ở nơi xóm nhà với mắt nhìn xuống' là việc học tập nên được thực hành.
-644	<h4>{}</h4>	sk9-name	Sk 9. Ukkhittaka
-645	<p>{}</p>	sk9	Ta sẽ không đi ở nơi xóm nhà với sự vén y lên' là việc học tập nên được thực hành.
-646	<h4>{}</h4>	sk10-name	Sk 10
-647	<p>{}</p>	sk10	Ta sẽ không ngồi ở nơi xóm nhà với sự vén y lên' là việc học tập nên được thực hành.
-648	<p class='endvagga'>{}</p>	sk-ending	Phẩm Tròn Đều là thứ nhất.
-649	<h3>{}</h3>	sk-chapter	Phẩm 2: Cười Vang
-650	<h4>{}</h4>	sk11-name	Sk 11. Ujjagghika
-651	<p>{}</p>	sk11	Ta sẽ không đi ở nơi xóm nhà với tiếng cười vang' là việc học tập nên được thực hành.
-652	<h4>{}</h4>	sk12-name	Sk 12
-653	<p>{}</p>	sk12	Ta sẽ không ngồi ở nơi xóm nhà với tiếng cười vang' là việc học tập nên được thực hành.
-654	<h4>{}</h4>	sk13-name	Sk 13. Uccasadda
-655	<p>{}</p>	sk13	Ta sẽ đi ở nơi xóm nhà với giọng nói nhỏ nhẹ' là việc học tập nên được thực hành.
-656	<h4>{}</h4>	sk14-name	Sk 14
-657	<p>{}</p>	sk14	Ta sẽ ngồi ở nơi xóm nhà với giọng nói nhỏ nhẹ' là việc học tập nên được thực hành.
-658	<h4>{}</h4>	sk15-name	Sk 15. Kāyappacālaka
-659	<p>{}</p>	sk15	Ta sẽ không đi ở nơi xóm nhà với sự đung đưa thân' là việc học tập nên được thực hành.
-660	<h4>{}</h4>	sk16-name	Sk 16
-661	<p>{}</p>	sk16	Ta sẽ không ngồi ở nơi xóm nhà với sự đung đưa thân' là việc học tập nên được thực hành.
-662	<h4>{}</h4>	sk17-name	Sk 17. Bāhuppacālaka
-663	<p>{}</p>	sk17	Ta sẽ không đi ở nơi xóm nhà với sự đung đưa cánh tay' là việc học tập nên được thực hành.
-664	<h4>{}</h4>	sk18-name	Sk 18
-665	<p>{}</p>	sk18	Ta sẽ không ngồi ở nơi xóm nhà với sự đung đưa cánh tay' là việc học tập nên được thực hành.
-666	<h4>{}</h4>	sk19-name	Sk 19. Sīsappacālaka
-667	<p>{}</p>	sk19	Ta sẽ không đi ở nơi xóm nhà với sự lắc lư đầu' là việc học tập nên được thực hành.
-668	<h4>{}</h4>	sk20-name	Sk 20
-669	<p>{}</p>	sk20	Ta sẽ không ngồi ở nơi xóm nhà với sự lắc lư đầu' là việc học tập nên được thực hành.
-670	<p class='endvagga'>{}</p>	sk-ending	Phẩm Cười Vang là thứ nhì.
-671	<h3>{}</h3>	sk-chapter	Phẩm 3: Chống Nạnh
-672	<h4>{}</h4>	sk21-name	Sk 21. Khambhakata
-673	<p>{}</p>	sk21	Ta sẽ không chống nạnh đi ở nơi xóm nhà' là việc học tập nên được thực hành.
-674	<h4>{}</h4>	sk22-name	Sk 22
-675	<p>{}</p>	sk22	Ta sẽ không chống nạnh ngồi ở nơi xóm nhà' là việc học tập nên được thực hành.
-676	<h4>{}</h4>	sk23-name	Sk 23. Oguṇṭhita
-677	<p>{}</p>	sk23	Ta sẽ không trùm đầu lại đi ở nơi xóm nhà' là việc học tập nên được thực hành.
-678	<h4>{}</h4>	sk24-name	Sk 24
-679	<p>{}</p>	sk24	Ta sẽ không trùm đầu lại ngồi ở nơi xóm nhà' là việc học tập nên được thực hành.
-680	<h4>{}</h4>	sk25-name	Sk 25. Ukkuṭika
-681	<p>{}</p>	sk25	Ta sẽ không đi ở nơi xóm nhà với sự nhón gót' là việc học tập nên được thực hành.
-682	<h4>{}</h4>	sk26-name	Sk 26. Pallatthika
-683	<p>{}</p>	sk26	Ta sẽ không ngồi ở nơi xóm nhà với sự ôm đầu gối' là việc học tập nên được thực hành.
-684	<h4>{}</h4>	sk27-name	Sk 27. Sakkaccapaṭiggahaṇa
-685	<p>{}</p>	sk27	Ta sẽ nhận lãnh đồ khất thực một cách nghiêm trang' là việc học tập nên được thực hành.
-686	<h4>{}</h4>	sk28-name	Sk 28. Pattasaññīpaṭiggahaṇa
-687	<p>{}</p>	sk28	Chú tâm ở bình bát, ta sẽ nhận lãnh đồ khất thực' là việc học tập nên được thực hành.
-688	<h4>{}</h4>	sk29-name	Sk 29. Samasūpakapaṭiggahaṇa
-689	<p>{}</p>	sk29	Ta sẽ nhận lãnh đồ khất thực với lượng xúp tương xứng' là việc học tập nên được thực hành.
-690	<h4>{}</h4>	sk30-name	Sk 30. Samatittika
-691	<p>{}</p>	sk30	Ta sẽ nhận lãnh đồ khất thực vừa ngang miệng (bình bát)' là việc học tập nên được thực hành.
-692	<p class='endvagga'>{}</p>	sk-ending	Phẩm Chống Nạnh là thứ ba.
-693	<h3>{}</h3>	sk-chapter	Phẩm 4: Nghiêm Trang
-694	<h4>{}</h4>	sk31-name	Sk 31. Sakkaccabhuñjana
-695	<p>{}</p>	sk31	Ta sẽ thọ dụng đồ khất thực một cách nghiêm trang' là việc học tập nên được thực hành.
-696	<h4>{}</h4>	sk32-name	Sk 32. Pattasaññībhuñjana
-697	<p>{}</p>	sk32	Chú tâm ở bình bát, ta sẽ thọ dụng đồ khất thực' là việc học tập nên được thực hành.
-698	<h4>{}</h4>	sk33-name	Sk 33. Sapadāna
-699	<p>{}</p>	sk33	Ta sẽ thọ dụng đồ khất thực theo tuần tự' là việc học tập nên được thực hành.
-700	<h4>{}</h4>	sk34-name	Sk 34. Samasūpaka
-701	<p>{}</p>	sk34	Ta sẽ thọ dụng đồ khất thực với lượng xúp tương xứng' là việc học tập nên được thực hành.
-702	<h4>{}</h4>	sk35-name	Sk 35. Nathūpakata
-703	<p>{}</p>	sk35	Ta sẽ không vun lên thành đống rồi thọ dụng đồ khất thực' là việc học tập nên được thực hành.
-704	<h4>{}</h4>	sk36-name	Sk 36. Odanappaṭicchādana
-705	<p>{}</p>	sk36	Ta sẽ không dùng cơm che lấp xúp hoặc thức ăn với ý muốn được nhiều hơn' là việc học tập nên được thực hành.
-706	<h4>{}</h4>	sk37-name	Sk 37. Sūpodanaviññatti
-707	<p>{}</p>	sk37	Khi không bị bệnh, ta sẽ không yêu cầu xúp và cơm vì nhu cầu của bản thân rồi thọ thực' là việc học tập nên được thực hành.
-708	<h4>{}</h4>	sk38-name	Sk 38. Ujjhānasaññī
-709	<p>{}</p>	sk38	Ta sẽ không nhìn vào bình bát của các vị khác với ý định tìm lỗi' là việc học tập nên được thực hành.
-710	<h4>{}</h4>	sk39-name	Sk 39. Kabaḷa
-711	<p>{}</p>	sk39	Ta sẽ không làm vắt cơm quá lớn' là việc học tập nên được thực hành.
-712	<h4>{}</h4>	sk40-name	Sk 40. Ālopa
-713	<p>{}</p>	sk40	Ta sẽ làm nắm cơm tròn đều' là việc học tập nên được thực hành.
-714	<p class='endvagga'>{}</p>	sk-ending	Phẩm Nghiêm Trang là thứ tư.
-715	<h3>{}</h3>	sk-chapter	Phẩm 5: Vắt Cơm
-716	<h4>{}</h4>	sk41-name	Sk 41. Anāhaṭa
-717	<p>{}</p>	sk41	Ta sẽ không há miệng ra khi vắt cơm chưa được đưa đến' là việc học tập nên được thực hành.
-718	<h4>{}</h4>	sk42-name	Sk 42. Bhuñjamāna
-719	<p>{}</p>	sk42	Ta sẽ không đưa trọn bàn tay vào miệng trong lúc thọ thực' là việc học tập nên được thực hành.
-720	<h4>{}</h4>	sk43-name	Sk 43. Sakabaḷa
-721	<p>{}</p>	sk43	Ta sẽ không nói khi miệng có vắt cơm' là việc học tập nên được thực hành.
-722	<h4>{}</h4>	sk44-name	Sk 44. Piṇḍukkhepaka
-723	<p>{}</p>	sk44	Ta sẽ không thọ thực theo lối đưa thức ăn (vào miệng) một cách liên tục' là việc học tập nên được thực hành.
-724	<h4>{}</h4>	sk45-name	Sk 45. Kabaḷāvacchedaka
-725	<p>{}</p>	sk45	Ta sẽ không thọ thực theo lối cắn vắt cơm từng chút một' là việc học tập nên được thực hành.
-726	<h4>{}</h4>	sk46-name	Sk 46. Avagaṇḍakāraka
-727	<p>{}</p>	sk46	Ta sẽ không thọ thực theo lối làm phồng má' là việc học tập nên được thực hành.
-728	<h4>{}</h4>	sk47-name	Sk 47. Hatthaniddhunaka
-729	<p>{}</p>	sk47	Ta sẽ không thọ thực có sự vung rảy bàn tay' là việc học tập nên được thực hành.
-730	<h4>{}</h4>	sk48-name	Sk 48. Sitthāvakāraka
-731	<p>{}</p>	sk48	Ta sẽ không thọ thực có sự làm rơi đổ cơm' là việc học tập nên được thực hành.
-732	<h4>{}</h4>	sk49-name	Sk 49. Jivhānicchāraka
-733	<p>{}</p>	sk49	Ta sẽ không thọ thực có sự le lưỡi' là việc học tập nên được thực hành.
-734	<h4>{}</h4>	sk50-name	Sk 50. Capucapukāraka
-735	<p>{}</p>	sk50	Ta sẽ không thọ thực có làm tiếng chép chép' là việc học tập nên được thực hành.
-736	<p class='endvagga'>{}</p>	sk-ending	Phẩm Vắt Cơm là thứ năm.
-737	<h3>{}</h3>	sk-chapter	Phẩm 6: Tiếng Sột Sột
-738	<h4>{}</h4>	sk51-name	Sk 51. Surusurukāraka
-739	<p>{}</p>	sk51	Ta sẽ không thọ thực có làm tiếng sột sột' là việc học tập nên được thực hành.
-740	<h4>{}</h4>	sk52-name	Sk 52. Hatthanillehaka
-741	<p>{}</p>	sk52	Ta sẽ không thọ thực có sự liếm tay' là việc học tập nên được thực hành.
-742	<h4>{}</h4>	sk53-name	Sk 53. Pattanillehaka
-743	<p>{}</p>	sk53	Ta sẽ không thọ thực có sự nạo vét bình bát' là việc học tập nên được thực hành.
-744	<h4>{}</h4>	sk54-name	Sk 54. Oṭṭhanillehaka
-745	<p>{}</p>	sk54	Ta sẽ không thọ thực có sự liếm môi' là việc học tập nên được thực hành.
-746	<h4>{}</h4>	sk55-name	Sk 55. Sāmisa
-747	<p>{}</p>	sk55	Ta sẽ không nhận lãnh tô nước uống bằng bàn tay có dính thức ăn' là việc học tập nên được thực hành.
-748	<h4>{}</h4>	sk56-name	Sk 56. Sasitthaka
-749	<p>{}</p>	sk56	Ta sẽ không đổ bỏ nước rửa bình bát có lẫn cơm ở nơi xóm nhà' là việc học tập nên được thực hành.
-750	<h4>{}</h4>	sk57-name	Sk 57. Chattapāṇi
-751	<p>{}</p>	sk57	Ta sẽ không thuyết Pháp đến người không bị bệnh có dù ở bàn tay' là việc học tập nên được thực hành.
-752	<h4>{}</h4>	sk58-name	Sk 58. Daṇḍapāṇi
-753	<p>{}</p>	sk58	Ta sẽ không thuyết Pháp đến người không bị bệnh có gậy ở bàn tay' là việc học tập nên được thực hành.
-754	<h4>{}</h4>	sk59-name	Sk 59. Satthapāṇi
-755	<p>{}</p>	sk59	Ta sẽ không thuyết Pháp đến người không bị bệnh có dao ở bàn tay' là việc học tập nên được thực hành.
-756	<h4>{}</h4>	sk60-name	Sk 60. Āvudhapāṇi
-757	<p>{}</p>	sk60	Ta sẽ không thuyết Pháp đến người không bị bệnh có vũ khí ở bàn tay' là việc học tập nên được thực hành.
-758	<p class='endvagga'>{}</p>	sk-ending	Phẩm Tiếng Sột Sột là thứ sáu.
-759	<h3>{}</h3>	sk-chapter	Phẩm 7: Giày Dép
-760	<h4>{}</h4>	sk61-name	Sk 61. Pāduka
-761	<p>{}</p>	sk61	Ta sẽ không thuyết Pháp đến người không bị bệnh có mang giày' là việc học tập nên được thực hành.
-762	<h4>{}</h4>	sk62-name	Sk 62. Upāhana
-763	<p>{}</p>	sk62	Ta sẽ không thuyết Pháp đến người không bị bệnh có mang dép' là việc học tập nên được thực hành.
-764	<h4>{}</h4>	sk63-name	Sk 63. Yāna
-765	<p>{}</p>	sk63	Ta sẽ không thuyết Pháp đến người không bị bệnh ở trên xe' là việc học tập nên được thực hành.
-766	<h4>{}</h4>	sk64-name	Sk 64. Sayana
-767	<p>{}</p>	sk64	Ta sẽ không thuyết Pháp đến người không bị bệnh đang nằm' là việc học tập nên được thực hành.
-768	<h4>{}</h4>	sk65-name	Sk 65. Pallatthika
-769	<p>{}</p>	sk65	Ta sẽ không thuyết Pháp đến người không bị bệnh ngồi ôm đầu gối' là việc học tập nên được thực hành.
-770	<h4>{}</h4>	sk66-name	Sk 66. Veṭhita
-771	<p>{}</p>	sk66	Ta sẽ không thuyết Pháp đến người không bị bệnh đội khăn ở đầu' là việc học tập nên được thực hành.
-772	<h4>{}</h4>	sk67-name	Sk 67. Oguṇṭhita
-773	<p>{}</p>	sk67	Ta sẽ không thuyết Pháp đến người không bị bệnh có đầu được trùm lại' là việc học tập nên được thực hành.
-774	<h4>{}</h4>	sk68-name	Sk 68. Chamā
-775	<p>{}</p>	sk68	Ta sẽ không ngồi ở nền đất rồi thuyết Pháp đến người không bị bệnh ngồi trên chỗ ngồi' là việc học tập nên được thực hành.
-776	<h4>{}</h4>	sk69-name	Sk 69. Nīcāsana
-777	<p>{}</p>	sk69	Ta sẽ không ngồi ở chỗ ngồi thấp rồi thuyết Pháp đến người không bị bệnh ngồi trên chỗ ngồi cao' là việc học tập nên được thực hành.
-778	<h4>{}</h4>	sk70-name	Sk 70. Ṭhita
-779	<p>{}</p>	sk70	Ta sẽ không đứng thuyết Pháp đến người không bị bệnh ngồi' là việc học tập nên được thực hành.
-780	<h4>{}</h4>	sk71-name	Sk 71. Pacchatogamana
-781	<p>{}</p>	sk71	Khi đang đi phía sau, ta sẽ không thuyết Pháp đến người không bị bệnh đang đi phía trước' là việc học tập nên được thực hành.
-782	<h4>{}</h4>	sk72-name	Sk 72. Uppathenagamana
-783	<p>{}</p>	sk72	Khi đang đi bên đường, ta sẽ không thuyết Pháp đến người không bị bệnh đang đi giữa đường' là việc học tập nên được thực hành.
-784	<h4>{}</h4>	sk73-name	Sk 73. Ṭhitouccāra
-785	<p>{}</p>	sk73	Khi không bị bệnh, ta sẽ không đứng đại tiện hoặc tiểu tiện' là việc học tập nên được thực hành.
-786	<h4>{}</h4>	sk74-name	Sk 74. Hariteuccāra
-787	<p>{}</p>	sk74	Khi không bị bệnh, ta sẽ không đại tiện hoặc tiểu tiện hoặc khạc nhổ trên cỏ cây xanh' là việc học tập nên được thực hành.
-788	<h4>{}</h4>	sk75-name	Sk 75. Udakeuccāra
-789	<p>{}</p>	sk75	Khi không bị bệnh, ta sẽ không đại tiện hoặc tiểu tiện hoặc khạc nhổ vào trong nước' là việc học tập nên được thực hành.
-790	<p class='endvagga'>{}</p>	sk-ending	Phẩm Giày Dép là thứ bảy.
-791	<h3>{}</h3>	sk-ending	Dứt Giới Ưng Học Pháp
-792	<p>{}</p>	sk-ending	Bạch chư đại đức, các pháp sekhiyā đã được đọc tụng xong.
-793	<p>{}	sk-ending	Trong các điều ấy, tôi hỏi các đại đức rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
-794	{}	sk-ending	Đến lần thứ nhì, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
-795	{}	sk-ending	Đến lần thứ ba, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
-796	{}</p>	sk-ending	Các đại đức được thanh tịnh nên mới im lặng. Tôi ghi nhận sự việc này là như vậy.
-797	<p class='endsection'>{}</p>	sk-ending	Dứt Các Điều Sekhiyā
-798	<h2>{}</h2>	as-opening	THUYẾT GIỚI DÀN XẾP TRANH TỤNG
-799	<p>{}</p>	as-opening	Bạch chư đại đức, bảy pháp dàn xếp tranh tụng này được đưa ra đọc tụng.
-800	<p>{}</p>	as-opening	Nhằm đưa đến sự dàn xếp, nhằm đưa đến sự giải quyết các sự tranh tụng đã sanh khởi hoặc chưa sanh khởi,
-801	<h4>{}</h4>	as1-name	As 1
-802	<p>{}</p>	as1	Nên áp dụng cách hành xử Luật với sự hiện diện,
-803	<h4>{}</h4>	as2-name	As 2
-804	<p>{}</p>	as2	Nên áp dụng cách hành xử Luật bằng sự ghi nhớ,
-805	<h4>{}</h4>	as3-name	As 3
-806	<p>{}</p>	as3	Nên áp dụng cách hành xử Luật khi không điên cuồng,
-807	<h4>{}</h4>	as4-name	As 4
-808	<p>{}</p>	as4	Nên phán xử theo sự thừa nhận,
-809	<h4>{}</h4>	as5-name	As 5
-810	<p>{}</p>	as5	Thuận theo số đông,
-811	<h4>{}</h4>	as6-name	As 6
-812	<p>{}</p>	as6	Theo tội của vị ấy,
-813	<h4>{}</h4>	as7-name	As 7
-814	<p>{}</p>	as7	Cách dùng cỏ che lấp.
-815	<h3>{}</h3>	as-ending	Dứt Giới Dàn Xếp Tranh Tụng
-816	<p>{}</p>	as-ending	Bạch chư đại đức, bảy pháp dàn xếp tranh tụng đã được đọc tụng xong.
-817	<p>{}	as-ending	Trong các điều ấy, tôi hỏi các đại đức rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
-818	{}	as-ending	Đến lần thứ nhì, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
-819	{}	as-ending	Đến lần thứ ba, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
-820	{}</p>	as-ending	Các đại đức được thanh tịnh nên mới im lặng. Tôi ghi nhận sự việc này là như vậy.
-821	<p class='endsection'>{}</p>	as-ending	Dứt Các Pháp Dàn Xếp Tranh Tụng
-822	<h2>{}</h2>	end	KẾT THÚC
-823	<p>{}<br>	end	Bạch chư đại đức, phần mở đầu đã được đọc tụng,
-824	{}<br>	end	Bốn điều pārājika đã được đọc tụng,
-825	{}<br>	end	Mười ba điều saṅghādisesa đã được đọc tụng,
-826	{}<br>	end	Hai điều aniyata đã được đọc tụng,
-827	{}<br>	end	Ba mươi điều nissaggiya pācittiya đã được đọc tụng,
-828	{}<br>	end	Chín mươi hai điều pācittiya đã được đọc tụng,
-829	{}<br>	end	Bốn điều pāṭidesanīya đã được đọc tụng,
-830	{}<br>	end	Các pháp sekhiyā đã được đọc tụng,
-831	{}</p>	end	Bảy pháp dàn xếp tranh tụng đã được đọc tụng.
-832	<p>{}	end	Bấy nhiêu của đức Thế Tôn ấy đã được truyền lại trong giới bổn, đã được đầy đủ trong giới bổn, được đưa ra đọc tụng vào mỗi nửa tháng.
-833	{}</p>	end	Chính tất cả (chư đại đức) nên học tập các điều học ấy với sự hợp nhất, thân thiện, không cãi cọ.
-834	<p class='endsection'>{}</p>	end	Phần Đọc Tụng Chi Tiết Là Thứ Năm
-835	<p class='endsutta'>{}</p>	end	Dứt Giới Bổn Pātimokkha Của Tỳ Khưu
-836	<p class='sadhu'>{}</p>	end	<b>Sādhu! Sādhu!! Sādhu!!!</b>
+399	{}</p>	pc36	Này tỳ khưu, hãy nhai hoặc hãy ăn đi;' khi vị kia đã ăn thì phạm tội pācittiya.
+400	<h4>{}</h4>	pc37-name	Pc 37. Vikālabhojana
+401	<p>{}</p>	pc37	Vị tỳ khưu nào nhai hoặc ăn vật thực cứng hoặc vật thực mềm vào lúc sái thời thì phạm tội pācittiya.
+402	<h4>{}</h4>	pc38-name	Pc 38. Sannidhikāraka
+403	<p>{}</p>	pc38	Vị tỳ khưu nào nhai hoặc ăn vật thực cứng hoặc vật thực mềm đã được tích trữ thì phạm tội pācittiya.
+404	<h4>{}</h4>	pc39-name	Pc 39. Paṇītabhojana
+405	<p>{}</p>	pc39	Các loại vật thực thượng hạng như là bơ lỏng, bơ đặc, dầu ăn, mật ong, đường mía, cá, thịt, sữa tươi, sữa đông, vị tỳ khưu nào không bị bệnh mà yêu cầu các loại vật thực thượng hạng như thế cho nhu cầu của bản thân rồi thọ dụng thì phạm tội pācittiya.
+406	<h4>{}</h4>	pc40-name	Pc 40. Dantapona
+407	<p>{}</p>	pc40	Vị tỳ khưu nào đưa thức ăn chưa được bố thí vào miệng ngoại trừ nước và tăm xỉa răng thì phạm tội pācittiya.
+408	<p class='endvagga'>{}</p>	pc-ending	Phẩm Vật Thực là thứ tư.
+409	<h3>{}</h3>	pc-chapter	Phẩm 5: Đạo Sĩ Loã Thể
+410	<h4>{}</h4>	pc41-name	Pc 41. Acelaka
+411	<p>{}</p>	pc41	Vị tỳ khưu nào tự tay cho vật thực cứng hoặc vật thực mềm đến đạo sĩ lõa thể, hoặc nam du sĩ ngoại đạo, hoặc nữ du sĩ ngoại đạo thì phạm tội pācittiya.
+412	<h4>{}</h4>	pc42-name	Pc 42. Uyyojana
+413	<p>{}	pc42	Vị tỳ khưu nào nói với vị tỳ khưu như vầy:
+414	{}	pc42	Này đại đức, hãy đến.
+415	{}	pc42	Chúng ta sẽ đi vào làng hoặc thị trấn để khất thực,'
+416	{}	pc42	sau khi bảo (thí chủ) bố thí hoặc không bảo (thí chủ) bố thí cho vị ấy rồi đuổi đi (nói rằng):
+417	{}	pc42	Này đại đức, hãy đi đi.
+418	{}	pc42	Nói chuyện hoặc ngồi với ngươi ta không được thoải mái.
+419	{}	pc42	Nói chuyện hoặc ngồi mỗi một mình ta còn có sự an lạc.'
+420	{}</p>	pc42	Sau khi thực hiện chỉ nguyên nhân ấy không điều nào khác thì phạm tội pācittiya.
+421	<h4>{}</h4>	pc43-name	Pc 43. Sabhojana
+422	<p>{}</p>	pc43	Vị tỳ khưu nào sau khi đi vào gia đình chỉ có cặp vợ chồng rồi ngồi xuống thì phạm tội pācittiya.
+423	<h4>{}</h4>	pc44-name	Pc 44. Rahopaṭicchanna
+424	<p>{}</p>	pc44	Vị tỳ khưu nào cùng với người nữ ngồi xuống ở chỗ ngồi kín đáo, được che khuất thì phạm tội pācittiya.
+425	<h4>{}</h4>	pc45-name	Pc 45. Rahonisajja
+426	<p>{}</p>	pc45	Vị tỳ khưu nào cùng với người nữ một nam một nữ ngồi ở nơi kín đáo thì phạm tội pācittiya.
+427	<h4>{}</h4>	pc46-name	Pc 46. Cāritta
+428	<p>{}	pc46	Vị tỳ khưu nào khi đã được thỉnh mời, khi đã có bữa trai phạn, chưa có sự thông báo đến vị tỳ khưu hiện diện lại đi thăm viếng các gia đình trước bữa ăn hoặc sau bữa ăn thì phạm tội pācittiya ngoại trừ có duyên cớ.
+429	{}	pc46	Duyên cớ trong trường hợp ấy là: trong thời hạn dâng y, trong lúc may y.
+430	{}</p>	pc46	Đây là duyên cớ trong trường hợp ấy.
+431	<h4>{}</h4>	pc47-name	Pc 47. Mahānāma
+432	<p>{}	pc47	Vị tỳ khưu không bị bệnh nên chấp nhận sự thỉnh cầu về (việc dâng) vật dụng trong bốn tháng, ngoại trừ có sự thỉnh cầu tiếp tục, ngoại trừ có sự thỉnh cầu đến trọn đời.
+433	{}</p>	pc47	Nếu chấp nhận vượt quá hạn ấy thì phạm tội pācittiya.
+434	<h4>{}</h4>	pc48-name	Pc 48. Uyyuttasenā
+435	<p>{}</p>	pc48	Vị tỳ khưu nào đi để xem quân đội động binh thì phạm tội pācittiya ngoại trừ có nhân duyên như thế.
+436	<h4>{}</h4>	pc49-name	Pc 49. Senāvāsa
+437	<p>{}</p>	pc49	Nếu có nhân duyên nào đó khiến vị tỳ khưu ấy đi đến nơi binh đội, vị tỳ khưu ấy nên trú ngụ trong binh đội hai ba đêm; nếu vượt hơn số ấy thì phạm tội pācittiya.
+438	<h4>{}</h4>	pc50-name	Pc 50. Uyyodhika
+439	<p>{}</p>	pc50	Nếu trong khi trú ngụ ở binh đội hai ba đêm vị tỳ khưu đi đến nơi tập trận, hoặc nơi đóng quân, hoặc nơi dàn binh, hoặc đội chủ lực thì phạm tội pācittiya.
+440	<p class='endvagga'>{}</p>	pc-ending	Phẩm Đạo Sĩ Lõa Thể là thứ năm.
+441	<h3>{}</h3>	pc-chapter	Phẩm 6: Uống Rượu
+442	<h4>{}</h4>	pc51-name	Pc 51. Surāpāna
+443	<p>{}</p>	pc51	Khi uống rượu và men say thì phạm tội pācittiya.
+444	<h4>{}</h4>	pc52-name	Pc 52. Aṅgulipatodaka
+445	<p>{}</p>	pc52	Khi thọt léc bằng ngón tay thì phạm tội pācittiya.
+446	<h4>{}</h4>	pc53-name	Pc 53. Hasadhamma
+447	<p>{}</p>	pc53	Khi chơi giỡn ở trong nước thì phạm tội pācittiya.
+448	<h4>{}</h4>	pc54-name	Pc 54. Anādariya
+449	<p>{}</p>	pc54	Khi có sự không tôn trọng thì phạm tội pācittiya.
+450	<h4>{}</h4>	pc55-name	Pc 55. Bhiṁsāpana
+451	<p>{}</p>	pc55	Vị tỳ khưu nào làm vị tỳ khưu kinh sợ thì phạm tội pācittiya.
+452	<h4>{}</h4>	pc56-name	Pc 56. Joti
+453	<p>{}</p>	pc56	Vị tỳ khưu nào không bị bệnh có ý định sưởi ấm rồi đốt lên hoặc bảo đốt lên ngọn lửa thì phạm tội pācittiya ngoại trừ có nhân duyên như thế.
+454	<h4>{}</h4>	pc57-name	Pc 57. Nahāna
+455	<p>{}	pc57	Vị tỳ khưu nào tắm khi chưa đủ nửa tháng thì phạm tội pācittiya ngoại trừ có duyên cớ.
+456	{}	pc57	Duyên cớ trong trường hợp ấy là: (Nghĩ rằng): Một tháng rưỡi còn lại của mùa nóng'
+457	{}</p>	pc57	và tháng đầu tiên của mùa mưa, như vậy thành hai tháng rưỡi là lúc trời nóng nực là lúc trời oi bức, trường hợp bị bệnh, trường hợp có công việc, trường hợp đi đường xa, trường hợp mưa gió; đây là duyên cớ trong trường hợp ấy.
+458	<h4>{}</h4>	pc58-name	Pc 58. Dubbaṇṇakaraṇa
+459	<p>{}	pc58	Vị tỳ khưu nhận được y mới nên áp dụng một cách hoại sắc nào đó trong ba cách hoại sắc là màu xanh, màu bùn, màu đen sẫm.
+460	{}</p>	pc58	Nếu vị tỳ khưu không áp dụng một cách hoại sắc nào đó trong ba cách hoại sắc mà sử dụng y mới thì phạm tội pācittiya.
+461	<h4>{}</h4>	pc59-name	Pc 59. Vikappana
+462	<p>{}</p>	pc59	Vị tỳ khưu nào sau khi đích thân chú nguyện để dùng chung y đến vị tỳ khưu hoặc đến vị tỳ khưu ni hoặc đến vị ni tu tập sự hoặc đến vị sa di hoặc đến vị sa di ni lại sử dụng khi chưa có sự xả lời nguyện thì phạm tội pācittiya.
+463	<h4>{}</h4>	pc60-name	Pc 60. Apanidhāna
+464	<p>{}</p>	pc60	Vị tỳ khưu nào thu giấu hoặc bảo thu giấu bình bát hoặc y hoặc tấm lót ngồi hoặc ống đựng kim hoặc dây thắt lưng của vị tỳ khưu cho dầu chỉ muốn cười giỡn thì phạm tội pācittiya.
+465	<p class='endvagga'>{}</p>	pc-ending	Phẩm Uống Rượu là thứ sáu.
+466	<h3>{}</h3>	pc-chapter	Phẩm 7: Có Sinh Vật
+467	<h4>{}</h4>	pc61-name	Pc 61. Sañcicca
+468	<p>{}</p>	pc61	Vị tỳ khưu nào cố ý đoạt lấy mạng sống sinh vật thì phạm tội pācittiya.
+469	<h4>{}</h4>	pc62-name	Pc 62. Sappāṇaka
+470	<p>{}</p>	pc62	Vị tỳ khưu nào trong khi biết nước có sinh vật vẫn sử dụng thì phạm tội pācittiya.
+471	<h4>{}</h4>	pc63-name	Pc 63. Ukkoṭana
+472	<p>{}</p>	pc63	Vị tỳ khưu nào trong khi biết sự tranh tụng đã được giải quyết đúng theo pháp vẫn khơi lại để làm hành sự lần nữa thì phạm tội pācittiya.
+473	<h4>{}</h4>	pc64-name	Pc 64. Duṭṭhulla
+474	<p>{}</p>	pc64	Vị tỳ khưu nào trong khi biết tội xấu xa của vị tỳ khưu vẫn che giấu thì phạm tội pācittiya.
+475	<h4>{}</h4>	pc65-name	Pc 65. Ūnavīsativassa
+476	<p>{}</p>	pc65	Vị tỳ khưu nào trong khi biết người chưa đủ hai mươi tuổi vẫn cho tu lên bậc trên thì người ấy chưa được tu lên bậc trên và các vị tỳ khưu ấy bị chê trách; đây là tội pācittiya trong trường hợp ấy.
+477	<h4>{}</h4>	pc66-name	Pc 66. Theyyasattha
+478	<p>{}</p>	pc66	Vị tỳ khưu nào trong khi biết vẫn hẹn trước rồi đi chung đường xa với đám người đạo tặc ngay cả từ làng này sang làng khác thì phạm tội pācittiya.
+479	<h4>{}</h4>	pc67-name	Pc 67. Saṁvidhāna
+480	<p>{}</p>	pc67	Vị tỳ khưu nào hẹn trước rồi đi chung đường xa với người nữ ngay cả từ làng này sang làng khác thì phạm tội pācittiya.
+481	<h4>{}</h4>	pc68-name	Pc 68. Ariṭṭha
+482	<p>{}	pc68	Vị tỳ khưu nào nói như vầy:
+483	{}	pc68	Theo như ta hiểu về Pháp đã được đức Thế Tôn thuyết giảng thì những pháp chướng ngại được đức Thế Tôn giảng giải không có khả năng đem đến sự chướng ngại cho người thực hành.'
+484	{}	pc68	Vị tỳ khưu ấy nên được nói bởi các tỳ khưu như vầy:
+485	{}	pc68	Đại đức chớ có nói như thế.
+486	{}	pc68	Chớ có vu khống đức Thế Tôn bởi vì việc vu khống đức Thế Tôn là không tốt.
+487	{}	pc68	Bởi vì đức Thế Tôn không có nói như thế.
+488	{}	pc68	Này đại đức, đức Thế Tôn đã giảng giải bằng nhiều phương thức rằng các pháp chướng ngại có khả năng đem đến sự chướng ngại cho người thực hành.'
+489	{}	pc68	Và khi được nói như vậy bởi các tỳ khưu mà vị tỳ khưu ấy vẫn chấp giữ y như thế, thì vị tỳ khưu ấy nên được các tỳ khưu nhắc nhở đến lần thứ ba để từ bỏ việc ấy.
+490	{}</p>	pc68	Nếu được nhắc nhở đến lần thứ ba mà dứt bỏ việc ấy, như thế việc này là tốt đẹp; nếu không dứt bỏ thì phạm tội pācittiya.
+491	<h4>{}</h4>	pc69-name	Pc 69. Ukkhittasambhoga
+492	<p>{}</p>	pc69	Vị tỳ khưu nào trong khi biết vị tỳ khưu là vị phát ngôn như thế, là vị không thực hành thuận pháp, và không dứt bỏ tà kiến ấy mà vẫn hưởng thụ chung, hoặc vẫn cộng trú, hoặc vẫn nằm chung chỗ ngụ thì phạm tội pācittiya.
+493	<h4>{}</h4>	pc70-name	Pc 70. Kaṇṭaka
+494	<p>{}	pc70	Nếu có vị sa di nói như vầy:
+495	{}	pc70	Theo như ta hiểu về Pháp đã được đức Thế Tôn thuyết giảng thì những pháp chướng ngại được đức Thế Tôn giảng giải không có khả năng đem đến sự chướng ngại cho người thực hành.'
+496	{}	pc70	Vị sa di ấy nên được nói bởi các tỳ khưu như sau:
+497	{}	pc70	Này ông sa di, ngươi chớ có nói như thế.
+498	{}	pc70	Chớ có vu khống đức Thế Tôn bởi vì việc vu khống đức Thế Tôn là không tốt.
+499	{}	pc70	Bởi vì đức Thế Tôn không có nói như thế.
+500	{}	pc70	Này ông sa di, đức Thế Tôn đã giảng giải bằng nhiều phương thức rằng các pháp chướng ngại có khả năng đem đến sự chướng ngại cho người thực hành.'
+501	{}	pc70	Và khi được các tỳ khưu nói như vậy mà vị sa di ấy vẫn chấp giữ y như thế, vị sa di ấy nên được nói bởi các tỳ khưu như sau:
+502	{}	pc70	Này ông sa di, kể từ hôm nay không được tuyên bố đức Thế Tôn ấy là bậc Đạo sư của ngươi nữa.
+503	{}	pc70	Ngay cả việc các sa di khác được hưởng là việc nằm chung chỗ ngụ với các tỳ khưu hai ba đêm, việc ấy không có cho ngươi nữa.
+504	{}	pc70	Hãy đi chỗ khác, hãy biến mất đi.'
+505	{}</p>	pc70	Vị tỳ khưu nào trong khi biết vị sa di là kẻ đã bị trục xuất như thế mà vẫn dụ dỗ, hoặc vẫn bảo phục vụ, hoặc vẫn hưởng thụ chung, hoặc vẫn nằm chung chỗ ngụ thì phạm tội pācittiya.
+506	<p class='endvagga'>{}</p>	pc-ending	Phẩm Có Sinh Vật là thứ bảy.
+507	<h3>{}</h3>	pc-chapter	Phẩm 8: Theo Pháp
+508	<h4>{}</h4>	pc71-name	Pc 71. Sahadhammika
+509	<p>{}	pc71	Vị tỳ khưu nào khi được các tỳ khưu nói theo Pháp lại nói như vầy:
+510	{}	pc71	Này các đại đức, tôi sẽ không thực hành điều học này cho đến khi nào tôi còn chưa hỏi vị tỳ khưu khác kinh nghiệm rành rẽ về Luật'
+511	{}	pc71	thì phạm tội pācittiya.'
+512	{}	pc71	Này các tỳ khưu, vị tỳ khưu trong lúc học tập nên hiểu rõ, nên thắc mắc, nên suy xét.
+513	{}</p>	pc71	Đây là sự đúng đắn trong trường hợp ấy.
+514	<h4>{}</h4>	pc72-name	Pc 72. Vilekhana
+515	<p>{}	pc72	Khi giới bổn Pātimokkha đang được đọc tụng, vị tỳ khưu nào nói như vầy:
+516	{}	pc72	Được việc gì với các điều học nhỏ nhặt và ít quan trọng được đọc tụng này?
+517	{}	pc72	Chúng chỉ đem lại sự ăn năn, sự bực bội, sự bối rối thôi!'
+518	{}</p>	pc72	Khi có sự chê bai điều học thì phạm tội pācittiya.
+519	<h4>{}</h4>	pc73-name	Pc 73. Mohana
+520	<p>{}	pc73	Vị tỳ khưu nào trong lúc giới bổn Pātimokkha đang được đọc tụng vào mỗi nửa tháng lại nói như vầy:
+521	{}	pc73	Ngay giờ đây tôi mới hay biết rằng điều học này đã được truyền lại trong giới bổn, đã được đầy đủ trong giới bổn, và được đưa ra đọc tụng vào mỗi nửa tháng.'
+522	{}	pc73	Nếu các vị tỳ khưu khác biết rõ về vị tỳ khưu ấy rằng:
+523	{}	pc73	Vị tỳ khưu này trước đây đã có ngồi hai hoặc ba lần trong lúc giới bổn Pātimokkha đang được đọc tụng, nói nhiều hơn nữa làm gì.'
+524	{}	pc73	Vị tỳ khưu ấy không có được sự vô tội vì không biết.
+525	{}	pc73	Và trong trường hợp đó, (vị ấy) đã vi phạm tội nào thì nên được hành xử theo pháp về tội ấy.
+526	{}	pc73	Hơn nữa, sự ngu dốt nên được khẳng định đối với vị ấy rằng:
+527	{}	pc73	Này đại đức, ngươi đây không có sự lợi ích, ngươi đây đã nhận lãnh điều xấu là việc trong lúc giới bổn Pātimokkha đang được đọc tụng ngươi lại không khéo chăm chú và tác ý.'
+528	{}</p>	pc73	Đây là tội pācittiya trong sự ngu dốt ấy.
+529	<h4>{}</h4>	pc74-name	Pc 74. Pahāra
+530	<p>{}</p>	pc74	Vị tỳ khưu nào nổi giận, bất bình rồi tung cú đánh vào vị tỳ khưu thì phạm tội pācittiya.
+531	<h4>{}</h4>	pc75-name	Pc 75. Talasattika
+532	<p>{}</p>	pc75	Vị tỳ khưu nào nổi giận, bất bình rồi giá tay dọa đánh vị tỳ khưu thì phạm tội pācittiya.
+533	<h4>{}</h4>	pc76-name	Pc 76. Amūlaka
+534	<p>{}</p>	pc76	Vị tỳ khưu nào bôi nhọ vị tỳ khưu về tội saṅghādisesa không có nguyên cớ thì phạm tội pācittiya.
+535	<h4>{}</h4>	pc77-name	Pc 77. Sañcicca
+536	<p>{}	pc77	Vị tỳ khưu nào cố ý gợi lên nỗi nghi hoặc ở nơi vị tỳ khưu (nghĩ rằng):
+537	{}	pc77	Như thế sẽ làm cho vị này không được thoải mái dầu chỉ trong chốc lát,'
+538	{}</p>	pc77	sau khi thực hiện chỉ nguyên nhân ấy không điều nào khác thì phạm tội pācittiya.
+539	<h4>{}</h4>	pc78-name	Pc 78. Upassuti
+540	<p>{}	pc78	Vị tỳ khưu nào đứng nghe lén các tỳ khưu đã nảy sanh sự xung đột, đã nảy sanh sự cãi cọ, đã tiến đến sự tranh luận (nghĩ rằng):
+541	{}	pc78	Những người này nói điều gì, ta sẽ nghe lời ấy,'
+542	{}</p>	pc78	sau khi thực hiện chỉ nguyên nhân ấy không điều nào khác thì phạm tội pācittiya.
+543	<h4>{}</h4>	pc79-name	Pc 79. Kammappaṭibāhana
+544	<p>{}</p>	pc79	Vị tỳ khưu nào sau khi trao ra sự tùy thuận cho những hành sự đúng pháp sau đó lại tiến hành việc phê phán thì phạm tội pācittiya.
+545	<h4>{}</h4>	pc80-name	Pc 80. Chandaṁadatvāgamana
+546	<p>{}</p>	pc80	Vị tỳ khưu nào, trong khi lời quyết định đang được tuyên bố ở hội chúng, không trao ra sự tùy thuận rồi từ chỗ ngồi đứng dậy và bỏ đi thì phạm tội pācittiya.
+547	<h4>{}</h4>	pc81-name	Pc 81. Dubbala
+548	<p>{}	pc81	Vị tỳ khưu nào cùng với hội chúng hợp nhất đã cho y sau đó lại tiến hành việc phê phán rằng:
+549	{}	pc81	Các tỳ khưu trao phần lợi lộc thuộc về hội chúng thuận theo sự quen biết'
+550	{}</p>	pc81	thì phạm tội pācittiya.
+551	<h4>{}</h4>	pc82-name	Pc 82. Pariṇāmana
+552	<p>{}</p>	pc82	Vị tỳ khưu nào trong khi biết lợi lộc đã được khẳng định là dành riêng cho hội chúng vẫn thuyết phục dâng cho cá nhân thì phạm tội pācittiya.
+553	<p class='endvagga'>{}</p>	pc-ending	Phẩm (Nói) Theo Pháp là thứ tám.
+554	<h3>{}</h3>	pc-chapter	Phẩm 9: Báu Vật
+555	<h4>{}</h4>	pc83-name	Pc 83. Antepura
+556	<p>{}</p>	pc83	Vị tỳ khưu nào khi chưa được báo tin trước mà vượt qua ngưỡng cửa (phòng ngủ) của đức vua dòng Sát- đế-lỵ đã được đội lên vương miện trong lúc đức vua chưa đi khỏi trong lúc vật báu (hoàng hậu) chưa lui ra thì phạm tội pācittiya.
+557	<h4>{}</h4>	pc84-name	Pc 84. Ratana
+558	<p>{}	pc84	Vị tỳ khưu nào nhặt lấy hoặc bảo nhặt lấy vật quý giá hoặc vật được xem là quý giá thì phạm tội pācittiya ngoại trừ trong khuôn viên tu viện hoặc trong khuôn viên chỗ ngụ.
+559	{}	pc84	Vị tỳ khưu sau khi nhặt lấy hoặc bảo nhặt lấy vật quý giá hoặc vật được xem là quý giá ở trong khuôn viên tu viện hoặc ở trong khuôn viên chỗ ngụ nên để riêng ra (nghĩ rằng):
+560	{}	pc84	Là của ai, người ấy sẽ đem đi.'
+561	{}</p>	pc84	Đây là điều đúng đắn trong trường hợp ấy.
+562	<h4>{}</h4>	pc85-name	Pc 85. Vikālagāmappavesana
+563	<p>{}</p>	pc85	Vị tỳ khưu nào đi vào làng lúc sái thời không thông báo vị tỳ khưu hiện diện thì phạm tội pācittiya ngoại trừ trường hợp có việc cần làm khẩn cấp như thế.
+564	<h4>{}</h4>	pc86-name	Pc 86. Sūcighara
+565	<p>{}</p>	pc86	Vị tỳ khưu nào cho làm ống đựng kim bằng xương, hoặc bằng ngà, hoặc bằng sừng thì (ống đựng kim ấy) nên được đập vỡ và phạm tội pācittiya.
+566	<h4>{}</h4>	pc87-name	Pc 87. Mañcapīṭha
+567	<p>{}	pc87	Trong lúc cho làm giường hoặc ghế mới, vị tỳ khưu nên bảo làm chân cao tám ngón tay theo ngón tay của đức Thiện Thệ ngoại trừ phần khung giường ở bên dưới.
+568	{}</p>	pc87	Nếu vượt quá mức ấy thì nên cắt bớt và phạm tội pācittiya.
+569	<h4>{}</h4>	pc88-name	Pc 88. Tūlonaddha
+570	<p>{}</p>	pc88	Vị tỳ khưu nào cho làm giường ghế độn bông gòn thì (bông gòn) nên được móc ra và phạm tội pācittiya.
+571	<h4>{}</h4>	pc89-name	Pc 89. Nisīdana
+572	<p>{}	pc89	Trong lúc cho làm tấm lót ngồi, vị tỳ khưu nên bảo làm theo kích thước.
+573	{}	pc89	Ở đây, kích thước này là chiều dài hai gang tay, chiều rộng một gang rưỡi, đường viền một gang theo gang tay của đức Thiện Thệ.
+574	{}</p>	pc89	Nếu vượt quá mức ấy thì (tấm lót ngồi) nên được cắt bớt và phạm tội pācittiya.
+575	<h4>{}</h4>	pc90-name	Pc 90. Kaṇḍuppaṭicchādi
+576	<p>{}	pc90	Trong lúc cho làm y đắp ghẻ, vị tỳ khưu nên bảo làm theo kích thước.
+577	{}	pc90	Ở đây, kích thước này là chiều dài bốn gang tay, chiều rộng hai gang theo gang tay của đức Thiện Thệ.
+578	{}</p>	pc90	Nếu vượt quá mức ấy thì (y đắp ghẻ) nên được cắt bớt và phạm tội pācittiya.
+579	<h4>{}</h4>	pc91-name	Pc 91. Vassikasāṭika
+580	<p>{}	pc91	Trong lúc cho làm vải choàng tắm mưa, vị tỳ khưu nên bảo làm theo kích thước.
+581	{}	pc91	Ở đây, kích thước này là chiều dài sáu gang tay, chiều rộng hai gang rưỡi theo gang tay của đức Thiện Thệ.
+582	{}</p>	pc91	Nếu vượt quá mức ấy thì (vải choàng tắm mưa) nên được cắt bớt và phạm tội pācittiya.
+583	<h4>{}</h4>	pc92-name	Pc 92. Nanda
+584	<p>{}	pc92	Vị tỳ khưu nào cho làm y có kích thước y của đức Thiện Thệ hoặc rộng hơn thì (y ấy) nên được cắt bớt và phạm tội pācittiya.
+585	{}	pc92	Trong trường hợp này, kích thước y của đức Thiện Thệ dành cho đức Thiện Thệ là chiều dài chín gang tay, chiều rộng sáu gang theo gang tay của đức Thiện Thệ.
+586	{}</p>	pc92	Đây là kích thước y của đức Thiện Thệ dành cho đức Thiện Thệ.
+587	<p class='endvagga'>{}</p>	pc-ending	Phẩm Đức Vua là thứ chín.
+588	<h3>{}</h3>	pc-ending	Dứt Giới Ưng Đối Trị
+589	<p>{}</p>	pc-ending	Bạch chư đại đức, chín mươi hai điều pācittiya đã được đọc tụng xong.
+590	<p>{}	pc-ending	Trong các điều ấy, tôi hỏi các đại đức rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
+591	{}	pc-ending	Đến lần thứ nhì, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
+592	{}	pc-ending	Đến lần thứ ba, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
+593	{}</p>	pc-ending	Các đại đức được thanh tịnh nên mới im lặng. Tôi ghi nhận sự việc này là như vậy.
+594	<p class='endsection'>{}</p>	pc-ending	Dứt Các Điều Pācittiyā
+595	<h2>{}</h2>	pd-opening	THUYẾT GIỚI ƯNG PHÁT LỘ
+596	<p>{}</p>	pd-opening	Bạch chư đại đức, bốn điều pāṭidesanīya này được đưa ra đọc tụng.
+597	<h4>{}</h4>	pd1-name	Pd 1. Paṭhamapāṭidesanīya
+598	<p>{}	pd1	Vị tỳ khưu nào tự tay nhận lãnh vật thực cứng hoặc vật thực mềm từ tay tỳ khưu ni không phải là thân quyến đã đi vào xóm nhà, rồi nhai hoặc ăn thì vị tỳ khưu ấy nên thú nhận rằng:
+599	{}</p>	pd1	Bạch chư đại đức, tôi đã vi phạm tội đáng chê trách, không có lợi ích, cần phải thú nhận; tôi xin thú nhận tội ấy.'
+600	<h4>{}</h4>	pd2-name	Pd 2. Dutiyapāṭidesanīya
+601	<p>{}	pd2	Trường hợp các tỳ khưu được thỉnh mời thọ thực ở các gia đình.
+602	{}	pd2	Nếu tại nơi ấy có vị tỳ khưu ni đứng hướng dẫn sự phục vụ (nói rằng):
+603	{}	pd2	Hãy dâng xúp ở đây, hãy dâng cơm ở chỗ này.'
+604	{}	pd2	Vị tỳ khưu ni ấy nên bị từ chối bởi các tỳ khưu ấy (nói rằng):
+605	{}	pd2	Này sư tỷ, hãy lui ra cho đến khi nào các tỳ khưu thọ thực xong.'
+606	{}	pd2	Nếu không một vị tỳ khưu nào lên tiếng để từ chối tỳ khưu ni ấy (nói rằng):
+607	{}	pd2	Này sư tỷ, hãy lui ra cho đến khi nào các tỳ khưu thọ thực xong'
+608	{}	pd2	thì các tỳ khưu ấy nên thú nhận rằng:
+609	{}</p>	pd2	Bạch chư đại đức, chúng tôi đã vi phạm tội đáng chê trách, không có lợi ích, cần phải thú nhận; chúng tôi xin thú nhận tội ấy.'
+610	<h4>{}</h4>	pd3-name	Pd 3. Tatiyapāṭidesanīya
+611	<p>{}	pd3	Trường hợp các gia đình đã được công nhận là bậc hữu học, vị tỳ khưu nào không được thỉnh mời trước, không bị bệnh, tự tay nhận lãnh vật thực cứng hoặc vật thực mềm ở các gia đình đã được công nhận là bậc hữu học theo hình thức như thế, rồi nhai hoặc ăn thì vị tỳ khưu ấy nên thú nhận rằng:
+612	{}</p>	pd3	Bạch chư đại đức, tôi đã vi phạm tội đáng chê trách, không có lợi ích, cần phải thú nhận; tôi xin thú nhận tội ấy.'
+613	<h4>{}</h4>	pd4-name	Pd 4. Catutthapāṭidesanīya
+614	<p>{}	pd4	Trường hợp những chỗ trú ngụ ở trong rừng được xác định là có sự nguy hiểm, có sự kinh hoàng, vị tỳ khưu nào trong khi đang sống ở những chỗ trú ngụ có hình thức như thế, sau khi tự tay nhận lãnh vật thực cứng hoặc vật thực mềm chưa được báo tin trước ở trong khuôn viên tu viện, không bị bệnh rồi nhai hoặc ăn thì vị tỳ khưu ấy nên thú nhận rằng:
+615	{}</p>	pd4	Bạch chư đại đức, tôi đã vi phạm tội đáng chê trách, không có lợi ích, cần phải thú nhận; tôi xin thú nhận tội ấy.'
+616	<h3>{}</h3>	pd-ending	Dứt Giới Ưng Phát Lộ
+617	<p>{}	pd-ending	Bạch chư đại đức, bốn điều pāṭidesanīya đã được đọc tụng xong.
+618	{}	pd-ending	Trong các điều ấy, tôi hỏi các đại đức rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
+619	{}	pd-ending	Đến lần thứ nhì, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
+620	{}	pd-ending	Đến lần thứ ba, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
+621	{}</p>	pd-ending	Các đại đức được thanh tịnh nên mới im lặng. Tôi ghi nhận sự việc này là như vậy.
+622	<p class='endsection'>{}</p>	pd-ending	Dứt Các Điều Pāṭidesanīya
+623	<h2>{}</h2>	sk-opening	THUYẾT GIỚI ƯNG HỌC PHÁP
+624	<p>{}</p>	sk-opening	Bạch chư đại đức, các pháp sekhiyā này được đưa ra đọc tụng.
+625	<h3>{}</h3>	sk-chapter	Phẩm 1: Tròn Đều
+626	<h4>{}</h4>	sk1-name	Sk 1. Parimaṇḍala
+627	<p>{}</p>	sk1	Ta sẽ quấn y (nội) tròn đều' là việc học tập nên được thực hành.
+628	<h4>{}</h4>	sk2-name	Sk 2
+629	<p>{}</p>	sk2	Ta sẽ trùm y (vai trái) tròn đều' là việc học tập nên được thực hành.
+630	<h4>{}</h4>	sk3-name	Sk 3. Suppaṭicchanna
+631	<p>{}</p>	sk3	Mặc y che kín đáo, ta sẽ đi ở nơi xóm nhà' là việc học tập nên được thực hành.
+632	<h4>{}</h4>	sk4-name	Sk 4
+633	<p>{}</p>	sk4	Mặc y che kín đáo, ta sẽ ngồi ở nơi xóm nhà' là việc học tập nên được thực hành.
+634	<h4>{}</h4>	sk5-name	Sk 5. Susaṁvuta
+635	<p>{}</p>	sk5	Khéo thu thúc, ta sẽ đi ở nơi xóm nhà' là việc học tập nên được thực hành.
+636	<h4>{}</h4>	sk6-name	Sk 6
+637	<p>{}</p>	sk6	Khéo thu thúc, ta sẽ ngồi ở nơi xóm nhà' là việc học tập nên được thực hành.
+638	<h4>{}</h4>	sk7-name	Sk 7. Okkhittacakkhu
+639	<p>{}</p>	sk7	Ta sẽ đi ở nơi xóm nhà với mắt nhìn xuống' là việc học tập nên được thực hành.
+640	<h4>{}</h4>	sk8-name	Sk 8
+641	<p>{}</p>	sk8	Ta sẽ ngồi ở nơi xóm nhà với mắt nhìn xuống' là việc học tập nên được thực hành.
+642	<h4>{}</h4>	sk9-name	Sk 9. Ukkhittaka
+643	<p>{}</p>	sk9	Ta sẽ không đi ở nơi xóm nhà với sự vén y lên' là việc học tập nên được thực hành.
+644	<h4>{}</h4>	sk10-name	Sk 10
+645	<p>{}</p>	sk10	Ta sẽ không ngồi ở nơi xóm nhà với sự vén y lên' là việc học tập nên được thực hành.
+646	<p class='endvagga'>{}</p>	sk-ending	Phẩm Tròn Đều là thứ nhất.
+647	<h3>{}</h3>	sk-chapter	Phẩm 2: Cười Vang
+648	<h4>{}</h4>	sk11-name	Sk 11. Ujjagghika
+649	<p>{}</p>	sk11	Ta sẽ không đi ở nơi xóm nhà với tiếng cười vang' là việc học tập nên được thực hành.
+650	<h4>{}</h4>	sk12-name	Sk 12
+651	<p>{}</p>	sk12	Ta sẽ không ngồi ở nơi xóm nhà với tiếng cười vang' là việc học tập nên được thực hành.
+652	<h4>{}</h4>	sk13-name	Sk 13. Uccasadda
+653	<p>{}</p>	sk13	Ta sẽ đi ở nơi xóm nhà với giọng nói nhỏ nhẹ' là việc học tập nên được thực hành.
+654	<h4>{}</h4>	sk14-name	Sk 14
+655	<p>{}</p>	sk14	Ta sẽ ngồi ở nơi xóm nhà với giọng nói nhỏ nhẹ' là việc học tập nên được thực hành.
+656	<h4>{}</h4>	sk15-name	Sk 15. Kāyappacālaka
+657	<p>{}</p>	sk15	Ta sẽ không đi ở nơi xóm nhà với sự đung đưa thân' là việc học tập nên được thực hành.
+658	<h4>{}</h4>	sk16-name	Sk 16
+659	<p>{}</p>	sk16	Ta sẽ không ngồi ở nơi xóm nhà với sự đung đưa thân' là việc học tập nên được thực hành.
+660	<h4>{}</h4>	sk17-name	Sk 17. Bāhuppacālaka
+661	<p>{}</p>	sk17	Ta sẽ không đi ở nơi xóm nhà với sự đung đưa cánh tay' là việc học tập nên được thực hành.
+662	<h4>{}</h4>	sk18-name	Sk 18
+663	<p>{}</p>	sk18	Ta sẽ không ngồi ở nơi xóm nhà với sự đung đưa cánh tay' là việc học tập nên được thực hành.
+664	<h4>{}</h4>	sk19-name	Sk 19. Sīsappacālaka
+665	<p>{}</p>	sk19	Ta sẽ không đi ở nơi xóm nhà với sự lắc lư đầu' là việc học tập nên được thực hành.
+666	<h4>{}</h4>	sk20-name	Sk 20
+667	<p>{}</p>	sk20	Ta sẽ không ngồi ở nơi xóm nhà với sự lắc lư đầu' là việc học tập nên được thực hành.
+668	<p class='endvagga'>{}</p>	sk-ending	Phẩm Cười Vang là thứ nhì.
+669	<h3>{}</h3>	sk-chapter	Phẩm 3: Chống Nạnh
+670	<h4>{}</h4>	sk21-name	Sk 21. Khambhakata
+671	<p>{}</p>	sk21	Ta sẽ không chống nạnh đi ở nơi xóm nhà' là việc học tập nên được thực hành.
+672	<h4>{}</h4>	sk22-name	Sk 22
+673	<p>{}</p>	sk22	Ta sẽ không chống nạnh ngồi ở nơi xóm nhà' là việc học tập nên được thực hành.
+674	<h4>{}</h4>	sk23-name	Sk 23. Oguṇṭhita
+675	<p>{}</p>	sk23	Ta sẽ không trùm đầu lại đi ở nơi xóm nhà' là việc học tập nên được thực hành.
+676	<h4>{}</h4>	sk24-name	Sk 24
+677	<p>{}</p>	sk24	Ta sẽ không trùm đầu lại ngồi ở nơi xóm nhà' là việc học tập nên được thực hành.
+678	<h4>{}</h4>	sk25-name	Sk 25. Ukkuṭika
+679	<p>{}</p>	sk25	Ta sẽ không đi ở nơi xóm nhà với sự nhón gót' là việc học tập nên được thực hành.
+680	<h4>{}</h4>	sk26-name	Sk 26. Pallatthika
+681	<p>{}</p>	sk26	Ta sẽ không ngồi ở nơi xóm nhà với sự ôm đầu gối' là việc học tập nên được thực hành.
+682	<h4>{}</h4>	sk27-name	Sk 27. Sakkaccapaṭiggahaṇa
+683	<p>{}</p>	sk27	Ta sẽ nhận lãnh đồ khất thực một cách nghiêm trang' là việc học tập nên được thực hành.
+684	<h4>{}</h4>	sk28-name	Sk 28. Pattasaññīpaṭiggahaṇa
+685	<p>{}</p>	sk28	Chú tâm ở bình bát, ta sẽ nhận lãnh đồ khất thực' là việc học tập nên được thực hành.
+686	<h4>{}</h4>	sk29-name	Sk 29. Samasūpakapaṭiggahaṇa
+687	<p>{}</p>	sk29	Ta sẽ nhận lãnh đồ khất thực với lượng xúp tương xứng' là việc học tập nên được thực hành.
+688	<h4>{}</h4>	sk30-name	Sk 30. Samatittika
+689	<p>{}</p>	sk30	Ta sẽ nhận lãnh đồ khất thực vừa ngang miệng (bình bát)' là việc học tập nên được thực hành.
+690	<p class='endvagga'>{}</p>	sk-ending	Phẩm Chống Nạnh là thứ ba.
+691	<h3>{}</h3>	sk-chapter	Phẩm 4: Nghiêm Trang
+692	<h4>{}</h4>	sk31-name	Sk 31. Sakkaccabhuñjana
+693	<p>{}</p>	sk31	Ta sẽ thọ dụng đồ khất thực một cách nghiêm trang' là việc học tập nên được thực hành.
+694	<h4>{}</h4>	sk32-name	Sk 32. Pattasaññībhuñjana
+695	<p>{}</p>	sk32	Chú tâm ở bình bát, ta sẽ thọ dụng đồ khất thực' là việc học tập nên được thực hành.
+696	<h4>{}</h4>	sk33-name	Sk 33. Sapadāna
+697	<p>{}</p>	sk33	Ta sẽ thọ dụng đồ khất thực theo tuần tự' là việc học tập nên được thực hành.
+698	<h4>{}</h4>	sk34-name	Sk 34. Samasūpaka
+699	<p>{}</p>	sk34	Ta sẽ thọ dụng đồ khất thực với lượng xúp tương xứng' là việc học tập nên được thực hành.
+700	<h4>{}</h4>	sk35-name	Sk 35. Nathūpakata
+701	<p>{}</p>	sk35	Ta sẽ không vun lên thành đống rồi thọ dụng đồ khất thực' là việc học tập nên được thực hành.
+702	<h4>{}</h4>	sk36-name	Sk 36. Odanappaṭicchādana
+703	<p>{}</p>	sk36	Ta sẽ không dùng cơm che lấp xúp hoặc thức ăn với ý muốn được nhiều hơn' là việc học tập nên được thực hành.
+704	<h4>{}</h4>	sk37-name	Sk 37. Sūpodanaviññatti
+705	<p>{}</p>	sk37	Khi không bị bệnh, ta sẽ không yêu cầu xúp và cơm vì nhu cầu của bản thân rồi thọ thực' là việc học tập nên được thực hành.
+706	<h4>{}</h4>	sk38-name	Sk 38. Ujjhānasaññī
+707	<p>{}</p>	sk38	Ta sẽ không nhìn vào bình bát của các vị khác với ý định tìm lỗi' là việc học tập nên được thực hành.
+708	<h4>{}</h4>	sk39-name	Sk 39. Kabaḷa
+709	<p>{}</p>	sk39	Ta sẽ không làm vắt cơm quá lớn' là việc học tập nên được thực hành.
+710	<h4>{}</h4>	sk40-name	Sk 40. Ālopa
+711	<p>{}</p>	sk40	Ta sẽ làm nắm cơm tròn đều' là việc học tập nên được thực hành.
+712	<p class='endvagga'>{}</p>	sk-ending	Phẩm Nghiêm Trang là thứ tư.
+713	<h3>{}</h3>	sk-chapter	Phẩm 5: Vắt Cơm
+714	<h4>{}</h4>	sk41-name	Sk 41. Anāhaṭa
+715	<p>{}</p>	sk41	Ta sẽ không há miệng ra khi vắt cơm chưa được đưa đến' là việc học tập nên được thực hành.
+716	<h4>{}</h4>	sk42-name	Sk 42. Bhuñjamāna
+717	<p>{}</p>	sk42	Ta sẽ không đưa trọn bàn tay vào miệng trong lúc thọ thực' là việc học tập nên được thực hành.
+718	<h4>{}</h4>	sk43-name	Sk 43. Sakabaḷa
+719	<p>{}</p>	sk43	Ta sẽ không nói khi miệng có vắt cơm' là việc học tập nên được thực hành.
+720	<h4>{}</h4>	sk44-name	Sk 44. Piṇḍukkhepaka
+721	<p>{}</p>	sk44	Ta sẽ không thọ thực theo lối đưa thức ăn (vào miệng) một cách liên tục' là việc học tập nên được thực hành.
+722	<h4>{}</h4>	sk45-name	Sk 45. Kabaḷāvacchedaka
+723	<p>{}</p>	sk45	Ta sẽ không thọ thực theo lối cắn vắt cơm từng chút một' là việc học tập nên được thực hành.
+724	<h4>{}</h4>	sk46-name	Sk 46. Avagaṇḍakāraka
+725	<p>{}</p>	sk46	Ta sẽ không thọ thực theo lối làm phồng má' là việc học tập nên được thực hành.
+726	<h4>{}</h4>	sk47-name	Sk 47. Hatthaniddhunaka
+727	<p>{}</p>	sk47	Ta sẽ không thọ thực có sự vung rảy bàn tay' là việc học tập nên được thực hành.
+728	<h4>{}</h4>	sk48-name	Sk 48. Sitthāvakāraka
+729	<p>{}</p>	sk48	Ta sẽ không thọ thực có sự làm rơi đổ cơm' là việc học tập nên được thực hành.
+730	<h4>{}</h4>	sk49-name	Sk 49. Jivhānicchāraka
+731	<p>{}</p>	sk49	Ta sẽ không thọ thực có sự le lưỡi' là việc học tập nên được thực hành.
+732	<h4>{}</h4>	sk50-name	Sk 50. Capucapukāraka
+733	<p>{}</p>	sk50	Ta sẽ không thọ thực có làm tiếng chép chép' là việc học tập nên được thực hành.
+734	<p class='endvagga'>{}</p>	sk-ending	Phẩm Vắt Cơm là thứ năm.
+735	<h3>{}</h3>	sk-chapter	Phẩm 6: Tiếng Sột Sột
+736	<h4>{}</h4>	sk51-name	Sk 51. Surusurukāraka
+737	<p>{}</p>	sk51	Ta sẽ không thọ thực có làm tiếng sột sột' là việc học tập nên được thực hành.
+738	<h4>{}</h4>	sk52-name	Sk 52. Hatthanillehaka
+739	<p>{}</p>	sk52	Ta sẽ không thọ thực có sự liếm tay' là việc học tập nên được thực hành.
+740	<h4>{}</h4>	sk53-name	Sk 53. Pattanillehaka
+741	<p>{}</p>	sk53	Ta sẽ không thọ thực có sự nạo vét bình bát' là việc học tập nên được thực hành.
+742	<h4>{}</h4>	sk54-name	Sk 54. Oṭṭhanillehaka
+743	<p>{}</p>	sk54	Ta sẽ không thọ thực có sự liếm môi' là việc học tập nên được thực hành.
+744	<h4>{}</h4>	sk55-name	Sk 55. Sāmisa
+745	<p>{}</p>	sk55	Ta sẽ không nhận lãnh tô nước uống bằng bàn tay có dính thức ăn' là việc học tập nên được thực hành.
+746	<h4>{}</h4>	sk56-name	Sk 56. Sasitthaka
+747	<p>{}</p>	sk56	Ta sẽ không đổ bỏ nước rửa bình bát có lẫn cơm ở nơi xóm nhà' là việc học tập nên được thực hành.
+748	<h4>{}</h4>	sk57-name	Sk 57. Chattapāṇi
+749	<p>{}</p>	sk57	Ta sẽ không thuyết Pháp đến người không bị bệnh có dù ở bàn tay' là việc học tập nên được thực hành.
+750	<h4>{}</h4>	sk58-name	Sk 58. Daṇḍapāṇi
+751	<p>{}</p>	sk58	Ta sẽ không thuyết Pháp đến người không bị bệnh có gậy ở bàn tay' là việc học tập nên được thực hành.
+752	<h4>{}</h4>	sk59-name	Sk 59. Satthapāṇi
+753	<p>{}</p>	sk59	Ta sẽ không thuyết Pháp đến người không bị bệnh có dao ở bàn tay' là việc học tập nên được thực hành.
+754	<h4>{}</h4>	sk60-name	Sk 60. Āvudhapāṇi
+755	<p>{}</p>	sk60	Ta sẽ không thuyết Pháp đến người không bị bệnh có vũ khí ở bàn tay' là việc học tập nên được thực hành.
+756	<p class='endvagga'>{}</p>	sk-ending	Phẩm Tiếng Sột Sột là thứ sáu.
+757	<h3>{}</h3>	sk-chapter	Phẩm 7: Giày Dép
+758	<h4>{}</h4>	sk61-name	Sk 61. Pāduka
+759	<p>{}</p>	sk61	Ta sẽ không thuyết Pháp đến người không bị bệnh có mang giày' là việc học tập nên được thực hành.
+760	<h4>{}</h4>	sk62-name	Sk 62. Upāhana
+761	<p>{}</p>	sk62	Ta sẽ không thuyết Pháp đến người không bị bệnh có mang dép' là việc học tập nên được thực hành.
+762	<h4>{}</h4>	sk63-name	Sk 63. Yāna
+763	<p>{}</p>	sk63	Ta sẽ không thuyết Pháp đến người không bị bệnh ở trên xe' là việc học tập nên được thực hành.
+764	<h4>{}</h4>	sk64-name	Sk 64. Sayana
+765	<p>{}</p>	sk64	Ta sẽ không thuyết Pháp đến người không bị bệnh đang nằm' là việc học tập nên được thực hành.
+766	<h4>{}</h4>	sk65-name	Sk 65. Pallatthika
+767	<p>{}</p>	sk65	Ta sẽ không thuyết Pháp đến người không bị bệnh ngồi ôm đầu gối' là việc học tập nên được thực hành.
+768	<h4>{}</h4>	sk66-name	Sk 66. Veṭhita
+769	<p>{}</p>	sk66	Ta sẽ không thuyết Pháp đến người không bị bệnh đội khăn ở đầu' là việc học tập nên được thực hành.
+770	<h4>{}</h4>	sk67-name	Sk 67. Oguṇṭhita
+771	<p>{}</p>	sk67	Ta sẽ không thuyết Pháp đến người không bị bệnh có đầu được trùm lại' là việc học tập nên được thực hành.
+772	<h4>{}</h4>	sk68-name	Sk 68. Chamā
+773	<p>{}</p>	sk68	Ta sẽ không ngồi ở nền đất rồi thuyết Pháp đến người không bị bệnh ngồi trên chỗ ngồi' là việc học tập nên được thực hành.
+774	<h4>{}</h4>	sk69-name	Sk 69. Nīcāsana
+775	<p>{}</p>	sk69	Ta sẽ không ngồi ở chỗ ngồi thấp rồi thuyết Pháp đến người không bị bệnh ngồi trên chỗ ngồi cao' là việc học tập nên được thực hành.
+776	<h4>{}</h4>	sk70-name	Sk 70. Ṭhita
+777	<p>{}</p>	sk70	Ta sẽ không đứng thuyết Pháp đến người không bị bệnh ngồi' là việc học tập nên được thực hành.
+778	<h4>{}</h4>	sk71-name	Sk 71. Pacchatogamana
+779	<p>{}</p>	sk71	Khi đang đi phía sau, ta sẽ không thuyết Pháp đến người không bị bệnh đang đi phía trước' là việc học tập nên được thực hành.
+780	<h4>{}</h4>	sk72-name	Sk 72. Uppathenagamana
+781	<p>{}</p>	sk72	Khi đang đi bên đường, ta sẽ không thuyết Pháp đến người không bị bệnh đang đi giữa đường' là việc học tập nên được thực hành.
+782	<h4>{}</h4>	sk73-name	Sk 73. Ṭhitouccāra
+783	<p>{}</p>	sk73	Khi không bị bệnh, ta sẽ không đứng đại tiện hoặc tiểu tiện' là việc học tập nên được thực hành.
+784	<h4>{}</h4>	sk74-name	Sk 74. Hariteuccāra
+785	<p>{}</p>	sk74	Khi không bị bệnh, ta sẽ không đại tiện hoặc tiểu tiện hoặc khạc nhổ trên cỏ cây xanh' là việc học tập nên được thực hành.
+786	<h4>{}</h4>	sk75-name	Sk 75. Udakeuccāra
+787	<p>{}</p>	sk75	Khi không bị bệnh, ta sẽ không đại tiện hoặc tiểu tiện hoặc khạc nhổ vào trong nước' là việc học tập nên được thực hành.
+788	<p class='endvagga'>{}</p>	sk-ending	Phẩm Giày Dép là thứ bảy.
+789	<h3>{}</h3>	sk-ending	Dứt Giới Ưng Học Pháp
+790	<p>{}</p>	sk-ending	Bạch chư đại đức, các pháp sekhiyā đã được đọc tụng xong.
+791	<p>{}	sk-ending	Trong các điều ấy, tôi hỏi các đại đức rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
+792	{}	sk-ending	Đến lần thứ nhì, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
+793	{}	sk-ending	Đến lần thứ ba, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
+794	{}</p>	sk-ending	Các đại đức được thanh tịnh nên mới im lặng. Tôi ghi nhận sự việc này là như vậy.
+795	<p class='endsection'>{}</p>	sk-ending	Dứt Các Điều Sekhiyā
+796	<h2>{}</h2>	as-opening	THUYẾT GIỚI DÀN XẾP TRANH TỤNG
+797	<p>{}</p>	as-opening	Bạch chư đại đức, bảy pháp dàn xếp tranh tụng này được đưa ra đọc tụng.
+798	<p>{}</p>	as-opening	Nhằm đưa đến sự dàn xếp, nhằm đưa đến sự giải quyết các sự tranh tụng đã sanh khởi hoặc chưa sanh khởi,
+799	<h4>{}</h4>	as1-name	As 1
+800	<p>{}</p>	as1	Nên áp dụng cách hành xử Luật với sự hiện diện,
+801	<h4>{}</h4>	as2-name	As 2
+802	<p>{}</p>	as2	Nên áp dụng cách hành xử Luật bằng sự ghi nhớ,
+803	<h4>{}</h4>	as3-name	As 3
+804	<p>{}</p>	as3	Nên áp dụng cách hành xử Luật khi không điên cuồng,
+805	<h4>{}</h4>	as4-name	As 4
+806	<p>{}</p>	as4	Nên phán xử theo sự thừa nhận,
+807	<h4>{}</h4>	as5-name	As 5
+808	<p>{}</p>	as5	Thuận theo số đông,
+809	<h4>{}</h4>	as6-name	As 6
+810	<p>{}</p>	as6	Theo tội của vị ấy,
+811	<h4>{}</h4>	as7-name	As 7
+812	<p>{}</p>	as7	Cách dùng cỏ che lấp.
+813	<h3>{}</h3>	as-ending	Dứt Giới Dàn Xếp Tranh Tụng
+814	<p>{}</p>	as-ending	Bạch chư đại đức, bảy pháp dàn xếp tranh tụng đã được đọc tụng xong.
+815	<p>{}	as-ending	Trong các điều ấy, tôi hỏi các đại đức rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
+816	{}	as-ending	Đến lần thứ nhì, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
+817	{}	as-ending	Đến lần thứ ba, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
+818	{}</p>	as-ending	Các đại đức được thanh tịnh nên mới im lặng. Tôi ghi nhận sự việc này là như vậy.
+819	<p class='endsection'>{}</p>	as-ending	Dứt Các Pháp Dàn Xếp Tranh Tụng
+820	<h2>{}</h2>	end	KẾT THÚC
+821	<p>{}<br>	end	Bạch chư đại đức, phần mở đầu đã được đọc tụng,
+822	{}<br>	end	Bốn điều pārājika đã được đọc tụng,
+823	{}<br>	end	Mười ba điều saṅghādisesa đã được đọc tụng,
+824	{}<br>	end	Hai điều aniyata đã được đọc tụng,
+825	{}<br>	end	Ba mươi điều nissaggiya pācittiya đã được đọc tụng,
+826	{}<br>	end	Chín mươi hai điều pācittiya đã được đọc tụng,
+827	{}<br>	end	Bốn điều pāṭidesanīya đã được đọc tụng,
+828	{}<br>	end	Các pháp sekhiyā đã được đọc tụng,
+829	{}</p>	end	Bảy pháp dàn xếp tranh tụng đã được đọc tụng.
+830	<p>{}	end	Bấy nhiêu của đức Thế Tôn ấy đã được truyền lại trong giới bổn, đã được đầy đủ trong giới bổn, được đưa ra đọc tụng vào mỗi nửa tháng.
+831	{}</p>	end	Chính tất cả (chư đại đức) nên học tập các điều học ấy với sự hợp nhất, thân thiện, không cãi cọ.
+832	<p class='endsection'>{}</p>	end	Phần Đọc Tụng Chi Tiết Là Thứ Năm
+833	<p class='endsutta'>{}</p>	end	Dứt Giới Bổn Pātimokkha Của Tỳ Khưu
+834	<p class='sadhu'>{}</p>	end	<b>Sādhu! Sādhu!! Sādhu!!!</b>
