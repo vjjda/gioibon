@@ -1,5 +1,7 @@
 // Path: web/modules/ui/content/lazy_renderer.js
-const BATCH_SIZE = 60;
+
+// Giảm Batch Size để mỗi lần render không làm treo main thread
+const BATCH_SIZE = 30; 
 
 export class LazyRenderer {
     constructor(container, elementCache, segmentFactory) {
@@ -17,7 +19,6 @@ export class LazyRenderer {
 
     render(items) {
         if (!this.container) return;
-        
         this._cleanup();
         this.items = items || [];
         
@@ -28,16 +29,21 @@ export class LazyRenderer {
 
         this.sentinel = document.createElement('div');
         this.sentinel.className = 'loading-sentinel';
-        this.sentinel.style.height = '50px';
+        this.sentinel.style.height = '100px'; // Tăng chiều cao để dễ bắt dính
         this.sentinel.style.width = '100%';
         this.container.appendChild(this.sentinel);
         
+        // Tăng rootMargin lên 1000px để render trước khi người dùng cuộn tới
         this.observer = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting && !this.isRendering) {
                 this.isRendering = true;
                 requestAnimationFrame(() => this.renderNextBatch());
             }
-        }, { root: this.container, rootMargin: '200px', threshold: 0.1 });
+        }, { 
+            root: this.container, 
+            rootMargin: '1000px', 
+            threshold: 0.01 
+        });
 
         this.observer.observe(this.sentinel);
         this.renderNextBatch();
@@ -79,7 +85,15 @@ export class LazyRenderer {
         this.renderedCount += batch.length;
         this.isRendering = false;
 
-        if (this.renderedCount >= this.items.length) {
+        // Nếu vẫn còn trong vùng quan sát, tiếp tục render batch tiếp theo
+        if (this.renderedCount < this.items.length) {
+            // Kiểm tra xem sentinel còn trong viewport không (sau khi đã chèn batch mới)
+            const rect = this.sentinel.getBoundingClientRect();
+            if (rect.top < window.innerHeight + 1000) {
+                 this.isRendering = true;
+                 requestAnimationFrame(() => this.renderNextBatch());
+            }
+        } else {
             this._removeSentinel();
         }
     }
@@ -142,4 +156,3 @@ export class LazyRenderer {
         return 'misc';
     }
 }
-
