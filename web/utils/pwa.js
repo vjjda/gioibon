@@ -104,17 +104,53 @@ export function setupPWA() {
         }
     });
 
+    // --- HÀM KIỂM TRA DỮ LIỆU NGẦM ---
+    const checkDataUpdateSilently = async () => {
+        try {
+            const versionUrl = `${BASE_URL}app-content/content_version.json?t=${Date.now()}`;
+            const res = await fetch(versionUrl, { cache: 'no-store' });
+            if (res.ok) {
+                const remoteData = await res.json();
+                const localVersion = localStorage.getItem('db_version_content.db');
+                // Chỉ báo update nếu đã có localVersion (nghĩa là không phải lần đầu tải) 
+                // và version trên server khác với local
+                if (localVersion && remoteData.version !== localVersion) {
+                    return true;
+                }
+            }
+        } catch (e) {
+            // Im lặng bỏ qua lỗi mạng khi check ngầm
+        }
+        return false;
+    };
+
+    // --- LẮNG NGHE SỰ KIỆN QUAY LẠI TAB (VISIBILITY CHANGE) ---
+    // Tự động kiểm tra cả SW và Data mỗi khi người dùng mở lại tab ứng dụng
+    document.addEventListener('visibilitychange', async () => {
+        if (document.visibilityState === 'visible') {
+            // 1. Kích hoạt Service Worker tự kiểm tra bản mới
+            if ('serviceWorker' in navigator) {
+                const reg = await navigator.serviceWorker.getRegistration();
+                if (reg) reg.update();
+            }
+            
+            // 2. Kiểm tra Data
+            if (await checkDataUpdateSilently()) {
+                console.log('[PWA] Data update found in background.');
+                showUpdateToast();
+            }
+        }
+    });
+
     if (toast && refreshBtn && closeBtn) {
         const handleUpdate = () => {
             refreshBtn.disabled = true;
             refreshBtn.textContent = "Đang tải...";
             closeBtn.disabled = true;
 
-            // Yêu cầu Service Worker mới giành quyền kiểm soát (nếu có bản cập nhật App)
+            // Yêu cầu Service Worker mới giành quyền kiểm soát
             updateSW(true);
 
-            // Bất kể là update App hay update Data, ta đều ép tải lại trang
-            // Quá trình load trang (Splash Screen) sẽ tự động handle việc kéo Data mới
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
@@ -122,6 +158,7 @@ export function setupPWA() {
 
         refreshBtn.addEventListener('click', handleUpdate);
         
+        // Nút check thủ công (dành cho người dùng muốn bấm trực tiếp)
         if (manualUpdateBtn) {
             manualUpdateBtn.addEventListener('click', async () => {
                 if (!toast.classList.contains('hidden')) {
@@ -134,30 +171,16 @@ export function setupPWA() {
 
                 let hasUpdate = false;
 
-                // --- 1. Kiểm tra cập nhật Dữ liệu (Content DB) ---
-                try {
-                    const versionUrl = `${BASE_URL}app-content/content_version.json?t=${Date.now()}`;
-                    const res = await fetch(versionUrl, { cache: 'no-store' });
-                    if (res.ok) {
-                        const remoteData = await res.json();
-                        const localVersion = localStorage.getItem('db_version_content.db'); // Key lưu trữ chuẩn trong sqlite_connection
-                        if (remoteData.version !== localVersion) {
-                            console.log(`[PWA] Data update found. Old: ${localVersion}, New: ${remoteData.version}`);
-                            hasUpdate = true;
-                        }
-                    }
-                } catch (e) {
-                    console.warn("[PWA] Could not check data update:", e);
-                }
+                // 1. Kiểm tra Dữ liệu
+                hasUpdate = await checkDataUpdateSilently();
 
-                // --- 2. Kiểm tra cập nhật App (Service Worker) ---
+                // 2. Kiểm tra App (Service Worker)
                 try {
                     if ('serviceWorker' in navigator) {
                         const registration = await navigator.serviceWorker.getRegistration();
                         if (registration) {
                             await registration.update();
                             if (registration.installing || registration.waiting) {
-                                console.log('[PWA] App update found in Service Worker.');
                                 hasUpdate = true;
                             }
                         }
@@ -166,7 +189,6 @@ export function setupPWA() {
                     console.error("[PWA] Manual SW update check failed:", e);
                 }
 
-                // --- 3. Xử lý kết quả kiểm tra ---
                 if (hasUpdate) {
                     showUpdateToast();
                 } else {
@@ -182,4 +204,3 @@ export function setupPWA() {
         });
     }
 }
-
