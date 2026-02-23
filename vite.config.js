@@ -102,24 +102,6 @@ export default defineConfig(({ mode }) => {
                     globIgnores: ['**/node_modules/**/*', 'sw.js', 'workbox-*.js', '**/*_version.json', '**/*.db'],
                     maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, 
                     runtimeCaching: [
-                        {
-                            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-                            handler: 'CacheFirst',
-                            options: {
-                                cacheName: 'google-fonts-cache',
-                                expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
-                                cacheableResponse: { statuses: [0, 200] }
-                            }
-                        },
-                        {
-                            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
-                            handler: 'CacheFirst',
-                            options: {
-                                cacheName: 'gstatic-fonts-cache',
-                                expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
-                                cacheableResponse: { statuses: [0, 200] }
-                            }
-                        },
                         // [NEW] Cache file âm thanh cục bộ (Dùng CacheFirst vì file mp3 (hash) không bao giờ đổi nội dung)
                         {
                             urlPattern: ({ url }) => url.pathname.includes('/app-content/audio/') && url.pathname.endsWith('.mp3'),
