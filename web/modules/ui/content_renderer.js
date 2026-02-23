@@ -303,12 +303,10 @@ export class ContentRenderer {
         const offset = 20; 
         const targetScrollTop = this.container.scrollTop + (rect.top - containerRect.top) - offset;
 
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        const behavior = isMobile ? 'auto' : UI_CONFIG.SCROLL_BEHAVIOR;
-
+        // Ép cứng behavior 'auto' để nhảy ngay lập tức (instant jump)
         this.container.scrollTo({
             top: targetScrollTop,
-            behavior: behavior
+            behavior: 'auto'
         });
     }
 
