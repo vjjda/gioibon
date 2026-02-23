@@ -3,11 +3,11 @@ import { SegmentFactory } from 'ui/content/segment_factory.js';
 import { MaskManager } from 'ui/content/mask_manager.js';
 import { UI_CONFIG } from 'core/config.js';
 
-const BATCH_SIZE = 60; // Increased to ensure it covers viewport on large screens
+const BATCH_SIZE = 60;
 
 export class ContentRenderer {
     constructor(containerId, playSegmentCallback, playSequenceCallback) {
-        this.container = document.getElementById(containerId); // This is #content
+        this.container = document.getElementById(containerId);
         this.playSegmentCallback = playSegmentCallback;
         this.playSequenceCallback = playSequenceCallback;
         this.items = [];
@@ -79,7 +79,7 @@ export class ContentRenderer {
         this.sentinel.style.height = '50px';
         this.sentinel.style.width = '100%';
         this.container.appendChild(this.sentinel);
-
+        
         // Setup Observer
         this.observer = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
@@ -180,15 +180,15 @@ export class ContentRenderer {
         const match = startItem.html ? startItem.html.match(/^<h(\d)>/i) : null;
         if (!match) return; 
         const startLevel = parseInt(match[1]);
-
+        
         const sequence = [];
 
         for (let i = startIndex + 1; i < this.items.length; i++) {
             const item = this.items[i];
-            
             if (item.label === 'end') break; 
 
             const itemMatch = item.html ? item.html.match(/^<h(\d)>/i) : null;
+            
             if (itemMatch) {
                 const itemLevel = parseInt(itemMatch[1]);
                 if (itemLevel <= startLevel) {
@@ -210,9 +210,10 @@ export class ContentRenderer {
 
     _handleKeyboardPlay() {
         if (!this.hoveredSegmentId) return;
+        
         const item = this.items.find(i => i.id === this.hoveredSegmentId);
         if (!item) return;
-
+        
         if (item.html && item.html.match(/^<h[1-6]/i)) {
             const index = this.items.indexOf(item);
             this._handlePlaySequence(index);
@@ -225,11 +226,13 @@ export class ContentRenderer {
 
     _handleKeyboardFlip() {
         if (!this.hoveredSegmentId) return;
+        
         const item = this.items.find(i => i.id === this.hoveredSegmentId);
         if (!item) return;
-
+        
         // Use cached element for flip as well
         const segmentEl = this.elementCache.get(this.hoveredSegmentId);
+        
         if (segmentEl) {
             const hasAudio = item.audio && item.audio !== 'skip';
             const isHeading = item.html && item.html.match(/^<h[1-6]/i) && item.label !== 'title' && item.label !== 'subtitle';
@@ -242,7 +245,7 @@ export class ContentRenderer {
 
     _ensureRendered(targetIndex) {
         if (targetIndex === -1 || targetIndex < this.renderedCount) return;
-
+        
         // Force render batches synchronously until we cover this index
         while (this.renderedCount <= targetIndex) {
             this._renderNextBatch();
@@ -251,16 +254,15 @@ export class ContentRenderer {
     }
 
     scrollToSegment(id) {
-        // Just delegate to highlightSegment which now handles rendering
-        this.highlightSegment(id, true);
+        // Sử dụng mode 'top' để cuộn lên sát mép thay vì dùng Sight View của Audio
+        this.highlightSegment(id, true, 'top');
     }
 
-    highlightSegment(id, shouldScroll = true) {
+    highlightSegment(id, shouldScroll = true, scrollMode = 'smart') {
         if (!this.container) return;
-
+        
         // Check if item is rendered. If not, force render.
         let activeEl = this.elementCache.get(id);
-
         if (!activeEl) {
              const index = this.items.findIndex(item => item.id === id);
              if (index !== -1) {
@@ -280,15 +282,39 @@ export class ContentRenderer {
             activeEl.classList.add('active');
             this.activeSegmentId = id;
 
-            // 3. Smart Scroll: Only scroll if out of view
+            // 3. Điều hướng cuộn tùy theo Mode
             if (shouldScroll) {
-                this._smartScroll(activeEl);
+                if (scrollMode === 'top') {
+                    this._scrollToTop(activeEl);
+                } else {
+                    this._smartScroll(activeEl);
+                }
             }
         }
     }
 
+    _scrollToTop(el) {
+        if (!this.container || !el) return;
+        
+        const rect = el.getBoundingClientRect();
+        const containerRect = this.container.getBoundingClientRect();
+        
+        // Khoảng đệm nhỏ (offset) để thẻ HTML cách đỉnh một chút cho dễ nhìn
+        const offset = 20; 
+        const targetScrollTop = this.container.scrollTop + (rect.top - containerRect.top) - offset;
+
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const behavior = isMobile ? 'auto' : UI_CONFIG.SCROLL_BEHAVIOR;
+
+        this.container.scrollTo({
+            top: targetScrollTop,
+            behavior: behavior
+        });
+    }
+
     _parseThreshold(val) {
         if (typeof val === 'number') return val;
+        
         if (typeof val !== 'string') return 0;
         if (val.endsWith('vh')) {
             // Dùng clientHeight của root để tính % vh chuẩn
@@ -299,7 +325,7 @@ export class ContentRenderer {
 
     _smartScroll(el) {
         if (!this.container || !el) return;
-
+        
         // 1. Lấy thông số thực tế tại thời điểm gọi (để chống lỗi Safari Address Bar)
         const rect = el.getBoundingClientRect();
         const containerRect = this.container.getBoundingClientRect();
@@ -311,15 +337,17 @@ export class ContentRenderer {
         // 3. Xác định vùng Sight View (tọa độ so với Viewport)
         // sightTop: điểm bắt đầu vùng nhìn (ngay dưới Header + khoảng đệm)
         const sightTop = containerRect.top + thresholdTop;
+        
         // sightBottom: điểm kết thúc vùng nhìn (trên Global Controls + khoảng đệm)
         const sightBottom = containerRect.bottom - thresholdBottom;
-
+        
         // 4. Kiểm tra xem Segment có nằm ngoài vùng Sight View không
         const isOutOfSightTop = rect.top < sightTop;
         const isOutOfSightBottom = rect.bottom > sightBottom;
 
         if (isOutOfSightTop || isOutOfSightBottom) {
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
             // Safari iOS hoạt động ổn định nhất với 'auto' khi xử lý audio liên tục
             const behavior = isMobile ? 'auto' : UI_CONFIG.SCROLL_BEHAVIOR;
             
@@ -356,7 +384,7 @@ export class ContentRenderer {
             btn.innerHTML = '<i class="fas fa-play-circle"></i>';
             btn.title = "Nghe toàn bộ phần này";
         });
-
+        
         if (!activeSegmentId || state === 'stopped') return;
 
         // Efficient lookup using cache
@@ -385,11 +413,13 @@ export class ContentRenderer {
 
     getFirstVisibleSegmentId() {
         if (!this.container) return null;
+        
         // Optimization: Only check rendered segments? 
         // QuerySelectorAll gets ALL rendered segments, which is fine since we lazy load.
         const segments = this.container.querySelectorAll('.segment');
         for (const segment of segments) {
             const rect = segment.getBoundingClientRect();
+            
             if (rect.top + rect.height > 80 && rect.top < window.innerHeight) {
                 if (parseInt(segment.dataset.id)) {
                     return parseInt(segment.dataset.id);
