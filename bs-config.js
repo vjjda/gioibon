@@ -2,8 +2,7 @@ module.exports = {
     "server": {
         "baseDir": "web",
         "routes": {
-            "/node_modules": "node_modules",
-            "/libs": "web/libs"
+            "/node_modules": "node_modules"
         },
         "middleware": function (req, res, next) {
             if (req.url.endsWith('.wasm')) {

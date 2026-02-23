@@ -29,6 +29,8 @@ if (fs.existsSync(modulesDir)) {
     });
 }
 // -----------------------------------
+// [FIX] Alias 'libs' tường minh vì giờ nó nằm trong public
+aliases['libs'] = path.resolve(webDir, 'public/libs');
 
 export default defineConfig(({ mode }) => {
     const isProd = mode === 'production';

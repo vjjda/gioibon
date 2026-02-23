@@ -3,8 +3,8 @@ import { initSQLite, withExistDB } from 'libs/wa-sqlite/wa-sqlite-index.js';
 import { useIdbStorage } from 'libs/wa-sqlite/wa-sqlite-idb.js';
 import { BASE_URL } from 'core/config.js';
 
-// [FIX] Sử dụng cú pháp ?url của Vite để ép bundler nhận diện và copy file .wasm
-import wasmUrl from 'libs/wa-sqlite/wa-sqlite-async.wasm?url';
+// [FIX] Sử dụng đường dẫn trực tiếp thay vì import ?url (để chạy được cả trên Vite và Simple Server)
+const wasmUrl = 'libs/wa-sqlite/wa-sqlite-async.wasm';
 
 export class SqliteConnection {
     constructor(dbName = "content.db", dbUrl = `${BASE_URL}app-content/content.db`) {
