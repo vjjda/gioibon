@@ -37,38 +37,28 @@ export default defineConfig(({ mode }) => {
         root: 'web', 
         base: '/gioibon/', 
         
-        // [PERF] Tối ưu hóa hệ thống dịch mã (esbuild)
         esbuild: {
-            // Xóa sạch console.log và debugger khi build bản thật để giảm dung lượng file
             drop: isProd ? ['console', 'debugger'] : [],
-            // Xóa các comment bản quyền thừa thãi trong file bundle
             legalComments: 'none', 
         },
 
         build: {
             outDir: '../dist', 
             emptyOutDir: true,
-            // [PERF] Build cho trình duyệt hiện đại (hỗ trợ WASM/ES6 native) giúp code siêu nhỏ gọn
             target: 'esnext', 
             minify: 'esbuild',
             cssMinify: true,
-            sourcemap: !isProd, // Tắt sourcemap ở Production để tránh lộ code và giảm dung lượng
-            
-            // [PERF] Cấu hình Rollup để chia nhỏ các file (Chunk Splitting)
+            sourcemap: !isProd,
             rollupOptions: {
                 output: {
                     manualChunks(id) {
-                        // Tách thư viện SQLite nặng ra một file riêng (vendor-sqlite)
-                        // Giúp trình duyệt cache file này vĩnh viễn, không phải tải lại khi ta sửa code UI
                         if (id.includes('wa-sqlite')) {
                             return 'vendor-sqlite';
                         }
-                        // Tách các thư viện khác trong node_modules (nếu có sau này)
                         if (id.includes('node_modules')) {
                             return 'vendor';
                         }
                     },
-                    // Rút gọn tên file tĩnh, thêm hash để vô hiệu hóa cache khi có bản build mới
                     entryFileNames: 'assets/[name].[hash].js',
                     chunkFileNames: 'assets/[name].[hash].js',
                     assetFileNames: 'assets/[name].[hash].[ext]'
@@ -102,22 +92,9 @@ export default defineConfig(({ mode }) => {
                     scope: '/gioibon/',
                     start_url: '/gioibon/',
                     icons: [
-                        {
-                            src: 'assets/icons/android-chrome-192x192.png',
-                            sizes: '192x192',
-                            type: 'image/png'
-                        },
-                        {
-                            src: 'assets/icons/android-chrome-512x512.png',
-                            sizes: '512x512',
-                            type: 'image/png'
-                        },
-                        {
-                            src: 'assets/icons/android-chrome-512x512.png',
-                            sizes: '512x512',
-                            type: 'image/png',
-                            purpose: 'any maskable'
-                        }
+                        { src: 'assets/icons/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
+                        { src: 'assets/icons/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },
+                        { src: 'assets/icons/android-chrome-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
                     ]
                 },
                 workbox: {
@@ -140,6 +117,16 @@ export default defineConfig(({ mode }) => {
                             options: {
                                 cacheName: 'gstatic-fonts-cache',
                                 expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
+                                cacheableResponse: { statuses: [0, 200] }
+                            }
+                        },
+                        // [NEW] Cache file âm thanh cục bộ (Dùng CacheFirst vì file mp3 (hash) không bao giờ đổi nội dung)
+                        {
+                            urlPattern: ({ url }) => url.pathname.includes('/app-content/audio/') && url.pathname.endsWith('.mp3'),
+                            handler: 'CacheFirst',
+                            options: {
+                                cacheName: 'audio-mp3-cache',
+                                expiration: { maxEntries: 600, maxAgeSeconds: 60 * 60 * 24 * 365 },
                                 cacheableResponse: { statuses: [0, 200] }
                             }
                         },

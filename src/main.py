@@ -44,8 +44,9 @@ def run_data_builder(clean: bool = False) -> None:
         # 2. Xử lý nội dung từ TSV
         segments = processor.process_tsv(TSV_SOURCE)
 
-        # 3. Ghi dữ liệu (TSV & SQLite)
-        writer = DataWriter(TSV_OUT, DB_OUT, AUDIO_TMP_DIR)
+        # 3. Ghi dữ liệu (TSV & SQLite & Copy Audio Files)
+        # TRUYỀN THÊM THAM SỐ final_audio_dir ĐỂ COPY FILE
+        writer = DataWriter(TSV_OUT, DB_OUT, AUDIO_TMP_DIR, AUDIO_FINAL_DIR)
         writer.save(segments)
 
         logger.info(
@@ -115,3 +116,4 @@ def cli() -> None:
 
 if __name__ == "__main__":
     cli()
+

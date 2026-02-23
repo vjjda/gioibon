@@ -19,28 +19,13 @@ export class AudioResolver {
         const targetHash = await audioCache.generateHash(ttsText, currentVoice, currentLang);
         const targetFilename = `${targetHash}.mp3`;
 
-        // 1. DB Match (Ưu tiên số 1 - Offline & Nhanh nhất)
-        if (item.audio === targetFilename && this.dbConnection) {
-            try {
-                // [FIX] Truy vấn vào bảng audios thông qua audio_name thay vì uid
-                const result = await this.dbConnection.query(
-                    "SELECT audio_blob FROM audios WHERE audio_name = ?", 
-                    [item.audio]
-                );
-                
-                if (result && result.length > 0) {
-                    let blobData = result[0].audio_blob;
-                    if (blobData) {
-                        const blob = new Blob([blobData], { type: 'audio/mp3' });
-                        return { url: URL.createObjectURL(blob), isBlob: true };
-                    }
-                }
-            } catch (e) {
-                console.error("DB Blob Fetch Error:", e);
-            }
+        // 1. Static Folder Match (Offline PWA xử lý qua Service Worker Cache)
+        // Trả về URL trực tiếp, tiết kiệm RAM cho iOS
+        if (item.audio && item.audio !== 'skip') {
+            return { url: `${BASE_URL}app-content/audio/${item.audio}`, isBlob: false };
         }
 
-        // 2. Cache IDB Match
+        // 2. Cache IDB Match (Cho những file tự sinh API lúc runtime)
         if (await audioCache.has(targetHash)) {
             if (sessionId !== getCurrentSessionId()) return null;
             const blob = await audioCache.get(targetHash);
@@ -57,23 +42,6 @@ export class AudioResolver {
                 return { url: URL.createObjectURL(blob), isBlob: true };
             } catch (e) {
                 console.error("AudioResolver API Error:", e);
-            }
-        }
-
-        // 4. Fallback (DB Audio Mismatch)
-        if (item.audio && item.audio !== 'skip' && this.dbConnection) {
-             try {
-                // [FIX] Truy vấn vào bảng audios
-                const result = await this.dbConnection.query(
-                    "SELECT audio_blob FROM audios WHERE audio_name = ?", 
-                    [item.audio]
-                );
-                if (result && result.length > 0 && result[0].audio_blob) {
-                    const blob = new Blob([result[0].audio_blob], { type: 'audio/mp3' });
-                    return { url: URL.createObjectURL(blob), isBlob: true };
-                }
-            } catch (e) {
-                console.error("DB Fallback Fetch Error:", e);
             }
         }
 

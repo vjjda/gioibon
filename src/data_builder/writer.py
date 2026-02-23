@@ -6,7 +6,8 @@ import logging
 import json
 import time
 import hashlib
-from typing import List, Optional, Dict
+import shutil
+from typing import List, Optional
 
 from src.data_builder.models import SegmentData
 
@@ -15,14 +16,16 @@ logger = logging.getLogger(__name__)
 __all__ = ["DataWriter"]
 
 class DataWriter:
-    def __init__(self, tsv_path: str, db_path: str, audio_dir: Optional[str] = None) -> None:
+    def __init__(self, tsv_path: str, db_path: str, tmp_audio_dir: Optional[str] = None, final_audio_dir: Optional[str] = None) -> None:
         self.tsv_path: str = tsv_path
         self.db_path: str = db_path
-        self.audio_dir: Optional[str] = audio_dir
+        self.tmp_audio_dir: Optional[str] = tmp_audio_dir
+        self.final_audio_dir: Optional[str] = final_audio_dir
 
     def save(self, data: List[SegmentData]) -> None:
         self._save_tsv(data)
         self._save_sqlite(data)
+        self._copy_audio_files(data)
 
     def _save_tsv(self, data: List[SegmentData]) -> None:
         os.makedirs(os.path.dirname(self.tsv_path), exist_ok=True)
@@ -54,44 +57,19 @@ class DataWriter:
             )
         """)
         
-        cursor.execute("""
-            CREATE TABLE audios (
-                audio_name TEXT PRIMARY KEY,
-                audio_blob BLOB
-            )
-        """)
-        
-        # [DB OPTIMIZATION] Đã xóa dòng tạo CREATE INDEX idx_label
-        # Giúp DB nhẹ đi vì JavaScript lo việc filter mảng trên RAM
-        
         insert_contents: List[tuple] = []
-        insert_audios: Dict[str, bytes] = {}
         
         for item in data:
-            audio_name: str = item.audio
-            
             insert_contents.append((
                 item.uid,
                 item.html,
                 item.label,
                 item.segment,
-                audio_name,
+                item.audio,
                 item.hint
             ))
-            
-            if self.audio_dir and audio_name and audio_name != 'skip':
-                if audio_name not in insert_audios:
-                    audio_path: str = os.path.join(self.audio_dir, audio_name)
-                    if os.path.exists(audio_path):
-                        with open(audio_path, 'rb') as f:
-                            insert_audios[audio_name] = f.read()
-                    else:
-                        logger.warning(f"⚠️ Không tìm thấy file audio để nhúng: {audio_path}")
 
         cursor.executemany("INSERT INTO contents VALUES (?, ?, ?, ?, ?, ?)", insert_contents)
-        
-        audio_records: List[tuple] = [(name, blob) for name, blob in insert_audios.items()]
-        cursor.executemany("INSERT INTO audios VALUES (?, ?)", audio_records)
         
         conn.commit()
         conn.close()
@@ -109,6 +87,34 @@ class DataWriter:
             os.rename(temp_db_path, self.db_path)
             logger.info(f"✅ Đã lưu SQLite DB tại: {self.db_path}")
             self._save_version_file()
+
+    def _copy_audio_files(self, data: List[SegmentData]) -> None:
+        """Đồng bộ các file âm thanh từ thư mục cache tạm ra thư mục web/public"""
+        if not self.tmp_audio_dir or not self.final_audio_dir:
+            return
+            
+        os.makedirs(self.final_audio_dir, exist_ok=True)
+        copied_count = 0
+        
+        # Xóa sạch thư mục đích để tránh rác từ các lần build trước
+        for f in os.listdir(self.final_audio_dir):
+            file_path = os.path.join(self.final_audio_dir, f)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+
+        for item in data:
+            audio_name = item.audio
+            if audio_name and audio_name != 'skip':
+                src_path = os.path.join(self.tmp_audio_dir, audio_name)
+                dest_path = os.path.join(self.final_audio_dir, audio_name)
+                
+                if os.path.exists(src_path):
+                    shutil.copy2(src_path, dest_path)
+                    copied_count += 1
+                else:
+                    logger.warning(f"⚠️ Không tìm thấy file audio trong cache để copy: {src_path}")
+                    
+        logger.info(f"✅ Đã đồng bộ {copied_count} file audio ra thư mục giao diện Web.")
 
     def _save_version_file(self) -> None:
         if not os.path.exists(self.db_path):

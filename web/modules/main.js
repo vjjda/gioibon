@@ -11,6 +11,7 @@ import { HeaderDrawer } from 'ui/header_drawer.js';
 import { ThemeSettings } from 'ui/theme_settings.js';
 import { FontSettings } from 'ui/font_settings.js';
 import { setupPWA } from 'utils/pwa.js';
+import { AudioPrefetcher } from 'services/audio_prefetcher.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     setupPWA();
@@ -42,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     );
 
     const tocRenderer = new TocRenderer('toc-list', 'sidebar', 'sidebar-toggle', contentRenderer);
-    
+
     const controlBar = new ControlBar(
         () => { /* Play All */
             if (ttsPlayer.isPaused) {
@@ -98,8 +99,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         const loadingEl = document.querySelector('.loading');
         if (loadingEl) loadingEl.remove();
 
+        // Kích hoạt tiến trình tải ngầm file âm thanh (Sau khi giao diện đã sẵn sàng)
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => {
+                const prefetcher = new AudioPrefetcher(contentLoader);
+                prefetcher.startPrefetch();
+            });
+        } else {
+            setTimeout(() => {
+                const prefetcher = new AudioPrefetcher(contentLoader);
+                prefetcher.startPrefetch();
+            }, 3000);
+        }
+
     } catch (error) {
         console.error("Initialization Error:", error);
         document.getElementById('content').innerHTML = `<div class="error">Không thể tải dữ liệu. Vui lòng thử lại sau.</div>`;
     }
 });
+

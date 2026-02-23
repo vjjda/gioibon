@@ -12,6 +12,7 @@ node_modules/
 # Frontend Assets (Ignore audio source and DB to save repo space)
 /web/public/app-content/content.db
 /web/public/app-content/*_version.json
+/web/public/app-content/audio/
 
 # Python cache
 __pycache__/
@@ -31,3 +32,4 @@ dist/
 *.egg-info/
 
 /tmp/*
+
