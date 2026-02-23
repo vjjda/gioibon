@@ -29,7 +29,6 @@ if (fs.existsSync(modulesDir)) {
     });
 }
 // -----------------------------------
-// Alias 'libs' tường minh vì giờ nó nằm trong public
 aliases['libs'] = path.resolve(webDir, 'public/libs');
 
 export default defineConfig(({ mode }) => {
@@ -40,7 +39,6 @@ export default defineConfig(({ mode }) => {
         base: '/gioibon/', 
         
         esbuild: {
-            // [UPDATED] Bỏ 'console' để cho phép in log trên GitHub Pages nhằm dễ theo dõi lỗi
             drop: isProd ? ['debugger'] : [],
             legalComments: 'none', 
         },
@@ -75,15 +73,10 @@ export default defineConfig(({ mode }) => {
             alias: aliases,
         },
         plugins: [
-            basicSsl(), 
+            basicSsl(), // Khôi phục HTTPS tự ký cho make preview (LAN/Mobile test)
             VitePWA({
                 registerType: 'autoUpdate',
-                includeAssets: [
-                    'assets/icons/favicon.ico', 
-                    'assets/icons/apple-touch-icon.png',
-                    'assets/icons/android-chrome-192x192.png',
-                    'assets/icons/android-chrome-512x512.png'
-                ],
+                includeManifestIcons: false, 
                 manifest: {
                     name: 'Giới Bổn Tỳ Kheo',
                     short_name: 'Giới Bổn',
@@ -104,11 +97,8 @@ export default defineConfig(({ mode }) => {
                     cleanupOutdatedCaches: true,
                     clientsClaim: true,
                     skipWaiting: true,
-                    
-                    // [UPDATED] Gỡ bỏ navigateFallback cố định để VitePWA tự động map base path
-                    
+                    navigateFallback: 'index.html',
                     globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,wasm,json}'], 
-                    // Bỏ qua file .zip để không bị Precache làm phình bộ nhớ PWA
                     globIgnores: ['**/node_modules/**/*', 'sw.js', 'workbox-*.js', '**/*_version.json', '**/*.db', '**/*.zip'],
                     maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, 
                     runtimeCaching: [
