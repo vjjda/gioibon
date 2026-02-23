@@ -3,6 +3,9 @@ import { initSQLite, withExistDB } from 'libs/wa-sqlite/wa-sqlite-index.js';
 import { useIdbStorage } from 'libs/wa-sqlite/wa-sqlite-idb.js';
 import { BASE_URL } from 'core/config.js';
 
+// [FIX] Sử dụng cú pháp ?url của Vite để ép bundler nhận diện và copy file .wasm
+import wasmUrl from 'libs/wa-sqlite/wa-sqlite-async.wasm?url';
+
 export class SqliteConnection {
     constructor(dbName = "content.db", dbUrl = `${BASE_URL}app-content/content.db`) {
         this.dbName = dbName;
@@ -19,6 +22,7 @@ export class SqliteConnection {
             
             let shouldDownload = false;
             let remoteVersionData = null;
+            
             try {
                 const res = await fetch(`${versionUrl}?t=${Date.now()}`, { cache: 'no-store' });
                 if (res.ok) {
@@ -45,30 +49,32 @@ export class SqliteConnection {
                 
                 const buffer = await response.arrayBuffer();
                 const file = new File([buffer], this.dbName);
-
+                
                 const db = await initSQLite(useIdbStorage(this.dbName, {
                     ...withExistDB(file),
-                    url: `${BASE_URL}libs/wa-sqlite/wa-sqlite-async.wasm`
+                    url: wasmUrl // [FIX] Sử dụng url động được Vite cung cấp
                 }));
+                
                 if (remoteVersionData) {
                     localStorage.setItem(storageKey, remoteVersionData.version);
                 }
                 
                 this.db = db;
+                
                 try {
-                    await db.run("PRAGMA cache_size = 500"); 
+                    await db.run("PRAGMA cache_size = 500");
                     await db.run("PRAGMA temp_store = MEMORY");
                     await db.run("PRAGMA synchronous = OFF");
                     await db.run("PRAGMA mmap_size = 0");
-                    // [SQL OPTIMIZATION] Báo cho SQLite đây là DB chỉ đọc, tiết kiệm RAM khóa
                     await db.run("PRAGMA query_only = 1");
                 } catch (e) {
                     console.warn("⚠️ Cannot set PRAGMAs", e);
                 }
             } else {
                 const db = await initSQLite(useIdbStorage(this.dbName, {
-                    url: `${BASE_URL}libs/wa-sqlite/wa-sqlite-async.wasm`
+                    url: wasmUrl // [FIX] Sử dụng url động được Vite cung cấp
                 }));
+                
                 try {
                     const tables = await db.run("SELECT name FROM sqlite_master WHERE type='table' AND name='contents'");
                     if (tables.length === 0) {
@@ -81,7 +87,6 @@ export class SqliteConnection {
                     await db.run("PRAGMA cache_size = 500");
                     await db.run("PRAGMA temp_store = MEMORY");
                     await db.run("PRAGMA mmap_size = 0");
-                    // [SQL OPTIMIZATION] Báo cho SQLite đây là DB chỉ đọc
                     await db.run("PRAGMA query_only = 1");
                 } catch (e) {
                     console.warn("❌ DB integrity check failed.", e);
@@ -94,6 +99,7 @@ export class SqliteConnection {
             }
 
             return this.db;
+            
         } catch (e) {
             console.error("❌ SqliteConnection Init Error:", e);
             throw e;
@@ -104,13 +110,15 @@ export class SqliteConnection {
         console.log("🔄 Force downloading DB...");
         const response = await fetch(`${this.dbUrl}?t=${Date.now()}`, { cache: 'no-store' });
         if (!response.ok) throw new Error(`Failed to download DB: ${response.status}`);
+        
         const buffer = await response.arrayBuffer();
         const file = new File([buffer], this.dbName);
         
         this.db = await initSQLite(useIdbStorage(this.dbName, {
             ...withExistDB(file),
-            url: `${BASE_URL}libs/wa-sqlite/wa-sqlite-async.wasm`
+            url: wasmUrl // [FIX] Sử dụng url động được Vite cung cấp
         }));
+        
         try {
              const versionUrl = this.dbUrl.replace(/\.db$/, '_version.json');
              const res = await fetch(`${versionUrl}?t=${Date.now()}`, { cache: 'no-store' });
@@ -120,7 +128,6 @@ export class SqliteConnection {
              }
         } catch(e) {}
         
-        // Cài đặt PRAGMA cho bản force download
         try {
             await this.db.run("PRAGMA cache_size = 500");
             await this.db.run("PRAGMA temp_store = MEMORY");
