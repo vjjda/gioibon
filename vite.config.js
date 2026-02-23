@@ -40,7 +40,7 @@ export default defineConfig(({ mode }) => {
         base: '/gioibon/', 
         
         esbuild: {
-            // [UPDATED] Bỏ 'console' để cho phép in log trên GitHub Pages nhằm dễ theo dõi
+            // [UPDATED] Bỏ 'console' để cho phép in log trên GitHub Pages nhằm dễ theo dõi lỗi
             drop: isProd ? ['debugger'] : [],
             legalComments: 'none', 
         },
@@ -104,8 +104,9 @@ export default defineConfig(({ mode }) => {
                     cleanupOutdatedCaches: true,
                     clientsClaim: true,
                     skipWaiting: true,
-                    navigateFallback: '/gioibon/index.html',
-                    navigateFallbackDenylist: [/^\/gioibon\/assets\//, /^\/gioibon\/data\//, /^\/gioibon\/.*\.json$/],
+                    
+                    // [UPDATED] Gỡ bỏ navigateFallback cố định để VitePWA tự động map base path
+                    
                     globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,wasm,json}'], 
                     // Bỏ qua file .zip để không bị Precache làm phình bộ nhớ PWA
                     globIgnores: ['**/node_modules/**/*', 'sw.js', 'workbox-*.js', '**/*_version.json', '**/*.db', '**/*.zip'],
