@@ -7,7 +7,7 @@ import json
 import time
 import hashlib
 import shutil
-from typing import List, Optional
+from typing import List, Optional, Set
 
 from src.data_builder.models import SegmentData
 
@@ -89,32 +89,38 @@ class DataWriter:
             self._save_version_file()
 
     def _copy_audio_files(self, data: List[SegmentData]) -> None:
-        """Đồng bộ các file âm thanh từ thư mục cache tạm ra thư mục web/public"""
         if not self.tmp_audio_dir or not self.final_audio_dir:
             return
             
         os.makedirs(self.final_audio_dir, exist_ok=True)
-        copied_count = 0
         
-        # Xóa sạch thư mục đích để tránh rác từ các lần build trước
+        # 1. Lấy danh sách các file audio DUY NHẤT thực sự được dùng trong db
+        required_audios: Set[str] = {item.audio for item in data if item.audio and item.audio != 'skip'}
+        
+        # 2. Xóa sạch thư mục đích để dọn dẹp file cũ không còn dùng
         for f in os.listdir(self.final_audio_dir):
             file_path = os.path.join(self.final_audio_dir, f)
             if os.path.isfile(file_path):
                 os.remove(file_path)
 
-        for item in data:
-            audio_name = item.audio
-            if audio_name and audio_name != 'skip':
-                src_path = os.path.join(self.tmp_audio_dir, audio_name)
-                dest_path = os.path.join(self.final_audio_dir, audio_name)
-                
-                if os.path.exists(src_path):
-                    shutil.copy2(src_path, dest_path)
-                    copied_count += 1
-                else:
-                    logger.warning(f"⚠️ Không tìm thấy file audio trong cache để copy: {src_path}")
+        copied_count = 0
+        missing_count = 0
+        
+        # 3. Chỉ copy đúng các file có trong tập required_audios
+        for audio_name in required_audios:
+            src_path = os.path.join(self.tmp_audio_dir, audio_name)
+            dest_path = os.path.join(self.final_audio_dir, audio_name)
+            
+            if os.path.exists(src_path):
+                shutil.copy2(src_path, dest_path)
+                copied_count += 1
+            else:
+                missing_count += 1
+                logger.warning(f"⚠️ Không tìm thấy file audio trong cache để copy: {audio_name}")
                     
-        logger.info(f"✅ Đã đồng bộ {copied_count} file audio ra thư mục giao diện Web.")
+        logger.info(f"✅ Đã đồng bộ {copied_count} file audio (lọc từ {len(data)} segments) ra thư mục Web.")
+        if missing_count > 0:
+            logger.warning(f"⚠️ Thiếu {missing_count} file audio. Hãy thử chạy lại không có --clean hoặc kiểm tra API.")
 
     def _save_version_file(self) -> None:
         if not os.path.exists(self.db_path):
