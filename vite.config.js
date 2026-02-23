@@ -40,7 +40,8 @@ export default defineConfig(({ mode }) => {
         base: '/gioibon/', 
         
         esbuild: {
-            drop: isProd ? ['console', 'debugger'] : [],
+            // [UPDATED] Bỏ 'console' để cho phép in log trên GitHub Pages nhằm dễ theo dõi
+            drop: isProd ? ['debugger'] : [],
             legalComments: 'none', 
         },
 
@@ -110,7 +111,6 @@ export default defineConfig(({ mode }) => {
                     globIgnores: ['**/node_modules/**/*', 'sw.js', 'workbox-*.js', '**/*_version.json', '**/*.db', '**/*.zip'],
                     maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, 
                     runtimeCaching: [
-                        // Cache file âm thanh cục bộ (Dùng CacheFirst vì file mp3 không bao giờ đổi nội dung)
                         {
                             urlPattern: ({ url }) => url.pathname.includes('/app-content/audio/') && url.pathname.endsWith('.mp3'),
                             handler: 'CacheFirst',
@@ -130,4 +130,3 @@ export default defineConfig(({ mode }) => {
         ]
     };
 });
-
