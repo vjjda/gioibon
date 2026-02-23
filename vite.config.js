@@ -103,6 +103,27 @@ export default defineConfig(({ mode }) => {
                     globIgnores: ['**/node_modules/**/*', 'sw.js', 'workbox-*.js', '**/*_version.json', '**/*.db', '**/*.zip'],
                     maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, 
                     runtimeCaching: [
+                        // 1. Cache API ngoại lai: CSS của Google Fonts & FontAwesome
+                        {
+                            urlPattern: /^https:\/\/(fonts\.googleapis\.com|cdnjs\.cloudflare\.com)\/.*/i,
+                            handler: 'StaleWhileRevalidate',
+                            options: {
+                                cacheName: 'external-stylesheets',
+                                expiration: { maxEntries: 15, maxAgeSeconds: 60 * 60 * 24 * 365 },
+                                cacheableResponse: { statuses: [0, 200] }
+                            }
+                        },
+                        // 2. Cache file Webfont của Google Fonts & FontAwesome (.woff2)
+                        {
+                            urlPattern: /^https:\/\/(fonts\.gstatic\.com|cdnjs\.cloudflare\.com)\/.*\.woff2?/i,
+                            handler: 'CacheFirst',
+                            options: {
+                                cacheName: 'external-webfonts',
+                                expiration: { maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 365 },
+                                cacheableResponse: { statuses: [0, 200] }
+                            }
+                        },
+                        // 3. Cache file Audio local MP3
                         {
                             urlPattern: ({ url }) => url.pathname.includes('/app-content/audio/') && url.pathname.endsWith('.mp3'),
                             handler: 'CacheFirst',
@@ -112,6 +133,7 @@ export default defineConfig(({ mode }) => {
                                 cacheableResponse: { statuses: [0, 200] }
                             }
                         },
+                        // 4. Cache Version Check
                         {
                             urlPattern: ({ url }) => url.pathname.endsWith('_version.json'),
                             handler: 'NetworkOnly'
