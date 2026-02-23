@@ -76,7 +76,7 @@ export default defineConfig(({ mode }) => {
         plugins: [
             basicSsl(), 
             VitePWA({
-                registerType: 'prompt', 
+                registerType: 'autoUpdate',
                 includeAssets: [
                     'assets/icons/favicon.ico', 
                     'assets/icons/apple-touch-icon.png',
@@ -100,6 +100,11 @@ export default defineConfig(({ mode }) => {
                     ]
                 },
                 workbox: {
+                    cleanupOutdatedCaches: true,
+                    clientsClaim: true,
+                    skipWaiting: true,
+                    navigateFallback: '/gioibon/index.html',
+                    navigateFallbackDenylist: [/^\/gioibon\/assets\//, /^\/gioibon\/data\//, /^\/gioibon\/.*\.json$/],
                     globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,wasm,json}'], 
                     globIgnores: ['**/node_modules/**/*', 'sw.js', 'workbox-*.js', '**/*_version.json', '**/*.db'],
                     maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, 
