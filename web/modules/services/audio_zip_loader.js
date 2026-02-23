@@ -1,6 +1,5 @@
 // Path: web/modules/services/audio_zip_loader.js
 import { BASE_URL } from 'core/config.js';
-import 'libs/jszip/jszip.min.js';
 
 /**
  * Tải ngầm file audio.zip, giải nén và đưa thẳng vào Service Worker Cache (Cache Storage)
