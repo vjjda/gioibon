@@ -75,7 +75,7 @@ export default defineConfig(({ mode }) => {
         plugins: [
             basicSsl(), // Khôi phục HTTPS tự ký cho make preview (LAN/Mobile test)
             VitePWA({
-                registerType: 'prompt', // Chuyển từ 'autoUpdate' sang 'prompt' để hiện Popup
+                registerType: 'prompt',
                 includeManifestIcons: false, 
                 manifest: {
                     name: 'Giới Bổn Tỳ Kheo',
@@ -96,8 +96,7 @@ export default defineConfig(({ mode }) => {
                 },
                 workbox: {
                     cleanupOutdatedCaches: true,
-                    clientsClaim: true,
-                    skipWaiting: true,
+                    // [FIX] Bỏ clientsClaim và skipWaiting để tránh xung đột với registerType: 'prompt'
                     navigateFallback: 'index.html',
                     globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,wasm,json}'], 
                     globIgnores: ['**/node_modules/**/*', 'sw.js', 'workbox-*.js', '**/*_version.json', '**/*.db', '**/*.zip'],
@@ -144,3 +143,4 @@ export default defineConfig(({ mode }) => {
         ]
     };
 });
+
