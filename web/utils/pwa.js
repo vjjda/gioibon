@@ -77,21 +77,26 @@ export function setupPWA() {
     const closeBtn = document.getElementById('pwa-close');
     const manualUpdateBtn = document.getElementById('btn-update-app');
 
-    if (toast && refreshBtn && closeBtn) {
-        console.log('[PWA] Found toast elements, attempting to register SW...');
-        // Hàm này sẽ được gọi khi có update hoặc offline ready
-        const updateSW = registerSW({
-            onNeedRefresh() {
-                // Hiển thị Toast khi có phiên bản mới
-                toast.classList.remove('hidden');
-                // Nếu người dùng đang trong drawer, cho nút manual update hiệu ứng lung linh
-                if (manualUpdateBtn) manualUpdateBtn.classList.add('update-available');
-            },
-            onOfflineReady() {
-                console.log('App ready to work offline');
-            }
-        });
+    console.log('[PWA] Attempting to register SW unconditionally...');
+    
+    // Register SW unconditionally
+    const updateSW = registerSW({
+        onNeedRefresh() {
+            console.log('[PWA] Need refresh');
+            if (toast) toast.classList.remove('hidden');
+            if (manualUpdateBtn) manualUpdateBtn.classList.add('update-available');
+        },
+        onOfflineReady() {
+            console.log('[PWA] Offline ready');
+        },
+        onRegisterError(error) {
+            console.error('[PWA] Registration error:', error);
+        }
+    });
 
+    if (toast && refreshBtn && closeBtn) {
+        console.log('[PWA] Found toast elements, binding events...');
+        
         const handleUpdate = () => {
             // [iOS FIX] Vô hiệu hóa nút và báo hiệu đang xử lý để tránh người dùng bấm nhiều lần
             refreshBtn.disabled = true;
