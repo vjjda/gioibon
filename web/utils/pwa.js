@@ -59,7 +59,6 @@ export function setupPWA() {
                     Object.entries(backup).forEach(([key, val]) => {
                         localStorage.setItem(key, val);
                     });
-                    
                     window.location.reload();
                 } catch (error) {
                     console.error('Lỗi khi xóa cache:', error);
@@ -92,8 +91,20 @@ export function setupPWA() {
         });
 
         const handleUpdate = () => {
-            // Chỉ reload SW, để SqliteConnection tự kiểm tra version DB khi khởi động lại
-            updateSW(true); 
+            // [iOS FIX] Vô hiệu hóa nút và báo hiệu đang xử lý để tránh người dùng bấm nhiều lần
+            refreshBtn.disabled = true;
+            refreshBtn.textContent = "Đang tải...";
+            closeBtn.disabled = true;
+
+            // Yêu cầu Service Worker mới giành quyền kiểm soát
+            updateSW(true);
+
+            // [iOS FIX] Fallback ép trình duyệt tải lại trang sau 1 giây.
+            // Giải quyết triệt để lỗi Safari trên iOS không bắn sự kiện `controllerchange`,
+            // khiến giao diện bị "đóng băng" không thể thao tác tiếp.
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         };
 
         refreshBtn.addEventListener('click', handleUpdate);
@@ -138,3 +149,4 @@ export function setupPWA() {
         });
     }
 }
+
