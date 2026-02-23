@@ -19,29 +19,39 @@
     visibility: hidden;
 }
 
-.splash-spinner {
-    width: 48px;
-    height: 48px;
-    border: 4px solid rgba(139, 90, 43, 0.15);
-    border-top-color: #8b5a2b;
-    border-radius: 50%;
-    animation: splash-spin 1s linear infinite;
-    margin-bottom: 24px;
+/* --- THANH TIẾN TRÌNH TỐI GIẢN --- */
+.splash-progress-container {
+    width: 200px; /* Thu gọn lại một chút */
+    height: 4px;  /* Thanh mảnh hơn */
+    background-color: rgba(139, 90, 43, 0.15); 
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 16px; /* Rút ngắn khoảng cách với text vì đã bỏ title */
 }
 
-@keyframes splash-spin {
-    to { transform: rotate(360deg); }
+.splash-progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 40%; 
+    background-color: #8b5a2b; 
+    border-radius: 2px;
+    animation: splash-slide 1.5s infinite ease-in-out; /* Chạy mượt và điềm đạm hơn */
 }
 
-.splash-title {
-    font-size: 1.5rem;
-    color: var(--primary-color, #8b4513);
-    margin-bottom: 8px;
-    font-weight: bold;
+@keyframes splash-slide {
+    0% { left: -40%; } 
+    50% { left: 30%; width: 50%; } 
+    100% { left: 100%; } 
 }
+/* --------------------------- */
 
 .splash-subtitle {
-    font-size: 0.95rem;
+    font-size: 0.9rem; /* Chữ nhỏ gọn, lịch sự */
     color: var(--text-muted, #7a634d);
+    font-family: var(--font-ui);
+    letter-spacing: 0.5px;
 }
 
