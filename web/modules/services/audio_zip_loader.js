@@ -67,7 +67,15 @@ export class AudioZipLoader {
             // ==========================================
             // Sử dụng cache busting để đảm bảo luôn tải ZIP mới nhất
             const zipUrl = `${BASE_URL}app-content/audio.zip?t=${Date.now()}`;
-            const response = await fetch(zipUrl);
+            let response;
+            
+            try {
+                response = await fetch(zipUrl);
+            } catch (fetchError) {
+                // Xử lý êm ái khi đang offline (mất mạng sẽ ném lỗi TypeError ở đây)
+                console.warn(`⚠️ Đang ngoại tuyến hoặc lỗi kết nối. Sẽ tải audio.zip sau. (${fetchError.message})`);
+                return;
+            }
             
             if (!response.ok) {
                 console.warn(`⚠️ Không thể tải audio.zip (${response.status}). Sẽ tải lại sau.`);
@@ -77,6 +85,7 @@ export class AudioZipLoader {
             const blob = await response.blob();
             // Lấy đối tượng JSZip từ global window
             const JSZip = window.JSZip;
+
             if (!JSZip) {
                 console.error("❌ Thư viện JSZip chưa được tải vào global.");
                 return;
@@ -104,6 +113,7 @@ export class AudioZipLoader {
                         headers: {
                             'Content-Type': 'audio/mpeg',
                             'Content-Length': audioBlob.size.toString(),
+                            'Accept-Ranges': 'bytes', // [FIX] Hỗ trợ Safari iOS
                             'Cache-Control': 'max-age=31536000' // Cho phép cache vĩnh viễn (1 năm)
                         }
                     });
