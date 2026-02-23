@@ -2,11 +2,12 @@
 // Sử dụng module ảo của vite-plugin-pwa để quản lý Service Worker chuẩn xác
 // @ts-ignore
 import { registerSW } from 'virtual:pwa-register';
+import { BASE_URL } from 'core/config.js';
 
 export function setupPWA() {
     console.log('[PWA] setupPWA called');
 
-    // 1. Logic dọn dẹp cache và dữ liệu (Giữ nguyên logic cũ)
+    // 1. Logic dọn dẹp cache và dữ liệu
     const clearCacheBtn = document.getElementById('btn-clear-cache');
     if (clearCacheBtn) {
         clearCacheBtn.addEventListener('click', async () => {
@@ -73,24 +74,27 @@ export function setupPWA() {
         });
     }
 
-    // 2. Logic thông báo cập nhật PWA (Sử dụng virtual:pwa-register)
+    // 2. Logic thông báo cập nhật PWA và Data
     const toast = document.getElementById('pwa-toast');
     const refreshBtn = document.getElementById('pwa-refresh');
     const closeBtn = document.getElementById('pwa-close');
     const manualUpdateBtn = document.getElementById('btn-update-app');
 
+    // Hàm hiển thị Toast dùng chung
+    const showUpdateToast = () => {
+        if (toast) toast.classList.remove('hidden');
+        if (manualUpdateBtn) {
+            manualUpdateBtn.classList.remove('rotating');
+            manualUpdateBtn.classList.add('update-available');
+            manualUpdateBtn.title = "Có bản cập nhật mới!";
+        }
+    };
+
     console.log('[PWA] Attempting to register SW unconditionally...');
-    // Register SW unconditionally
     const updateSW = registerSW({
         onNeedRefresh() {
-            console.log('[PWA] Need refresh');
-            if (toast) toast.classList.remove('hidden');
-            if (manualUpdateBtn) {
-                // Xóa trạng thái quay và báo có update
-                manualUpdateBtn.classList.remove('rotating');
-                manualUpdateBtn.classList.add('update-available');
-                manualUpdateBtn.title = "Có bản cập nhật mới!";
-            }
+            console.log('[PWA] App update needed (SW)');
+            showUpdateToast();
         },
         onOfflineReady() {
             console.log('[PWA] Offline ready');
@@ -101,18 +105,16 @@ export function setupPWA() {
     });
 
     if (toast && refreshBtn && closeBtn) {
-        console.log('[PWA] Found toast elements, binding events...');
-
         const handleUpdate = () => {
-            // [iOS FIX] Vô hiệu hóa nút và báo hiệu đang xử lý để tránh người dùng bấm nhiều lần
             refreshBtn.disabled = true;
             refreshBtn.textContent = "Đang tải...";
             closeBtn.disabled = true;
 
-            // Yêu cầu Service Worker mới giành quyền kiểm soát
+            // Yêu cầu Service Worker mới giành quyền kiểm soát (nếu có bản cập nhật App)
             updateSW(true);
 
-            // [iOS FIX] Fallback ép trình duyệt tải lại trang sau 1 giây.
+            // Bất kể là update App hay update Data, ta đều ép tải lại trang
+            // Quá trình load trang (Splash Screen) sẽ tự động handle việc kéo Data mới
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
@@ -122,50 +124,55 @@ export function setupPWA() {
         
         if (manualUpdateBtn) {
             manualUpdateBtn.addEventListener('click', async () => {
-                // 1. Nếu toast đang hiện (nghĩa là đã có update chờ sẵn)
                 if (!toast.classList.contains('hidden')) {
                     handleUpdate();
                     return;
                 }
 
-                // 2. Nếu chưa có update, thực hiện check thủ công
                 manualUpdateBtn.classList.add('rotating');
                 manualUpdateBtn.title = "Đang kiểm tra...";
 
+                let hasUpdate = false;
+
+                // --- 1. Kiểm tra cập nhật Dữ liệu (Content DB) ---
+                try {
+                    const versionUrl = `${BASE_URL}app-content/content_version.json?t=${Date.now()}`;
+                    const res = await fetch(versionUrl, { cache: 'no-store' });
+                    if (res.ok) {
+                        const remoteData = await res.json();
+                        const localVersion = localStorage.getItem('db_version_content.db'); // Key lưu trữ chuẩn trong sqlite_connection
+                        if (remoteData.version !== localVersion) {
+                            console.log(`[PWA] Data update found. Old: ${localVersion}, New: ${remoteData.version}`);
+                            hasUpdate = true;
+                        }
+                    }
+                } catch (e) {
+                    console.warn("[PWA] Could not check data update:", e);
+                }
+
+                // --- 2. Kiểm tra cập nhật App (Service Worker) ---
                 try {
                     if ('serviceWorker' in navigator) {
                         const registration = await navigator.serviceWorker.getRegistration();
                         if (registration) {
                             await registration.update();
-                            
-                            // 3. Sau khi check xong, kiểm tra trạng thái cài đặt thực tế
-                            if (registration.installing) {
-                                // Đang tải và cài đặt bản mới dưới background.
-                                // Cứ để icon xoay, khi cài xong hook onNeedRefresh phía trên sẽ tự chạy.
-                                console.log('[PWA] Update found, installing in background...');
-                                return;
-                            } else if (registration.waiting) {
-                                // Đã tải xong và nằm chờ (có thể do hệ thống tự check ngầm trước đó)
-                                console.log('[PWA] Update already waiting...');
-                                manualUpdateBtn.classList.remove('rotating');
-                                manualUpdateBtn.classList.add('update-available');
-                                if (toast) toast.classList.remove('hidden');
-                                return;
+                            if (registration.installing || registration.waiting) {
+                                console.log('[PWA] App update found in Service Worker.');
+                                hasUpdate = true;
                             }
-
-                            // Nếu cả 2 đều không có, chắc chắn không có bản mới
-                            manualUpdateBtn.classList.remove('rotating');
-                            manualUpdateBtn.title = "Kiểm tra & Cập nhật";
-                            alert("Ứng dụng và dữ liệu đã ở phiên bản mới nhất.");
-                        } else {
-                            manualUpdateBtn.classList.remove('rotating');
                         }
-                    } else {
-                        manualUpdateBtn.classList.remove('rotating');
                     }
                 } catch (e) {
-                    console.error("Manual update check failed:", e);
+                    console.error("[PWA] Manual SW update check failed:", e);
+                }
+
+                // --- 3. Xử lý kết quả kiểm tra ---
+                if (hasUpdate) {
+                    showUpdateToast();
+                } else {
                     manualUpdateBtn.classList.remove('rotating');
+                    manualUpdateBtn.title = "Kiểm tra & Cập nhật";
+                    alert("Ứng dụng và dữ liệu đã ở phiên bản mới nhất.");
                 }
             });
         }
