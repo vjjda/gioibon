@@ -25,6 +25,7 @@
     color: var(--primary-color);
     margin: 3rem 0 1rem 0;
     letter-spacing: -0.5px;
+    font-family: var(--font-main);
 }
 
 .segment[data-label="subtitle"] .segment-text h2 {
@@ -35,6 +36,7 @@
     font-style: italic;
     margin-bottom: 4rem;
     border: none;
+    font-family: var(--font-main);
 }
 
 .chapter-header .segment-text h2, .segment-text h2 {
