@@ -75,7 +75,7 @@ export default defineConfig(({ mode }) => {
         plugins: [
             basicSsl(), // Khôi phục HTTPS tự ký cho make preview (LAN/Mobile test)
             VitePWA({
-                registerType: 'autoUpdate',
+                registerType: 'prompt', // Chuyển từ 'autoUpdate' sang 'prompt' để hiện Popup
                 includeManifestIcons: false, 
                 manifest: {
                     name: 'Giới Bổn Tỳ Kheo',
@@ -144,4 +144,3 @@ export default defineConfig(({ mode }) => {
         ]
     };
 });
-
