@@ -5,6 +5,7 @@ import { registerSW } from 'virtual:pwa-register';
 
 export function setupPWA() {
     console.log('[PWA] setupPWA called');
+
     // 1. Logic dọn dẹp cache và dữ liệu (Giữ nguyên logic cũ)
     const clearCacheBtn = document.getElementById('btn-clear-cache');
     if (clearCacheBtn) {
@@ -60,6 +61,7 @@ export function setupPWA() {
                     Object.entries(backup).forEach(([key, val]) => {
                         localStorage.setItem(key, val);
                     });
+
                     window.location.reload();
                 } catch (error) {
                     console.error('Lỗi khi xóa cache:', error);
@@ -78,13 +80,17 @@ export function setupPWA() {
     const manualUpdateBtn = document.getElementById('btn-update-app');
 
     console.log('[PWA] Attempting to register SW unconditionally...');
-    
     // Register SW unconditionally
     const updateSW = registerSW({
         onNeedRefresh() {
             console.log('[PWA] Need refresh');
             if (toast) toast.classList.remove('hidden');
-            if (manualUpdateBtn) manualUpdateBtn.classList.add('update-available');
+            if (manualUpdateBtn) {
+                // Xóa trạng thái quay và báo có update
+                manualUpdateBtn.classList.remove('rotating');
+                manualUpdateBtn.classList.add('update-available');
+                manualUpdateBtn.title = "Có bản cập nhật mới!";
+            }
         },
         onOfflineReady() {
             console.log('[PWA] Offline ready');
@@ -96,7 +102,7 @@ export function setupPWA() {
 
     if (toast && refreshBtn && closeBtn) {
         console.log('[PWA] Found toast elements, binding events...');
-        
+
         const handleUpdate = () => {
             // [iOS FIX] Vô hiệu hóa nút và báo hiệu đang xử lý để tránh người dùng bấm nhiều lần
             refreshBtn.disabled = true;
@@ -107,8 +113,6 @@ export function setupPWA() {
             updateSW(true);
 
             // [iOS FIX] Fallback ép trình duyệt tải lại trang sau 1 giây.
-            // Giải quyết triệt để lỗi Safari trên iOS không bắn sự kiện `controllerchange`,
-            // khiến giao diện bị "đóng băng" không thể thao tác tiếp.
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
@@ -133,16 +137,31 @@ export function setupPWA() {
                         const registration = await navigator.serviceWorker.getRegistration();
                         if (registration) {
                             await registration.update();
-                            // Sau khi update, nếu có bản mới, onNeedRefresh sẽ tự kích hoạt toast
-                            // Chúng ta đợi 2s để tạo cảm giác "đang check"
-                            setTimeout(() => {
+                            
+                            // 3. Sau khi check xong, kiểm tra trạng thái cài đặt thực tế
+                            if (registration.installing) {
+                                // Đang tải và cài đặt bản mới dưới background.
+                                // Cứ để icon xoay, khi cài xong hook onNeedRefresh phía trên sẽ tự chạy.
+                                console.log('[PWA] Update found, installing in background...');
+                                return;
+                            } else if (registration.waiting) {
+                                // Đã tải xong và nằm chờ (có thể do hệ thống tự check ngầm trước đó)
+                                console.log('[PWA] Update already waiting...');
                                 manualUpdateBtn.classList.remove('rotating');
-                                manualUpdateBtn.title = "Kiểm tra & Cập nhật";
-                                if (toast.classList.contains('hidden')) {
-                                    alert("Ứng dụng và dữ liệu đã ở phiên bản mới nhất.");
-                                }
-                            }, 1500);
+                                manualUpdateBtn.classList.add('update-available');
+                                if (toast) toast.classList.remove('hidden');
+                                return;
+                            }
+
+                            // Nếu cả 2 đều không có, chắc chắn không có bản mới
+                            manualUpdateBtn.classList.remove('rotating');
+                            manualUpdateBtn.title = "Kiểm tra & Cập nhật";
+                            alert("Ứng dụng và dữ liệu đã ở phiên bản mới nhất.");
+                        } else {
+                            manualUpdateBtn.classList.remove('rotating');
                         }
+                    } else {
+                        manualUpdateBtn.classList.remove('rotating');
                     }
                 } catch (e) {
                     console.error("Manual update check failed:", e);
