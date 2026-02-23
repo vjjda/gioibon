@@ -7,6 +7,7 @@ import json
 import time
 import hashlib
 import shutil
+import zipfile
 from typing import List, Optional, Set
 
 from src.data_builder.models import SegmentData
@@ -121,6 +122,20 @@ class DataWriter:
         logger.info(f"✅ Đã đồng bộ {copied_count} file audio (lọc từ {len(data)} segments) ra thư mục Web.")
         if missing_count > 0:
             logger.warning(f"⚠️ Thiếu {missing_count} file audio. Hãy thử chạy lại không có --clean hoặc kiểm tra API.")
+
+        # 4. Nén toàn bộ thành file audio.zip (Bỏ qua cấu trúc thư mục)
+        if copied_count > 0:
+            zip_path = os.path.join(os.path.dirname(self.final_audio_dir), "audio.zip")
+            logger.info(f"📦 Đang nén {copied_count} file âm thanh thành audio.zip...")
+            try:
+                with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                    for audio_name in required_audios:
+                        file_to_zip = os.path.join(self.final_audio_dir, audio_name)
+                        if os.path.exists(file_to_zip):
+                            zipf.write(file_to_zip, arcname=audio_name)
+                logger.info(f"✅ Đã tạo file nén tại: {zip_path}")
+            except Exception as e:
+                logger.error(f"❌ Lỗi khi tạo file audio.zip: {e}")
 
     def _save_version_file(self) -> None:
         if not os.path.exists(self.db_path):

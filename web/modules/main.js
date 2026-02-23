@@ -11,7 +11,7 @@ import { HeaderDrawer } from 'ui/header_drawer.js';
 import { ThemeSettings } from 'ui/theme_settings.js';
 import { FontSettings } from 'ui/font_settings.js';
 import { setupPWA } from 'utils/pwa.js';
-import { AudioPrefetcher } from 'services/audio_prefetcher.js';
+import { AudioZipLoader } from 'services/audio_zip_loader.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     setupPWA();
@@ -94,21 +94,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Render nội dung
         contentRenderer.render(data);
         tocRenderer.render(data);
-        
+
         // Remove loading
         const loadingEl = document.querySelector('.loading');
         if (loadingEl) loadingEl.remove();
 
-        // Kích hoạt tiến trình tải ngầm file âm thanh (Sau khi giao diện đã sẵn sàng)
+        // Kích hoạt tiến trình tải audio.zip và giải nén (Sau khi giao diện đã sẵn sàng)
         if ('requestIdleCallback' in window) {
             requestIdleCallback(() => {
-                const prefetcher = new AudioPrefetcher(contentLoader);
-                prefetcher.startPrefetch();
+                const zipLoader = new AudioZipLoader(contentLoader);
+                zipLoader.loadAndInject();
             });
         } else {
             setTimeout(() => {
-                const prefetcher = new AudioPrefetcher(contentLoader);
-                prefetcher.startPrefetch();
+                const zipLoader = new AudioZipLoader(contentLoader);
+                zipLoader.loadAndInject();
             }, 3000);
         }
 

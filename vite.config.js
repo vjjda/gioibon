@@ -29,7 +29,7 @@ if (fs.existsSync(modulesDir)) {
     });
 }
 // -----------------------------------
-// [FIX] Alias 'libs' tường minh vì giờ nó nằm trong public
+// Alias 'libs' tường minh vì giờ nó nằm trong public
 aliases['libs'] = path.resolve(webDir, 'public/libs');
 
 export default defineConfig(({ mode }) => {
@@ -106,10 +106,11 @@ export default defineConfig(({ mode }) => {
                     navigateFallback: '/gioibon/index.html',
                     navigateFallbackDenylist: [/^\/gioibon\/assets\//, /^\/gioibon\/data\//, /^\/gioibon\/.*\.json$/],
                     globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,wasm,json}'], 
-                    globIgnores: ['**/node_modules/**/*', 'sw.js', 'workbox-*.js', '**/*_version.json', '**/*.db'],
+                    // Bỏ qua file .zip để không bị Precache làm phình bộ nhớ PWA
+                    globIgnores: ['**/node_modules/**/*', 'sw.js', 'workbox-*.js', '**/*_version.json', '**/*.db', '**/*.zip'],
                     maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, 
                     runtimeCaching: [
-                        // [NEW] Cache file âm thanh cục bộ (Dùng CacheFirst vì file mp3 (hash) không bao giờ đổi nội dung)
+                        // Cache file âm thanh cục bộ (Dùng CacheFirst vì file mp3 không bao giờ đổi nội dung)
                         {
                             urlPattern: ({ url }) => url.pathname.includes('/app-content/audio/') && url.pathname.endsWith('.mp3'),
                             handler: 'CacheFirst',
