@@ -45,15 +45,16 @@ class TsvContentProcessor:
                     label = row['label']
                     segment_text = row['segment']
 
-                    # 1. Bọc các cụm từ trong ngoặc đơn (Pali) vào thẻ span.pali-name
-                    pali_pattern = r"\(.*?\)"
-                    segment_text = re.sub(pali_pattern, r"<span class='pali-name'>\g<0></span>", segment_text)
-
-                    # 2. Tạo nội dung cho Hint Mode (Pre-processed)
+                    # 1. Tạo nội dung cho Hint Mode (Pre-processed)
                     # Bỏ qua tạo hint-tail cho các đoạn là heading (luôn hiển thị rõ)
                     is_heading = html.startswith("<h") or label in ["title", "subtitle"] or label.endswith("-name") or label.endswith("-chapter")
+                    
                     if is_heading:
                         hint_content = ""
+                        # Chỉ bọc các cụm từ trong ngoặc đơn (Pali) vào thẻ span.pali-name cho heading/name
+                        if html.startswith("<h") and label.endswith("-name"):
+                            pali_pattern = r"\(.*?\)"
+                            segment_text = re.sub(pali_pattern, r"<span class='pali-name'>\g<0></span>", segment_text)
                     else:
                         hint_content = self._generate_hint_html(segment_text)
 
