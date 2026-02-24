@@ -20,11 +20,12 @@ class TsvContentProcessor:
         if not text:
             return ""
         
-        # Regex này khớp với: (Chữ cái đầu) (Các chữ cái tiếp theo)
-        # Sử dụng flag re.UNICODE để hỗ trợ tiếng Việt
+        # Regex này khớp với: (Phụ âm đầu hoặc Chữ cái đầu) (Các chữ cái tiếp theo)
+        # Hỗ trợ các phụ âm ghép tiếng Việt (ngh, ch, gh, gi, kh, ng, nh, ph, qu, th, tr)
+        # Sử dụng re.IGNORECASE để khớp cả chữ hoa và thường.
         # [^\W\d_] khớp với ký tự là chữ (Letter), không bao gồm số và dấu gạch dưới.
-        pattern = r"([^\W\d_])([^\W\d_]+)"
-        return re.sub(pattern, r"\1<span class='hint-tail'>\2</span>", text, flags=re.UNICODE)
+        pattern = r"\b(ngh|ch|gh|gi|kh|ng|nh|ph|qu|th|tr|[^\W\d_])([^\W\d_]+)"
+        return re.sub(pattern, r"\1<span class='hint-tail'>\2</span>", text, flags=re.IGNORECASE | re.UNICODE)
 
     def process_tsv(self, tsv_path: str) -> List[SegmentData]:
         """Đọc file TSV nguồn và bổ sung cột Audio, cột Hint bằng cách xử lý text."""
