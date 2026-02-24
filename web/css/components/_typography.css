@@ -83,6 +83,14 @@
     font-weight: 300;
 }
 
+/* [NEW] Pali Name (Low Profile) inside headings/text */
+.pali-name {
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.85em;
+    font-weight: 400;
+}
+
 /* [NEW] Note Styling (Low Profile) */
 .note {
     font-family: var(--font-ui);
