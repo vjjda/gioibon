@@ -1,6 +1,6 @@
 html	label	segment
-"<h1 class=""title"">{}</h1>"	title	GIỚI BỔN TỲ KHƯU
-"<h2 class=""subtitle"">{}</h2>"	subtitle	PĀTIMOKKHA BHIKKHU
+<h1 class="title">{}</h1>	title	GIỚI BỔN TỲ KHƯU
+<h2 class="subtitle">{}</h2>	subtitle	PĀTIMOKKHA BHIKKHU
 <h2>{}</h2>	tiensu	TIỀN SỰ
 <p class='namo'>{}</p>	tiensu	NAMO TASSA BHAGAVATO ARAHATO SAMMĀSAMBUDDHASSA
 <h3>{}</h3>	tiensu	Công Việc Chuẩn Bị
@@ -13,10 +13,10 @@ html	label	segment
 <h2>{}</h2>	modau	MỞ ĐẦU
 <h3>{}</h3>	modau	Tác Bạch
 <p>{}	modau	Suṇātu me bhante saṅgho.
-{}</p>	modau	Ajjuposatho [<b>paṇṇaraso</b>], yadi saṅghassa pattakallaṃ, saṅgho uposathaṃ kareyya, pātimokkhaṃ uddiseyya.
-"<p class=""note"">{}</p>"	note	paṇṇaraso (15) hoặc catuddaso (14) hoặc samaggo (hoà hợp tăng).
+{}</p>	modau	Ajjuposatho <b>paṇṇaraso</b>, yadi saṅghassa pattakallaṃ, saṅgho uposathaṃ kareyya, pātimokkhaṃ uddiseyya.
+<p class="note">{}</p>	note	paṇṇaraso (15) hoặc catuddaso (14) hoặc samaggo (hoà hợp tăng).
 <p>{}	modau	Bạch chư đại đức Tăng, xin hội chúng hãy lắng nghe tôi.
-{}	modau	Hôm nay là ngày [<b>mười lăm</b>] là ngày lễ Uposatha.
+{}	modau	Hôm nay là ngày <b>mười lăm</b> là ngày lễ Uposatha.
 {}</p>	modau	Nếu là thời điểm thích hợp cho hội chúng, hội chúng nên tiến hành lễ Uposatha, nên đọc tụng giới bổn Pātimokkha.
 <p>{}	modau	Phận sự trước tiên của hội chúng là gì?
 {}	modau	Các đại đức hãy tuyên bố sự trong sạch rồi tôi sẽ đọc tụng giới bổn Pātimokkha.
@@ -275,11 +275,11 @@ html	label	segment
 <p>{}	np23	Các loại dược phẩm nào được dùng cho các tỳ khưu bị bệnh như là bơ lỏng, bơ đặc, dầu ăn, mật ong, đường mía.
 {}	np23	Các thứ ấy sau khi nhận lãnh nên được thọ dụng với sự cất giữ tối đa là 7 ngày.
 {}</p>	np23	Vượt quá hạn ấy thì nên được xả bỏ và (vị ấy) phạm tội pācittiya.
-<h4>{}</h4>	np24-name	Np 24. Y choàng tắm mưa (Vassikasāṭika)
-<p>{}<br>	np24	(Biết rằng): ‘Mùa nóng còn lại là một tháng’ vị tỳ khưu nên tìm kiếm y choàng tắm mưa.
+<h4>{}</h4>	np24-name	Np 24. Vải choàng tắm mưa (Vassikasāṭika)
+<p>{}<br>	np24	(Biết rằng): ‘Mùa nóng còn lại là một tháng’ vị tỳ khưu nên tìm kiếm vải choàng tắm mưa.
 {}<br>	np24	(Biết rằng): ‘Mùa nóng còn lại là nửa tháng’ vị làm xong thì nên mặc.
-{}<br>	np24	Nếu (biết rằng): ‘Mùa nóng còn lại là hơn một tháng’ rồi tìm kiếm y choàng tắm mưa,
-{}</p>	np24	(nếu biết rằng): ‘Mùa nóng còn lại là hơn nửa tháng’ sau khi làm xong rồi mặc vào thì (y ấy) nên được xả bỏ và (vị ấy) phạm tội pācittiya.
+{}<br>	np24	Nếu (biết rằng): ‘Mùa nóng còn lại là hơn một tháng’ rồi tìm kiếm vải choàng tắm mưa,
+{}</p>	np24	(nếu biết rằng): ‘Mùa nóng còn lại là hơn nửa tháng’ sau khi làm xong rồi mặc vào thì (vải choàng ấy) nên được xả bỏ và (vị ấy) phạm tội pācittiya.
 <h4>{}</h4>	np25-name	Np 25. Giật lại y (Cīvaraacchindana)
 <p>{}</p>	np25	Vị tỳ khưu nào sau khi tự mình cho y đến vị tỳ khưu lại nổi giận, bất bình, rồi giật lại, hoặc bảo giật lại thì (y ấy) nên được xả bỏ và (vị ấy) phạm tội pācittiya.
 <h4>{}</h4>	np26-name	Np 26. Yêu cầu chỉ sợi (Suttaviññatti)
@@ -472,21 +472,21 @@ html	label	segment
 <p>{}</p>	pc60	Vị tỳ khưu nào thu giấu hoặc bảo thu giấu bình bát hoặc y hoặc tấm lót ngồi hoặc ống đựng kim hoặc dây thắt lưng của vị tỳ khưu cho dầu chỉ muốn cười giỡn thì phạm tội pācittiya.
 <p class='endvagga'>{}</p>	pc-ending	Phẩm Uống Rượu là thứ sáu.
 <h3>{}</h3>	pc-chapter	Phẩm 7: Có Sinh Vật
-<h4>{}</h4>	pc61-name	Pc 61. Sañcicca
+<h4>{}</h4>	pc61-name	Pc 61. Cố ý (Sañcicca)
 <p>{}</p>	pc61	Vị tỳ khưu nào cố ý đoạt lấy mạng sống sinh vật thì phạm tội pācittiya.
-<h4>{}</h4>	pc62-name	Pc 62. Sappāṇaka
+<h4>{}</h4>	pc62-name	Pc 62. Có sinh vật (Sappāṇaka)
 <p>{}</p>	pc62	Vị tỳ khưu nào trong khi biết nước có sinh vật vẫn sử dụng thì phạm tội pācittiya.
-<h4>{}</h4>	pc63-name	Pc 63. Ukkoṭana
+<h4>{}</h4>	pc63-name	Pc 63. Khơi lại (Ukkoṭana)
 <p>{}</p>	pc63	Vị tỳ khưu nào trong khi biết sự tranh tụng đã được giải quyết đúng theo pháp vẫn khơi lại để làm hành sự lần nữa thì phạm tội pācittiya.
-<h4>{}</h4>	pc64-name	Pc 64. Duṭṭhulla
+<h4>{}</h4>	pc64-name	Pc 64. Tội xấu xa (Duṭṭhulla)
 <p>{}</p>	pc64	Vị tỳ khưu nào trong khi biết tội xấu xa của vị tỳ khưu vẫn che giấu thì phạm tội pācittiya.
-<h4>{}</h4>	pc65-name	Pc 65. Ūnavīsativassa
+<h4>{}</h4>	pc65-name	Pc 65. Chưa đủ hai mươi tuổi (Ūnavīsativassa)
 <p>{}</p>	pc65	Vị tỳ khưu nào trong khi biết người chưa đủ hai mươi tuổi vẫn cho tu lên bậc trên thì người ấy chưa được tu lên bậc trên và các vị tỳ khưu ấy bị chê trách; đây là tội pācittiya trong trường hợp ấy.
-<h4>{}</h4>	pc66-name	Pc 66. Theyyasattha
+<h4>{}</h4>	pc66-name	Pc 66. Đám người đạo tặc (Theyyasattha)
 <p>{}</p>	pc66	Vị tỳ khưu nào trong khi biết vẫn hẹn trước rồi đi chung đường xa với đám người đạo tặc ngay cả từ làng này sang làng khác thì phạm tội pācittiya.
-<h4>{}</h4>	pc67-name	Pc 67. Saṁvidhāna
+<h4>{}</h4>	pc67-name	Pc 67. Hẹn trước (Saṁvidhāna)
 <p>{}</p>	pc67	Vị tỳ khưu nào hẹn trước rồi đi chung đường xa với người nữ ngay cả từ làng này sang làng khác thì phạm tội pācittiya.
-<h4>{}</h4>	pc68-name	Pc 68. Ariṭṭha
+<h4>{}</h4>	pc68-name	Pc 68. Ariṭṭha (Ariṭṭha)
 <p>{}	pc68	Vị tỳ khưu nào nói như vầy:
 {}	pc68	‘Theo như ta hiểu về Pháp đã được đức Thế Tôn thuyết giảng thì những pháp chướng ngại được đức Thế Tôn giảng giải không có khả năng đem đến sự chướng ngại cho người thực hành.’
 {}	pc68	Vị tỳ khưu ấy nên được nói bởi các tỳ khưu như vầy:
@@ -496,9 +496,9 @@ html	label	segment
 {}	pc68	Này đại đức, đức Thế Tôn đã giảng giải bằng nhiều phương thức rằng các pháp chướng ngại có khả năng đem đến sự chướng ngại cho người thực hành.’
 {}	pc68	Và khi được nói như vậy bởi các tỳ khưu mà vị tỳ khưu ấy vẫn chấp giữ y như thế, thì vị tỳ khưu ấy nên được các tỳ khưu nhắc nhở đến lần thứ ba để từ bỏ việc ấy.
 {}</p>	pc68	Nếu được nhắc nhở đến lần thứ ba mà dứt bỏ việc ấy, như thế việc này là tốt đẹp; nếu không dứt bỏ thì phạm tội pācittiya.
-<h4>{}</h4>	pc69-name	Pc 69. Ukkhittasambhoga
+<h4>{}</h4>	pc69-name	Pc 69. Ngưng hưởng thụ chung (Ukkhittasambhoga)
 <p>{}</p>	pc69	Vị tỳ khưu nào trong khi biết vị tỳ khưu là vị phát ngôn như thế, là vị không thực hành thuận pháp, và không dứt bỏ tà kiến ấy mà vẫn hưởng thụ chung, hoặc vẫn cộng trú, hoặc vẫn nằm chung chỗ ngụ thì phạm tội pācittiya.
-<h4>{}</h4>	pc70-name	Pc 70. Kaṇṭaka
+<h4>{}</h4>	pc70-name	Pc 70. Chương ngại (Kaṇṭaka)
 <p>{}	pc70	Nếu có vị sa di nói như vầy:
 {}	pc70	‘Theo như ta hiểu về Pháp đã được đức Thế Tôn thuyết giảng thì những pháp chướng ngại được đức Thế Tôn giảng giải không có khả năng đem đến sự chướng ngại cho người thực hành.’
 {}	pc70	Vị sa di ấy nên được nói bởi các tỳ khưu như sau:
@@ -513,18 +513,18 @@ html	label	segment
 {}</p>	pc70	Vị tỳ khưu nào trong khi biết vị sa di là kẻ đã bị trục xuất như thế mà vẫn dụ dỗ, hoặc vẫn bảo phục vụ, hoặc vẫn hưởng thụ chung, hoặc vẫn nằm chung chỗ ngụ thì phạm tội pācittiya.
 <p class='endvagga'>{}</p>	pc-ending	Phẩm Có Sinh Vật là thứ bảy.
 <h3>{}</h3>	pc-chapter	Phẩm 8: Theo Pháp
-<h4>{}</h4>	pc71-name	Pc 71. Sahadhammika
+<h4>{}</h4>	pc71-name	Pc 71. Theo pháp (Sahadhammika)
 <p>{}	pc71	Vị tỳ khưu nào khi được các tỳ khưu nói theo Pháp lại nói như vầy:
 {}	pc71	‘Này các đại đức, tôi sẽ không thực hành điều học này cho đến khi nào tôi còn chưa hỏi vị tỳ khưu khác kinh nghiệm rành rẽ về Luật’
 {}	pc71	thì phạm tội pācittiya.’
 {}	pc71	Này các tỳ khưu, vị tỳ khưu trong lúc học tập nên hiểu rõ, nên thắc mắc, nên suy xét.
 {}</p>	pc71	Đây là sự đúng đắn trong trường hợp ấy.
-<h4>{}</h4>	pc72-name	Pc 72. Vilekhana
+<h4>{}</h4>	pc72-name	Pc 72. Bối rối (Vilekhana)
 <p>{}	pc72	Khi giới bổn Pātimokkha đang được đọc tụng, vị tỳ khưu nào nói như vầy:
 {}	pc72	‘Được việc gì với các điều học nhỏ nhặt và ít quan trọng được đọc tụng này?
 {}	pc72	Chúng chỉ đem lại sự ăn năn, sự bực bội, sự bối rối thôi!’
 {}</p>	pc72	Khi có sự chê bai điều học thì phạm tội pācittiya.
-<h4>{}</h4>	pc73-name	Pc 73. Mohana
+<h4>{}</h4>	pc73-name	Pc 73. Ngu dốt (Mohana)
 <p>{}	pc73	Vị tỳ khưu nào trong lúc giới bổn Pātimokkha đang được đọc tụng vào mỗi nửa tháng lại nói như vầy:
 {}	pc73	‘Ngay giờ đây tôi mới hay biết rằng điều học này đã được truyền lại trong giới bổn, đã được đầy đủ trong giới bổn, và được đưa ra đọc tụng vào mỗi nửa tháng.’
 {}	pc73	Nếu các vị tỳ khưu khác biết rõ về vị tỳ khưu ấy rằng:
@@ -534,61 +534,61 @@ html	label	segment
 {}	pc73	Hơn nữa, sự ngu dốt nên được khẳng định đối với vị ấy rằng:
 {}	pc73	‘Này đại đức, ngươi đây không có sự lợi ích, ngươi đây đã nhận lãnh điều xấu là việc trong lúc giới bổn Pātimokkha đang được đọc tụng ngươi lại không khéo chăm chú và tác ý.’
 {}</p>	pc73	Đây là tội pācittiya trong sự ngu dốt ấy.
-<h4>{}</h4>	pc74-name	Pc 74. Pahāra
+<h4>{}</h4>	pc74-name	Pc 74. Tung cú đánh (Pahāra)
 <p>{}</p>	pc74	Vị tỳ khưu nào nổi giận, bất bình rồi tung cú đánh vào vị tỳ khưu thì phạm tội pācittiya.
-<h4>{}</h4>	pc75-name	Pc 75. Talasattika
+<h4>{}</h4>	pc75-name	Pc 75. Giá tay dọa đánh (Talasattika)
 <p>{}</p>	pc75	Vị tỳ khưu nào nổi giận, bất bình rồi giá tay dọa đánh vị tỳ khưu thì phạm tội pācittiya.
-<h4>{}</h4>	pc76-name	Pc 76. Amūlaka
+<h4>{}</h4>	pc76-name	Pc 76. Không có nguyên cơ (Amūlaka)
 <p>{}</p>	pc76	Vị tỳ khưu nào bôi nhọ vị tỳ khưu về tội saṅghādisesa không có nguyên cớ thì phạm tội pācittiya.
-<h4>{}</h4>	pc77-name	Pc 77. Sañcicca
+<h4>{}</h4>	pc77-name	Pc 77. Cố ý (Sañcicca)
 <p>{}	pc77	Vị tỳ khưu nào cố ý gợi lên nỗi nghi hoặc ở nơi vị tỳ khưu (nghĩ rằng):
 {}	pc77	‘Như thế sẽ làm cho vị này không được thoải mái dầu chỉ trong chốc lát,’
 {}</p>	pc77	sau khi thực hiện chỉ nguyên nhân ấy không điều nào khác thì phạm tội pācittiya.
-<h4>{}</h4>	pc78-name	Pc 78. Upassuti
+<h4>{}</h4>	pc78-name	Pc 78. Nghe lén (Upassuti)
 <p>{}	pc78	Vị tỳ khưu nào đứng nghe lén các tỳ khưu đã nảy sanh sự xung đột, đã nảy sanh sự cãi cọ, đã tiến đến sự tranh luận (nghĩ rằng):
 {}	pc78	‘Những người này nói điều gì, ta sẽ nghe lời ấy,’
 {}</p>	pc78	sau khi thực hiện chỉ nguyên nhân ấy không điều nào khác thì phạm tội pācittiya.
-<h4>{}</h4>	pc79-name	Pc 79. Kammappaṭibāhana
+<h4>{}</h4>	pc79-name	Pc 79. Cản trở hành sự (Kammappaṭibāhana)
 <p>{}</p>	pc79	Vị tỳ khưu nào sau khi trao ra sự tùy thuận cho những hành sự đúng pháp sau đó lại tiến hành việc phê phán thì phạm tội pācittiya.
-<h4>{}</h4>	pc80-name	Pc 80. Chandaṁadatvāgamana
+<h4>{}</h4>	pc80-name	Pc 80. Bỏ đi không trao tùy thuận (Chandaṁadatvāgamana)
 <p>{}</p>	pc80	Vị tỳ khưu nào, trong khi lời quyết định đang được tuyên bố ở hội chúng, không trao ra sự tùy thuận rồi từ chỗ ngồi đứng dậy và bỏ đi thì phạm tội pācittiya.
-<h4>{}</h4>	pc81-name	Pc 81. Dubbala
+<h4>{}</h4>	pc81-name	Pc 81. Đã cũ (Dubbala)
 <p>{}	pc81	Vị tỳ khưu nào cùng với hội chúng hợp nhất đã cho y sau đó lại tiến hành việc phê phán rằng:
 {}	pc81	‘Các tỳ khưu trao phần lợi lộc thuộc về hội chúng thuận theo sự quen biết’
 {}</p>	pc81	thì phạm tội pācittiya.
-<h4>{}</h4>	pc82-name	Pc 82. Pariṇāmana
+<h4>{}</h4>	pc82-name	Pc 82. Chuyển dâng (Pariṇāmana)
 <p>{}</p>	pc82	Vị tỳ khưu nào trong khi biết lợi lộc đã được khẳng định là dành riêng cho hội chúng vẫn thuyết phục dâng cho cá nhân thì phạm tội pācittiya.
 <p class='endvagga'>{}</p>	pc-ending	Phẩm (Nói) Theo Pháp là thứ tám.
 <h3>{}</h3>	pc-chapter	Phẩm 9: Báu Vật
-<h4>{}</h4>	pc83-name	Pc 83. Antepura
+<h4>{}</h4>	pc83-name	Pc 83. Hậu cung (Antepura)
 <p>{}</p>	pc83	Vị tỳ khưu nào khi chưa được báo tin trước mà vượt qua ngưỡng cửa (phòng ngủ) của đức vua dòng Sát- đế-lỵ đã được đội lên vương miện trong lúc đức vua chưa đi khỏi trong lúc vật báu (hoàng hậu) chưa lui ra thì phạm tội pācittiya.
-<h4>{}</h4>	pc84-name	Pc 84. Ratana
+<h4>{}</h4>	pc84-name	Pc 84. Vật quý giá (Ratana)
 <p>{}	pc84	Vị tỳ khưu nào nhặt lấy hoặc bảo nhặt lấy vật quý giá hoặc vật được xem là quý giá thì phạm tội pācittiya ngoại trừ trong khuôn viên tu viện hoặc trong khuôn viên chỗ ngụ.
 {}	pc84	Vị tỳ khưu sau khi nhặt lấy hoặc bảo nhặt lấy vật quý giá hoặc vật được xem là quý giá ở trong khuôn viên tu viện hoặc ở trong khuôn viên chỗ ngụ nên để riêng ra (nghĩ rằng):
 {}	pc84	‘Là của ai, người ấy sẽ đem đi.’
 {}</p>	pc84	Đây là điều đúng đắn trong trường hợp ấy.
-<h4>{}</h4>	pc85-name	Pc 85. Vikālagāmappavesana
+<h4>{}</h4>	pc85-name	Pc 85. Vào làng lúc sái thời (Vikālagāmappavesana)
 <p>{}</p>	pc85	Vị tỳ khưu nào đi vào làng lúc sái thời không thông báo vị tỳ khưu hiện diện thì phạm tội pācittiya ngoại trừ trường hợp có việc cần làm khẩn cấp như thế.
-<h4>{}</h4>	pc86-name	Pc 86. Sūcighara
+<h4>{}</h4>	pc86-name	Pc 86. Ống đựng kim (Sūcighara)
 <p>{}</p>	pc86	Vị tỳ khưu nào cho làm ống đựng kim bằng xương, hoặc bằng ngà, hoặc bằng sừng thì (ống đựng kim ấy) nên được đập vỡ và phạm tội pācittiya.
-<h4>{}</h4>	pc87-name	Pc 87. Mañcapīṭha
+<h4>{}</h4>	pc87-name	Pc 87. Giường ghế (Mañcapīṭha)
 <p>{}	pc87	Trong lúc cho làm giường hoặc ghế mới, vị tỳ khưu nên bảo làm chân cao tám ngón tay theo ngón tay của đức Thiện Thệ ngoại trừ phần khung giường ở bên dưới.
 {}</p>	pc87	Nếu vượt quá mức ấy thì nên cắt bớt và phạm tội pācittiya.
-<h4>{}</h4>	pc88-name	Pc 88. Tūlonaddha
+<h4>{}</h4>	pc88-name	Pc 88. Độn bông gòn (Tūlonaddha)
 <p>{}</p>	pc88	Vị tỳ khưu nào cho làm giường ghế độn bông gòn thì (bông gòn) nên được móc ra và phạm tội pācittiya.
-<h4>{}</h4>	pc89-name	Pc 89. Nisīdana
+<h4>{}</h4>	pc89-name	Pc 89. Tấm lót ngồi (Nisīdana)
 <p>{}	pc89	Trong lúc cho làm tấm lót ngồi, vị tỳ khưu nên bảo làm theo kích thước.
 {}	pc89	Ở đây, kích thước này là chiều dài hai gang tay, chiều rộng một gang rưỡi, đường viền một gang theo gang tay của đức Thiện Thệ.
 {}</p>	pc89	Nếu vượt quá mức ấy thì (tấm lót ngồi) nên được cắt bớt và phạm tội pācittiya.
-<h4>{}</h4>	pc90-name	Pc 90. Kaṇḍuppaṭicchādi
+<h4>{}</h4>	pc90-name	Pc 90. Y đắp ghẻ (Kaṇḍuppaṭicchādi)
 <p>{}	pc90	Trong lúc cho làm y đắp ghẻ, vị tỳ khưu nên bảo làm theo kích thước.
 {}	pc90	Ở đây, kích thước này là chiều dài bốn gang tay, chiều rộng hai gang theo gang tay của đức Thiện Thệ.
 {}</p>	pc90	Nếu vượt quá mức ấy thì (y đắp ghẻ) nên được cắt bớt và phạm tội pācittiya.
-<h4>{}</h4>	pc91-name	Pc 91. Vassikasāṭika
+<h4>{}</h4>	pc91-name	Pc 91. Vải choàng tắm mưa (Vassikasāṭika)
 <p>{}	pc91	Trong lúc cho làm vải choàng tắm mưa, vị tỳ khưu nên bảo làm theo kích thước.
 {}	pc91	Ở đây, kích thước này là chiều dài sáu gang tay, chiều rộng hai gang rưỡi theo gang tay của đức Thiện Thệ.
 {}</p>	pc91	Nếu vượt quá mức ấy thì (vải choàng tắm mưa) nên được cắt bớt và phạm tội pācittiya.
-<h4>{}</h4>	pc92-name	Pc 92. Nanda
+<h4>{}</h4>	pc92-name	Pc 92. Nanda (Nanda)
 <p>{}	pc92	Vị tỳ khưu nào cho làm y có kích thước y của đức Thiện Thệ hoặc rộng hơn thì (y ấy) nên được cắt bớt và phạm tội pācittiya.
 {}	pc92	Trong trường hợp này, kích thước y của đức Thiện Thệ dành cho đức Thiện Thệ là chiều dài chín gang tay, chiều rộng sáu gang theo gang tay của đức Thiện Thệ.
 {}</p>	pc92	Đây là kích thước y của đức Thiện Thệ dành cho đức Thiện Thệ.
@@ -602,10 +602,11 @@ html	label	segment
 <p class='endsection'>{}</p>	pc-ending	Dứt Các Điều Pācittiyā
 <h2>{}</h2>	pd-opening	THUYẾT GIỚI ƯNG PHÁT LỘ
 <p>{}</p>	pd-opening	Bạch chư đại đức, bốn điều pāṭidesanīya này được đưa ra đọc tụng.
-<h4>{}</h4>	pd1-name	Pd 1. Paṭhamapāṭidesanīya
-<p>{}	pd1	Vị tỳ khưu nào tự tay nhận lãnh vật thực cứng hoặc vật thực mềm từ tay tỳ khưu ni không phải là thân quyến đã đi vào xóm nhà, rồi nhai hoặc ăn thì vị tỳ khưu ấy nên thú nhận rằng:
+<h4>{}</h4>	pd1-name	Pd 1. Ưng phát lộ thứ nhất (Paṭhamapāṭidesanīya)
+<p>{}	pd1	Vị tỳ khưu nào tự tay nhận lãnh vật thực cứng hoặc vật thực mềm từ tay tỳ khưu ni không phải là thân quyến đã đi vào xóm nhà,
+{}	pd1	rồi nhai hoặc ăn thì vị tỳ khưu ấy nên thú nhận rằng:
 {}</p>	pd1	‘Bạch chư đại đức, tôi đã vi phạm tội đáng chê trách, không có lợi ích, cần phải thú nhận; tôi xin thú nhận tội ấy.’
-<h4>{}</h4>	pd2-name	Pd 2. Dutiyapāṭidesanīya
+<h4>{}</h4>	pd2-name	Pd 2. Ưng phát lộ thứ hai (Dutiyapāṭidesanīya)
 <p>{}	pd2	Trường hợp các tỳ khưu được thỉnh mời thọ thực ở các gia đình.
 {}	pd2	Nếu tại nơi ấy có vị tỳ khưu ni đứng hướng dẫn sự phục vụ (nói rằng):
 {}	pd2	‘Hãy dâng xúp ở đây, hãy dâng cơm ở chỗ này.’
@@ -615,11 +616,16 @@ html	label	segment
 {}	pd2	‘Này sư tỷ, hãy lui ra cho đến khi nào các tỳ khưu thọ thực xong’
 {}	pd2	thì các tỳ khưu ấy nên thú nhận rằng:
 {}</p>	pd2	‘Bạch chư đại đức, chúng tôi đã vi phạm tội đáng chê trách, không có lợi ích, cần phải thú nhận; chúng tôi xin thú nhận tội ấy.’
-<h4>{}</h4>	pd3-name	Pd 3. Tatiyapāṭidesanīya
-<p>{}	pd3	Trường hợp các gia đình đã được công nhận là bậc hữu học, vị tỳ khưu nào không được thỉnh mời trước, không bị bệnh, tự tay nhận lãnh vật thực cứng hoặc vật thực mềm ở các gia đình đã được công nhận là bậc hữu học theo hình thức như thế, rồi nhai hoặc ăn thì vị tỳ khưu ấy nên thú nhận rằng:
+<h4>{}</h4>	pd3-name	Pd 3. Ưng phát lộ thứ ba (Tatiyapāṭidesanīya)
+<p>{}	pd3	Trường hợp các gia đình đã được công nhận là bậc hữu học,
+{}	pd3	vị tỳ khưu nào không được thỉnh mời trước, không bị bệnh, tự tay nhận lãnh vật thực cứng hoặc vật thực mềm ở các gia đình đã được công nhận là bậc hữu học theo hình thức như thế,
+{}	pd3	rồi nhai hoặc ăn thì vị tỳ khưu ấy nên thú nhận rằng:
 {}</p>	pd3	‘Bạch chư đại đức, tôi đã vi phạm tội đáng chê trách, không có lợi ích, cần phải thú nhận; tôi xin thú nhận tội ấy.’
-<h4>{}</h4>	pd4-name	Pd 4. Catutthapāṭidesanīya
-<p>{}	pd4	Trường hợp những chỗ trú ngụ ở trong rừng được xác định là có sự nguy hiểm, có sự kinh hoàng, vị tỳ khưu nào trong khi đang sống ở những chỗ trú ngụ có hình thức như thế, sau khi tự tay nhận lãnh vật thực cứng hoặc vật thực mềm chưa được báo tin trước ở trong khuôn viên tu viện, không bị bệnh rồi nhai hoặc ăn thì vị tỳ khưu ấy nên thú nhận rằng:
+<h4>{}</h4>	pd4-name	Pd 4. Ưng phát lộ thứ tư (Catutthapāṭidesanīya)
+<p>{}	pd4	Trường hợp những chỗ trú ngụ ở trong rừng được xác định là có sự nguy hiểm, có sự kinh hoàng,
+{}	pd4	vị tỳ khưu nào trong khi đang sống ở những chỗ trú ngụ có hình thức như thế,
+{}	pd4	sau khi tự tay nhận lãnh vật thực cứng hoặc vật thực mềm chưa được báo tin trước ở trong khuôn viên tu viện,
+{}	pd4	không bị bệnh rồi nhai hoặc ăn thì vị tỳ khưu ấy nên thú nhận rằng:
 {}</p>	pd4	‘Bạch chư đại đức, tôi đã vi phạm tội đáng chê trách, không có lợi ích, cần phải thú nhận; tôi xin thú nhận tội ấy.’
 <h3>{}</h3>	pd-ending	Dứt Giới Ưng Phát Lộ
 <p>{}	pd-ending	Bạch chư đại đức, bốn điều pāṭidesanīya đã được đọc tụng xong.
@@ -733,7 +739,7 @@ html	label	segment
 <p>{}</p>	sk46	‘Ta sẽ không thọ thực theo lối làm phồng má’ là việc học tập nên được thực hành.
 <h4>{}</h4>	sk47-name	Sk 47. Vung rảy bàn tay (Hatthaniddhunaka)
 <p>{}</p>	sk47	‘Ta sẽ không thọ thực có sự vung rảy bàn tay’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk48-name	Sk 48. Rơi đổ cơm (Sitthāvakāraka)
+<h4>{}</h4>	sk48-name	Sk 48. Làm rơi đổ cơm (Sitthāvakāraka)
 <p>{}</p>	sk48	‘Ta sẽ không thọ thực có sự làm rơi đổ cơm’ là việc học tập nên được thực hành.
 <h4>{}</h4>	sk49-name	Sk 49. Le lưỡi (Jivhānicchāraka)
 <p>{}</p>	sk49	‘Ta sẽ không thọ thực có sự le lưỡi’ là việc học tập nên được thực hành.
@@ -741,57 +747,57 @@ html	label	segment
 <p>{}</p>	sk50	‘Ta sẽ không thọ thực có làm tiếng chép chép’ là việc học tập nên được thực hành.
 <p class='endvagga'>{}</p>	sk-ending	Phẩm Vắt Cơm là thứ năm.
 <h3>{}</h3>	sk-chapter	Phẩm 6: Tiếng Sột Sột
-<h4>{}</h4>	sk51-name	Sk 51. Surusurukāraka
+<h4>{}</h4>	sk51-name	Sk 51. Làm tiếng sột sột (Surusurukāraka)
 <p>{}</p>	sk51	‘Ta sẽ không thọ thực có làm tiếng sột sột’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk52-name	Sk 52. Hatthanillehaka
+<h4>{}</h4>	sk52-name	Sk 52. Liếm tay (Hatthanillehaka)
 <p>{}</p>	sk52	‘Ta sẽ không thọ thực có sự liếm tay’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk53-name	Sk 53. Pattanillehaka
+<h4>{}</h4>	sk53-name	Sk 53. Nạo vét bình bát (Pattanillehaka)
 <p>{}</p>	sk53	‘Ta sẽ không thọ thực có sự nạo vét bình bát’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk54-name	Sk 54. Oṭṭhanillehaka
+<h4>{}</h4>	sk54-name	Sk 54. Liếm môi (Oṭṭhanillehaka)
 <p>{}</p>	sk54	‘Ta sẽ không thọ thực có sự liếm môi’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk55-name	Sk 55. Sāmisa
+<h4>{}</h4>	sk55-name	Sk 55. Dính bẩn (Sāmisa)
 <p>{}</p>	sk55	‘Ta sẽ không nhận lãnh tô nước uống bằng bàn tay có dính thức ăn’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk56-name	Sk 56. Sasitthaka
+<h4>{}</h4>	sk56-name	Sk 56. Có lẫn cơm (Sasitthaka)
 <p>{}</p>	sk56	‘Ta sẽ không đổ bỏ nước rửa bình bát có lẫn cơm ở nơi xóm nhà’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk57-name	Sk 57. Chattapāṇi
+<h4>{}</h4>	sk57-name	Sk 57. Có dù ở bàn tay (Chattapāṇi)
 <p>{}</p>	sk57	‘Ta sẽ không thuyết Pháp đến người không bị bệnh có dù ở bàn tay’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk58-name	Sk 58. Daṇḍapāṇi
+<h4>{}</h4>	sk58-name	Sk 58. Có gậy ở bàn tay (Daṇḍapāṇi)
 <p>{}</p>	sk58	‘Ta sẽ không thuyết Pháp đến người không bị bệnh có gậy ở bàn tay’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk59-name	Sk 59. Satthapāṇi
+<h4>{}</h4>	sk59-name	Sk 59. Có dao ở bàn tay (Satthapāṇi)
 <p>{}</p>	sk59	‘Ta sẽ không thuyết Pháp đến người không bị bệnh có dao ở bàn tay’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk60-name	Sk 60. Āvudhapāṇi
+<h4>{}</h4>	sk60-name	Sk 60. Có vũ khí ở bàn tay (Āvudhapāṇi)
 <p>{}</p>	sk60	‘Ta sẽ không thuyết Pháp đến người không bị bệnh có vũ khí ở bàn tay’ là việc học tập nên được thực hành.
 <p class='endvagga'>{}</p>	sk-ending	Phẩm Tiếng Sột Sột là thứ sáu.
 <h3>{}</h3>	sk-chapter	Phẩm 7: Giày Dép
-<h4>{}</h4>	sk61-name	Sk 61. Pāduka
+<h4>{}</h4>	sk61-name	Sk 61. Giày (Pāduka)
 <p>{}</p>	sk61	‘Ta sẽ không thuyết Pháp đến người không bị bệnh có mang giày’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk62-name	Sk 62. Upāhana
+<h4>{}</h4>	sk62-name	Sk 62. Dép (Upāhana)
 <p>{}</p>	sk62	‘Ta sẽ không thuyết Pháp đến người không bị bệnh có mang dép’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk63-name	Sk 63. Yāna
+<h4>{}</h4>	sk63-name	Sk 63. Xe (Yāna)
 <p>{}</p>	sk63	‘Ta sẽ không thuyết Pháp đến người không bị bệnh ở trên xe’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk64-name	Sk 64. Sayana
+<h4>{}</h4>	sk64-name	Sk 64. Nằm (Sayana)
 <p>{}</p>	sk64	‘Ta sẽ không thuyết Pháp đến người không bị bệnh đang nằm’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk65-name	Sk 65. Pallatthika
+<h4>{}</h4>	sk65-name	Sk 65. Ngồi ôm đầu gối (Pallatthika)
 <p>{}</p>	sk65	‘Ta sẽ không thuyết Pháp đến người không bị bệnh ngồi ôm đầu gối’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk66-name	Sk 66. Veṭhita
+<h4>{}</h4>	sk66-name	Sk 66. Đội khăn (Veṭhita)
 <p>{}</p>	sk66	‘Ta sẽ không thuyết Pháp đến người không bị bệnh đội khăn ở đầu’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk67-name	Sk 67. Oguṇṭhita
+<h4>{}</h4>	sk67-name	Sk 67. Trùm đầu (Oguṇṭhita)
 <p>{}</p>	sk67	‘Ta sẽ không thuyết Pháp đến người không bị bệnh có đầu được trùm lại’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk68-name	Sk 68. Chamā
+<h4>{}</h4>	sk68-name	Sk 68. Ở nền đất (Chamā)
 <p>{}</p>	sk68	‘Ta sẽ không ngồi ở nền đất rồi thuyết Pháp đến người không bị bệnh ngồi trên chỗ ngồi’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk69-name	Sk 69. Nīcāsana
+<h4>{}</h4>	sk69-name	Sk 69. Chỗ ngồi thấp (Nīcāsana)
 <p>{}</p>	sk69	‘Ta sẽ không ngồi ở chỗ ngồi thấp rồi thuyết Pháp đến người không bị bệnh ngồi trên chỗ ngồi cao’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk70-name	Sk 70. Ṭhita
+<h4>{}</h4>	sk70-name	Sk 70. Đứng (Ṭhita)
 <p>{}</p>	sk70	‘Ta sẽ không đứng thuyết Pháp đến người không bị bệnh ngồi’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk71-name	Sk 71. Pacchatogamana
+<h4>{}</h4>	sk71-name	Sk 71. Đi phía sau (Pacchatogamana)
 <p>{}</p>	sk71	‘Khi đang đi phía sau, ta sẽ không thuyết Pháp đến người không bị bệnh đang đi phía trước’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk72-name	Sk 72. Uppathenagamana
+<h4>{}</h4>	sk72-name	Sk 72. Đi bên đường (Uppathenagamana)
 <p>{}</p>	sk72	‘Khi đang đi bên đường, ta sẽ không thuyết Pháp đến người không bị bệnh đang đi giữa đường’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk73-name	Sk 73. Ṭhitouccāra
+<h4>{}</h4>	sk73-name	Sk 73. Đứng đại tiện (Ṭhitouccāra)
 <p>{}</p>	sk73	‘Khi không bị bệnh, ta sẽ không đứng đại tiện hoặc tiểu tiện’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk74-name	Sk 74. Hariteuccāra
+<h4>{}</h4>	sk74-name	Sk 74. Đại tiện trên cỏ cây xanh (Hariteuccāra)
 <p>{}</p>	sk74	‘Khi không bị bệnh, ta sẽ không đại tiện hoặc tiểu tiện hoặc khạc nhổ trên cỏ cây xanh’ là việc học tập nên được thực hành.
-<h4>{}</h4>	sk75-name	Sk 75. Udakeuccāra
+<h4>{}</h4>	sk75-name	Sk 75. Đại tiện vào trong nước (Udakeuccāra)
 <p>{}</p>	sk75	‘Khi không bị bệnh, ta sẽ không đại tiện hoặc tiểu tiện hoặc khạc nhổ vào trong nước’ là việc học tập nên được thực hành.
 <p class='endvagga'>{}</p>	sk-ending	Phẩm Giày Dép là thứ bảy.
 <h3>{}</h3>	sk-ending	Dứt Giới Ưng Học Pháp
