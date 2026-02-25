@@ -40,7 +40,7 @@ class TsvContentProcessor:
                 logger.info(f"Đang xử lý {total} segments từ {tsv_path}...")
 
                 for i, row in enumerate(rows):
-                    uid = int(row['uid'])
+                    uid = i + 1
                     html = row['html']
                     label = row['label']
                     segment_text = row['segment']
