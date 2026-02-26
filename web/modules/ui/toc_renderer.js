@@ -171,8 +171,15 @@ export class TocRenderer {
         this.toggle.parentNode.replaceChild(newToggle, this.toggle);
         this.toggle = newToggle;
 
-        this.toggle.addEventListener('click', () => {
-            this.sidebar.classList.toggle('visible');
+        this.toggle.addEventListener('click', (e) => {
+            if (e) e.stopPropagation();
+            if (window.innerWidth > 1024) {
+                this.sidebar.classList.toggle('collapsed');
+                const container = document.querySelector('.container');
+                if (container) container.classList.toggle('sidebar-collapsed');
+            } else {
+                this.sidebar.classList.toggle('visible');
+            }
         });
 
         document.addEventListener('click', (e) => {

@@ -17,7 +17,7 @@
 
 .toc-header {
     height: var(--header-height);
-    padding: 0 1.25rem;
+    padding: 0 1.25rem 0 55px; /* Added left padding for toggle button */
     font-family: var(--font-ui);
     font-weight: 600;
     color: var(--text-main);
@@ -182,9 +182,7 @@
     transform: scale(1.05); /* Phóng to nhẹ một chút */
 }
 
-/* Ẩn trên thiết bị Desktop */
-@media (min-width: 1025px) {
-    #sidebar-toggle {
-        display: none !important;
-    }
+/* Trạng thái thu gọn cho Desktop */
+#sidebar.collapsed {
+    transform: translateX(-100%);
 }

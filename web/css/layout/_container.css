@@ -21,6 +21,11 @@ html, body {
     transition: margin-left 0.3s ease;
 }
 
+/* Add collapsed state for desktop */
+.container.sidebar-collapsed {
+    margin-left: 0;
+}
+
 /* Content Area - Biến thành khu vực cuộn độc lập */
 #content {
     flex: 1; /* Chiếm toàn bộ không gian còn lại sau Header */
