@@ -442,9 +442,9 @@ html	label	segment
 <h4>{}</h4>	pc48-name	Pc 48. Quân đội động binh (Uyyuttasenā)
 <p>{}</p>	pc48	Vị tỳ khưu nào đi để xem quân đội động binh thì phạm tội pācittiya ngoại trừ có nhân duyên như thế.
 <h4>{}</h4>	pc49-name	Pc 49. Nơi binh đội (Senāvāsa)
-<p>{}</p>	pc49	Nếu có nhân duyên nào đó khiến vị tỳ khưu ấy đi đến nơi binh đội, vị tỳ khưu ấy nên trú ngụ trong binh đội hai ba đêm; nếu vượt hơn số ấy thì phạm tội pācittiya.
+<p>{}</p>	pc49	Nếu có nhân duyên nào đó khiến vị tỳ khưu ấy đi đến nơi binh đội, vị tỳ khưu ấy nên trú ngụ trong binh đội hai ba đêm; nếu vượt quá số ấy thì phạm tội pācittiya.
 <h4>{}</h4>	pc50-name	Pc 50. Nơi tập trận (Uyyodhika)
-<p>{}</p>	pc50	Nếu trong khi trú ngụ ở binh đội hai ba đêm vị tỳ khưu đi đến nơi tập trận, hoặc nơi đóng quân, hoặc nơi dàn binh, hoặc đội chủ lực thì phạm tội pācittiya.
+<p>{}</p>	pc50	Nếu trong khi trú ngụ ở binh đội hai ba đêm, vị tỳ khưu đi đến nơi tập trận, hoặc nơi đóng quân, hoặc nơi dàn binh, hoặc đội chủ lực thì phạm tội pācittiya.
 <p class='endvagga'>{}</p>	pc-ending	Phẩm Đạo Sĩ Lõa Thể là thứ năm.
 <h3>{}</h3>	pc-chapter	Phẩm 6: Uống Rượu
 <h4>{}</h4>	pc51-name	Pc 51. Rượu (Surāpāna)
