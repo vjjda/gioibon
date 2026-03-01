@@ -15,7 +15,7 @@ BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
 help:
 	@echo "Các lệnh có sẵn:"
 	@echo "  make data      : Xây dựng dữ liệu SQLite từ Markdown"
-	@echo "  make data ARGS=\"--clean\" : Xây dựng dữ liệu và dọn dẹp audio rác"
+	@echo "  make data-clean: Xây dựng dữ liệu và dọn dẹp audio rác"
 	@echo "  make icons     : Sinh bộ icons PWA (yêu cầu Pillow)"
 	@echo "  make dev       : Chạy Vite dev server (có QR Code mạng LAN)"
 	@echo "  make simple    : Chạy Python HTTP Server đơn giản (Port 3456)"
@@ -45,6 +45,9 @@ amend:
 # Backend & Data
 data:
 	$(PYTHON) src/main.py data $(ARGS)
+
+data-clean:
+	$(PYTHON) src/main.py data --clean
 
 icons:
 	$(PYTHON) scripts/generate_pwa_icons.py
