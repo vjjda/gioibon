@@ -40,6 +40,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     FontSettings.init();
     SyncManager.init();
 
+    // Outline Mode Toggle
+    const outlineToggleBtn = document.getElementById('outline-toggle');
+    if (outlineToggleBtn) {
+        outlineToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('outline-mode');
+            outlineToggleBtn.classList.toggle('active');
+        });
+    }
+
     const memorizationManager = new MemorizationManager();
 
     const contentRenderer = new ContentRenderer(

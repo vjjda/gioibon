@@ -323,3 +323,12 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     transform: translateY(-50%) scaleY(2);
     opacity: 1 !important;
 }
+
+/* --- OUTLINE MODE --- */
+body.outline-mode .segment:not(.heading-segment):not(.chapter-header):not(.rule-header):not(.main-title) {
+    display: none !important;
+}
+
+body.outline-mode .segment[data-label^="note"] {
+    display: none !important;
+}

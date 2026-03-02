@@ -206,6 +206,35 @@
     transform: scale(1.05); /* Phóng to nhẹ một chút */
 }
 
+/* Nút Outline Toggle */
+#outline-toggle {
+    position: fixed;
+    top: 15px; 
+    left: 55px; /* Ngay bên phải nút sidebar-toggle */
+    z-index: 1001;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: var(--text-muted);
+    opacity: 0.6;
+    font-size: 1.2rem;
+    padding: 8px;
+    cursor: pointer;
+    transition: color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#outline-toggle:hover,
+#outline-toggle:active,
+#outline-toggle.active {
+    color: var(--primary-color); 
+    opacity: 1; 
+    background: transparent !important; 
+    transform: scale(1.05);
+}
+
 /* Trạng thái thu gọn cho Desktop */
 #sidebar.collapsed {
     transform: translateX(-100%);
