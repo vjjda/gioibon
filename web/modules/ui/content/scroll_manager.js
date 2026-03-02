@@ -43,22 +43,41 @@ export class ScrollManager {
     restoreScrollPosition() {
         const lastId = localStorage.getItem('sutta_last_segment_id');
         if (lastId) {
-            const id = parseInt(lastId, 10);
-            if (!isNaN(id)) {
-                // Cuộn tới vị trí đó mà không làm sáng (highlight)
-                let targetEl = this.elementCache.get(id);
-                if (!targetEl) {
-                     const items = this.getItems();
-                     const index = items.findIndex(item => item.id === id);
-                     if (index !== -1) {
-                         this.ensureRendered(index);
-                         targetEl = this.elementCache.get(id);
-                     }
-                }
-                if (targetEl) {
-                    this._scrollToTop(targetEl, 'auto');
+            this.scrollToId(parseInt(lastId, 10), 'auto');
+        }
+    }
+
+    scrollToId(id, behavior = 'auto') {
+        if (!id || isNaN(id)) return;
+        
+        let targetEl = this.elementCache.get(id);
+        
+        // Nếu ở chế độ Outline, segment có thể đang bị ẩn (display: none)
+        // Chúng ta cần kiểm tra xem nó có hiển thị không
+        const isHidden = (el) => !el || el.offsetParent === null;
+
+        if (!targetEl || isHidden(targetEl)) {
+            // Nếu đoạn này bị ẩn, tìm tiêu đề (Heading) gần nhất ở phía trước nó
+            const items = this.getItems();
+            const index = items.findIndex(item => item.id === id);
+            if (index !== -1) {
+                for (let i = index; i >= 0; i--) {
+                    const item = items[i];
+                    const isHeading = item.html && item.html.match(/^<h[1-6]/i);
+                    const isRule = item.label && item.label.endsWith('-name');
+                    
+                    if (isHeading || isRule || item.label === 'title') {
+                        // Tìm thấy tiêu đề gần nhất, render nó nếu cần và cuộn tới
+                        this.ensureRendered(i);
+                        targetEl = this.elementCache.get(item.id);
+                        if (targetEl && !isHidden(targetEl)) break;
+                    }
                 }
             }
+        }
+
+        if (targetEl) {
+            this._scrollToTop(targetEl, behavior);
         }
     }
 
