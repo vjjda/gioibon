@@ -106,7 +106,8 @@ export class ContentRenderer {
         const segments = this.container.querySelectorAll('.segment');
         for (const segment of segments) {
             const rect = segment.getBoundingClientRect();
-            if (rect.top + rect.height > 80 && rect.top < window.innerHeight) {
+            // Đảm bảo đồng bộ logic với ScrollManager: lấy segment đầu tiên có top hiển thị trọn vẹn
+            if (rect.top >= 70 && rect.top < window.innerHeight) {
                 if (parseInt(segment.dataset.id)) {
                     return parseInt(segment.dataset.id);
                 }

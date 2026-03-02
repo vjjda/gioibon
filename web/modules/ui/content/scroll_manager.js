@@ -28,8 +28,9 @@ export class ScrollManager {
         const segments = this.container.querySelectorAll('.segment');
         for (const segment of segments) {
             const rect = segment.getBoundingClientRect();
-            // Điều kiện để coi là segment đang "được đọc" (đang hiển thị ở phần trên cùng màn hình)
-            if (rect.top + rect.height > 80 && rect.top < window.innerHeight / 2) {
+            // Lấy segment đầu tiên có phần đầu (top) nằm dưới thanh header (~70px)
+            // Điều này đảm bảo ta luôn lưu lại segment đang hiển thị trọn vẹn phần đầu
+            if (rect.top >= 70 && rect.top < window.innerHeight) {
                 const id = parseInt(segment.dataset.id);
                 if (id) {
                     localStorage.setItem('sutta_last_segment_id', id.toString());
