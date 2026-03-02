@@ -259,10 +259,11 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 6px;
-    height: 6px; /* Delicate visual dot */
+    width: 4px;
+    height: 4px; /* Delicate visual dot */
     border-radius: 50%;
-    border: 1px solid var(--text-muted);
+    background-color: var(--text-muted); /* Solid dot instead of border */
+    border: none;
     transition: all 0.2s ease;
 }
 
