@@ -42,10 +42,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Outline Mode Toggle
     const outlineToggleBtn = document.getElementById('outline-toggle');
+    const outlineStorageKey = 'sutta_outline_mode';
+    
+    // Load saved state
+    if (localStorage.getItem(outlineStorageKey) === 'true') {
+        document.body.classList.add('outline-mode');
+        if (outlineToggleBtn) outlineToggleBtn.classList.add('active');
+    }
+
     if (outlineToggleBtn) {
         outlineToggleBtn.addEventListener('click', () => {
-            document.body.classList.toggle('outline-mode');
+            const isOutline = document.body.classList.toggle('outline-mode');
             outlineToggleBtn.classList.toggle('active');
+            localStorage.setItem(outlineStorageKey, isOutline.toString());
         });
     }
 

@@ -22,7 +22,7 @@ export const SyncManager = {
         // Lọc các key liên quan đến ứng dụng
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            if (key.startsWith('gioibon_') || key.startsWith('sutta_') || key === 'theme' || key === 'fontSizeScale' || key === 'sepiaIntensity') {
+            if (key.startsWith('gioibon_') || key.startsWith('sutta_') || key === 'theme' || key === 'fontSizeScale' || key === 'sepiaIntensity' || key === 'sutta_outline_mode') {
                 data[key] = localStorage.getItem(key);
             }
         }
@@ -82,7 +82,7 @@ export const SyncManager = {
                 const data = JSON.parse(e.target.result);
                 let count = 0;
                 for (const key in data) {
-                    if (key.startsWith('gioibon_') || key.startsWith('sutta_') || key === 'theme' || key === 'fontSizeScale' || key === 'sepiaIntensity') {
+                    if (key.startsWith('gioibon_') || key.startsWith('sutta_') || key === 'theme' || key === 'fontSizeScale' || key === 'sepiaIntensity' || key === 'sutta_outline_mode') {
                         localStorage.setItem(key, data[key]);
                         count++;
                     }
