@@ -4,7 +4,13 @@ export class SegmentFactory {
     constructor(callbacks, memorizationManager) {
         this.callbacks = callbacks;
         this.memorizationManager = memorizationManager;
-        // { playSegment, playSequence, onMaskStart, onMaskEnter, onHover }
+        // { playSegment, playSequence, onMaskStart, onMaskEnter, onHover, applySavedState }
+    }
+
+    applySavedState(segmentEl, id) {
+        if (this.callbacks.applySavedState) {
+            this.callbacks.applySavedState(segmentEl, id);
+        }
     }
 
     create(item, index) {

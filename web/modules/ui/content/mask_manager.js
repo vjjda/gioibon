@@ -8,8 +8,28 @@ export class MaskManager {
         this.dragMaskAction = null; // 'mask' or 'unmask'
         this.lastActionTime = 0;
         this.cooldownMs = 250; // Tránh double tap quá nhanh
+        this.STORAGE_KEY = 'gioibon_masked_segments';
+        this.maskedIds = new Set(this._loadMaskedState());
 
         this._setupGlobalListeners();
+    }
+
+    _loadMaskedState() {
+        try {
+            const data = localStorage.getItem(this.STORAGE_KEY);
+            return data ? JSON.parse(data) : [];
+        } catch (e) {
+            console.error("Failed to load masked state", e);
+            return [];
+        }
+    }
+
+    _saveMaskedState() {
+        try {
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(Array.from(this.maskedIds)));
+        } catch (e) {
+            console.error("Failed to save masked state", e);
+        }
     }
 
     setItems(items) {
@@ -18,8 +38,11 @@ export class MaskManager {
 
     _setupGlobalListeners() {
         const endDrag = () => {
-            this.isDraggingMask = false;
-            this.dragMaskAction = null;
+            if (this.isDraggingMask) {
+                this.isDraggingMask = false;
+                this.dragMaskAction = null;
+                this._saveMaskedState(); // Save state when drag ends
+            }
         };
         document.addEventListener('mouseup', endDrag);
         document.addEventListener('touchend', endDrag);
@@ -41,11 +64,13 @@ export class MaskManager {
         // [UPDATED] Thay vì chỉ check rule-name, giờ check mọi Heading
         if (this._isHeading(item)) {
             this._toggleHeadingMask(segmentEl, item);
+            this._saveMaskedState();
             return;
         }
 
         const isMasked = textEl.classList.contains('masked');
-        this._applyMaskAction(textEl, isMasked ? 'unmask' : 'mask');
+        this._applyMaskAction(textEl, isMasked ? 'unmask' : 'mask', item.id);
+        this._saveMaskedState();
     }
 
     handleMaskStart(e, segmentEl, item) {
@@ -72,7 +97,7 @@ export class MaskManager {
         const isMasked = textEl.classList.contains('masked');
         this.dragMaskAction = isMasked ? 'unmask' : 'mask'; 
         
-        this._applyMaskAction(textEl, this.dragMaskAction);
+        this._applyMaskAction(textEl, this.dragMaskAction, item.id);
     }
 
     handleMaskEnter(e, segmentEl) {
@@ -83,14 +108,25 @@ export class MaskManager {
         if (item && this._isHeading(item)) return;
 
         const textEl = segmentEl.querySelector('.segment-text');
-        this._applyMaskAction(textEl, this.dragMaskAction);
+        this._applyMaskAction(textEl, this.dragMaskAction, itemId);
     }
 
-    _applyMaskAction(textEl, action) {
+    _applyMaskAction(textEl, action, id) {
+        if (!id) return;
         if (action === 'mask') {
             textEl.classList.add('masked');
+            this.maskedIds.add(String(id));
         } else {
             textEl.classList.remove('masked');
+            this.maskedIds.delete(String(id));
+        }
+    }
+
+    // Called when a segment is rendered to apply existing state
+    applySavedState(segmentEl, id) {
+        const textEl = segmentEl.querySelector('.segment-text');
+        if (textEl && this.maskedIds.has(String(id))) {
+            textEl.classList.add('masked');
         }
     }
 
@@ -122,6 +158,10 @@ export class MaskManager {
                     action = nextTextEl.classList.contains('masked') ? 'unmask' : 'mask';
                     break;
                 }
+            } else {
+                // If element isn't in DOM, check state
+                action = this.maskedIds.has(String(nextItem.id)) ? 'unmask' : 'mask';
+                break;
             }
         }
 
@@ -141,7 +181,14 @@ export class MaskManager {
             if (nextEl) {
                 const nextTextEl = nextEl.querySelector('.segment-text');
                 if (nextTextEl) {
-                    this._applyMaskAction(nextTextEl, action);
+                    this._applyMaskAction(nextTextEl, action, nextItem.id);
+                }
+            } else {
+                // Apply to state even if not in DOM
+                if (action === 'mask') {
+                    this.maskedIds.add(String(nextItem.id));
+                } else {
+                    this.maskedIds.delete(String(nextItem.id));
                 }
             }
         }

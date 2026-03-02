@@ -76,6 +76,12 @@ export class LazyRenderer {
             }
 
             const segmentEl = this.segmentFactory.create(item, globalIndex);
+            
+            // Allow MaskManager via SegmentFactory to apply saved states
+            if (this.segmentFactory.applySavedState) {
+                this.segmentFactory.applySavedState(segmentEl, item.id);
+            }
+            
             this.elementCache.set(item.id, segmentEl);
             currentSection.appendChild(segmentEl);
         });

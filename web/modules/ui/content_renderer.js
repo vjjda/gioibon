@@ -28,7 +28,8 @@ export class ContentRenderer {
             playSequence: (index) => this.playSequenceFromIndex(index),
             onMaskStart: (e, el, item) => this.maskManager.handleMaskStart(e, el, item),
             onMaskEnter: (e, el) => this.maskManager.handleMaskEnter(e, el),
-            onHover: (id) => { this.hoveredSegmentId = id; }
+            onHover: (id) => { this.hoveredSegmentId = id; },
+            applySavedState: (el, id) => this.maskManager.applySavedState(el, id)
         }, this.memorizationManager);
 
         this.lazyRenderer = new LazyRenderer(this.container, this.elementCache, this.segmentFactory);
