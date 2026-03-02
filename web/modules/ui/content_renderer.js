@@ -65,6 +65,7 @@ export class ContentRenderer {
     render(items) {
         this.items = items || [];
         this.maskManager.setItems(this.items);
+        this.collapseManager.recalculate();
         this.scrollManager.clearHighlight();
         this.lazyRenderer.render(this.items);
         

@@ -20,7 +20,7 @@ export class CollapseManager {
     _loadFromStorage() {
         try {
             const saved = localStorage.getItem(this.storageKey);
-            return saved ? JSON.parse(saved) : [];
+            return saved ? JSON.parse(saved).map(id => Number(id)) : [];
         } catch (e) {
             console.error("Failed to load collapse state", e);
             return [];
@@ -41,13 +41,14 @@ export class CollapseManager {
         if (enabled) {
             this.outlineExpandedIds.clear();
         }
-        this._recalculateHiddenItems();
+        this.recalculate();
         this.applyToDOM();
     }
 
     toggleCollapse(headingId) {
+        headingId = Number(headingId);
         const items = this.getItems();
-        const headingIndex = items.findIndex(i => i.id === headingId);
+        const headingIndex = items.findIndex(i => Number(i.id) === headingId);
         if (headingIndex === -1) return;
 
         const headingItem = items[headingIndex];
@@ -60,14 +61,15 @@ export class CollapseManager {
             const willExpand = !this.outlineExpandedIds.has(headingId);
             
             this._recursiveUpdate(headingIndex, level, (id) => {
+                const numId = Number(id);
                 if (willExpand) {
-                    this.outlineExpandedIds.add(id);
+                    this.outlineExpandedIds.add(numId);
                     // Nếu đã chủ động mở rộng trong Outline, ta cũng muốn nó được mở rộng khi quay lại Normal Mode
-                    this.normalCollapsedIds.delete(id);
+                    this.normalCollapsedIds.delete(numId);
                 } else {
-                    this.outlineExpandedIds.delete(id);
+                    this.outlineExpandedIds.delete(numId);
                     // Nếu đã chủ động thu gọn trong Outline (về mặc định), ta coi như nó cũng nên thu gọn ở Normal Mode
-                    this.normalCollapsedIds.add(id);
+                    this.normalCollapsedIds.add(numId);
                 }
             });
         } else {
@@ -76,16 +78,17 @@ export class CollapseManager {
             const willCollapse = !this.normalCollapsedIds.has(headingId);
 
             this._recursiveUpdate(headingIndex, level, (id) => {
+                const numId = Number(id);
                 if (willCollapse) {
-                    this.normalCollapsedIds.add(id);
+                    this.normalCollapsedIds.add(numId);
                 } else {
-                    this.normalCollapsedIds.delete(id);
+                    this.normalCollapsedIds.delete(numId);
                 }
             });
         }
 
         this._saveToStorage();
-        this._recalculateHiddenItems();
+        this.recalculate();
         this.applyToDOM();
     }
 
@@ -104,9 +107,15 @@ export class CollapseManager {
         }
     }
 
+    recalculate() {
+        this._recalculateHiddenItems();
+    }
+
     _recalculateHiddenItems() {
         this.hiddenItemIds.clear();
         const items = this.getItems();
+        if (!items || items.length === 0) return;
+
         let currentNearestHeadingCollapsed = this.isOutlineMode;
 
         for (let i = 0; i < items.length; i++) {
@@ -115,16 +124,15 @@ export class CollapseManager {
             const isHeading = isHeadingMatch && item.label !== 'title' && item.label !== 'subtitle';
             
             if (isHeading) {
+                const id = Number(item.id);
                 if (this.isOutlineMode) {
-                    // Chế độ Outline: Thu gọn trừ khi nằm trong tập được mở rộng
-                    currentNearestHeadingCollapsed = !this.outlineExpandedIds.has(item.id);
+                    currentNearestHeadingCollapsed = !this.outlineExpandedIds.has(id);
                 } else {
-                    // Chế độ Bình thường: Mở rộng trừ khi nằm trong tập bị thu gọn
-                    currentNearestHeadingCollapsed = this.normalCollapsedIds.has(item.id);
+                    currentNearestHeadingCollapsed = this.normalCollapsedIds.has(id);
                 }
             } else {
                 if (currentNearestHeadingCollapsed) {
-                    this.hiddenItemIds.add(item.id);
+                    this.hiddenItemIds.add(Number(item.id));
                 }
             }
         }
@@ -144,7 +152,7 @@ export class CollapseManager {
 
     applyToElement(el, item) {
         if (!item) return;
-        const id = item.id;
+        const id = Number(item.id);
 
         const isHeadingMatch = item.html ? item.html.match(/^<h([1-6])/i) : null;
         const isHeading = isHeadingMatch && item.label !== 'title' && item.label !== 'subtitle';
