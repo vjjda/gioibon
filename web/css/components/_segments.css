@@ -201,43 +201,71 @@ body.hint-mode-active .segment-text.masked .hint-tail {
 
 .mem-dot {
     flex: 1;
-    max-width: 30px;
-    height: 4px;
-    border-radius: 4px;
-    background-color: var(--border-color);
+    max-width: 45px;
+    height: 16px; /* Larger hit area */
+    background-color: transparent;
     border: none;
     cursor: pointer;
-    transition: all 0.2s ease;
     padding: 0;
+    position: relative;
 }
 
-.mem-dot:hover {
-    transform: scaleY(1.5);
+.mem-dot::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 4px; /* Slender visual line */
+    transform: translateY(-50%);
+    background-color: var(--border-color);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.mem-dot:hover::before {
+    transform: translateY(-50%) scaleY(1.5);
     opacity: 0.8;
 }
 
 /* Colors for active levels */
-.mem-dot.active[data-active-level="1"] { background-color: #ef4444; }
-.mem-dot.active[data-active-level="2"] { background-color: #f97316; }
-.mem-dot.active[data-active-level="3"] { background-color: #eab308; }
-.mem-dot.active[data-active-level="4"] { background-color: #84cc16; }
-.mem-dot.active[data-active-level="5"] { background-color: #22c55e; }
+.mem-dot.active[data-active-level="1"]::before { background-color: #ef4444; }
+.mem-dot.active[data-active-level="2"]::before { background-color: #f97316; }
+.mem-dot.active[data-active-level="3"]::before { background-color: #eab308; }
+.mem-dot.active[data-active-level="4"]::before { background-color: #84cc16; }
+.mem-dot.active[data-active-level="5"]::before { background-color: #22c55e; }
 
 .mem-reset-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
+    width: 24px;
+    height: 24px; /* Larger hit area */
     background-color: transparent;
-    border: 1px solid var(--text-muted);
+    border: none;
     cursor: pointer;
     padding: 0;
-    margin-right: 4px;
+    margin-right: 12px; /* Extra space to separate from progress bars */
     opacity: 0.5;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.mem-reset-dot::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px; /* Delicate visual dot */
+    border-radius: 50%;
+    border: 1px solid var(--text-muted);
     transition: all 0.2s ease;
 }
 
 .mem-reset-dot:hover {
     opacity: 1;
+}
+
+.mem-reset-dot:hover::before {
     background-color: var(--text-muted);
-    transform: scale(1.2);
+    transform: translate(-50%, -50%) scale(1.2);
 }
