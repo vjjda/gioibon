@@ -5,15 +5,34 @@ export class CollapseManager {
         this.getItems = getItems;
         this.getElementCache = getElementCache;
         this.isOutlineMode = false;
+        this.storageKey = 'sutta_normal_collapsed_ids';
         
         // normalCollapsedIds: Lưu các heading mà người dùng đã chủ động thu gọn ở chế độ bình thường.
-        this.normalCollapsedIds = new Set();
+        this.normalCollapsedIds = new Set(this._loadFromStorage());
         
         // outlineExpandedIds: Lưu các heading mà người dùng đã chủ động mở rộng khi đang ở chế độ Outline.
         // Tập hợp này sẽ được reset mỗi khi bật Outline Mode để đảm bảo bắt đầu từ trạng thái "thu gọn tất cả".
         this.outlineExpandedIds = new Set();
         
         this.hiddenItemIds = new Set();
+    }
+
+    _loadFromStorage() {
+        try {
+            const saved = localStorage.getItem(this.storageKey);
+            return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            console.error("Failed to load collapse state", e);
+            return [];
+        }
+    }
+
+    _saveToStorage() {
+        try {
+            localStorage.setItem(this.storageKey, JSON.stringify([...this.normalCollapsedIds]));
+        } catch (e) {
+            console.error("Failed to save collapse state", e);
+        }
     }
 
     setOutlineMode(enabled) {
@@ -65,6 +84,7 @@ export class CollapseManager {
             });
         }
 
+        this._saveToStorage();
         this._recalculateHiddenItems();
         this.applyToDOM();
     }

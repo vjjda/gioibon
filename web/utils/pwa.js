@@ -26,7 +26,8 @@ export function setupPWA() {
                         'sutta_sepia_light',
                         'sutta_sepia_dark',
                         'sutta_loop_enabled',
-                        'sutta_hint_mode_enabled'
+                        'sutta_hint_mode_enabled',
+                        'sutta_normal_collapsed_ids'
                     ];
 
                     const backup = {};

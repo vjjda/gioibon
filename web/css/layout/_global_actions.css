@@ -65,5 +65,6 @@
 }
 
 #btn-toggle-drawer {
+    top: 15px !important;
     right: 15px;
 }
