@@ -52,20 +52,28 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (outlineToggleBtn) {
         outlineToggleBtn.addEventListener('click', () => {
-            // 1. Lưu lại ID segment đang hiển thị TRƯỚC KHI toggle
+            const scrollMgr = contentRenderer.scrollManager;
+            
+            // 1. Lưu lại ID segment đang hiển thị và kích hoạt chế độ chuyển đổi
             const currentId = contentRenderer.getFirstVisibleSegmentId();
+            scrollMgr.isTransitioning = true;
             
             // 2. Thực hiện chuyển chế độ
             const isOutline = document.body.classList.toggle('outline-mode');
             outlineToggleBtn.classList.toggle('active');
             localStorage.setItem(outlineStorageKey, isOutline.toString());
             
-            // 3. Cuộn về đúng vị trí (hoặc tiêu đề gần nhất nếu segment cũ bị ẩn)
+            // 3. Khôi phục vị trí cuộn ngay lập tức trong frame hình tiếp theo
             if (currentId) {
-                // Delay cực ngắn để trình duyệt cập nhật layout
-                setTimeout(() => {
-                    contentRenderer.scrollManager.scrollToId(currentId, 'auto');
-                }, 10);
+                requestAnimationFrame(() => {
+                    scrollMgr.scrollToId(currentId, 'auto');
+                    // Giải phóng flag sau khi trình duyệt đã ổn định layout
+                    setTimeout(() => {
+                        scrollMgr.isTransitioning = false;
+                    }, 100);
+                });
+            } else {
+                scrollMgr.isTransitioning = false;
             }
         });
     }

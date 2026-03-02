@@ -9,6 +9,7 @@ export class ScrollManager {
         this.ensureRendered = ensureRenderedCallback;
         this.activeSegmentId = null;
         this.scrollTimeout = null;
+        this.isTransitioning = false; // Flag khóa lưu vị trí khi đang nhảy trang
 
         // Bắt sự kiện cuộn để lưu vị trí
         if (this.container) {
@@ -17,6 +18,8 @@ export class ScrollManager {
     }
 
     _handleScroll() {
+        if (this.isTransitioning) return; // Không lưu vị trí khi đang chuyển mode
+        
         if (this.scrollTimeout) clearTimeout(this.scrollTimeout);
         this.scrollTimeout = setTimeout(() => {
             this._saveScrollPosition();
@@ -24,13 +27,12 @@ export class ScrollManager {
     }
 
     _saveScrollPosition() {
-        if (!this.container) return;
+        if (!this.container || this.isTransitioning) return;
         const segments = this.container.querySelectorAll('.segment');
         for (const segment of segments) {
             const rect = segment.getBoundingClientRect();
-            // Lấy segment đầu tiên có phần đầu (top) nằm dưới thanh header (~70px)
-            // Điều này đảm bảo ta luôn lưu lại segment đang hiển thị trọn vẹn phần đầu
-            if (rect.top >= 70 && rect.top < window.innerHeight) {
+            // Ưu tiên đoạn văn bản ngay sát dưới header (70px)
+            if (rect.top >= 65 && rect.top < 150) {
                 const id = parseInt(segment.dataset.id);
                 if (id) {
                     localStorage.setItem('sutta_last_segment_id', id.toString());
@@ -52,12 +54,11 @@ export class ScrollManager {
         
         let targetEl = this.elementCache.get(id);
         
-        // Nếu ở chế độ Outline, segment có thể đang bị ẩn (display: none)
-        // Chúng ta cần kiểm tra xem nó có hiển thị không
+        // Kiểm tra phần tử có bị ẩn không (do Outline mode)
         const isHidden = (el) => !el || el.offsetParent === null;
 
         if (!targetEl || isHidden(targetEl)) {
-            // Nếu đoạn này bị ẩn, tìm tiêu đề (Heading) gần nhất ở phía trước nó
+            // Tìm tiêu đề (Heading) gần nhất phía trên nó
             const items = this.getItems();
             const index = items.findIndex(item => item.id === id);
             if (index !== -1) {
@@ -67,7 +68,6 @@ export class ScrollManager {
                     const isRule = item.label && item.label.endsWith('-name');
                     
                     if (isHeading || isRule || item.label === 'title') {
-                        // Tìm thấy tiêu đề gần nhất, render nó nếu cần và cuộn tới
                         this.ensureRendered(i);
                         targetEl = this.elementCache.get(item.id);
                         if (targetEl && !isHidden(targetEl)) break;
