@@ -1,54 +1,50 @@
 /* Path: web/css/layout/drawer/_drawer_footer.css */
 
-/* --- FOOTER CONTAINER (System Toolbar) --- */
-#drawer-footer {
-  /* Removed top margin/border as this is the main content now */
-  padding: 0;
-  background-color: transparent;
-  
-  /* [OPTIMIZED] Flexbox for perfect symmetry and centering */
+/* --- DRAWER ROWS (2-Row Layout) --- */
+.drawer-row {
   display: flex;
-  justify-content: center; /* Initial center, pushed by flex:1 siblings */
+  justify-content: space-between;
   align-items: center;
-  gap: var(--drawer-gap, 20px);
   width: 100%;
+  gap: 15px;
+}
+
+.drawer-divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--border-light);
+  margin: 10px 0;
+  opacity: 0.5;
 }
 
 /* --- [NEW] LEFT GROUP: ZOOM WIDGET --- */
 .zoom-widget {
-  flex: 1;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Aligns to left edge */
-  gap: var(--btn-gap, 8px);
+  gap: 8px;
 }
 
 /* --- [NEW] CENTER GROUP: MAINTENANCE --- */
 .maintenance-group {
-  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--btn-gap, 8px);
+  width: 100%; /* Take full width of its row */
+  gap: 12px; /* A bit more gap to spread icons */
 }
 
 /* --- RIGHT GROUP: THEME TOGGLE --- */
 .theme-toggle-group {
-  flex: 1;
   display: flex;
   align-items: center;
-  justify-content: flex-end; /* Aligns to right edge */
-  gap: var(--btn-gap, 8px);
-  
-  /* Quan trọng: Để neo vị trí tuyệt đối cho panel con */
+  gap: 8px;
   position: relative; 
 }
 
 /* Responsive Gaps for very small screens */
 @media (max-width: 360px) {
-  #drawer-footer {
-    --drawer-gap: 12px;
-    --btn-gap: 4px;
+  .drawer-row {
+    gap: 10px;
   }
 }
 
@@ -67,8 +63,8 @@
   background: transparent;
   border: none;
   color: var(--text-muted);
-  width: 32px;
-  height: 32px;
+  width: 36px; /* Slightly larger for easier touch */
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -107,9 +103,6 @@
   70% { box-shadow: 0 0 0 10px rgba(139, 69, 19, 0); }
   100% { box-shadow: 0 0 0 0 rgba(139, 69, 19, 0); }
 }
-
-/* --- CENTER GROUP: SPACER (If needed) --- */
-/* We don't have offline widget here, so we might want to center things or just use space-between */
 
 /* [NEW] Vertical Sepia Panel (Drop Down) */
 #sepia-control-panel {
@@ -203,8 +196,8 @@
   background: transparent;
   border: none;
   color: var(--text-muted);
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -232,8 +225,8 @@
   border-radius: 4px;
   margin-left: 0;
   cursor: pointer;
-  width: 32px;  
-  height: 32px; 
+  width: 36px;  
+  height: 36px; 
   flex-shrink: 0;
   transition: all 0.2s ease;
   display: flex;
