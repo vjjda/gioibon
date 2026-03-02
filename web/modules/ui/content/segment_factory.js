@@ -114,9 +114,11 @@ export class SegmentFactory {
         };
         memContainer.appendChild(resetBtn);
 
+        const dots = [];
         for (let i = 1; i <= 5; i++) {
             const dot = document.createElement('button');
             dot.className = `mem-dot mem-level-${i}`;
+            dot.dataset.level = i;
             if (i <= currentLevel) {
                 dot.classList.add('active');
                 dot.dataset.activeLevel = currentLevel; 
@@ -125,8 +127,35 @@ export class SegmentFactory {
                 e.stopPropagation();
                 this.memorizationManager.setLevel(item.label, i);
             };
+            
+            dot.onmouseenter = () => {
+                dots.forEach((d, idx) => {
+                    if (idx < i) {
+                        d.classList.add('hover-active');
+                        d.dataset.hoverLevel = i;
+                    } else {
+                        d.classList.add('hover-inactive');
+                    }
+                });
+            };
+            
+            dot.onmouseleave = () => {
+                dots.forEach(d => {
+                    d.classList.remove('hover-active', 'hover-inactive');
+                    delete d.dataset.hoverLevel;
+                });
+            };
+
+            dots.push(dot);
             memContainer.appendChild(dot);
         }
+
+        resetBtn.onmouseenter = () => {
+            dots.forEach(d => d.classList.add('hover-inactive'));
+        };
+        resetBtn.onmouseleave = () => {
+            dots.forEach(d => d.classList.remove('hover-inactive'));
+        };
 
         wrapper.appendChild(memContainer);
     }
