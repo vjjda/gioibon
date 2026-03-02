@@ -1,0 +1,69 @@
+/* Path: web/css/layout/_global_actions.css */
+
+/* --- GLOBAL ACTION BUTTONS (Floating at Top Corners) --- */
+
+.global-action-btn {
+    position: fixed;
+    top: 17px;
+    z-index: 1001;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: var(--text-muted);
+    opacity: 0.6;
+    font-size: 1.3rem;
+    padding: 8px;
+    cursor: pointer;
+    transition: color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.global-action-btn:hover {
+    color: var(--text-main);
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.global-action-btn:focus {
+    outline: none;
+}
+
+.global-action-btn:active {
+    transform: scale(0.95);
+}
+
+/* Specific Positions */
+
+#sidebar-toggle {
+    left: 15px;
+}
+
+#outline-toggle {
+    right: 55px; /* Left of btn-toggle-drawer */
+    font-size: 1.2rem;
+}
+
+#sidebar-toggle.active,
+#outline-toggle.active,
+#btn-toggle-drawer.open {
+    color: var(--text-main);
+    opacity: 1;
+}
+
+#btn-toggle-drawer svg {
+    transition: transform 0.3s ease;
+}
+
+#btn-toggle-drawer.open svg {
+    transform: rotate(0deg) !important;
+}
+
+#outline-toggle.active {
+    color: var(--primary-color);
+}
+
+#btn-toggle-drawer {
+    right: 15px;
+}

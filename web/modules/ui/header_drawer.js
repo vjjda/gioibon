@@ -8,6 +8,10 @@ export const HeaderDrawer = {
             // 1. Toggle Button Click
             toggleDrawerBtn.addEventListener("click", (e) => {
                 e.stopPropagation(); // Stop propagation
+                
+                // Xóa focus ngay lập tức để tránh trạng thái sáng "dính" do focus
+                toggleDrawerBtn.blur();
+                
                 controlDrawer.classList.toggle("hidden");
                 toggleDrawerBtn.classList.toggle("open");
                 

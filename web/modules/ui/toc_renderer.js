@@ -211,6 +211,10 @@ export class TocRenderer {
 
         this.toggle.addEventListener('click', (e) => {
             if (e) e.stopPropagation();
+            
+            // Xóa focus ngay lập tức để tránh trạng thái sáng "dính" do focus
+            this.toggle.blur();
+
             if (window.innerWidth > 1024) {
                 this.sidebar.classList.toggle('collapsed');
                 const container = document.querySelector('.container');

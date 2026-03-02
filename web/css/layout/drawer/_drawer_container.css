@@ -2,34 +2,6 @@
 
 /* --- Control Bar & Drawer --- */
 
-/* Nút mở Settings (Ghost Button - Fixed Position) */
-#btn-toggle-drawer {
-    position: fixed;
-    top: 15px; 
-    right: 15px;
-    z-index: 1001; /* Đảm bảo nổi lên trên các thành phần khác */
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    color: var(--text-muted);
-    opacity: 0.6;
-    font-size: 1.3rem;
-    padding: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#btn-toggle-drawer:hover,
-#btn-toggle-drawer:active,
-#btn-toggle-drawer.open {
-    color: var(--text-main); 
-    opacity: 1;
-    transform: scale(1.05);
-}
-
 /* Control Bar Anchor (Direct child of body) */
 #control-bar {
     position: absolute;

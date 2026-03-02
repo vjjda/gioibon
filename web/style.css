@@ -15,6 +15,7 @@
 @import "css/components/_splash.css"; /* Thêm hiệu ứng cho Splash Screen */
 
 /* Layout */
+@import "css/layout/_global_actions.css";
 @import "css/layout/_sidebar.css";
 @import "css/layout/_header.css";
 @import "css/layout/_container.css";
