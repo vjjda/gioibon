@@ -26,7 +26,10 @@ export class SegmentFactory {
 
         const isHeading = item.html && item.html.match(/^<h[1-6]/i) && item.label !== 'title' && item.label !== 'subtitle';
         if (item.label.endsWith('-name') || isHeading) {
-            const isCentered = item.html && (item.html.includes('class="center"') || item.html.includes("class='center'") || item.html.includes('style="text-align: center"') || item.html.includes("style='text-align: center'"));
+            // Check if HTML explicitly centers it OR if it's an h1/h2/h3 which are implicitly centered via CSS
+            const explicitCenter = item.html && (item.html.includes('class="center"') || item.html.includes("class='center'") || item.html.includes('style="text-align: center"') || item.html.includes("style='text-align: center'"));
+            const implicitCenter = item.html && item.html.match(/^<h[1-3]/i);
+            const isCentered = explicitCenter || implicitCenter;
             this._addMemorizationUI(textEl, item, isCentered);
         }
 
