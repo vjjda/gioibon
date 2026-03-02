@@ -25,12 +25,18 @@
 }
 
 /* --- [NEW] CENTER GROUP: MAINTENANCE --- */
-.maintenance-group {
+.sync-group {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%; /* Take full width of its row */
-  gap: 12px; /* A bit more gap to spread icons */
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.system-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 /* --- RIGHT GROUP: THEME TOGGLE --- */
