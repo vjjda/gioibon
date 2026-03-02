@@ -17,7 +17,7 @@ export const SyncManager = {
         }
     },
 
-    exportData() {
+    async exportData() {
         const data = {};
         // Lọc các key liên quan đến ứng dụng
         for (let i = 0; i < localStorage.length; i++) {
@@ -28,13 +28,41 @@ export const SyncManager = {
         }
 
         const jsonString = JSON.stringify(data, null, 2);
+        const date = new Date().toISOString().split('T')[0];
+        const defaultFilename = `gioibon_backup_${date}.json`;
+
+        // Ưu tiên dùng File System Access API (trên Desktop Chrome/Edge) để cho phép chọn thư mục
+        if (window.showSaveFilePicker) {
+            try {
+                const handle = await window.showSaveFilePicker({
+                    suggestedName: defaultFilename,
+                    types: [{
+                        description: 'JSON Backup File',
+                        accept: { 'application/json': ['.json'] },
+                    }],
+                });
+                const writable = await handle.createWritable();
+                await writable.write(jsonString);
+                await writable.close();
+                CustomDialog.alert("Đã lưu dữ liệu thành công.", "Thành công");
+                return;
+            } catch (err) {
+                // Người dùng hủy (AbortError) hoặc lỗi khác
+                if (err.name !== 'AbortError') {
+                    console.error("SaveFilePicker Error:", err);
+                }
+                // Fallback xuống cách tải xuống thông thường nếu bị lỗi (trừ khi cố ý hủy)
+                if (err.name === 'AbortError') return;
+            }
+        }
+
+        // Fallback: Tải xuống file truyền thống (Dành cho iOS Safari, Firefox, Android)
         const blob = new Blob([jsonString], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         
         const a = document.createElement('a');
         a.href = url;
-        const date = new Date().toISOString().split('T')[0];
-        a.download = `gioibon_backup_${date}.json`;
+        a.download = defaultFilename;
         document.body.appendChild(a);
         a.click();
         
