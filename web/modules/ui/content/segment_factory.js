@@ -22,13 +22,13 @@ export class SegmentFactory {
         contentWrapper.className = 'segment-content-wrapper';
 
         this._addPlayButtons(contentWrapper, item, index);
-        this._addTextContent(contentWrapper, item);
-
-        segmentEl.appendChild(contentWrapper);
+        const textEl = this._addTextContent(contentWrapper, item);
 
         if (item.label.endsWith('-name')) {
-            this._addMemorizationUI(segmentEl, item);
+            this._addMemorizationUI(textEl, item);
         }
+
+        segmentEl.appendChild(contentWrapper);
 
         this._addMaskToggle(segmentEl, item);
         
@@ -93,6 +93,7 @@ export class SegmentFactory {
         
         textEl.innerHTML = renderedHtml;
         wrapper.appendChild(textEl);
+        return textEl;
     }
 
     _addMemorizationUI(wrapper, item) {

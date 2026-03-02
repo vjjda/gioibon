@@ -17,15 +17,20 @@ export class TocRenderer {
         if (!this.container) return;
         this.container.innerHTML = '';
         
-        if (this.memorizationManager) {
-            const resetBtnContainer = document.createElement('div');
-            resetBtnContainer.className = 'toc-reset-progress-container';
-            const resetBtn = document.createElement('button');
-            resetBtn.className = 'toc-reset-progress-btn';
-            resetBtn.innerHTML = '<i class="fas fa-undo"></i> Xóa tiến độ thuộc';
-            resetBtn.onclick = () => this.memorizationManager.resetAll();
-            resetBtnContainer.appendChild(resetBtn);
-            this.container.appendChild(resetBtnContainer);
+        if (this.memorizationManager && this.sidebar) {
+            let resetBtn = this.sidebar.querySelector('.toc-reset-progress-btn');
+            if (!resetBtn) {
+                resetBtn = document.createElement('button');
+                resetBtn.className = 'toc-reset-progress-btn';
+                resetBtn.innerHTML = '<i class="fas fa-undo"></i>';
+                resetBtn.title = 'Xóa toàn bộ tiến độ thuộc';
+                resetBtn.onclick = () => this.memorizationManager.resetAll();
+                
+                const header = this.sidebar.querySelector('.toc-header');
+                if (header) {
+                    header.appendChild(resetBtn);
+                }
+            }
         }
 
         // --- Create Structure ---

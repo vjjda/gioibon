@@ -23,6 +23,7 @@
     color: var(--text-main);
     display: flex;
     align-items: center;
+    justify-content: space-between;
     border-bottom: 1px solid var(--border-light);
     background-color: var(--bg-sidebar); /* Matches sidebar bg */
 }
@@ -217,29 +218,23 @@
     filter: brightness(0.9);
 }
 
-.toc-reset-progress-container {
-    padding: 15px;
-    display: flex;
-    justify-content: center;
-}
-
 .toc-reset-progress-btn {
     background: transparent;
-    border: 1px dashed var(--border-color);
+    border: none;
     color: var(--text-muted);
-    font-family: var(--font-ui);
-    font-size: 0.8rem;
-    padding: 6px 12px;
+    font-size: 1rem;
+    padding: 6px;
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    opacity: 0.6;
 }
 
 .toc-reset-progress-btn:hover {
-    background: var(--bg-card);
     color: var(--primary-color);
-    border-color: var(--primary-color);
+    background: rgba(0,0,0,0.05);
+    opacity: 1;
 }
