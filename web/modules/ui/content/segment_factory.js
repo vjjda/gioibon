@@ -24,11 +24,11 @@ export class SegmentFactory {
         this._addPlayButtons(contentWrapper, item, index);
         this._addTextContent(contentWrapper, item);
 
-        if (item.label.endsWith('-name')) {
-            this._addMemorizationUI(contentWrapper, item);
-        }
-
         segmentEl.appendChild(contentWrapper);
+
+        if (item.label.endsWith('-name')) {
+            this._addMemorizationUI(segmentEl, item);
+        }
 
         this._addMaskToggle(segmentEl, item);
         
