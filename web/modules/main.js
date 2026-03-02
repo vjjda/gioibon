@@ -13,6 +13,7 @@ import { FontSettings } from 'ui/font_settings.js';
 import { setupPWA } from 'utils/pwa.js';
 import { AudioZipLoader } from 'services/audio_zip_loader.js';
 import { SplashManager } from 'utils/splash.js';
+import { MemorizationManager } from 'core/memorization.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     setupPWA();
@@ -37,13 +38,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     ThemeSettings.init();
     FontSettings.init();
 
+    const memorizationManager = new MemorizationManager();
+
     const contentRenderer = new ContentRenderer(
         'content',
         (segmentId, audio, text) => { ttsPlayer.playSegment(segmentId, audio, text); },
-        (sequence, parentId) => { ttsPlayer.playSequence(sequence, parentId); }
+        (sequence, parentId) => { ttsPlayer.playSequence(sequence, parentId); },
+        memorizationManager
     );
 
-    const tocRenderer = new TocRenderer('toc-list', 'sidebar', 'sidebar-toggle', contentRenderer);
+    const tocRenderer = new TocRenderer('toc-list', 'sidebar', 'sidebar-toggle', contentRenderer, memorizationManager);
 
     const controlBar = new ControlBar(
         () => { /* Play All */

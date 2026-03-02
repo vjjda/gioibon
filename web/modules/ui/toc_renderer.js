@@ -1,17 +1,33 @@
 // Path: web/modules/ui/toc_renderer.js
 export class TocRenderer {
-    constructor(containerId, sidebarId, sidebarToggleId, contentRenderer) {
+    constructor(containerId, sidebarId, sidebarToggleId, contentRenderer, memorizationManager) {
         this.container = document.getElementById(containerId);
         this.sidebar = document.getElementById(sidebarId);
         this.toggle = document.getElementById(sidebarToggleId);
         this.contentRenderer = contentRenderer; // Store reference
+        this.memorizationManager = memorizationManager;
         this.activeLink = null;
+
+        if (this.memorizationManager) {
+            this.memorizationManager.onChange(() => this.updateMemorizationColors());
+        }
     }
 
     render(items) {
         if (!this.container) return;
         this.container.innerHTML = '';
         
+        if (this.memorizationManager) {
+            const resetBtnContainer = document.createElement('div');
+            resetBtnContainer.className = 'toc-reset-progress-container';
+            const resetBtn = document.createElement('button');
+            resetBtn.className = 'toc-reset-progress-btn';
+            resetBtn.innerHTML = '<i class="fas fa-undo"></i> Xóa tiến độ thuộc';
+            resetBtn.onclick = () => this.memorizationManager.resetAll();
+            resetBtnContainer.appendChild(resetBtn);
+            this.container.appendChild(resetBtnContainer);
+        }
+
         // --- Create Structure ---
         const mainList = document.createElement('ul');
         mainList.className = 'toc-main-list';
@@ -76,11 +92,6 @@ export class TocRenderer {
                     li.appendChild(link);
                     
                     if (currentH2Li) {
-                        // Create sub-list for H2 if needed (optional structure, here flat for H3)
-                        // For this specific design, H3 is just indented under H2 visually?
-                        // Let's append to mainList but mark class? 
-                        // Actually better to nest inside H2 for collapsible?
-                        // The original code appended to mainList directly. Let's keep it flat for now.
                         mainList.appendChild(li); 
                     } else {
                         mainList.appendChild(li);
@@ -117,6 +128,7 @@ export class TocRenderer {
                         link.textContent = shortLabel; // Update text for grid
                         link.title = text; // Tooltip shows full text
                         link.className = 'toc-link rule-link';
+                        link.dataset.label = item.label;
 
                         const li = document.createElement('li');
                         li.className = 'toc-rule-item';
@@ -127,7 +139,24 @@ export class TocRenderer {
             }
         });
 
+        this.updateMemorizationColors();
         this._setupToggle();
+    }
+
+    updateMemorizationColors() {
+        if (!this.memorizationManager || !this.container) return;
+        const ruleLinks = this.container.querySelectorAll('.toc-link.rule-link');
+        ruleLinks.forEach(link => {
+            const label = link.dataset.label;
+            if (label) {
+                const level = this.memorizationManager.getLevel(label);
+                if (level > 0) {
+                    link.dataset.memLevel = level;
+                } else {
+                    delete link.dataset.memLevel;
+                }
+            }
+        });
     }
 
     _createLink(item, text, level) {

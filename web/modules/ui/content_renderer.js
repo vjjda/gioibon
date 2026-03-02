@@ -8,10 +8,11 @@ import { PlaybackUIUpdater } from 'ui/content/playback_ui.js';
 import { SequenceBuilder } from 'ui/content/sequence_builder.js';
 
 export class ContentRenderer {
-    constructor(containerId, playSegmentCallback, playSequenceCallback) {
+    constructor(containerId, playSegmentCallback, playSequenceCallback, memorizationManager) {
         this.container = document.getElementById(containerId);
         this.playSegmentCallback = playSegmentCallback;
         this.playSequenceCallback = playSequenceCallback;
+        this.memorizationManager = memorizationManager;
         
         this.items = [];
         this.hoveredSegmentId = null;
@@ -26,7 +27,7 @@ export class ContentRenderer {
             onMaskStart: (e, el, item) => this.maskManager.handleMaskStart(e, el, item),
             onMaskEnter: (e, el) => this.maskManager.handleMaskEnter(e, el),
             onHover: (id) => { this.hoveredSegmentId = id; }
-        });
+        }, this.memorizationManager);
 
         this.lazyRenderer = new LazyRenderer(this.container, this.elementCache, this.segmentFactory);
         
@@ -47,6 +48,12 @@ export class ContentRenderer {
         );
 
         this.playbackUI = new PlaybackUIUpdater(this.container, this.elementCache);
+
+        if (this.memorizationManager) {
+            this.memorizationManager.onChange(() => {
+                this.updateMemorizationUI();
+            });
+        }
     }
 
     render(items) {
@@ -98,6 +105,26 @@ export class ContentRenderer {
             }
         }
         return null;
+    }
+
+    updateMemorizationUI() {
+        if (!this.container || !this.memorizationManager) return;
+        const containers = this.container.querySelectorAll('.memorization-container');
+        containers.forEach(container => {
+            const label = container.dataset.label;
+            const currentLevel = this.memorizationManager.getLevel(label);
+            const dots = container.querySelectorAll('.mem-dot');
+            dots.forEach((dot, index) => {
+                const i = index + 1;
+                if (i <= currentLevel) {
+                    dot.classList.add('active');
+                    dot.dataset.activeLevel = currentLevel;
+                } else {
+                    dot.classList.remove('active');
+                    delete dot.dataset.activeLevel;
+                }
+            });
+        });
     }
 }
 

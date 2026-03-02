@@ -1,8 +1,9 @@
 // Path: web/modules/ui/content/segment_factory.js
 
 export class SegmentFactory {
-    constructor(callbacks) {
+    constructor(callbacks, memorizationManager) {
         this.callbacks = callbacks;
+        this.memorizationManager = memorizationManager;
         // { playSegment, playSequence, onMaskStart, onMaskEnter, onHover }
     }
 
@@ -22,6 +23,10 @@ export class SegmentFactory {
 
         this._addPlayButtons(contentWrapper, item, index);
         this._addTextContent(contentWrapper, item);
+
+        if (item.label.endsWith('-name')) {
+            this._addMemorizationUI(contentWrapper, item);
+        }
 
         segmentEl.appendChild(contentWrapper);
 
@@ -88,6 +93,42 @@ export class SegmentFactory {
         
         textEl.innerHTML = renderedHtml;
         wrapper.appendChild(textEl);
+    }
+
+    _addMemorizationUI(wrapper, item) {
+        if (!this.memorizationManager) return;
+
+        const memContainer = document.createElement('div');
+        memContainer.className = 'memorization-container';
+        memContainer.dataset.label = item.label;
+
+        const currentLevel = this.memorizationManager.getLevel(item.label);
+
+        for (let i = 1; i <= 5; i++) {
+            const dot = document.createElement('button');
+            dot.className = `mem-dot mem-level-${i}`;
+            if (i <= currentLevel) {
+                dot.classList.add('active');
+                dot.dataset.activeLevel = currentLevel; 
+            }
+            dot.onclick = (e) => {
+                e.stopPropagation();
+                this.memorizationManager.setLevel(item.label, i);
+            };
+            memContainer.appendChild(dot);
+        }
+
+        const resetBtn = document.createElement('button');
+        resetBtn.className = 'mem-reset-btn icon-btn';
+        resetBtn.innerHTML = '<i class="fas fa-undo"></i>';
+        resetBtn.title = "Reset tiến độ";
+        resetBtn.onclick = (e) => {
+            e.stopPropagation();
+            this.memorizationManager.setLevel(item.label, 0);
+        };
+        memContainer.appendChild(resetBtn);
+
+        wrapper.appendChild(memContainer);
     }
 
     _addMaskToggle(segmentEl, item) {
