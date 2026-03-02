@@ -3,7 +3,7 @@
 /* Buttons */
 .btn {
     padding: 8px 20px;
-    border-radius: 25px;
+    border-radius: 8px;
     border: none;
     font-family: var(--font-ui);
     font-weight: 500;

@@ -84,8 +84,8 @@
         }
     }
 
-    .btn span { display: none; }
-    .btn { padding: 10px; border-radius: 50%; }
+    .global-controls .btn span { display: none; }
+    .global-controls .btn { padding: 10px; border-radius: 50%; }
     .divider { display: none; }
 
     /* Fix cho các màn hình cực nhỏ (iPhone SE, v.v.) */
