@@ -29,7 +29,20 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 48px; /* Perfectly aligns with zoom-widget buttons (8px gap + 32px span + 8px gap) */
+  gap: 8px; /* Restored from 48px to use spacer instead */
+}
+
+.sync-spacer {
+  color: var(--border-color); /* Subtle dot color */
+  font-size: 0.8rem;
+  user-select: none;
+  min-width: 32px; /* Match zoom-label min-width */
+  padding: 0 4px; /* Match zoom-label padding */
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
 }
 
 .system-group {
