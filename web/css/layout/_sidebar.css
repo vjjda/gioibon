@@ -17,15 +17,16 @@
 
 .toc-header {
     height: var(--header-height);
-    padding: 0 1.25rem 0 95px; /* Added left padding for both toggle buttons */
+    padding: 0 1rem;
     font-family: var(--font-ui);
     font-weight: 600;
     color: var(--text-main);
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center; /* Center the text */
     border-bottom: 1px solid var(--border-light);
     background-color: var(--bg-sidebar); /* Matches sidebar bg */
+    position: relative; /* Anchor for absolutely positioned children */
 }
 
 /* Custom Scrollbar for TOC */
@@ -271,6 +272,8 @@
 }
 
 .toc-reset-progress-btn {
+    position: absolute;
+    right: 15px; /* Nằm ép lề phải */
     background: transparent;
     border: none;
     color: var(--text-muted);

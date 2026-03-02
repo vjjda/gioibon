@@ -9,10 +9,7 @@
     #sidebar.visible {
         transform: translateX(0);
     }
-    /* Add padding to TOC header to avoid overlap with fixed toggle buttons */
-    .toc-header {
-        padding-left: 100px;
-    }
+    /* TOC header is now centered natively, no need for padding override */
     .container {
         margin-left: 0;
         overflow-x: hidden;
