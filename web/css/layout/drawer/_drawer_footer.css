@@ -33,7 +33,7 @@
 }
 
 .sync-spacer {
-  color: var(--border-color); /* Subtle dot color */
+  color: var(--text-muted); /* Changed from border-color to text-muted for better contrast */
   font-size: 0.8rem;
   user-select: none;
   min-width: 32px; /* Match zoom-label min-width */
@@ -42,7 +42,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.6;
+  opacity: 0.8; /* Increased from 0.6 */
 }
 
 .system-group {
