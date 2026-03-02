@@ -30,7 +30,9 @@ export class SegmentFactory {
             const explicitCenter = item.html && (item.html.includes('class="center"') || item.html.includes("class='center'") || item.html.includes('style="text-align: center"') || item.html.includes("style='text-align: center'"));
             const implicitCenter = item.html && item.html.match(/^<h[1-3]/i);
             const isCentered = explicitCenter || implicitCenter;
-            this._addMemorizationUI(textEl, item, isCentered);
+            
+            const memLabel = item.label.endsWith('-name') ? item.label : `heading-${item.id}`;
+            this._addMemorizationUI(textEl, item, isCentered, memLabel);
         }
 
         segmentEl.appendChild(contentWrapper);
@@ -101,17 +103,19 @@ export class SegmentFactory {
         return textEl;
     }
 
-    _addMemorizationUI(wrapper, item, isCentered = false) {
+    _addMemorizationUI(wrapper, item, isCentered = false, memLabel = null) {
         if (!this.memorizationManager) return;
+
+        const actualLabel = memLabel || item.label;
 
         const memContainer = document.createElement('div');
         memContainer.className = 'memorization-container';
         if (isCentered) {
             memContainer.classList.add('centered');
         }
-        memContainer.dataset.label = item.label;
+        memContainer.dataset.label = actualLabel;
 
-        const currentLevel = this.memorizationManager.getLevel(item.label);
+        const currentLevel = this.memorizationManager.getLevel(actualLabel);
 
         const dots = [];
         for (let i = 1; i <= 5; i++) {
@@ -124,7 +128,7 @@ export class SegmentFactory {
             }
             dot.onclick = (e) => {
                 e.stopPropagation();
-                this.memorizationManager.setLevel(item.label, i);
+                this.memorizationManager.setLevel(actualLabel, i);
             };
             
             dot.onmouseenter = () => {
@@ -154,7 +158,7 @@ export class SegmentFactory {
         resetBtn.title = "Reset tiến độ";
         resetBtn.onclick = (e) => {
             e.stopPropagation();
-            this.memorizationManager.setLevel(item.label, 0);
+            this.memorizationManager.setLevel(actualLabel, 0);
         };
         memContainer.appendChild(resetBtn);
 

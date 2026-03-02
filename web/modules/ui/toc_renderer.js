@@ -169,7 +169,10 @@ export class TocRenderer {
         link.className = 'toc-link';
         link.href = `#segment-${item.id}`;
         link.dataset.id = item.id;
-        link.dataset.label = item.label; // Thêm label cho tất cả link để hỗ trợ memorization
+        
+        const isRule = item.label && item.label.endsWith('-name');
+        link.dataset.label = isRule ? item.label : `heading-${item.id}`; 
+        
         link.textContent = text;
         
         link.onclick = (e) => {
