@@ -17,7 +17,7 @@
 
 .toc-header {
     height: var(--header-height);
-    padding: 0 1.25rem 0 55px; /* Added left padding for toggle button */
+    padding: 0 1.25rem 0 95px; /* Added left padding for both toggle buttons */
     font-family: var(--font-ui);
     font-weight: 600;
     color: var(--text-main);

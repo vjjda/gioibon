@@ -9,9 +9,9 @@
     #sidebar.visible {
         transform: translateX(0);
     }
-    /* Add padding to TOC header to avoid overlap with fixed toggle button */
+    /* Add padding to TOC header to avoid overlap with fixed toggle buttons */
     .toc-header {
-        padding-left: 60px;
+        padding-left: 100px;
     }
     .container {
         margin-left: 0;
