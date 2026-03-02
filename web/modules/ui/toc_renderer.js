@@ -150,8 +150,8 @@ export class TocRenderer {
 
     updateMemorizationColors() {
         if (!this.memorizationManager || !this.container) return;
-        const ruleLinks = this.container.querySelectorAll('.toc-link.rule-link');
-        ruleLinks.forEach(link => {
+        const allLinks = this.container.querySelectorAll('.toc-link');
+        allLinks.forEach(link => {
             const label = link.dataset.label;
             if (label) {
                 const level = this.memorizationManager.getLevel(label);
@@ -169,6 +169,7 @@ export class TocRenderer {
         link.className = 'toc-link';
         link.href = `#segment-${item.id}`;
         link.dataset.id = item.id;
+        link.dataset.label = item.label; // Thêm label cho tất cả link để hỗ trợ memorization
         link.textContent = text;
         
         link.onclick = (e) => {

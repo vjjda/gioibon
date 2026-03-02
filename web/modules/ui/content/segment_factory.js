@@ -24,8 +24,10 @@ export class SegmentFactory {
         this._addPlayButtons(contentWrapper, item, index);
         const textEl = this._addTextContent(contentWrapper, item);
 
-        if (item.label.endsWith('-name')) {
-            this._addMemorizationUI(textEl, item);
+        const isHeading = item.html && item.html.match(/^<h[1-6]/i) && item.label !== 'title' && item.label !== 'subtitle';
+        if (item.label.endsWith('-name') || isHeading) {
+            const isCentered = item.html && (item.html.includes('class="center"') || item.html.includes("class='center'") || item.html.includes('style="text-align: center"') || item.html.includes("style='text-align: center'"));
+            this._addMemorizationUI(textEl, item, isCentered);
         }
 
         segmentEl.appendChild(contentWrapper);
@@ -96,11 +98,14 @@ export class SegmentFactory {
         return textEl;
     }
 
-    _addMemorizationUI(wrapper, item) {
+    _addMemorizationUI(wrapper, item, isCentered = false) {
         if (!this.memorizationManager) return;
 
         const memContainer = document.createElement('div');
         memContainer.className = 'memorization-container';
+        if (isCentered) {
+            memContainer.classList.add('centered');
+        }
         memContainer.dataset.label = item.label;
 
         const currentLevel = this.memorizationManager.getLevel(item.label);

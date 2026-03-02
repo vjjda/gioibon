@@ -99,6 +99,8 @@
     letter-spacing: 0.5px;
     border-bottom: 1px solid rgba(0,0,0,0.05); /* Subtle separator */
     margin-bottom: 0.25rem;
+    position: relative; /* For mem dot */
+    padding-right: 25px; /* Leave space for dot */
 }
 
 /* H3: Sub-section */
@@ -109,7 +111,28 @@
     padding-left: 1.2rem;
     margin-top: 0.15rem;
     letter-spacing: 0.2px;
+    position: relative; /* For mem dot */
+    padding-right: 25px; /* Leave space for dot */
 }
+
+/* --- TOC Memorization Dots for Headings --- */
+.level-h2 > .toc-link[data-mem-level]::after,
+.level-h3 > .toc-link[data-mem-level]::after {
+    content: '';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.level-h2 > .toc-link[data-mem-level="1"]::after, .level-h3 > .toc-link[data-mem-level="1"]::after { background-color: #ef4444; }
+.level-h2 > .toc-link[data-mem-level="2"]::after, .level-h3 > .toc-link[data-mem-level="2"]::after { background-color: #f97316; }
+.level-h2 > .toc-link[data-mem-level="3"]::after, .level-h3 > .toc-link[data-mem-level="3"]::after { background-color: #eab308; }
+.level-h2 > .toc-link[data-mem-level="4"]::after, .level-h3 > .toc-link[data-mem-level="4"]::after { background-color: #84cc16; }
+.level-h2 > .toc-link[data-mem-level="5"]::after, .level-h3 > .toc-link[data-mem-level="5"]::after { background-color: #22c55e; }
 
 /* TOC Grid for Rules */
 .toc-rule-list {

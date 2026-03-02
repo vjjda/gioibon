@@ -199,6 +199,10 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     width: 100%;
 }
 
+.memorization-container.centered {
+    justify-content: center;
+}
+
 .mem-dot {
     flex: 1;
     max-width: 45px;
