@@ -242,7 +242,8 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     border: none;
     cursor: pointer;
     padding: 0;
-    margin-right: 12px; /* Extra space to separate from progress bars */
+    margin-left: 12px; /* Extra space to separate from progress bars */
+    margin-right: 0;
     opacity: 0.5;
     position: relative;
     transition: all 0.2s ease;

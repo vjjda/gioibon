@@ -105,15 +105,6 @@ export class SegmentFactory {
 
         const currentLevel = this.memorizationManager.getLevel(item.label);
 
-        const resetBtn = document.createElement('button');
-        resetBtn.className = 'mem-reset-dot';
-        resetBtn.title = "Reset tiến độ";
-        resetBtn.onclick = (e) => {
-            e.stopPropagation();
-            this.memorizationManager.setLevel(item.label, 0);
-        };
-        memContainer.appendChild(resetBtn);
-
         const dots = [];
         for (let i = 1; i <= 5; i++) {
             const dot = document.createElement('button');
@@ -149,6 +140,15 @@ export class SegmentFactory {
             dots.push(dot);
             memContainer.appendChild(dot);
         }
+
+        const resetBtn = document.createElement('button');
+        resetBtn.className = 'mem-reset-dot';
+        resetBtn.title = "Reset tiến độ";
+        resetBtn.onclick = (e) => {
+            e.stopPropagation();
+            this.memorizationManager.setLevel(item.label, 0);
+        };
+        memContainer.appendChild(resetBtn);
 
         resetBtn.onmouseenter = () => {
             dots.forEach(d => d.classList.add('hover-inactive'));
