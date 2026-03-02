@@ -1,4 +1,5 @@
 // Path: web/modules/core/sync_manager.js
+import { CustomDialog } from 'ui/custom_dialog.js';
 
 export const SyncManager = {
     init() {
@@ -56,12 +57,10 @@ export const SyncManager = {
                         count++;
                     }
                 }
-                const { CustomDialog } = await import('ui/custom_dialog.js');
                 await CustomDialog.alert(`Đã phục hồi thành công ${count} mục dữ liệu.\nỨng dụng sẽ được tải lại để áp dụng thay đổi.`, "Thành công");
                 window.location.reload();
             } catch (err) {
                 console.error("Lỗi phục hồi dữ liệu:", err);
-                const { CustomDialog } = await import('ui/custom_dialog.js');
                 CustomDialog.alert("File phục hồi không hợp lệ hoặc bị hỏng.", "Lỗi");
             }
         };
