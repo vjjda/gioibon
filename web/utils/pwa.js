@@ -3,6 +3,7 @@
 // @ts-ignore
 import { registerSW } from 'virtual:pwa-register';
 import { BASE_URL } from 'core/config.js';
+import { CustomDialog } from 'ui/custom_dialog.js';
 
 export function setupPWA() {
     console.log('[PWA] setupPWA called');
@@ -11,7 +12,7 @@ export function setupPWA() {
     const clearCacheBtn = document.getElementById('btn-clear-cache');
     if (clearCacheBtn) {
         clearCacheBtn.addEventListener('click', async () => {
-            if (confirm('Bạn có chắc chắn muốn làm mới toàn bộ dữ liệu? Các cấu hình như API Key, font size và tốc độ đọc sẽ được giữ lại.')) {
+            if (await CustomDialog.confirm('Bạn có chắc chắn muốn làm mới toàn bộ dữ liệu? Các cấu hình như API Key, font size và tốc độ đọc sẽ được giữ lại.')) {
                 clearCacheBtn.disabled = true;
                 clearCacheBtn.style.opacity = '0.5';
 
@@ -66,7 +67,7 @@ export function setupPWA() {
                     window.location.reload();
                 } catch (error) {
                     console.error('Lỗi khi xóa cache:', error);
-                    alert('Đã xảy ra lỗi khi làm mới dữ liệu. Vui lòng thử lại.');
+                    CustomDialog.alert('Đã xảy ra lỗi khi làm mới dữ liệu. Vui lòng thử lại.', 'Lỗi');
                     clearCacheBtn.disabled = false;
                     clearCacheBtn.style.opacity = '1';
                 }
@@ -194,7 +195,7 @@ export function setupPWA() {
                 } else {
                     manualUpdateBtn.classList.remove('rotating');
                     manualUpdateBtn.title = "Kiểm tra & Cập nhật";
-                    alert("Ứng dụng và dữ liệu đã ở phiên bản mới nhất.");
+                    CustomDialog.alert("Ứng dụng và dữ liệu đã ở phiên bản mới nhất.", "Thông báo");
                 }
             });
         }

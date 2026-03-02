@@ -1,4 +1,6 @@
 // Path: web/modules/core/memorization.js
+import { CustomDialog } from 'ui/custom_dialog.js';
+
 export class MemorizationManager {
     constructor() {
         this.STORAGE_KEY = 'gioibon_memorization_progress';
@@ -38,8 +40,8 @@ export class MemorizationManager {
         this._save();
     }
 
-    resetAll() {
-        if (confirm("Bạn có chắc chắn muốn xóa toàn bộ tiến độ thuộc các giới luật?")) {
+    async resetAll() {
+        if (await CustomDialog.confirm("Bạn có chắc chắn muốn xóa toàn bộ tiến độ thuộc các giới luật?", "Xóa tiến độ")) {
             this.progress = {};
             this._save();
         }

@@ -7,6 +7,8 @@ import { LazyRenderer } from 'ui/content/lazy_renderer.js';
 import { PlaybackUIUpdater } from 'ui/content/playback_ui.js';
 import { SequenceBuilder } from 'ui/content/sequence_builder.js';
 
+import { CustomDialog } from 'ui/custom_dialog.js';
+
 export class ContentRenderer {
     constructor(containerId, playSegmentCallback, playSequenceCallback, memorizationManager) {
         this.container = document.getElementById(containerId);
@@ -70,7 +72,7 @@ export class ContentRenderer {
         if (result && result.sequence.length > 0) {
             this.playSequenceCallback(result.sequence, result.startId);
         } else {
-            alert("Không có dữ liệu âm thanh cho phần này.");
+            CustomDialog.alert("Không có dữ liệu âm thanh cho phần này.", "Thông báo");
         }
     }
 

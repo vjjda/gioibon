@@ -46,7 +46,7 @@ export const SyncManager = {
         if (!file) return;
 
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
             try {
                 const data = JSON.parse(e.target.result);
                 let count = 0;
@@ -56,12 +56,13 @@ export const SyncManager = {
                         count++;
                     }
                 }
-                alert(`Đã phục hồi thành công ${count} mục dữ liệu.
-Ứng dụng sẽ được tải lại để áp dụng thay đổi.`);
+                const { CustomDialog } = await import('ui/custom_dialog.js');
+                await CustomDialog.alert(`Đã phục hồi thành công ${count} mục dữ liệu.\nỨng dụng sẽ được tải lại để áp dụng thay đổi.`, "Thành công");
                 window.location.reload();
             } catch (err) {
                 console.error("Lỗi phục hồi dữ liệu:", err);
-                alert("File phục hồi không hợp lệ hoặc bị hỏng.");
+                const { CustomDialog } = await import('ui/custom_dialog.js');
+                CustomDialog.alert("File phục hồi không hợp lệ hoặc bị hỏng.", "Lỗi");
             }
         };
         reader.readAsText(file);
