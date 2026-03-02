@@ -55,6 +55,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         outlineToggleBtn.addEventListener('click', () => {
             const scrollMgr = contentRenderer.scrollManager;
             
+            // Xóa focus ngay lập tức để tránh trạng thái sáng "dính" do focus
+            outlineToggleBtn.blur();
+            
             // 1. Tìm mỏ neo (Heading) hiện tại và tọa độ pixel của nó
             const anchor = scrollMgr.getVisibleAnchor();
             scrollMgr.isTransitioning = true;

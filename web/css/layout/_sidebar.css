@@ -227,13 +227,24 @@
     justify-content: center;
 }
 
-#outline-toggle:hover,
-#outline-toggle:active,
-#outline-toggle.active {
-    color: var(--primary-color); 
-    opacity: 1; 
-    background: transparent !important; 
+#outline-toggle:hover {
+    color: var(--text-main);
+    opacity: 1;
     transform: scale(1.05);
+}
+
+#outline-toggle.active {
+    color: var(--primary-color);
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+#outline-toggle:focus {
+    outline: none;
+}
+
+#outline-toggle:active {
+    transform: scale(0.95);
 }
 
 /* Trạng thái thu gọn cho Desktop */
