@@ -50,10 +50,12 @@ export const SyncManager = {
                 // Người dùng hủy (AbortError) hoặc lỗi khác
                 if (err.name !== 'AbortError') {
                     console.error("SaveFilePicker Error:", err);
+                    CustomDialog.alert("Lỗi File Picker: " + err.message, "Debug");
                 }
-                // Fallback xuống cách tải xuống thông thường nếu bị lỗi (trừ khi cố ý hủy)
                 if (err.name === 'AbortError') return;
             }
+        } else {
+            console.warn("showSaveFilePicker is not supported on this browser.");
         }
 
         // Fallback: Tải xuống file truyền thống (Dành cho iOS Safari, Firefox, Android)
