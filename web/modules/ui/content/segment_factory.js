@@ -105,6 +105,15 @@ export class SegmentFactory {
 
         const currentLevel = this.memorizationManager.getLevel(item.label);
 
+        const resetBtn = document.createElement('button');
+        resetBtn.className = 'mem-reset-dot';
+        resetBtn.title = "Reset tiến độ";
+        resetBtn.onclick = (e) => {
+            e.stopPropagation();
+            this.memorizationManager.setLevel(item.label, 0);
+        };
+        memContainer.appendChild(resetBtn);
+
         for (let i = 1; i <= 5; i++) {
             const dot = document.createElement('button');
             dot.className = `mem-dot mem-level-${i}`;
@@ -118,16 +127,6 @@ export class SegmentFactory {
             };
             memContainer.appendChild(dot);
         }
-
-        const resetBtn = document.createElement('button');
-        resetBtn.className = 'mem-reset-btn icon-btn';
-        resetBtn.innerHTML = '<i class="fas fa-undo"></i>';
-        resetBtn.title = "Reset tiến độ";
-        resetBtn.onclick = (e) => {
-            e.stopPropagation();
-            this.memorizationManager.setLevel(item.label, 0);
-        };
-        memContainer.appendChild(resetBtn);
 
         wrapper.appendChild(memContainer);
     }

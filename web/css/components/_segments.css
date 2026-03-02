@@ -193,16 +193,16 @@ body.hint-mode-active .segment-text.masked .hint-tail {
 .memorization-container {
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin-top: 10px;
+    gap: 4px;
+    margin-top: 8px;
     margin-bottom: 5px;
     width: 100%;
 }
 
 .mem-dot {
     flex: 1;
-    max-width: 40px;
-    height: 8px;
+    max-width: 30px;
+    height: 4px;
     border-radius: 4px;
     background-color: var(--border-color);
     border: none;
@@ -212,7 +212,7 @@ body.hint-mode-active .segment-text.masked .hint-tail {
 }
 
 .mem-dot:hover {
-    transform: scale(1.05);
+    transform: scaleY(1.5);
     opacity: 0.8;
 }
 
@@ -223,19 +223,21 @@ body.hint-mode-active .segment-text.masked .hint-tail {
 .mem-dot.active[data-active-level="4"] { background-color: #84cc16; }
 .mem-dot.active[data-active-level="5"] { background-color: #22c55e; }
 
-.mem-reset-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
+.mem-reset-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 1px solid var(--text-muted);
     cursor: pointer;
-    font-size: 0.9rem;
-    padding: 4px 8px;
-    margin-left: 4px;
+    padding: 0;
+    margin-right: 4px;
     opacity: 0.5;
-    transition: opacity 0.2s ease, color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
-.mem-reset-btn:hover {
+.mem-reset-dot:hover {
     opacity: 1;
-    color: var(--primary-color);
+    background-color: var(--text-muted);
+    transform: scale(1.2);
 }
