@@ -31,6 +31,14 @@ export class SegmentFactory {
         const textEl = this._addTextContent(contentWrapper, item);
 
         const isHeading = item.html && item.html.match(/^<h[1-6]/i) && item.label !== 'title' && item.label !== 'subtitle';
+        if (isHeading && this.callbacks.onHeadingClick) {
+            textEl.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.callbacks.onHeadingClick(item.id);
+            });
+            textEl.title = "Nhấp để thu gọn/mở rộng";
+        }
+
         if (item.label.endsWith('-name') || isHeading) {
             // Check if HTML explicitly centers it OR if it's an h1/h2/h3 which are implicitly centered via CSS
             const explicitCenter = item.html && (item.html.includes('class="center"') || item.html.includes("class='center'") || item.html.includes('style="text-align: center"') || item.html.includes("style='text-align: center'"));

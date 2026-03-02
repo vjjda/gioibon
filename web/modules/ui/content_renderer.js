@@ -6,6 +6,7 @@ import { KeyboardHandler } from 'ui/content/keyboard_handler.js';
 import { LazyRenderer } from 'ui/content/lazy_renderer.js';
 import { PlaybackUIUpdater } from 'ui/content/playback_ui.js';
 import { SequenceBuilder } from 'ui/content/sequence_builder.js';
+import { CollapseManager } from 'ui/content/collapse_manager.js';
 
 import { CustomDialog } from 'ui/custom_dialog.js';
 
@@ -22,6 +23,7 @@ export class ContentRenderer {
 
         // --- Sub-modules (Composition) ---
         this.maskManager = new MaskManager(this.container);
+        this.collapseManager = new CollapseManager(() => this.items, () => this.elementCache);
         
         this.segmentFactory = new SegmentFactory({
             playSegment: this.playSegmentCallback,
@@ -29,10 +31,11 @@ export class ContentRenderer {
             onMaskStart: (e, el, item) => this.maskManager.handleMaskStart(e, el, item),
             onMaskEnter: (e, el) => this.maskManager.handleMaskEnter(e, el),
             onHover: (id) => { this.hoveredSegmentId = id; },
-            applySavedState: (el, id) => this.maskManager.applySavedState(el, id)
+            applySavedState: (el, id) => this.maskManager.applySavedState(el, id),
+            onHeadingClick: (id) => this.collapseManager.toggleCollapse(id)
         }, this.memorizationManager);
 
-        this.lazyRenderer = new LazyRenderer(this.container, this.elementCache, this.segmentFactory);
+        this.lazyRenderer = new LazyRenderer(this.container, this.elementCache, this.segmentFactory, this.collapseManager);
         
         this.scrollManager = new ScrollManager(
             this.container,

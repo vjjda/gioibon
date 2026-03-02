@@ -325,10 +325,27 @@ body.hint-mode-active .segment-text.masked .hint-tail {
 }
 
 /* --- OUTLINE MODE --- */
-body.outline-mode .segment:not(.heading-segment):not(.chapter-header):not(.rule-header):not(.main-title) {
+/* [REMOVED] Logic moved to CollapseManager for unified behavior */
+
+
+/* --- COLLAPSE LOGIC --- */
+.hidden-by-collapse {
     display: none !important;
 }
 
-body.outline-mode .segment[data-label^="note"] {
-    display: none !important;
+.heading-segment .segment-text {
+    cursor: pointer;
+    transition: opacity 0.2s;
 }
+
+.heading-segment .segment-text:hover {
+    color: var(--primary-color);
+}
+
+.heading-segment.is-collapsed .segment-text {
+    /* No visual changes to the heading itself when collapsed */
+}
+
+/* Biểu tượng [ + ] đã bị loại bỏ theo yêu cầu */
+
+

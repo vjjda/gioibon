@@ -4,10 +4,11 @@
 const BATCH_SIZE = 30; 
 
 export class LazyRenderer {
-    constructor(container, elementCache, segmentFactory) {
+    constructor(container, elementCache, segmentFactory, collapseManager = null) {
         this.container = container;
         this.elementCache = elementCache;
         this.segmentFactory = segmentFactory;
+        this.collapseManager = collapseManager;
 
         this.items = [];
         this.renderedCount = 0;
@@ -80,6 +81,10 @@ export class LazyRenderer {
             // Allow MaskManager via SegmentFactory to apply saved states
             if (this.segmentFactory.applySavedState) {
                 this.segmentFactory.applySavedState(segmentEl, item.id);
+            }
+
+            if (this.collapseManager) {
+                this.collapseManager.applyToElement(segmentEl, item);
             }
             
             this.elementCache.set(item.id, segmentEl);

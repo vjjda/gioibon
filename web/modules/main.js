@@ -45,7 +45,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const outlineStorageKey = 'sutta_outline_mode';
     
     // Load saved state
-    if (localStorage.getItem(outlineStorageKey) === 'true') {
+    const savedOutline = localStorage.getItem(outlineStorageKey) === 'true';
+    if (savedOutline) {
         document.body.classList.add('outline-mode');
         if (outlineToggleBtn) outlineToggleBtn.classList.add('active');
     }
@@ -58,8 +59,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             const anchor = scrollMgr.getVisibleAnchor();
             scrollMgr.isTransitioning = true;
             
-            // 2. Thực hiện chuyển chế độ
+            // 2. Thực hiện chuyển chế độ qua CollapseManager
             const isOutline = document.body.classList.toggle('outline-mode');
+            contentRenderer.collapseManager.setOutlineMode(isOutline);
+            
             outlineToggleBtn.classList.toggle('active');
             localStorage.setItem(outlineStorageKey, isOutline.toString());
             
@@ -88,6 +91,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         (sequence, parentId) => { ttsPlayer.playSequence(sequence, parentId); },
         memorizationManager
     );
+
+    // Initial state for CollapseManager
+    if (savedOutline) {
+        contentRenderer.collapseManager.setOutlineMode(true);
+    }
 
     const tocRenderer = new TocRenderer('toc-list', 'sidebar', 'sidebar-toggle', contentRenderer, memorizationManager);
 
