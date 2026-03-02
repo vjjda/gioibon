@@ -14,6 +14,7 @@ import { setupPWA } from 'utils/pwa.js';
 import { AudioZipLoader } from 'services/audio_zip_loader.js';
 import { SplashManager } from 'utils/splash.js';
 import { MemorizationManager } from 'core/memorization.js';
+import { SyncManager } from 'core/sync_manager.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     setupPWA();
@@ -37,6 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     HeaderDrawer.init();
     ThemeSettings.init();
     FontSettings.init();
+    SyncManager.init();
 
     const memorizationManager = new MemorizationManager();
 
