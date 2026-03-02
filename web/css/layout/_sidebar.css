@@ -210,7 +210,7 @@
 #outline-toggle {
     position: fixed;
     top: 15px; 
-    left: 55px; /* Ngay bên phải nút sidebar-toggle */
+    right: 55px; /* Bên trái nút btn-toggle-drawer */
     z-index: 1001;
     background: transparent !important;
     border: none !important;
