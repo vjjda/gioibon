@@ -63,6 +63,11 @@ export class ContentRenderer {
         this.maskManager.setItems(this.items);
         this.scrollManager.clearHighlight();
         this.lazyRenderer.render(this.items);
+        
+        // Restore scroll position after a short delay to allow DOM to settle
+        setTimeout(() => {
+            this.scrollManager.restoreScrollPosition();
+        }, 100);
     }
 
     playSequenceFromIndex(startIndex) {

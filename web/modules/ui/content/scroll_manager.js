@@ -8,6 +8,57 @@ export class ScrollManager {
         this.getItems = getItemsCallback;
         this.ensureRendered = ensureRenderedCallback;
         this.activeSegmentId = null;
+        this.scrollTimeout = null;
+
+        // Bắt sự kiện cuộn để lưu vị trí
+        if (this.container) {
+            this.container.addEventListener('scroll', () => this._handleScroll(), { passive: true });
+        }
+    }
+
+    _handleScroll() {
+        if (this.scrollTimeout) clearTimeout(this.scrollTimeout);
+        this.scrollTimeout = setTimeout(() => {
+            this._saveScrollPosition();
+        }, 300); // Debounce 300ms
+    }
+
+    _saveScrollPosition() {
+        if (!this.container) return;
+        const segments = this.container.querySelectorAll('.segment');
+        for (const segment of segments) {
+            const rect = segment.getBoundingClientRect();
+            // Điều kiện để coi là segment đang "được đọc" (đang hiển thị ở phần trên cùng màn hình)
+            if (rect.top + rect.height > 80 && rect.top < window.innerHeight / 2) {
+                const id = parseInt(segment.dataset.id);
+                if (id) {
+                    localStorage.setItem('sutta_last_segment_id', id.toString());
+                    break;
+                }
+            }
+        }
+    }
+
+    restoreScrollPosition() {
+        const lastId = localStorage.getItem('sutta_last_segment_id');
+        if (lastId) {
+            const id = parseInt(lastId, 10);
+            if (!isNaN(id)) {
+                // Cuộn tới vị trí đó mà không làm sáng (highlight)
+                let targetEl = this.elementCache.get(id);
+                if (!targetEl) {
+                     const items = this.getItems();
+                     const index = items.findIndex(item => item.id === id);
+                     if (index !== -1) {
+                         this.ensureRendered(index);
+                         targetEl = this.elementCache.get(id);
+                     }
+                }
+                if (targetEl) {
+                    this._scrollToTop(targetEl, 'auto');
+                }
+            }
+        }
     }
 
     scrollToSegment(id) {
@@ -54,7 +105,7 @@ export class ScrollManager {
         }
     }
 
-    _scrollToTop(el) {
+    _scrollToTop(el, behavior = 'auto') {
         if (!this.container || !el) return;
         
         const rect = el.getBoundingClientRect();
@@ -65,7 +116,7 @@ export class ScrollManager {
 
         this.container.scrollTo({
             top: targetScrollTop,
-            behavior: 'auto'
+            behavior: behavior
         });
     }
 
