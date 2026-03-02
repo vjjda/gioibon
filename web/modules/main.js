@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         outlineToggleBtn.addEventListener('click', () => {
             const scrollMgr = contentRenderer.scrollManager;
             
-            // 1. Lưu lại ID segment đang hiển thị và kích hoạt chế độ chuyển đổi
-            const currentId = contentRenderer.getFirstVisibleSegmentId();
+            // 1. Tìm mỏ neo (Heading) hiện tại và tọa độ pixel của nó
+            const anchor = scrollMgr.getVisibleAnchor();
             scrollMgr.isTransitioning = true;
             
             // 2. Thực hiện chuyển chế độ
@@ -63,14 +63,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             outlineToggleBtn.classList.toggle('active');
             localStorage.setItem(outlineStorageKey, isOutline.toString());
             
-            // 3. Khôi phục vị trí cuộn ngay lập tức trong frame hình tiếp theo
-            if (currentId) {
+            // 3. Khôi phục mỏ neo về đúng vị trí điểm ảnh cũ
+            if (anchor) {
+                // Sử dụng requestAnimationFrame để căn chỉnh ngay sau khi layout thay đổi
                 requestAnimationFrame(() => {
-                    scrollMgr.scrollToId(currentId, 'auto');
-                    // Giải phóng flag sau khi trình duyệt đã ổn định layout
+                    scrollMgr.scrollToAnchor(anchor);
+                    
+                    // Giải phóng flag sau khi layout ổn định
                     setTimeout(() => {
                         scrollMgr.isTransitioning = false;
-                    }, 100);
+                    }, 150);
                 });
             } else {
                 scrollMgr.isTransitioning = false;

@@ -42,6 +42,74 @@ export class ScrollManager {
         }
     }
 
+    /**
+     * Tìm mỏ neo (heading) để giữ vị trí cố định khi co giãn nội dung
+     */
+    getVisibleAnchor() {
+        if (!this.container) return null;
+        const segments = Array.from(this.container.querySelectorAll('.segment'));
+        
+        // Danh sách các tiêu đề có khả năng hiển thị trong cả 2 mode
+        const isHeadingEl = (el) => 
+            el.classList.contains('heading-segment') || 
+            el.classList.contains('chapter-header') || 
+            el.classList.contains('rule-header') ||
+            el.classList.contains('main-title');
+
+        const headings = segments.filter(isHeadingEl);
+
+        // 1. Tìm tiêu đề đầu tiên đang nằm trong khung nhìn
+        for (const el of headings) {
+            const rect = el.getBoundingClientRect();
+            if (rect.bottom > 70 && rect.top < window.innerHeight) {
+                return { id: el.dataset.id, top: rect.top };
+            }
+        }
+
+        // 2. Nếu không thấy tiêu đề nào, lấy tiêu đề gần nhất ở phía trên (đã cuộn qua)
+        for (let i = headings.length - 1; i >= 0; i--) {
+            const el = headings[i];
+            const rect = el.getBoundingClientRect();
+            if (rect.top <= 70) {
+                return { id: el.dataset.id, top: rect.top };
+            }
+        }
+
+        // 3. Cùng bất đắc dĩ: lấy segment bất kỳ đang hiện
+        for (const el of segments) {
+            const rect = el.getBoundingClientRect();
+            if (rect.bottom > 70) {
+                return { id: el.dataset.id, top: rect.top };
+            }
+        }
+        
+        return null;
+    }
+
+    /**
+     * Cuộn sao cho phần tử neo nằm đúng vị trí pixel cũ
+     */
+    scrollToAnchor(anchor) {
+        if (!anchor || !anchor.id) return;
+        const id = parseInt(anchor.id, 10);
+        
+        let targetEl = this.elementCache.get(id);
+        if (!targetEl) {
+            const items = this.getItems();
+            const index = items.findIndex(item => item.id === id);
+            if (index !== -1) {
+                this.ensureRendered(index);
+                targetEl = this.elementCache.get(id);
+            }
+        }
+
+        if (targetEl) {
+            const currentRect = targetEl.getBoundingClientRect();
+            const delta = currentRect.top - anchor.top;
+            this.container.scrollTop += delta;
+        }
+    }
+
     restoreScrollPosition() {
         const lastId = localStorage.getItem('sutta_last_segment_id');
         if (lastId) {
