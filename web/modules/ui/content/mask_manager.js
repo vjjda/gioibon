@@ -100,12 +100,17 @@ export class MaskManager {
         this._applyMaskAction(textEl, this.dragMaskAction, item.id);
     }
 
+    // Helper kiểm tra các đoạn "miễn nhiễm" với toggle hàng loạt
+    _isImmune(item) {
+        return item.html && item.html.match(/class=['"](endsection|endvagga|endsutta)['"]/);
+    }
+
     handleMaskEnter(e, segmentEl) {
         if (!this.isDraggingMask || !this.dragMaskAction) return;
         // Bỏ qua không mask các thẻ heading khi đang kéo chuột
         const itemId = segmentEl.dataset.id;
         const item = this.items.find(i => String(i.id) === String(itemId));
-        if (item && this._isHeading(item)) return;
+        if (item && (this._isHeading(item) || this._isImmune(item))) return;
 
         const textEl = segmentEl.querySelector('.segment-text');
         this._applyMaskAction(textEl, this.dragMaskAction, itemId);
@@ -139,7 +144,7 @@ export class MaskManager {
 
         let action = 'mask'; 
         
-        // Bước 1: Quyết định action dựa trên segment con ĐẦU TIÊN hợp lệ (không phải heading)
+        // Bước 1: Quyết định action dựa trên segment con ĐẦU TIÊN hợp lệ (không phải heading và không miễn nhiễm)
         for (let i = startIndex + 1; i < this.items.length; i++) {
             const nextItem = this.items[i];
             if (nextItem.label === 'end') break;
@@ -150,6 +155,8 @@ export class MaskManager {
                 if (itemLevel <= startLevel) break; // Thoát nếu gặp Heading cấp cao hơn hoặc bằng
                 continue; // Bỏ qua sub-heading, tiếp tục tìm nội dung
             }
+            
+            if (this._isImmune(nextItem)) continue; // Bỏ qua các đoạn kết thúc
             
             const nextEl = this._findElement(nextItem.id);
             if (nextEl) {
@@ -165,7 +172,7 @@ export class MaskManager {
             }
         }
 
-        // Bước 2: Thực thi action lên toàn bộ content con
+        // Bước 2: Thực thi action lên toàn bộ content con (ngoại trừ heading và miễn nhiễm)
         for (let i = startIndex + 1; i < this.items.length; i++) {
             const nextItem = this.items[i];
             if (nextItem.label === 'end') break;
@@ -176,6 +183,8 @@ export class MaskManager {
                 if (itemLevel <= startLevel) break; // Thoát nếu ra khỏi phạm vi
                 continue; // [QUAN TRỌNG] Ngoại trừ các segment heading
             }
+
+            if (this._isImmune(nextItem)) continue; // [QUAN TRỌNG] Ngoại trừ các đoạn kết thúc
 
             const nextEl = this._findElement(nextItem.id);
             if (nextEl) {
