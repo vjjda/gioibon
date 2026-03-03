@@ -65,6 +65,10 @@ export class SegmentFactory {
             el.classList.add('main-title');
         }
 
+        if (item.label && item.label.endsWith('-duyenco')) {
+            el.classList.add('duyenco-segment');
+        }
+
         if (item.html && item.html.match(/^<h[1-6]/i)) {
             el.classList.add('heading-segment');
         }
@@ -107,10 +111,26 @@ export class SegmentFactory {
     _addTextContent(wrapper, item) {
         const textEl = document.createElement('div');
         textEl.className = 'segment-text';
-        const htmlTemplate = item.html || '{}';
+        
+        let htmlTemplate = item.html || '{}';
+        let content = item.text || '';
+
+        // Check for 'duyenco' special formatting
+        if (item.label && item.label.endsWith('-duyenco')) {
+            const parts = content.split(';').map(s => s.trim()).filter(s => s);
+            if (parts.length > 0) {
+                // Create list structure
+                content = `<ul class="duyenco-list">${parts.map(p => `<li>${p}</li>`).join('')}</ul>`;
+                
+                // If template is <p>{}</p>, change to <div>{}</div> to avoid invalid HTML (<p> cannot contain <ul>)
+                if (htmlTemplate.trim().match(/^<p\b/i)) {
+                    htmlTemplate = htmlTemplate.replace(/^<p/i, '<div').replace(/<\/p>$/i, '</div>');
+                }
+            }
+        }
         
         // Sử dụng thuộc tính 'text' đã được ContentLoader tối ưu (chứa hint hoặc segment)
-        const renderedHtml = htmlTemplate.replace('{}', item.text || '');
+        const renderedHtml = htmlTemplate.replace('{}', content);
         
         textEl.innerHTML = renderedHtml;
         wrapper.appendChild(textEl);

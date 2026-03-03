@@ -194,8 +194,9 @@ html	label	segment
 <p>{}</p>	np5	Vị tỳ khưu nào nhận lãnh y từ tay tỳ khưu ni không phải là thân quyến thì (y ấy) nên được xả bỏ và (vị ấy) phạm tội pācittiya ngoại trừ có sự trao đổi.
 <h4>{}</h4>	np6-name	Np 6. Yêu cầu không phải thân quyến (Aññātakaviññatti)
 <p>{}	np6	Vị tỳ khưu nào yêu cầu nam gia chủ hoặc nữ gia chủ không phải là thân quyến về y thì (y ấy) nên được xả bỏ và (vị ấy) phạm tội pācittiya ngoại trừ có duyên cớ.
-{}	np6	Duyên cớ trong trường hợp này là vị tỳ khưu có y bị cướp đoạt hoặc là có y bị hư hỏng.
-{}</p>	np6	Đây là duyên cớ trong trường hợp này.
+{}</p>	np6	Duyên cớ trong trường hợp ấy là: 
+<p>{}</p>	np6-duyenco	vị tỳ khưu có y bị cướp đoạt hoặc có y bị hư hỏng.
+<p>{}</p>	np6	Đây là duyên cớ trong trường hợp ấy.
 <h4>{}</h4>	np7-name	Np 7. Vượt quá số ấy (Tatuttari)
 <p>{}</p>	np7	Nếu vị ấy được nam gia chủ hoặc nữ gia chủ không phải là thân quyến thỉnh cầu để đem lại với nhiều y, vị tỳ khưu ấy nên chấp nhận y trong số ấy với mức tối đa là y nội và thượng y, nếu chấp nhận vượt quá số ấy thì (y ấy) nên được xả bỏ và (vị ấy) phạm tội pācittiya.
 <h4>{}</h4>	np8-name	Np 8. Được chuẩn bị thứ nhất (Paṭhamaupakkhaṭa)
@@ -366,8 +367,9 @@ html	label	segment
 <p>{}</p>	pc22	Dầu đã được chỉ định, nếu vị tỳ khưu giáo giới tỳ khưu ni khi mặt trời đã lặn thì phạm tội pācittiya.
 <h4>{}</h4>	pc23-name	Pc 23. Chỗ ngụ của tỳ khưu ni (Bhikkhunupassaya)
 <p>{}	pc23	Vị tỳ khưu nào sau khi đi đến chỗ ngụ của tỳ khưu ni rồi giáo giới cho các tỳ khưu ni thì phạm tội pācittiya, ngoại trừ có duyên cớ.
-{}	pc23	Duyên cớ trong trường hợp ấy là vị tỳ khưu ni bị bệnh.
-{}</p>	pc23	Đây là duyên cớ trong trường hợp ấy.
+{}</p>	pc23	Duyên cớ trong trường hợp ấy là:
+<p>{}</p>	pc23-duyenco	vị tỳ khưu ni bị bệnh.
+<p>{}</p>	pc23	Đây là duyên cớ trong trường hợp ấy.
 <h4>{}</h4>	pc24-name	Pc 24. Vật chất (Āmisa)
 <p>{}</p>	pc24	Vị tỳ khưu nào nói như vầy: ‘Các tỳ khưu giáo giới cho các tỳ khưu ni vì nguyên nhân vật chất,’ thì phạm tội pācittiya.
 <h4>{}</h4>	pc25-name	Pc 25. Cho y (Cīvaradāna)
@@ -376,8 +378,9 @@ html	label	segment
 <p>{}</p>	pc26	Vị tỳ khưu nào may y hoặc bảo may y cho tỳ khưu ni không phải là thân quyến thì phạm tội pācittiya.
 <h4>{}</h4>	pc27-name	Pc 27. Hẹn trước (Saṁvidhāna)
 <p>{}	pc27	Vị tỳ khưu nào sau khi hẹn trước rồi đi chung đường xa với vị tỳ khưu ni ngay cả (đi) từ làng này sang làng khác thì phạm tội pācittiya, ngoại trừ có duyên cớ.
-{}	pc27	Duyên cớ trong trường hợp ấy là: con đường cần phải đi chung với đoàn xe, được xác định là có sự nguy hiểm, có sự kinh hoàng.
-{}</p>	pc27	Đây là duyên cớ trong trường hợp ấy.
+{}</p>	pc27	Duyên cớ trong trường hợp ấy là: 
+<p>{}</p>	pc27-duyenco	con đường cần phải đi chung với đoàn xe, được xác định là có sự nguy hiểm, có sự kinh hoàng.
+<p>{}</p>	pc27	Đây là duyên cớ trong trường hợp ấy.
 <h4>{}</h4>	pc28-name	Pc 28. Lên thuyền (Nāvābhiruhana)
 <p>{}</p>	pc28	Vị tỳ khưu nào sau khi hẹn trước rồi cùng với vị tỳ khưu ni lên chung một chiếc thuyền đi ngược dòng hoặc đi xuôi dòng thì phạm tội pācittiya, ngoại trừ vượt ngang qua (sông).
 <h4>{}</h4>	pc29-name	Pc 29. Môi giới (Paripācita)
@@ -391,12 +394,14 @@ html	label	segment
 {}</p>	pc31	Nếu vượt quá số ấy thì phạm tội pācittiya.
 <h4>{}</h4>	pc32-name	Pc 32. Vật thực chung nhóm (Gaṇabhojana)
 <p>{}	pc32	Trường hợp vật thực chung nhóm thì phạm tội pācittiya ngoại trừ có duyên cớ.
-{}	pc32	Duyên cớ trong trường hợp ấy là: trường hợp bị bệnh, trong thời hạn dâng y, trong lúc may y, trường hợp đi đường xa, trường hợp lên thuyền, trường hợp đông đảo (các tỳ khưu), trường hợp bữa trai phạn của Sa-môn.
-{}</p>	pc32	Đây là duyên cớ trong trường hợp ấy.
+{}</p>	pc32	Duyên cớ trong trường hợp ấy là: 
+<p>{}</p>	pc32-duyenco	trường hợp bị bệnh; trong thời hạn dâng y; trong lúc may y; trường hợp đi đường xa; trường hợp lên thuyền; trường hợp đông đảo (các tỳ khưu); trường hợp bữa trai phạn của Sa-môn.
+<p>{}</p>	pc32	Đây là duyên cớ trong trường hợp ấy.
 <h4>{}</h4>	pc33-name	Pc 33. Vật thực thỉnh sau (Paramparabhojana)
 <p>{}	pc33	Trường hợp vật thực thỉnh sau thì phạm tội pācittiya ngoại trừ có duyên cớ.
-{}	pc33	Duyên cớ trong trường hợp ấy là: trường hợp bị bệnh, trong thời hạn dâng y, trong lúc may y.
-{}</p>	pc33	Đây là duyên cớ trong trường hợp ấy.
+{}</p>	pc33	Duyên cớ trong trường hợp ấy là: 
+<p>{}</p>	pc33-duyenco	trường hợp bị bệnh; trong thời hạn dâng y; trong lúc may y.
+<p>{}</p>	pc33	Đây là duyên cớ trong trường hợp ấy.
 <h4>{}</h4>	pc34-name	Pc 34. Kāṇamātā (Kāṇamātu)
 <p>{}	pc34	Vị tỳ khưu khi đi đến gia đình được yêu cầu nhận lãnh các bánh ngọt hoặc các bánh lúa mạch, vị tỳ khưu đang mong mỏi thì nên nhận lãnh hai hoặc ba bình bát đầy.
 {}	pc34	Nếu nhận lãnh quá số lượng ấy thì phạm tội pācittiya.
@@ -434,8 +439,9 @@ html	label	segment
 <p>{}</p>	pc45	Vị tỳ khưu nào cùng với người nữ một nam một nữ ngồi ở nơi kín đáo thì phạm tội pācittiya.
 <h4>{}</h4>	pc46-name	Pc 46. Thăm viếng (Cāritta)
 <p>{}	pc46	Vị tỳ khưu nào khi đã được thỉnh mời, khi đã có bữa trai phạn, chưa có sự thông báo đến vị tỳ khưu hiện diện lại đi thăm viếng các gia đình trước bữa ăn hoặc sau bữa ăn thì phạm tội pācittiya ngoại trừ có duyên cớ.
-{}	pc46	Duyên cớ trong trường hợp ấy là: trong thời hạn dâng y, trong lúc may y.
-{}</p>	pc46	Đây là duyên cớ trong trường hợp ấy.
+{}</p>	pc46	Duyên cớ trong trường hợp ấy là: 
+<p>{}</p>	pc46-duyenco	trong thời hạn dâng y; trong lúc may y.
+<p>{}</p>	pc46	Đây là duyên cớ trong trường hợp ấy.
 <h4>{}</h4>	pc47-name	Pc 47. Mahānāma (Mahānāma)
 <p>{}	pc47	Vị tỳ khưu không bị bệnh nên chấp nhận sự thỉnh cầu về (việc dâng) vật dụng trong bốn tháng, ngoại trừ có sự thỉnh cầu tiếp tục, ngoại trừ có sự thỉnh cầu đến trọn đời.
 {}</p>	pc47	Nếu chấp nhận vượt quá hạn ấy thì phạm tội pācittiya.
@@ -461,9 +467,9 @@ html	label	segment
 <p>{}</p>	pc56	Vị tỳ khưu nào không bị bệnh có ý định sưởi ấm rồi đốt lên hoặc bảo đốt lên ngọn lửa thì phạm tội pācittiya ngoại trừ có nhân duyên như thế.
 <h4>{}</h4>	pc57-name	Pc 57. Tắm (Nahāna)
 <p>{}	pc57	Vị tỳ khưu nào tắm khi chưa đủ nửa tháng thì phạm tội pācittiya ngoại trừ có duyên cớ.
-{}	pc57	Duyên cớ trong trường hợp ấy là: (Nghĩ rằng): ‘Một tháng rưỡi còn lại của mùa nóng’ và tháng đầu tiên của mùa mưa, như vậy thành hai tháng rưỡi là lúc trời nóng nực là lúc trời oi bức,
-{}	pc57	trường hợp bị bệnh, trường hợp có công việc, trường hợp đi đường xa, trường hợp mưa gió. 
-{}</p>	pc57	Đây là duyên cớ trong trường hợp ấy.
+{}</p>	pc57	Duyên cớ trong trường hợp ấy là: 
+<p>{}</p>	pc57-duyenco	(Nghĩ rằng), ‘Một tháng rưỡi còn lại của mùa nóng’ và tháng đầu tiên của mùa mưa, như vậy thành hai tháng rưỡi là lúc trời nóng nực là lúc trời oi bức; trường hợp bị bệnh; trường hợp có công việc; trường hợp đi đường xa; trường hợp mưa gió. 
+<p>{}</p>	pc57	Đây là duyên cớ trong trường hợp ấy.
 <h4>{}</h4>	pc58-name	Pc 58. Làm hoại sắc (Dubbaṇṇakaraṇa)
 <p>{}	pc58	Vị tỳ khưu nhận được y mới nên áp dụng một cách hoại sắc nào đó trong ba cách hoại sắc là màu xanh, màu bùn, màu đen sẫm.
 {}</p>	pc58	Nếu vị tỳ khưu không áp dụng một cách hoại sắc nào đó trong ba cách hoại sắc mà sử dụng y mới thì phạm tội pācittiya.
@@ -581,10 +587,10 @@ html	label	segment
 <p>{}	pc89	Trong lúc cho làm tấm lót ngồi, vị tỳ khưu nên bảo làm theo kích thước.
 {}	pc89	Ở đây, kích thước này là chiều dài hai gang tay, chiều rộng một gang rưỡi, đường viền một gang theo gang tay của đức Thiện Thệ.
 {}</p>	pc89	Nếu vượt quá mức ấy thì (tấm lót ngồi) nên được cắt bớt và phạm tội pācittiya.
-<h4>{}</h4>	pc90-name	Pc 90. Y đắp ghẻ (Kaṇḍuppaṭicchādi)
-<p>{}	pc90	Trong lúc cho làm y đắp ghẻ, vị tỳ khưu nên bảo làm theo kích thước.
+<h4>{}</h4>	pc90-name	Pc 90. Vải đắp ghẻ (Kaṇḍuppaṭicchādi)
+<p>{}	pc90	Trong lúc cho làm vải đắp ghẻ, vị tỳ khưu nên bảo làm theo kích thước.
 {}	pc90	Ở đây, kích thước này là chiều dài bốn gang tay, chiều rộng hai gang theo gang tay của đức Thiện Thệ.
-{}</p>	pc90	Nếu vượt quá mức ấy thì (y đắp ghẻ) nên được cắt bớt và phạm tội pācittiya.
+{}</p>	pc90	Nếu vượt quá mức ấy thì (vải đắp ghẻ) nên được cắt bớt và phạm tội pācittiya.
 <h4>{}</h4>	pc91-name	Pc 91. Vải choàng tắm mưa (Vassikasāṭika)
 <p>{}	pc91	Trong lúc cho làm vải choàng tắm mưa, vị tỳ khưu nên bảo làm theo kích thước.
 {}	pc91	Ở đây, kích thước này là chiều dài sáu gang tay, chiều rộng hai gang rưỡi theo gang tay của đức Thiện Thệ.

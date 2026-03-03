@@ -346,6 +346,29 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     /* No visual changes to the heading itself when collapsed */
 }
 
+/* --- DUYEN CO LIST --- */
+.duyenco-segment {
+    margin: 0;
+}
+
+.duyenco-list {
+    list-style: none;
+    padding-left: 1.5rem; /* Thụt lề so với segment khác */
+    margin: 0.25rem 0;
+}
+
+.duyenco-list li {
+    padding-bottom: 0.3rem;
+    line-height: 1.5;
+    color: var(--text-main);
+    font-style: italic; /* Có thể thêm italic để phân biệt nếu muốn, hoặc bỏ qua */
+    opacity: 0.9;
+}
+
+.duyenco-list li:last-child {
+    padding-bottom: 0;
+}
+
 /* Biểu tượng [ + ] đã bị loại bỏ theo yêu cầu */
 
 
