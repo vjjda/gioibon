@@ -131,7 +131,10 @@ export class CollapseManager {
                     currentNearestHeadingCollapsed = this.normalCollapsedIds.has(id);
                 }
             } else {
-                if (currentNearestHeadingCollapsed) {
+                // MIỄN NHIỄM: Các đoạn kết thúc (endsection, endvagga, endsutta) không bao giờ bị ẩn
+                const isImmune = item.html && item.html.match(/class=['"](endsection|endvagga|endsutta)['"]/);
+                
+                if (currentNearestHeadingCollapsed && !isImmune) {
                     this.hiddenItemIds.add(Number(item.id));
                 }
             }
