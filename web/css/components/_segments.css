@@ -353,16 +353,22 @@ body.hint-mode-active .segment-text.masked .hint-tail {
 
 .duyenco-list {
     list-style: none;
-    padding-left: 1.5rem; /* Thụt lề so với segment khác */
+    padding-left: 1.25rem;
     margin: 0.25rem 0;
 }
 
 .duyenco-list li {
+    position: relative;
     padding-bottom: 0.3rem;
     line-height: 1.5;
     color: var(--text-main);
-    font-style: italic; /* Có thể thêm italic để phân biệt nếu muốn, hoặc bỏ qua */
-    opacity: 0.9;
+}
+
+.duyenco-list li::before {
+    content: "-";
+    position: absolute;
+    left: -1rem;
+    color: var(--text-muted);
 }
 
 .duyenco-list li:last-child {
