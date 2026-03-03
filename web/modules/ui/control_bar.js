@@ -20,7 +20,7 @@ export class ControlBar {
         if (this.speedSelect) {
             // Nạp giá trị speed từ bộ nhớ
             const savedRate = localStorage.getItem(STORAGE_KEY_RATE);
-            if (savedRate) this.speedSelect.value = savedRate;
+            if (savedRate) this.setSpeed(parseFloat(savedRate));
 
             this.speedSelect.addEventListener('change', (e) => {
                 const rate = parseFloat(e.target.value);
@@ -120,8 +120,11 @@ export class ControlBar {
     }
 
     setSpeed(rate) {
-        if (this.speedSelect) {
-            this.speedSelect.value = rate.toString();
+        if (!this.speedSelect) return;
+        const rateFloat = parseFloat(rate);
+        const matchedOption = Array.from(this.speedSelect.options).find(opt => parseFloat(opt.value) === rateFloat);
+        if (matchedOption) {
+            this.speedSelect.value = matchedOption.value;
         }
     }
 }
