@@ -30,6 +30,9 @@ export class ContentRenderer {
             playSequence: (index) => this.playSequenceFromIndex(index),
             onMaskStart: (e, el, item) => this.maskManager.handleMaskStart(e, el, item),
             onMaskEnter: (e, el) => this.maskManager.handleMaskEnter(e, el),
+            onSegmentTouchStart: (e) => this.maskManager.handleSegmentTouchStart(e),
+            onSegmentTouchMove: (e) => this.maskManager.handleSegmentTouchMove(e),
+            onSegmentTouchEnd: (e, el, item) => this.maskManager.handleSegmentTouchEnd(e, el, item),
             onHover: (id) => { this.hoveredSegmentId = id; },
             applySavedState: (el, id) => this.maskManager.applySavedState(el, id),
             onHeadingClick: (id) => this.collapseManager.toggleCollapse(id)

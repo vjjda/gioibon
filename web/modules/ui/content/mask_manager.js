@@ -11,6 +11,12 @@ export class MaskManager {
         this.STORAGE_KEY = 'gioibon_masked_segments';
         this.maskedIds = new Set(this._loadMaskedState());
 
+        // Gesture Tracking
+        this.touchStart = { x: 0, y: 0, time: 0 };
+        this.SWIPE_THRESHOLD_X = 40; // px
+        this.SWIPE_THRESHOLD_Y = 30; // px - max vertical deviation
+        this.SWIPE_MAX_TIME = 300;   // ms
+
         this._setupGlobalListeners();
     }
 
@@ -114,6 +120,49 @@ export class MaskManager {
 
         const textEl = segmentEl.querySelector('.segment-text');
         this._applyMaskAction(textEl, this.dragMaskAction, itemId);
+    }
+
+    // --- Swipe Gesture Support ---
+
+    handleSegmentTouchStart(e) {
+        if (e.touches.length !== 1) return;
+        this.touchStart = {
+            x: e.touches[0].clientX,
+            y: e.touches[0].clientY,
+            time: Date.now()
+        };
+    }
+
+    handleSegmentTouchMove(e) {
+        if (e.touches.length !== 1) return;
+        
+        const deltaX = Math.abs(e.touches[0].clientX - this.touchStart.x);
+        const deltaY = Math.abs(e.touches[0].clientY - this.touchStart.y);
+
+        // Nếu vuốt ngang rõ rệt hơn vuốt dọc, chặn cuộn trang để xử lý gesture
+        if (deltaX > 10 && deltaX > deltaY) {
+            if (e.cancelable) e.preventDefault();
+        }
+    }
+
+    handleSegmentTouchEnd(e, segmentEl, item) {
+        if (e.changedTouches.length !== 1) return;
+        
+        const deltaX = e.changedTouches[0].clientX - this.touchStart.x;
+        const deltaY = e.changedTouches[0].clientY - this.touchStart.y;
+        const deltaTime = Date.now() - this.touchStart.time;
+
+        // Kiểm tra xem có phải là cú vuốt ngang không
+        if (Math.abs(deltaX) > this.SWIPE_THRESHOLD_X && 
+            Math.abs(deltaY) < this.SWIPE_THRESHOLD_Y && 
+            deltaTime < this.SWIPE_MAX_TIME) {
+            
+            // Chặn hành vi mặc định nếu là swipe hợp lệ
+            if (e.cancelable) e.preventDefault();
+            
+            // Kích hoạt toggle mask
+            this.toggleMask(segmentEl, item);
+        }
     }
 
     _applyMaskAction(textEl, action, id) {

@@ -22,6 +22,16 @@ export class SegmentFactory {
         segmentEl.addEventListener('mouseenter', () => {
             if (this.callbacks.onHover) this.callbacks.onHover(item.id);
         });
+
+        // Hỗ trợ cử chỉ vuốt (Swipe) để che/hiện văn bản
+        if (this.callbacks.onSegmentTouchStart && this.callbacks.onSegmentTouchEnd) {
+            segmentEl.addEventListener('touchstart', (e) => this.callbacks.onSegmentTouchStart(e), { passive: true });
+            if (this.callbacks.onSegmentTouchMove) {
+                segmentEl.addEventListener('touchmove', (e) => this.callbacks.onSegmentTouchMove(e), { passive: false });
+            }
+            segmentEl.addEventListener('touchend', (e) => this.callbacks.onSegmentTouchEnd(e, segmentEl, item), { passive: false });
+        }
+
         this._applyClasses(segmentEl, item);
 
         const contentWrapper = document.createElement('div');
