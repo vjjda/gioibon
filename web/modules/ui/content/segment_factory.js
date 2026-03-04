@@ -117,7 +117,7 @@ export class SegmentFactory {
         textEl.className = 'segment-text';
         
         let htmlTemplate = item.html || '{}';
-        let content = item.text || '';
+        let content = item.text || ''; // item.text hiện chứa segment_html từ DB
 
         // Check for 'duyenco' special formatting
         if (item.label && item.label.endsWith('-duyenco')) {
@@ -133,7 +133,7 @@ export class SegmentFactory {
             }
         }
         
-        // Sử dụng thuộc tính 'text' đã được ContentLoader tối ưu (chứa hint hoặc segment)
+        // Render nội dung đã được xử lý từ Backend (bao gồm b, span.quote-text, span.hint-tail)
         const renderedHtml = htmlTemplate.replace('{}', content);
         
         textEl.innerHTML = renderedHtml;

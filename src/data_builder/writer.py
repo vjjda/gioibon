@@ -31,7 +31,7 @@ class DataWriter:
     def _save_tsv(self, data: List[SegmentData]) -> None:
         os.makedirs(os.path.dirname(self.tsv_path), exist_ok=True)
         with open(self.tsv_path, 'w', encoding='utf-8', newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=["uid", "html", "label", "segment", "audio", "hint"], delimiter='\t')
+            writer = csv.DictWriter(f, fieldnames=["uid", "html", "label", "segment", "audio", "segment_html", "has_hint"], delimiter='\t')
             writer.writeheader()
             for item in data:
                 writer.writerow(item.model_dump())
@@ -54,7 +54,8 @@ class DataWriter:
                 label TEXT,
                 segment TEXT,
                 audio_name TEXT,
-                hint TEXT
+                segment_html TEXT,
+                has_hint INTEGER
             )
         """)
         
@@ -67,10 +68,11 @@ class DataWriter:
                 item.label,
                 item.segment,
                 item.audio,
-                item.hint
+                item.segment_html,
+                item.has_hint
             ))
 
-        cursor.executemany("INSERT INTO contents VALUES (?, ?, ?, ?, ?, ?)", insert_contents)
+        cursor.executemany("INSERT INTO contents VALUES (?, ?, ?, ?, ?, ?, ?)", insert_contents)
         
         conn.commit()
         conn.close()

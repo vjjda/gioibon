@@ -11,4 +11,5 @@ class SourceSegmentData(BaseModel):
 class SegmentData(SourceSegmentData):
     uid: int = Field(description="ID duy nhất của segment")
     audio: str = Field(description="Tên file audio (ví dụ: 001_title_1.mp3)")
-    hint: str = Field(description="Nội dung văn bản đã bọc thẻ span cho Hint Mode")
+    segment_html: str = Field(description="Nội dung văn bản đã làm giàu (thẻ b, span...) để hiển thị")
+    has_hint: int = Field(description="Cờ hiệu có hỗ trợ hint hay không (0 hoặc 1)")

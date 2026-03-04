@@ -35,7 +35,7 @@ class TsvContentProcessor:
         return "".join(result)
 
     def process_tsv(self, tsv_path: str) -> List[SegmentData]:
-        """Đọc file TSV nguồn và bổ sung cột Audio, cột Hint bằng cách xử lý text."""
+        """Đọc file TSV nguồn và bổ sung cột Audio, segment_html bằng cách xử lý text."""
         segments_output: List[SegmentData] = []
 
         try:
@@ -52,70 +52,72 @@ class TsvContentProcessor:
                     uid = i + 1
                     html = row['html']
                     label = row['label']
-                    segment_text = row['segment']
+                    raw_source_text = row['segment']
 
-                    # --- Xử lý bọc thẻ quote cho các đoạn hội thoại/trích dẫn nằm giữa ‘ và ’ ---
+                    # --- 1. Xử lý quote wrapping (Duy trì trạng thái in_quote) ---
                     was_in_quote = in_quote
-                    new_text = ""
+                    text_with_quotes = ""
 
-                    # Quét từng ký tự để bắt chính xác lúc mở và đóng ngoặc
-                    for char in segment_text:
+                    for char in raw_source_text:
                         if char == '‘':
                             if not in_quote:
-                                new_text += "<span class='quote-text'>"
+                                text_with_quotes += "<span class='quote-text'>"
                                 in_quote = True
-                            new_text += '‘'
+                            text_with_quotes += '‘'
                         elif char == '’':
-                            new_text += '’'
+                            text_with_quotes += '’'
                             if in_quote:
-                                new_text += "</span>"
+                                text_with_quotes += "</span>"
                                 in_quote = False
                         else:
-                            new_text += char
+                            text_with_quotes += char
 
-                    # Nếu đoạn này bắt đầu mà đã nằm trong quote (từ đoạn trước kéo sang), mở thẻ ngay từ đầu
                     if was_in_quote:
-                        new_text = "<span class='quote-text'>" + new_text
-
-                    # Nếu kết thúc đoạn này mà vẫn đang trong quote (chưa có dấu đóng), phải đóng tạm thẻ
+                        text_with_quotes = "<span class='quote-text'>" + text_with_quotes
                     if in_quote:
-                        new_text = new_text + "</span>"
+                        text_with_quotes = text_with_quotes + "</span>"
 
-                    segment_text = new_text
-                    # -----------------------------------------------------------------------------
-
-                    # 1. Tạo nội dung cho Hint Mode (Pre-processed)
-                    # Bỏ qua tạo hint-tail cho các đoạn là heading (luôn hiển thị rõ)
+                    # --- 2. Xác định các flag hiển thị ---
                     is_heading = html.startswith("<h") or label in ["title", "subtitle"] or label.endswith("-name") or label.endswith("-chapter")
-                    
+
+                    # --- 3. Tạo segment_html (Làm giàu nội dung hiển thị) ---
+                    current_display_text = text_with_quotes
+                    has_hint_val = 0
+
                     if is_heading:
-                        hint_content = ""
-                        # Chỉ bọc các cụm từ trong ngoặc đơn (Pali) vào thẻ span.pali-name cho heading/name
+                        # Chỉ bọc Pali trong ngoặc đơn cho heading
                         if html.startswith("<h") and label.endswith("-name"):
                             pali_pattern = r"\(.*?\)"
-                            segment_text = re.sub(pali_pattern, r"<span class='pali-name'>\g<0></span>", segment_text)
+                            current_display_text = re.sub(pali_pattern, r"<span class='pali-name'>\g<0></span>", current_display_text)
                     else:
-                        hint_content = self._generate_hint_html(segment_text)
+                        # Tạo Hint cho nội dung thường
+                        current_display_text = self._generate_hint_html(current_display_text)
+                        has_hint_val = 1
 
-                    # 3. Tạo tên file audio (hash) hoặc skip
+                    # --- 4. Tạo segment (Văn bản thuần túy để tìm kiếm) ---
+                    # Loại bỏ hoàn toàn thẻ HTML khỏi segment_text
+                    # Lưu ý: Dùng raw_source_text để đảm bảo không dính các span vừa thêm
+                    clean_segment = re.sub(r'<[^>]+>', '', raw_source_text)
+
+                    # 5. Tạo tên file audio
                     audio_filename = self.tts_generator.process_segment(
-                        segment_text=segment_text,
+                        segment_text=clean_segment, # Dùng bản sạch để TTS
                         html=html,
                         label=label
                     )
-                    
+
                     segments_output.append(SegmentData(
                         uid=uid,
                         html=html,
                         label=label,
-                        segment=segment_text,
+                        segment=clean_segment,
                         audio=audio_filename,
-                        hint=hint_content
+                        segment_html=current_display_text,
+                        has_hint=has_hint_val
                     ))
-                    
+
                     if (i + 1) % 200 == 0:
                         logger.info(f"Đã xử lý {i + 1}/{total} segments...")
-
         except Exception as e:
             logger.error(f"Lỗi khi xử lý file TSV: {e}")
             raise e

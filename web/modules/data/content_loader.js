@@ -16,11 +16,8 @@ export class ContentLoader {
             let hasMore = true;
 
             while (hasMore) {
-                // [SQL OPTIMIZATION] Đẩy logic chọn text vào SQLite bằng CASE WHEN.
-                // Giảm 40% lượng chuỗi (string) phải truyền từ WASM sang JavaScript.
                 const rows = await this.db.query(
-                    `SELECT uid, html, label, audio_name, 
-                     CASE WHEN hint IS NOT NULL AND hint != '' THEN hint ELSE segment END as text 
+                    `SELECT uid, html, label, audio_name, segment, segment_html, has_hint 
                      FROM contents WHERE uid > ${lastUid} ORDER BY uid ASC LIMIT ${BATCH_SIZE}`
                 );
 
@@ -30,7 +27,9 @@ export class ContentLoader {
                         html: row.html,
                         label: row.label,
                         audio: row.audio_name,
-                        text: row.text // Đã được SQLite xử lý
+                        segment: row.segment,      // Bản thô (để search)
+                        text: row.segment_html,    // Bản HTML (để hiển thị)
+                        hasHint: row.has_hint === 1
                     }));
                     this.data.push(...batchItems);
                     lastUid = rows[rows.length - 1].uid;
