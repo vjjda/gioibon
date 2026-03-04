@@ -100,8 +100,8 @@
 
 /* [NEW] Translator Additions (Dimmed, no brackets) */
 .trans-addition {
-    opacity: 0.7;
-    font-weight: 400;
+    color: var(--text-muted);
+    font-weight: 300;
 }
 
 /* [NEW] Note Styling (Low Profile) */
