@@ -7,7 +7,7 @@
     font-family: var(--font-mono); /* [TESTING] Switch to Monospace */
     color: var(--text-main);
     line-height: 1.7;
-    font-weight: 400; /* Monospace thường cần weight dày hơn một chút để dễ đọc */
+    font-weight: 450; /* Monospace thường cần weight dày hơn một chút để dễ đọc */
 }
 
 /* Heading Typography Override */
@@ -128,7 +128,7 @@
     font-style: italic;
     color: var(--text-light);
     /* Lighter text */
-    font-size: calc(0.9rem * var(--text-scale, 1));
+    font-size: calc(1.1rem * var(--text-scale, 1));
     /* Margins removed here to be handled by segment container alignment logic */
     margin: 0;
     font-family: var(--font-ui);
