@@ -106,7 +106,28 @@
 
 /* [NEW] Selection Groups (from [A hoặc B]) */
 .selection-group {
-    /* Vùng chứa các lựa chọn, có thể thêm border-bottom nhẹ nếu muốn nổi bật hơn */
+    background-color: rgba(58, 90, 64, 0.05); /* Nền xanh rêu siêu nhạt để gom nhóm */
+    padding: 0 4px;
+    border-radius: 4px;
+    display: inline;
+    margin: 0 1px;
+}
+
+/* Thêm dấu ngoặc ảo bằng CSS để phân định ranh giới group mà không làm bẩn dữ liệu copy */
+.selection-group::before {
+    content: "[";
+    color: var(--text-light);
+    opacity: 0.4;
+    margin-right: 2px;
+    font-family: var(--font-ui);
+}
+
+.selection-group::after {
+    content: "]";
+    color: var(--text-light);
+    opacity: 0.4;
+    margin-left: 2px;
+    font-family: var(--font-ui);
 }
 
 .selection-or {
