@@ -42,16 +42,16 @@ class TsvContentProcessor:
         def replacer(match):
             content = match.group(1).strip()
 
-            # 1. Trường hợp danh sách các cụm "hoặc là ..." ngăn cách bởi dấu phẩy
+            # 1. Trường hợp danh sách các cụm "hoặc là ..." hoặc "hoặc ..." ở đầu mỗi cụm (ngăn cách bởi dấu phẩy)
             # VD: [hoặc là với tội A, hoặc là với tội B]
-            if content.startswith("hoặc là"):
-                # Tách theo dấu phẩy, giả định mỗi phần sau dấu phẩy bắt đầu bằng "hoặc là"
-                parts = re.split(r',\s*(?=hoặc là)', content)
+            if content.startswith("hoặc"):
+                # Tách theo dấu phẩy, dùng lookahead để đảm bảo vế sau cũng bắt đầu bằng "hoặc"
+                parts = re.split(r',\s*(?=hoặc)', content)
                 processed_parts = []
                 for p in parts:
                     p = p.strip()
-                    # Tách chữ "hoặc là" ở đầu
-                    m = re.match(r'^(hoặc là)\s*(.*)$', p)
+                    # Tách từ khóa ở đầu cụm (ưu tiên "hoặc là" dài hơn trước)
+                    m = re.match(r'^(hoặc là|hoặc)\s*(.*)$', p)
                     if m:
                         processed_parts.append(f"<span class='selection-or'>{m.group(1)}</span> <span class='selection-item'>{m.group(2)}</span>")
                     else:
@@ -59,17 +59,11 @@ class TsvContentProcessor:
                 inner = ", ".join(processed_parts)
                 return f"<span class='selection-group'>{inner}</span>"
 
-            # 2. Trường hợp "hoặc là" nằm ở giữa để phân tách 2 vế
-            # VD: [là người phụ việc chùa hoặc là nam cư sĩ]
-            elif " hoặc là " in content:
-                parts = content.split(" hoặc là ")
-                wrapped_parts = [f"<span class='selection-item'>{p.strip()}</span>" for p in parts]
-                inner = " <span class='selection-or'>hoặc là</span> ".join(wrapped_parts)
-                return f"<span class='selection-group'>{inner}</span>"
-
-            # 3. Trường hợp "hoặc" nằm ở giữa
+            # 2. Trường hợp "hoặc" nằm ở giữa để phân tách các vế (Phổ biến)
             # VD: [vật thực cứng hoặc vật thực mềm]
+            # VD: [là người phụ việc chùa hoặc là nam cư sĩ] -> tách tại " hoặc " -> "là...chùa" và "là nam cư sĩ"
             elif " hoặc " in content:
+                # Tách tất cả các vế bằng từ " hoặc " duy nhất làm mốc phân tách
                 parts = content.split(" hoặc ")
                 wrapped_parts = [f"<span class='selection-item'>{p.strip()}</span>" for p in parts]
                 inner = " <span class='selection-or'>hoặc</span> ".join(wrapped_parts)
@@ -78,7 +72,6 @@ class TsvContentProcessor:
             return content
 
         return re.sub(r'\[(.*?)\]', replacer, text)
-
     def process_tsv(self, tsv_path: str) -> List[SegmentData]:
         """Đọc file TSV nguồn và bổ sung cột Audio, segment_html bằng cách xử lý text."""
         segments_output: List[SegmentData] = []
