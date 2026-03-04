@@ -19,31 +19,70 @@ class TsvContentProcessor:
         """Bọc phần đuôi của các từ vào thẻ span.hint-tail để dùng cho Hint Mode."""
         if not text:
             return ""
-        
+
         # Regex này khớp với: (Phụ âm đầu hoặc Chữ cái đầu) (Các chữ cái tiếp theo)
-        # Hỗ trợ các phụ âm ghép tiếng Việt (ngh, ch, gh, gi, kh, ng, nh, ph, qu, th, tr)
-        # Sử dụng re.IGNORECASE để khớp cả chữ hoa và thường.
-        # [^\W\d_] khớp với ký tự là chữ (Letter), không bao gồm số và dấu gạch dưới.
         pattern = r"\b(ngh|ch|gh|gi|kh|ng|nh|ph|qu|th|tr|[^\W\d_])([^\W\d_]+)"
-        return re.sub(pattern, r"\1<span class='hint-tail'>\2</span>", text, flags=re.IGNORECASE | re.UNICODE)
+
+        # Split text by HTML tags to preserve them, ensuring we don't inject spans inside HTML attributes
+        parts = re.split(r'(<[^>]+>)', text)
+        result = []
+        for part in parts:
+            if part.startswith('<') and part.endswith('>'):
+                result.append(part)
+            else:
+                result.append(re.sub(pattern, r"\1<span class='hint-tail'>\2</span>", part, flags=re.IGNORECASE | re.UNICODE))
+
+        return "".join(result)
 
     def process_tsv(self, tsv_path: str) -> List[SegmentData]:
         """Đọc file TSV nguồn và bổ sung cột Audio, cột Hint bằng cách xử lý text."""
         segments_output: List[SegmentData] = []
-        
+
         try:
             with open(tsv_path, 'r', encoding='utf-8') as f:
-                reader = csv.DictReader(f, delimiter='	')
-                
+                reader = csv.DictReader(f, delimiter='\t')
+
                 rows = list(reader)
                 total = len(rows)
                 logger.info(f"Đang xử lý {total} segments từ {tsv_path}...")
+
+                in_quote = False
 
                 for i, row in enumerate(rows):
                     uid = i + 1
                     html = row['html']
                     label = row['label']
                     segment_text = row['segment']
+
+                    # --- Xử lý bọc thẻ quote cho các đoạn hội thoại/trích dẫn nằm giữa ‘ và ’ ---
+                    was_in_quote = in_quote
+                    new_text = ""
+
+                    # Quét từng ký tự để bắt chính xác lúc mở và đóng ngoặc
+                    for char in segment_text:
+                        if char == '‘':
+                            if not in_quote:
+                                new_text += "<span class='quote-text'>"
+                                in_quote = True
+                            new_text += '‘'
+                        elif char == '’':
+                            new_text += '’'
+                            if in_quote:
+                                new_text += "</span>"
+                                in_quote = False
+                        else:
+                            new_text += char
+
+                    # Nếu đoạn này bắt đầu mà đã nằm trong quote (từ đoạn trước kéo sang), mở thẻ ngay từ đầu
+                    if was_in_quote:
+                        new_text = "<span class='quote-text'>" + new_text
+
+                    # Nếu kết thúc đoạn này mà vẫn đang trong quote (chưa có dấu đóng), phải đóng tạm thẻ
+                    if in_quote:
+                        new_text = new_text + "</span>"
+
+                    segment_text = new_text
+                    # -----------------------------------------------------------------------------
 
                     # 1. Tạo nội dung cho Hint Mode (Pre-processed)
                     # Bỏ qua tạo hint-tail cho các đoạn là heading (luôn hiển thị rõ)

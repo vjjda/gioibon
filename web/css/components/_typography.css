@@ -83,6 +83,12 @@
     font-weight: 300;
 }
 
+/* Quote Text (Giữa hai dấu ngoặc đơn) */
+.quote-text {
+    font-style: italic;
+    color: var(--accent-color);
+}
+
 /* [NEW] Pali Name (Low Profile) inside headings/text */
 .pali-name {
     color: var(--text-muted);
