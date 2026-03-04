@@ -144,7 +144,7 @@ html	label	segment
 {}	ss-ending	Vị tỳ khưu vi phạm điều nọ hoặc điều kia thuộc về các điều này và che giấu biết được bao nhiêu ngày thì vị tỳ khưu ấy phải chịu hình phạt parivāsa không theo ý muốn bấy nhiêu ngày.
 {}	ss-ending	Vị tỳ khưu đã trải qua hình phạt parivāsa nên thực hành thêm sáu đêm mānatta dành cho tỳ khưu.
 {}	ss-ending	Vị tỳ khưu có hình phạt mānatta đã được hoàn tất thì vị tỳ khưu ấy nên được giải tội tại nơi nào có hội chúng tỳ khưu nhóm hai mươi vị.
-{}	ss-ending	Nếu hội chúng tỳ khưu nhóm hai mươi vị chỉ thiếu đi một mà giải tội cho vị tỳ khưu ấy thì vị tỳ khưu ấy chưa được giải tội và các tỳ khưu ấy bị chê trách.
+{}	ss-ending	Nếu hội chúng tỳ khưu nhóm hai mươi vị chỉ thiếu đi một mà giải tội cho vị tỳ khưu ấy thì vị tỳ khưu ấy chưa được giải tội và các tỳ khưu ấy đáng bị chê trách.
 {}</p>	ss-ending	Đây là điều đúng đắn trong trường hợp ấy.
 <p>{}	ss-ending	Trong các điều ấy, tôi hỏi các đại đức rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
 {}	ss-ending	Đến lần thứ nhì, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
@@ -488,7 +488,7 @@ html	label	segment
 <h4>{}</h4>	pc64-name	Pc 64. Tội xấu xa (Duṭṭhulla)
 <p>{}</p>	pc64	Vị tỳ khưu nào trong khi biết tội xấu xa của vị tỳ khưu vẫn che giấu thì phạm tội pācittiya.
 <h4>{}</h4>	pc65-name	Pc 65. Chưa đủ hai mươi tuổi (Ūnavīsativassa)
-<p>{}</p>	pc65	Vị tỳ khưu nào trong khi biết người chưa đủ hai mươi tuổi vẫn cho tu lên bậc trên thì người ấy chưa được tu lên bậc trên và các vị tỳ khưu ấy bị chê trách; đây là tội pācittiya trong trường hợp ấy.
+<p>{}</p>	pc65	Vị tỳ khưu nào trong khi biết người chưa đủ hai mươi tuổi vẫn cho tu lên bậc trên thì người ấy chưa được tu lên bậc trên và các vị tỳ khưu ấy đáng bị chê trách; đây là tội pācittiya trong trường hợp ấy.
 <h4>{}</h4>	pc66-name	Pc 66. Đám người đạo tặc (Theyyasattha)
 <p>{}</p>	pc66	Vị tỳ khưu nào trong khi biết vẫn hẹn trước rồi đi chung đường xa với đám người đạo tặc ngay cả từ làng này sang làng khác thì phạm tội pācittiya.
 <h4>{}</h4>	pc67-name	Pc 67. Hẹn trước (Saṁvidhāna)
