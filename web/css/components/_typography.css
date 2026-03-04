@@ -89,7 +89,7 @@
     font-style: normal;           /* Chữ đứng cho dễ đọc dấu tiếng Việt */
     color: var(--text-quote);
     font-weight: 500;             /* Đậm hơn text thường một chút */
-    background-color: rgba(139, 69, 19, 0.03); /* Nền siêu nhạt để nhận diện khối lời thoại */
+    /* background-color: rgba(139, 69, 19, 0.03); */ /* Nền siêu nhạt để nhận diện khối lời thoại */
     padding: 0 2px;
     border-radius: 3px;
 }
