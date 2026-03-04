@@ -80,11 +80,11 @@ class TsvContentProcessor:
             return text
 
         if len(parts) == 1:
-            # Trường hợp 1 item: dùng ul, sẽ ẩn bullet bằng CSS
-            content = f"<ul class='duyenco-list single-item'><li>{parts[0]}</li></ul>"
+            # Trường hợp 1 item: bọc span bảo vệ để tránh flex-gap làm gãy từ khi có hint spans
+            content = f"<ul class='duyenco-list single-item'><li><span class='duyenco-content'>{parts[0]}</span></li></ul>"
         else:
-            # Trường hợp nhiều items: dùng ol, có đánh số subtle
-            list_items = "".join([f"<li>{p}</li>" for p in parts])
+            # Trường hợp nhiều items: dùng ol, mỗi item bọc trong span.duyenco-content
+            list_items = "".join([f"<li><span class='duyenco-content'>{p}</span></li>" for p in parts])
             content = f"<ol class='duyenco-list multi-item'>{list_items}</ol>"
 
         return content
