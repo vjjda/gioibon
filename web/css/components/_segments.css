@@ -141,8 +141,12 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     padding-top: 0;
 }
 
+.heading-segment[data-label^="h3"] {
+    margin-top: 2rem;
+}
+
 .rule-header {
-    margin-top: 0.5rem;
+    margin-top: 1.5rem;
 }
 
 /* --- Segment Mask Toggle (Right Side) --- */
