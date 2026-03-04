@@ -11,7 +11,7 @@
   --text-light: #888888;   /* Very Light Text */
   --text-pali: #8b4513;    /* SaddleBrown for Pali */
   --text-quote: #6b4c3a;   /* Deep muted brown for multi-segment quotes */
-  --text-selection: #006064; /* Deep Teal for highlighted choices */
+  --text-selection: #3a5a40; /* Deep Moss Green for choices - more organic with sepia */
 
   --primary-color: #8b4513; /* SaddleBrown */
   --primary-hover: #a0522d; /* Sienna */
@@ -57,7 +57,7 @@
   --text-light: #757575;
   --text-pali: #ae7e68;
   --text-quote: #967a68;
-  --text-selection: #4dd0e1; /* Soft Cyan/Teal for selections */
+  --text-selection: #a3b18a; /* Sage Green for choices in dark mode */
 
   --primary-color: #a0522d;
   --primary-hover: #ba6b45;
