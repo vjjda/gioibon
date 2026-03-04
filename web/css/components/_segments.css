@@ -95,6 +95,11 @@ body.hint-mode-active .segment-text.masked .trans-addition {
     color: var(--text-muted) !important;
 }
 
+body.hint-mode-active .segment-text.masked .selection-or {
+    color: var(--text-muted) !important;
+    font-style: italic !important;
+}
+
 body.hint-mode-active .segment-text.masked .hint-tail {
     color: transparent !important;
     border-bottom: 1px solid rgba(128, 128, 128, 0.8) !important;

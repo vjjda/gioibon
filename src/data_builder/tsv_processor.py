@@ -34,6 +34,51 @@ class TsvContentProcessor:
 
         return "".join(result)
 
+    def _process_selections(self, text: str) -> str:
+        """Xử lý các đoạn lựa chọn trong ngoặc vuông [...hoặc...]"""
+        if '[' not in text:
+            return text
+
+        def replacer(match):
+            content = match.group(1).strip()
+
+            # 1. Trường hợp danh sách các cụm "hoặc là ..." ngăn cách bởi dấu phẩy
+            # VD: [hoặc là với tội A, hoặc là với tội B]
+            if content.startswith("hoặc là"):
+                # Tách theo dấu phẩy, giả định mỗi phần sau dấu phẩy bắt đầu bằng "hoặc là"
+                parts = re.split(r',\s*(?=hoặc là)', content)
+                processed_parts = []
+                for p in parts:
+                    p = p.strip()
+                    # Tách chữ "hoặc là" ở đầu
+                    m = re.match(r'^(hoặc là)\s*(.*)$', p)
+                    if m:
+                        processed_parts.append(f"<span class='selection-or'>{m.group(1)}</span> <span class='selection-item'>{m.group(2)}</span>")
+                    else:
+                        processed_parts.append(f"<span class='selection-item'>{p}</span>")
+                inner = ", ".join(processed_parts)
+                return f"<span class='selection-group'>{inner}</span>"
+
+            # 2. Trường hợp "hoặc là" nằm ở giữa để phân tách 2 vế
+            # VD: [là người phụ việc chùa hoặc là nam cư sĩ]
+            elif " hoặc là " in content:
+                parts = content.split(" hoặc là ")
+                wrapped_parts = [f"<span class='selection-item'>{p.strip()}</span>" for p in parts]
+                inner = " <span class='selection-or'>hoặc là</span> ".join(wrapped_parts)
+                return f"<span class='selection-group'>{inner}</span>"
+
+            # 3. Trường hợp "hoặc" nằm ở giữa
+            # VD: [vật thực cứng hoặc vật thực mềm]
+            elif " hoặc " in content:
+                parts = content.split(" hoặc ")
+                wrapped_parts = [f"<span class='selection-item'>{p.strip()}</span>" for p in parts]
+                inner = " <span class='selection-or'>hoặc</span> ".join(wrapped_parts)
+                return f"<span class='selection-group'>{inner}</span>"
+
+            return content
+
+        return re.sub(r'\[(.*?)\]', replacer, text)
+
     def process_tsv(self, tsv_path: str) -> List[SegmentData]:
         """Đọc file TSV nguồn và bổ sung cột Audio, segment_html bằng cách xử lý text."""
         segments_output: List[SegmentData] = []
@@ -90,17 +135,20 @@ class TsvContentProcessor:
                             pali_pattern = r"\(.*?\)"
                             current_display_text = re.sub(pali_pattern, r"<span class='pali-name'>\g<0></span>", current_display_text)
                     else:
-                        # Xử lý phần bổ sung của dịch giả (Bỏ dấu ngoặc, bọc thẻ trans-addition)
+                        # A. Xử lý phần bổ sung của dịch giả (Bỏ dấu ngoặc đơn, bọc thẻ trans-addition)
                         trans_pattern = r"\((.*?)\)"
                         current_display_text = re.sub(trans_pattern, r"<span class='trans-addition'>\1</span>", current_display_text)
-                        
-                        # Tạo Hint cho nội dung thường
+
+                        # B. Xử lý phần lựa chọn [hoặc] (Bỏ dấu ngoặc vuông, bọc rich styles)
+                        current_display_text = self._process_selections(current_display_text)
+
+                        # C. Tạo Hint cho nội dung thường
                         current_display_text = self._generate_hint_html(current_display_text)
                         has_hint_val = 1
 
                     # --- 4. Tạo segment (Văn bản thuần túy để tìm kiếm) ---
-                    # Bỏ dấu ngoặc đơn ở bản thô cho mọi trường hợp (để search/TTS tự nhiên hơn)
-                    clean_segment = re.sub(r'\(|\)', '', raw_source_text)
+                    # Bỏ mọi loại ngoặc ( , ) , [ , ] ở bản thô
+                    clean_segment = re.sub(r'\(|\)|\[|\]', '', raw_source_text)
                     # Loại bỏ hoàn toàn thẻ HTML nếu có
                     clean_segment = re.sub(r'<[^>]+>', '', clean_segment)
 

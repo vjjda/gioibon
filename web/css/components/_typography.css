@@ -101,7 +101,26 @@
 /* [NEW] Translator Additions (Dimmed, no brackets) */
 .trans-addition {
     color: var(--text-muted);
-    font-weight: 300;
+    font-weight: 400;
+}
+
+/* [NEW] Selection Groups (from [A hoặc B]) */
+.selection-group {
+    /* Vùng chứa các lựa chọn, có thể thêm border-bottom nhẹ nếu muốn nổi bật hơn */
+}
+
+.selection-or {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 0.9em;
+    font-weight: 400;
+    margin: 0 2px;
+}
+
+.selection-item {
+    color: var(--text-main);
+    font-weight: 500;
+    /* Giữ font Mono cho các lựa chọn để dễ dùng Hint Mode */
 }
 
 /* [NEW] Note Styling (Low Profile) */
