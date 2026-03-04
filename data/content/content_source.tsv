@@ -3,37 +3,37 @@ html	label	segment
 <h2 class="subtitle">{}</h2>	subtitle	PĀTIMOKKHA BHIKKHU
 <h2>{}</h2>	tiensu	TIỀN SỰ
 <p class='namo'>{}</p>	tiensu	NAMO TASSA BHAGAVATO ARAHATO SAMMĀSAMBUDDHASSA
-<h3>{}</h3>	tiensu	Công Việc Chuẩn Bị
-<p>{}</p>	tiensu	Việc quét tước, thắp sáng đèn, nước (uống nước rửa), và chỗ ngồi, các việc này gọi là công việc chuẩn bị cho lễ Uposatha.
-<h3>{}</h3>	tiensu	Phận Sự Trước Tiên
-<p>{}</p>	tiensu	(Việc bày tỏ) sự tùy thuận và sự trong sạch, việc tính mùa tiết, việc đếm số tỳ khưu (hiện diện), và sự giáo giới (tỳ khưu ni), các việc này gọi là phận sự trước tiên của lễ Uposatha.
-<h3>{}</h3>	tiensu	Thời Điểm Thích Hợp
-<p>{}</p>	tiensu	(Hôm nay) là ngày lễ Uposatha, các vị tỳ khưu với số lượng cần thiết đã có đủ, (trường hợp) các vị tỳ khưu vi phạm tội giống nhau không xảy ra, ở đây không có những nhân vật cần phải tách ly, như thế gọi là “thời điểm thích hợp.”
-<p>{}</p>	tiensu	Các công việc chuẩn bị và các phận sự trước tiên đã được hoàn tất, hội chúng tỳ khưu tăng đã sám hối tội lỗi và có sự hợp nhất, với sự đồng ý của hội chúng tỳ khưu tăng tôi xin thỉnh đọc tụng giới bổn Pātimokkha.
+<h3>{}</h3>	tiensu-chuanbi	Công Việc Chuẩn Bị
+<p>{}</p>	tiensu-chuanbi	Việc quét tước, thắp sáng đèn, nước (uống nước rửa), và chỗ ngồi, các việc này gọi là công việc chuẩn bị cho lễ Uposatha.
+<h3>{}</h3>	tiensu-phansu	Phận Sự Trước Tiên
+<p>{}</p>	tiensu-phansu	(Việc bày tỏ) sự tùy thuận và sự trong sạch, việc tính mùa tiết, việc đếm số tỳ khưu (hiện diện), và sự giáo giới (tỳ khưu ni), các việc này gọi là phận sự trước tiên của lễ Uposatha.
+<h3>{}</h3>	tiensu-thoidiem	Thời Điểm Thích Hợp
+<p>{}</p>	tiensu-thoidiem	(Hôm nay) là ngày lễ Uposatha, các vị tỳ khưu với số lượng cần thiết đã có đủ, (trường hợp) các vị tỳ khưu vi phạm tội giống nhau không xảy ra, ở đây không có những nhân vật cần phải tách ly, như thế gọi là “thời điểm thích hợp.”
+<p>{}</p>	tiensu-ending	Các công việc chuẩn bị và các phận sự trước tiên đã được hoàn tất, hội chúng tỳ khưu tăng đã sám hối tội lỗi và có sự hợp nhất, với sự đồng ý của hội chúng tỳ khưu tăng tôi xin thỉnh đọc tụng giới bổn Pātimokkha.
 <h2>{}</h2>	modau	MỞ ĐẦU
-<h3>{}</h3>	modau	Tác Bạch
-<p>{}	modau	Suṇātu me bhante saṅgho.
-{}</p>	modau	Ajjuposatho <b>paṇṇaraso</b>, yadi saṅghassa pattakallaṃ, saṅgho uposathaṃ kareyya, pātimokkhaṃ uddiseyya.
+<h3>{}</h3>	modau-tacbach	Tác Bạch
+<p>{}	modau-tacbach	Suṇātu me bhante saṅgho.
+{}</p>	modau-tacbach	Ajjuposatho <b>paṇṇaraso</b>, yadi saṅghassa pattakallaṃ, saṅgho uposathaṃ kareyya, pātimokkhaṃ uddiseyya.
 <p class="note">{}</p>	note	paṇṇaraso (15) hoặc catuddaso (14) hoặc samaggo (hoà hợp tăng).
-<p>{}	modau	Bạch chư đại đức Tăng, xin hội chúng hãy lắng nghe tôi.
-{}	modau	Hôm nay là ngày <b>mười lăm</b> là ngày lễ Uposatha.
-{}</p>	modau	Nếu là thời điểm thích hợp cho hội chúng, hội chúng nên tiến hành lễ Uposatha, nên đọc tụng giới bổn Pātimokkha.
-<p>{}	modau	Phận sự trước tiên của hội chúng là gì?
-{}	modau	Các đại đức hãy tuyên bố sự trong sạch rồi tôi sẽ đọc tụng giới bổn Pātimokkha.
-{}</p>	modau	Hết thảy tất cả các vị hiện diện (chúng ta) hãy nghiêm chỉnh lắng nghe và hãy chú tâm.
-<p>{}	modau	Nếu vị tỳ khưu nào có phạm tội, vị tỳ khưu ấy nên bày tỏ; vị không có phạm tội thì nên im lặng.
-{}	modau	Do thái độ im lặng, tôi sẽ nhận biết về các đại đức rằng: ‘(Các vị) được trong sạch.’
-{}	modau	Giống như đối với mỗi lần được hỏi đến thì có câu trả lời; tương tự như thế, trong hội chúng như thế này (câu hỏi) được thông báo đến lần thứ ba.
-{}</p>	modau	Trong khi đang được thông báo đến lần thứ ba, vị tỳ khưu nào nhớ ra mà không bày tỏ tội đang có thì vị tỳ khưu ấy cố tình nói dối.
-<p>{}	modau	Bạch chư đại đức, việc cố tình nói dối là pháp chướng ngại đã được đức Thế Tôn đề cập đến; do đó, vị tỳ khưu bị phạm tội mà nhớ ra và có ý muốn được trong sạch thì nên bày tỏ ra tội đang có.
-{}</p>	modau	Bởi vì khi (tội) đã được bày tỏ thì vị tỳ khưu ấy sẽ được thoải mái.
-<h3>{}</h3>	modau	Dứt Phần Mở Đầu
-<p>{}	modau	Bạch chư đại đức, phần mở đầu đã được đọc tụng xong.
-{}	modau	Trong các điều ấy, tôi hỏi các đại đức rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
-{}	modau	Đến lần thứ nhì, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
-{}	modau	Đến lần thứ ba, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
-{}</p>	modau	Các đại đức được thanh tịnh nên mới im lặng. Tôi ghi nhận sự việc này là như vậy.
-<p class='endsection'>{}</p>	modau	Dứt Phần Đọc Tụng Mở Đầu
+<p>{}	modau-tacbach	Bạch chư đại đức Tăng, xin hội chúng hãy lắng nghe tôi.
+{}	modau-tacbach	Hôm nay là ngày <b>mười lăm</b> là ngày lễ Uposatha.
+{}</p>	modau-tacbach	Nếu là thời điểm thích hợp cho hội chúng, hội chúng nên tiến hành lễ Uposatha, nên đọc tụng giới bổn Pātimokkha.
+<p>{}	modau-tacbach	Phận sự trước tiên của hội chúng là gì?
+{}	modau-tacbach	Các đại đức hãy tuyên bố sự trong sạch rồi tôi sẽ đọc tụng giới bổn Pātimokkha.
+{}</p>	modau-tacbach	Hết thảy tất cả các vị hiện diện (chúng ta) hãy nghiêm chỉnh lắng nghe và hãy chú tâm.
+<p>{}	modau-tacbach	Nếu vị tỳ khưu nào có phạm tội, vị tỳ khưu ấy nên bày tỏ; vị không có phạm tội thì nên im lặng.
+{}	modau-tacbach	Do thái độ im lặng, tôi sẽ nhận biết về các đại đức rằng: ‘(Các vị) được trong sạch.’
+{}	modau-tacbach	Giống như đối với mỗi lần được hỏi đến thì có câu trả lời; tương tự như thế, trong hội chúng như thế này (câu hỏi) được thông báo đến lần thứ ba.
+{}</p>	modau-tacbach	Trong khi đang được thông báo đến lần thứ ba, vị tỳ khưu nào nhớ ra mà không bày tỏ tội đang có thì vị tỳ khưu ấy cố tình nói dối.
+<p>{}	modau-tacbach	Bạch chư đại đức, việc cố tình nói dối là pháp chướng ngại đã được đức Thế Tôn đề cập đến; do đó, vị tỳ khưu bị phạm tội mà nhớ ra và có ý muốn được trong sạch thì nên bày tỏ ra tội đang có.
+{}</p>	modau-tacbach	Bởi vì khi (tội) đã được bày tỏ thì vị tỳ khưu ấy sẽ được thoải mái.
+<h3>{}</h3>	modau-ending	Dứt Phần Mở Đầu
+<p>{}	modau-ending	Bạch chư đại đức, phần mở đầu đã được đọc tụng xong.
+{}	modau-ending	Trong các điều ấy, tôi hỏi các đại đức rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
+{}	modau-ending	Đến lần thứ nhì, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
+{}	modau-ending	Đến lần thứ ba, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
+{}</p>	modau-ending	Các đại đức được thanh tịnh nên mới im lặng. Tôi ghi nhận sự việc này là như vậy.
+<p class='endsection'>{}</p>	modau-ending	Dứt Phần Đọc Tụng Mở Đầu
 <h2>{}</h2>	pj-opening	THUYẾT GIỚI TRIỆT KHAI
 <p>{}</p>	pj-opening	Ở đây, bốn điều Pārājika này được đưa ra đọc tụng.
 <h4>{}</h4>	pj1-name	Pj 1. Việc đôi lứa (Methunadhamma)
@@ -144,7 +144,7 @@ html	label	segment
 {}	ss-ending	Vị tỳ khưu vi phạm điều nọ hoặc điều kia thuộc về các điều này và che giấu biết được bao nhiêu ngày thì vị tỳ khưu ấy phải chịu hình phạt parivāsa không theo ý muốn bấy nhiêu ngày.
 {}	ss-ending	Vị tỳ khưu đã trải qua hình phạt parivāsa nên thực hành thêm sáu đêm mānatta dành cho tỳ khưu.
 {}	ss-ending	Vị tỳ khưu có hình phạt mānatta đã được hoàn tất thì vị tỳ khưu ấy nên được giải tội tại nơi nào có hội chúng tỳ khưu nhóm hai mươi vị.
-{}	ss-ending	Nếu hội chúng tỳ khưu nhóm hai mươi vị chỉ thiếu đi một mà giải tội cho vị tỳ khưu ấy thì vị tỳ khưu ấy chưa được giải tội và các tỳ khưu ấy bị khiển trách.
+{}	ss-ending	Nếu hội chúng tỳ khưu nhóm hai mươi vị chỉ thiếu đi một mà giải tội cho vị tỳ khưu ấy thì vị tỳ khưu ấy chưa được giải tội và các tỳ khưu ấy bị chê trách.
 {}</p>	ss-ending	Đây là điều đúng đắn trong trường hợp ấy.
 <p>{}	ss-ending	Trong các điều ấy, tôi hỏi các đại đức rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
 {}	ss-ending	Đến lần thứ nhì, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
@@ -328,8 +328,8 @@ html	label	segment
 <p>{}</p>	pc7	Vị tỳ khưu nào thuyết Pháp đến người nữ hơn năm sáu câu ngoại trừ có người nam có trí suy xét thì phạm tội pācittiya.
 <h4>{}</h4>	pc8-name	Pc 8. Nói thật (Bhūtārocana)
 <p>{}</p>	pc8	Vị tỳ khưu nào tuyên bố pháp thượng nhân đến người chưa tu lên bậc trên (nếu) đã thực chứng thì phạm tội pācittiya.
-<h4>{}</h4>	pc9-name	Pc 9. Công bố tội xấu (Duṭṭhullārocana)
-<p>{}</p>	pc9	Vị tỳ khưu nào công bố tội xấu của vị tỳ khưu đến người chưa tu lên bậc trên thì phạm tội pācittiya ngoại trừ có sự đồng ý của các tỳ khưu.
+<h4>{}</h4>	pc9-name	Pc 9. Công bố tội xấu xa (Duṭṭhullārocana)
+<p>{}</p>	pc9	Vị tỳ khưu nào công bố tội xấu xa của vị tỳ khưu đến người chưa tu lên bậc trên thì phạm tội pācittiya ngoại trừ có sự đồng ý của các tỳ khưu.
 <h4>{}</h4>	pc10-name	Pc 10. Đào đất (Pathavīkhaṇana)
 <p>{}</p>	pc10	Vị tỳ khưu nào tự đào hoặc bảo đào đất thì phạm tội pācittiya.
 <p class='endvagga'>{}</p>	pc-ending	Phẩm Nói Dối là thứ nhất.
@@ -377,7 +377,7 @@ html	label	segment
 <h4>{}</h4>	pc26-name	Pc 26. May y (Cīvarasibbana)
 <p>{}</p>	pc26	Vị tỳ khưu nào may y hoặc bảo may y cho tỳ khưu ni không phải là thân quyến thì phạm tội pācittiya.
 <h4>{}</h4>	pc27-name	Pc 27. Hẹn trước (Saṁvidhāna)
-<p>{}	pc27	Vị tỳ khưu nào sau khi hẹn trước rồi đi chung đường xa với vị tỳ khưu ni ngay cả (đi) từ làng này sang làng khác thì phạm tội pācittiya, ngoại trừ có duyên cớ.
+<p>{}	pc27	Vị tỳ khưu nào hẹn trước rồi đi chung đường xa với vị tỳ khưu ni ngay cả từ làng này sang làng khác thì phạm tội pācittiya, ngoại trừ có duyên cớ.
 {}</p>	pc27	Duyên cớ trong trường hợp ấy là: 
 <p>{}</p>	pc27-duyenco	con đường cần phải đi chung với đoàn xe, được xác định là có sự nguy hiểm, có sự kinh hoàng.
 <p>{}</p>	pc27	Đây là duyên cớ trong trường hợp ấy.
@@ -836,18 +836,18 @@ html	label	segment
 {}	as-ending	Đến lần thứ ba, tôi hỏi rằng: Chắc hẳn các vị được thanh tịnh trong vấn đề này?
 {}</p>	as-ending	Các đại đức được thanh tịnh nên mới im lặng. Tôi ghi nhận sự việc này là như vậy.
 <p class='endsection'>{}</p>	as-ending	Dứt Các Pháp Dàn Xếp Tranh Tụng
-<h2>{}</h2>	end	KẾT THÚC
-<p>{}<br>	end	Bạch chư đại đức, phần mở đầu đã được đọc tụng,
-{}<br>	end	Bốn điều pārājika đã được đọc tụng,
-{}<br>	end	Mười ba điều saṅghādisesa đã được đọc tụng,
-{}<br>	end	Hai điều aniyata đã được đọc tụng,
-{}<br>	end	Ba mươi điều nissaggiya pācittiya đã được đọc tụng,
-{}<br>	end	Chín mươi hai điều pācittiya đã được đọc tụng,
-{}<br>	end	Bốn điều pāṭidesanīya đã được đọc tụng,
-{}<br>	end	Các pháp sekhiyā đã được đọc tụng,
-{}</p>	end	Bảy pháp dàn xếp tranh tụng đã được đọc tụng.
-<p>{}	end	Bấy nhiêu của đức Thế Tôn ấy đã được truyền lại trong giới bổn, đã được đầy đủ trong giới bổn, được đưa ra đọc tụng vào mỗi nửa tháng.
-{}</p>	end	Chính tất cả (chư đại đức) nên học tập các điều học ấy với sự hợp nhất, thân thiện, không cãi cọ.
-<p class='endsection'>{}</p>	end	Phần Đọc Tụng Chi Tiết Là Thứ Năm
-<p class='endsutta'>{}</p>	end	Dứt Giới Bổn Pātimokkha Của Tỳ Khưu
-<p class='sadhu'>{}</p>	end	<b>Sādhu! Sādhu!! Sādhu!!!</b>
+<h2>{}</h2>	tomtat	TÓM TẮT
+<p>{}<br>	tomtat	Bạch chư đại đức, phần mở đầu đã được đọc tụng,
+{}<br>	tomtat	Bốn điều pārājika đã được đọc tụng,
+{}<br>	tomtat	Mười ba điều saṅghādisesa đã được đọc tụng,
+{}<br>	tomtat	Hai điều aniyata đã được đọc tụng,
+{}<br>	tomtat	Ba mươi điều nissaggiya pācittiya đã được đọc tụng,
+{}<br>	tomtat	Chín mươi hai điều pācittiya đã được đọc tụng,
+{}<br>	tomtat	Bốn điều pāṭidesanīya đã được đọc tụng,
+{}<br>	tomtat	Các pháp sekhiyā đã được đọc tụng,
+{}</p>	tomtat	Bảy pháp dàn xếp tranh tụng đã được đọc tụng.
+<p>{}	tomtat	Bấy nhiêu của đức Thế Tôn ấy đã được truyền lại trong giới bổn, đã được đầy đủ trong giới bổn, được đưa ra đọc tụng vào mỗi nửa tháng.
+{}</p>	tomtat	Chính tất cả (chư đại đức) nên học tập các điều học ấy với sự hợp nhất, thân thiện, không cãi cọ.
+<p class='endsection'>{}</p>	tomtat-ending	Phần Đọc Tụng Chi Tiết Là Thứ Năm
+<p class='endsutta'>{}</p>	tomtat-ending	Dứt Giới Bổn Pātimokkha Của Tỳ Khưu
+<p class='sadhu'>{}</p>	tomtat-sadhu	<b>Sādhu! Sādhu!! Sādhu!!!</b>
