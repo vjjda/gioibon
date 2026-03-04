@@ -10,7 +10,8 @@
   --text-muted: #5c5550;   /* Muted Ink */
   --text-light: #888888;   /* Very Light Text */
   --text-pali: #8b4513;    /* SaddleBrown for Pali */
-  
+  --text-quote: #6b4c3a;   /* Deep muted brown for multi-segment quotes */
+
   --primary-color: #8b4513; /* SaddleBrown */
   --primary-hover: #a0522d; /* Sienna */
   --accent-color: #d2691e;  /* Chocolate */
@@ -54,7 +55,8 @@
   --text-muted: #a09c98;
   --text-light: #757575;
   --text-pali: #ae7e68;
-  
+  --text-quote: #967a68;
+
   --primary-color: #a0522d;
   --primary-hover: #ba6b45;
   --accent-color: #d29476;

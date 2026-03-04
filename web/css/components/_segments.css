@@ -88,7 +88,7 @@ body.hint-mode-active .segment-text.masked .pli {
 }
 
 body.hint-mode-active .segment-text.masked .quote-text {
-    color: var(--accent-color) !important;
+    color: var(--text-quote) !important;
 }
 
 body.hint-mode-active .segment-text.masked .hint-tail {

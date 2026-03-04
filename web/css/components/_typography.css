@@ -86,7 +86,7 @@
 /* Quote Text (Giữa hai dấu ngoặc đơn) */
 .quote-text {
     font-style: italic;
-    color: var(--accent-color);
+    color: var(--text-quote);
 }
 
 /* [NEW] Pali Name (Low Profile) inside headings/text */
