@@ -13,9 +13,9 @@ export class MaskManager {
 
         // Gesture Tracking
         this.touchStart = { x: 0, y: 0, time: 0 };
-        this.SWIPE_THRESHOLD_X = 40; // px
-        this.SWIPE_THRESHOLD_Y = 30; // px - max vertical deviation
-        this.SWIPE_MAX_TIME = 300;   // ms
+        this.SWIPE_THRESHOLD_X = 30; // px (Giảm từ 40)
+        this.SWIPE_THRESHOLD_Y = 40; // px (Tăng từ 30 - cho phép lệch dọc nhiều hơn chút)
+        this.SWIPE_MAX_TIME = 400;   // ms (Tăng từ 300 - cho phép vuốt chậm hơn)
 
         this._setupGlobalListeners();
     }
@@ -139,8 +139,8 @@ export class MaskManager {
         const deltaX = Math.abs(e.touches[0].clientX - this.touchStart.x);
         const deltaY = Math.abs(e.touches[0].clientY - this.touchStart.y);
 
-        // Nếu vuốt ngang rõ rệt hơn vuốt dọc, chặn cuộn trang để xử lý gesture
-        if (deltaX > 10 && deltaX > deltaY) {
+        // Nếu vuốt ngang rõ rệt hơn vuốt dọc, chặn cuộn trang để xử lý gesture (Giảm ngưỡng từ 10 xuống 5)
+        if (deltaX > 5 && deltaX > deltaY) {
             if (e.cancelable) e.preventDefault();
         }
     }
