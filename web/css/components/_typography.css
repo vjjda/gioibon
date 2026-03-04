@@ -85,11 +85,13 @@
 
 /* Quote Text (Giữa hai dấu ngoặc đơn) */
 .quote-text {
-    font-family: var(--font-main); /* Chuyển sang Serif để dễ đọc lời thoại */
-    font-style: normal;           /* Bỏ in nghiêng để tránh lỗi hiển thị dấu tiếng Việt */
+    font-family: var(--font-mono); /* Giữ Mono để ước lượng số ký tự trong Hint Mode */
+    font-style: normal;           /* Chữ đứng cho dễ đọc dấu tiếng Việt */
     color: var(--text-quote);
-    font-weight: 500;             /* Tăng nhẹ độ đậm để nổi bật trên nền Mono */
-    font-size: 1.05em;            /* Serif thường nhỏ hơn Mono cùng size nên cần tăng nhẹ */
+    font-weight: 500;             /* Đậm hơn text thường một chút */
+    background-color: rgba(139, 69, 19, 0.03); /* Nền siêu nhạt để nhận diện khối lời thoại */
+    padding: 0 2px;
+    border-radius: 3px;
 }
 
 /* [NEW] Pali Name (Low Profile) inside headings/text */
