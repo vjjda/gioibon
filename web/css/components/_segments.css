@@ -379,20 +379,39 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     list-style: none;
 }
 
-/* 2. Trường hợp nhiều items: đánh số subtle */
+/* 2. Trường hợp nhiều items: đánh số subtle khoanh tròn */
 .duyenco-list.multi-item {
-    list-style: decimal;
+    list-style: none;
+    counter-reset: duyenco-counter;
+    padding-left: 0.5rem; /* Giảm padding trái của list vì li::before sẽ chiếm chỗ */
 }
 
-/* Subtle styling cho số thứ tự */
-.duyenco-list.multi-item li::marker {
-    color: var(--text-muted);
+.duyenco-list.multi-item li {
+    counter-increment: duyenco-counter;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem; /* Khoảng cách rõ ràng giữa số và chữ */
+}
+
+.duyenco-list.multi-item li::before {
+    content: counter(duyenco-counter);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 1.4em;
+    height: 1.4em;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    font-size: 0.7em;
     font-family: var(--font-ui);
-    font-size: 0.85em;
+    color: var(--text-muted);
+    margin-top: 0.25em; /* Căn chỉnh số theo dòng đầu tiên của text */
+    flex-shrink: 0;
+    background-color: rgba(0, 0, 0, 0.02);
 }
 
 .duyenco-list li {
-    padding-bottom: 0.3rem;
+    padding-bottom: 0.4rem;
     line-height: 1.6;
     color: var(--text-main);
 }
