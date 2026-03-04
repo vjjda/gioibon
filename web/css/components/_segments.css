@@ -351,10 +351,6 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     color: var(--primary-color);
 }
 
-.heading-segment.is-collapsed .segment-text {
-    /* No visual changes to the heading itself when collapsed */
-}
-
 /* --- DUYEN CO LIST --- */
 .duyenco-segment {
     margin: 0;
