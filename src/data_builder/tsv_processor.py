@@ -85,19 +85,24 @@ class TsvContentProcessor:
                     has_hint_val = 0
 
                     if is_heading:
-                        # Chỉ bọc Pali trong ngoặc đơn cho heading
-                        if html.startswith("<h") and label.endswith("-name"):
+                        # Chỉ bọc Pali trong ngoặc đơn cho heading (Giữ nguyên dấu ngoặc)
+                        if (html.startswith("<h") or label.endswith("-chapter")) and label.endswith("-name") or label.endswith("-chapter"):
                             pali_pattern = r"\(.*?\)"
                             current_display_text = re.sub(pali_pattern, r"<span class='pali-name'>\g<0></span>", current_display_text)
                     else:
+                        # Xử lý phần bổ sung của dịch giả (Bỏ dấu ngoặc, bọc thẻ trans-addition)
+                        trans_pattern = r"\((.*?)\)"
+                        current_display_text = re.sub(trans_pattern, r"<span class='trans-addition'>\1</span>", current_display_text)
+                        
                         # Tạo Hint cho nội dung thường
                         current_display_text = self._generate_hint_html(current_display_text)
                         has_hint_val = 1
 
                     # --- 4. Tạo segment (Văn bản thuần túy để tìm kiếm) ---
-                    # Loại bỏ hoàn toàn thẻ HTML khỏi segment_text
-                    # Lưu ý: Dùng raw_source_text để đảm bảo không dính các span vừa thêm
-                    clean_segment = re.sub(r'<[^>]+>', '', raw_source_text)
+                    # Bỏ dấu ngoặc đơn ở bản thô cho mọi trường hợp (để search/TTS tự nhiên hơn)
+                    clean_segment = re.sub(r'\(|\)', '', raw_source_text)
+                    # Loại bỏ hoàn toàn thẻ HTML nếu có
+                    clean_segment = re.sub(r'<[^>]+>', '', clean_segment)
 
                     # 5. Tạo tên file audio
                     audio_filename = self.tts_generator.process_segment(
