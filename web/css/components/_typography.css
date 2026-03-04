@@ -118,7 +118,7 @@
 }
 
 .selection-item {
-    color: var(--text-main);
+    color: var(--text-selection);
     font-weight: 500;
     /* Giữ font Mono cho các lựa chọn để dễ dùng Hint Mode */
 }
