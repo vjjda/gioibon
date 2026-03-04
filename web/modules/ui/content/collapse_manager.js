@@ -131,8 +131,8 @@ export class CollapseManager {
                     currentNearestHeadingCollapsed = this.normalCollapsedIds.has(id);
                 }
             } else {
-                // MIỄN NHIỄM: Các đoạn kết thúc (endsection, endvagga, endsutta) không bao giờ bị ẩn
-                const isImmune = item.html && item.html.match(/class=['"](endsection|endvagga|endsutta)['"]/);
+                // MIỄN NHIỄM: Các đoạn kết thúc (endsection, endvagga, endsutta) và title/subtitle không bao giờ bị ẩn
+                const isImmune = item.label === 'title' || item.label === 'subtitle' || (item.html && item.html.match(/class=['"](endsection|endvagga|endsutta)['"]/));
                 
                 if (currentNearestHeadingCollapsed && !isImmune) {
                     this.hiddenItemIds.add(Number(item.id));
