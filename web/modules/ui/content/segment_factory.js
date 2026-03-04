@@ -71,6 +71,10 @@ export class SegmentFactory {
 
         if (item.html && item.html.match(/^<h[1-6]/i)) {
             el.classList.add('heading-segment');
+            const levelMatch = item.html.match(/^<h([1-6])/i);
+            if (levelMatch) {
+                el.classList.add(`heading-level-${levelMatch[1]}`);
+            }
         }
 
         if (item.html && item.html.match(/class=['"](endsection|endvagga|endsutta|sadhu|namo)['"]/)) {

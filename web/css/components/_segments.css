@@ -141,11 +141,12 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     padding-top: 0;
 }
 
-.heading-segment[data-label^="h3"] {
+.heading-level-3 {
     margin-top: 2rem;
 }
 
-.rule-header {
+.rule-header,
+.heading-level-4 {
     margin-top: 1.5rem;
 }
 
