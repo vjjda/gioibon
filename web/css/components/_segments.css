@@ -87,6 +87,10 @@ body.hint-mode-active .segment-text.masked .pli {
     color: var(--text-pali) !important;
 }
 
+body.hint-mode-active .segment-text.masked .quote-text {
+    color: var(--accent-color) !important;
+}
+
 body.hint-mode-active .segment-text.masked .hint-tail {
     color: transparent !important;
     border-bottom: 1px solid rgba(128, 128, 128, 0.8) !important;
