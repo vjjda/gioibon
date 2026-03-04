@@ -370,23 +370,31 @@ body.hint-mode-active .segment-text.masked .hint-tail {
 }
 
 .duyenco-list {
-    list-style: none;
-    padding-left: 1.25rem;
     margin: 0.25rem 0;
+    padding-left: 1.5rem;
+}
+
+/* 1. Trường hợp chỉ có 1 item: không bullet, chỉ indent */
+.duyenco-list.single-item {
+    list-style: none;
+}
+
+/* 2. Trường hợp nhiều items: đánh số subtle */
+.duyenco-list.multi-item {
+    list-style: decimal;
+}
+
+/* Subtle styling cho số thứ tự */
+.duyenco-list.multi-item li::marker {
+    color: var(--text-muted);
+    font-family: var(--font-ui);
+    font-size: 0.85em;
 }
 
 .duyenco-list li {
-    position: relative;
     padding-bottom: 0.3rem;
-    line-height: 1.5;
+    line-height: 1.6;
     color: var(--text-main);
-}
-
-.duyenco-list li::before {
-    content: "-";
-    position: absolute;
-    left: -1rem;
-    color: var(--text-muted);
 }
 
 .duyenco-list li:last-child {

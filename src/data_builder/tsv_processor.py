@@ -72,6 +72,23 @@ class TsvContentProcessor:
             return content
 
         return re.sub(r'\[(.*?)\]', replacer, text)
+    def _process_duyenco(self, text: str) -> str:
+        """Xử lý định dạng danh sách duyenco."""
+        # Tách các thành phần bằng dấu chấm phẩy
+        parts = [p.strip() for p in text.split(';') if p.strip()]
+        if not parts:
+            return text
+
+        if len(parts) == 1:
+            # Trường hợp 1 item: dùng ul, sẽ ẩn bullet bằng CSS
+            content = f"<ul class='duyenco-list single-item'><li>{parts[0]}</li></ul>"
+        else:
+            # Trường hợp nhiều items: dùng ol, có đánh số subtle
+            list_items = "".join([f"<li>{p}</li>" for p in parts])
+            content = f"<ol class='duyenco-list multi-item'>{list_items}</ol>"
+
+        return content
+
     def process_tsv(self, tsv_path: str) -> List[SegmentData]:
         """Đọc file TSV nguồn và bổ sung cột Audio, segment_html bằng cách xử lý text."""
         segments_output: List[SegmentData] = []
@@ -135,7 +152,14 @@ class TsvContentProcessor:
                         # B. Xử lý phần lựa chọn [hoặc] (Bỏ dấu ngoặc vuông, bọc rich styles)
                         current_display_text = self._process_selections(current_display_text)
 
-                        # C. Tạo Hint cho nội dung thường
+                        # C. Xử lý duyenco (Danh sách liệt kê)
+                        if label.endswith('-duyenco'):
+                            current_display_text = self._process_duyenco(current_display_text)
+                            # Đổi template p -> div để HTML valid vì p không được chứa ul/ol
+                            if html.startswith("<p"):
+                                html = html.replace("<p", "<div").replace("</p>", "</div>")
+
+                        # D. Tạo Hint cho nội dung thường
                         current_display_text = self._generate_hint_html(current_display_text)
                         has_hint_val = 1
 

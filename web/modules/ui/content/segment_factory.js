@@ -116,24 +116,10 @@ export class SegmentFactory {
         const textEl = document.createElement('div');
         textEl.className = 'segment-text';
         
-        let htmlTemplate = item.html || '{}';
-        let content = item.text || ''; // item.text hiện chứa segment_html từ DB
-
-        // Check for 'duyenco' special formatting
-        if (item.label && item.label.endsWith('-duyenco')) {
-            const parts = content.split(';').map(s => s.trim()).filter(s => s);
-            if (parts.length > 0) {
-                // Create list structure
-                content = `<ul class="duyenco-list">${parts.map(p => `<li>${p}</li>`).join('')}</ul>`;
-                
-                // If template is <p>{}</p>, change to <div>{}</div> to avoid invalid HTML (<p> cannot contain <ul>)
-                if (htmlTemplate.trim().match(/^<p\b/i)) {
-                    htmlTemplate = htmlTemplate.replace(/^<p/i, '<div').replace(/<\/p>$/i, '</div>');
-                }
-            }
-        }
+        const htmlTemplate = item.html || '{}';
+        const content = item.text || ''; // item.text hiện chứa segment_html từ DB (đã xử lý duyenco list)
         
-        // Render nội dung đã được xử lý từ Backend (bao gồm b, span.quote-text, span.hint-tail)
+        // Render nội dung đã được xử lý từ Backend (bao gồm b, span.quote-text, span.hint-tail, ul/ol.duyenco-list)
         const renderedHtml = htmlTemplate.replace('{}', content);
         
         textEl.innerHTML = renderedHtml;
