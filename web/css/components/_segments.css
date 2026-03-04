@@ -3,11 +3,11 @@
 .segment {
     display: flex;
     flex-direction: column;
-    padding: 0.4rem 1rem;
+    padding: 0.5rem 1rem;
     border-left: 3px solid transparent;
     /* [OPTIMIZED] Instant border highlight to sync with audio, smooth background */
     transition: background-color 0.15s ease-out, border-left-color 0s, color 0.15s ease-out;
-    margin-bottom: 0.15rem;
+    margin-bottom: 0.2rem;
     position: relative; /* Containing block cho play-btn::before và mask-toggle */
     border-radius: 0 8px 8px 0;
 
