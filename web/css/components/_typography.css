@@ -117,9 +117,11 @@
 .selection-group.is-block {
     display: block;
     background-color: transparent;
-    padding: 0.25rem 0 0.25rem 1.25rem;
-    margin: 0.25rem 0;
-    border-left: 2px solid var(--border-light);
+    padding: 0.4rem 0 0.4rem 1.25rem;
+    margin: 0.4rem 0;
+    /* Sử dụng màu rgba cực nhẹ để đường kẻ luôn subtle, kể cả khi masked */
+    border-left: 2px solid rgba(0, 0, 0, 0.07);
+    border-radius: 0; /* Xoá bo góc để đường kẻ lề trái thẳng tuyệt đối */
 }
 
 .selection-group.is-block::before,
