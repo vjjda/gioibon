@@ -151,7 +151,8 @@ body.hint-mode-active .segment-text.masked .hint-tail {
 .segment-text h1:first-child,
 .segment-text h2:first-child,
 .segment-text h3:first-child,
-.segment-text h4:first-child {
+.segment-text h4:first-child,
+.segment-text .subtitle:first-child {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
     display: block;

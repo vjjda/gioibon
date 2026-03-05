@@ -28,7 +28,7 @@
     font-family: var(--font-main);
 }
 
-.segment[data-label="subtitle"] .segment-text h2 {
+.segment[data-label="subtitle"] .segment-text .subtitle {
     font-size: calc(1.1rem * var(--text-scale, 1));
     font-weight: 300;
     text-align: center;
