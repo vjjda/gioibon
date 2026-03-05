@@ -183,8 +183,11 @@ export class SearchManager {
                 ruleText = `<span class="search-result-rule">${this._escapeHtml(res.rule_viet)} (${this._escapeHtml(res.rule_pali)})</span>`;
             }
 
-            // Highlight keyword in snippet
-            const snippet = this._highlightKeyword(res.segment, keyword);
+            // Sử dụng snippet được tạo tự động bởi FTS5 SQLite, nếu không có (do fallback) thì tự làm mờ bằng JS
+            let snippet = res.segment_snippet;
+            if (!snippet) {
+                snippet = this._highlightKeyword(res.raw_segment, keyword);
+            }
 
             html += `
                 <div class="search-result-card" data-id="${res.id}">
@@ -218,7 +221,7 @@ export class SearchManager {
                             this.activeSegmentId = id;
                             setTimeout(() => {
                                 if (this.activeSegmentId === id) {
-                                    textEl.classList.remove('active-search-highlight');
+                                    targetEl.classList.remove('active-search-highlight');
                                     this.activeSegmentId = null;
                                 }
                             }, 3000); // Remove highlight after 3 seconds

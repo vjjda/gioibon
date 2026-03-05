@@ -62,28 +62,61 @@ export class ContentLoader {
     async searchSegments(keyword) {
         if (!keyword || keyword.trim() === '') return [];
         try {
-            // Using parameterized query or escaping if needed. wa-sqlite supports ? but our wrapper might not natively without an array.
-            // Let's use simple string concatenation with replace for safety since this is a local client-side db, but still be careful.
-            const safeKeyword = keyword.replace(/'/g, "''");
+            // Chuẩn bị từ khóa cho FTS5 (cần bọc trong ngoặc kép nếu có khoảng trắng hoặc ký tự đặc biệt)
+            // Lọc bỏ ký tự có thể làm hỏng cú pháp MATCH của FTS5
+            let safeKeyword = keyword.replace(/['"^*]/g, ' '); 
+            // Cắt từ khóa thành các token để tìm kiếm linh hoạt (gần nhau)
+            const tokens = safeKeyword.trim().split(/\s+/).filter(t => t.length > 0);
+            if (tokens.length === 0) return [];
+            
+            // Xây dựng câu query FTS: MATCH '"từ khóa" *' (phù hợp với việc gõ từng phần chữ)
+            // Thay vì exact match, ta tìm các từ cùng xuất hiện. NEAR() sẽ tốt hơn cho cụm từ dài.
+            // Để đơn giản và chính xác với cụm từ người dùng bôi đen, bọc toàn bộ thành 1 cụm phrase.
+            const ftsMatch = `"${tokens.join(' ')}"`; 
+
             const query = `
                 SELECT 
                     c.uid as id, 
-                    c.segment, 
+                    snippet(contents_fts, 0, '<span class="search-highlight">', '</span>', '...', 32) as segment_snippet,
+                    c.segment as raw_segment,
                     h.breadcrumbs,
                     r.id as rule_id,
                     r.viet as rule_viet,
                     r.pali as rule_pali
-                FROM contents c
+                FROM contents_fts fts
+                JOIN contents c ON fts.rowid = c.uid
                 LEFT JOIN headings h ON c.heading_id = h.uid
                 LEFT JOIN rules r ON c.rule_id = r.id
-                WHERE c.segment LIKE '%${safeKeyword}%'
-                ORDER BY c.uid ASC
+                WHERE contents_fts MATCH '${ftsMatch}'
+                ORDER BY fts.rank
+                LIMIT 50
             `;
             const rows = await this.db.query(query);
             return rows || [];
         } catch (error) {
             console.error("Search Error:", error);
-            return [];
+            // Fallback sang LIKE nếu FTS lỗi (do từ khóa quá đặc biệt)
+            try {
+                const safeKeyword = keyword.replace(/'/g, "''");
+                const fallbackQuery = `
+                    SELECT 
+                        c.uid as id, 
+                        c.segment as raw_segment, 
+                        h.breadcrumbs,
+                        r.id as rule_id,
+                        r.viet as rule_viet,
+                        r.pali as rule_pali
+                    FROM contents c
+                    LEFT JOIN headings h ON c.heading_id = h.uid
+                    LEFT JOIN rules r ON c.rule_id = r.id
+                    WHERE c.segment LIKE '%${safeKeyword}%'
+                    ORDER BY c.uid ASC
+                    LIMIT 50
+                `;
+                return await this.db.query(fallbackQuery) || [];
+            } catch (fallbackError) {
+                 return [];
+            }
         }
     }
 

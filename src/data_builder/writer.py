@@ -63,6 +63,32 @@ class DataWriter:
                 rule_id TEXT
             )
         """)
+
+        # Tạo bảng FTS5 (Full Text Search) ảo cho cột segment
+        cursor.execute("""
+            CREATE VIRTUAL TABLE contents_fts USING fts5(
+                segment,
+                content='contents',
+                content_rowid='uid',
+                tokenize='unicode61'
+            )
+        """)
+        
+        # Tạo Trigger để tự động đồng bộ contents -> contents_fts
+        cursor.executescript("""
+            CREATE TRIGGER contents_ai AFTER INSERT ON contents BEGIN
+                INSERT INTO contents_fts(rowid, segment) VALUES (new.uid, new.segment);
+            END;
+            
+            CREATE TRIGGER contents_ad AFTER DELETE ON contents BEGIN
+                INSERT INTO contents_fts(contents_fts, rowid, segment) VALUES('delete', old.uid, old.segment);
+            END;
+            
+            CREATE TRIGGER contents_au AFTER UPDATE ON contents BEGIN
+                INSERT INTO contents_fts(contents_fts, rowid, segment) VALUES('delete', old.uid, old.segment);
+                INSERT INTO contents_fts(rowid, segment) VALUES (new.uid, new.segment);
+            END;
+        """)
         
         # Tạo bảng rules
         cursor.execute("""
