@@ -184,24 +184,24 @@ export class MaskManager {
         }
     }
 
-    // [NEW] Logic mới bao quát tất cả các cấp độ Heading
+    // [NEW] Logic mới bao quát tất cả các cấp độ Heading sử dụng dữ liệu từ DB
     _toggleHeadingMask(headerSegmentEl, headerItem) {
         const startIndex = parseInt(headerSegmentEl.dataset.index);
-        const match = headerItem.html.match(/^<h(\d)>/i);
-        if (!match) return;
-        const startLevel = parseInt(match[1]);
+        const targetHeadingId = headerItem.id;
 
         let action = 'mask'; 
         
         // Bước 1: Quyết định action dựa trên segment con ĐẦU TIÊN hợp lệ (không phải heading và không miễn nhiễm)
         for (let i = startIndex + 1; i < this.items.length; i++) {
             const nextItem = this.items[i];
-            if (nextItem.label === 'end') break;
             
-            const itemMatch = nextItem.html ? nextItem.html.match(/^<h(\d)>/i) : null;
-            if (itemMatch) {
-                const itemLevel = parseInt(itemMatch[1]);
-                if (itemLevel <= startLevel) break; // Thoát nếu gặp Heading cấp cao hơn hoặc bằng
+            // Dừng lại nếu gặp một heading khác cùng cấp hoặc cấp cao hơn (không thuộc nhánh của targetHeadingId)
+            // Hoặc đơn giản là nếu nó không còn trỏ headingId về targetHeadingId nữa (tuy nhiên DB thiết kế headingId trỏ về cha gần nhất)
+            // Vì vậy, một đoạn văn nằm dưới sub-heading sẽ có headingId = sub-heading-id.
+            // Để giải quyết bài toán cây phả hệ đơn giản nhất: ta cứ duyệt tới khi gặp 1 heading có level <= level của headerItem
+            
+            if (this._isHeading(nextItem)) {
+                if (nextItem.headingLevel <= headerItem.headingLevel) break; 
                 continue; // Bỏ qua sub-heading, tiếp tục tìm nội dung
             }
             
@@ -224,12 +224,9 @@ export class MaskManager {
         // Bước 2: Thực thi action lên toàn bộ content con (ngoại trừ heading và miễn nhiễm)
         for (let i = startIndex + 1; i < this.items.length; i++) {
             const nextItem = this.items[i];
-            if (nextItem.label === 'end') break;
 
-            const itemMatch = nextItem.html ? nextItem.html.match(/^<h(\d)>/i) : null;
-            if (itemMatch) {
-                const itemLevel = parseInt(itemMatch[1]);
-                if (itemLevel <= startLevel) break; // Thoát nếu ra khỏi phạm vi
+            if (this._isHeading(nextItem)) {
+                if (nextItem.headingLevel <= headerItem.headingLevel) break; // Thoát nếu ra khỏi phạm vi
                 continue; // [QUAN TRỌNG] Ngoại trừ các segment heading
             }
 

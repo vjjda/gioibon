@@ -52,8 +52,7 @@ export class CollapseManager {
         if (headingIndex === -1) return;
 
         const headingItem = items[headingIndex];
-        const match = headingItem.html.match(/^<h(\d)/i);
-        const level = parseInt(match[1]);
+        const level = headingItem.headingLevel || 4;
 
         if (this.isOutlineMode) {
             // TRONG CHẾ ĐỘ OUTLINE:
@@ -96,11 +95,10 @@ export class CollapseManager {
         const items = this.getItems();
         for (let i = startIndex; i < items.length; i++) {
             const item = items[i];
-            const match = item.html ? item.html.match(/^<h(\d)/i) : null;
-            const isHeading = match && item.label !== 'title' && item.label !== 'subtitle';
+            const isHeading = item.id === item.headingId && item.label !== 'title' && item.label !== 'subtitle';
             
             if (isHeading) {
-                const itemLevel = parseInt(match[1]);
+                const itemLevel = item.headingLevel || 4;
                 if (i > startIndex && itemLevel <= level) break;
                 callback(item.id);
             }
@@ -120,8 +118,7 @@ export class CollapseManager {
 
         for (let i = 0; i < items.length; i++) {
             const item = items[i];
-            const isHeadingMatch = item.html ? item.html.match(/^<h([1-6])/i) : null;
-            const isHeading = isHeadingMatch && item.label !== 'title' && item.label !== 'subtitle';
+            const isHeading = item.id === item.headingId && item.label !== 'title' && item.label !== 'subtitle';
             
             if (isHeading) {
                 const id = Number(item.id);
@@ -157,8 +154,7 @@ export class CollapseManager {
         if (!item) return;
         const id = Number(item.id);
 
-        const isHeadingMatch = item.html ? item.html.match(/^<h([1-6])/i) : null;
-        const isHeading = isHeadingMatch && item.label !== 'title' && item.label !== 'subtitle';
+        const isHeading = item.id === item.headingId && item.label !== 'title' && item.label !== 'subtitle';
 
         if (isHeading) {
             let isCollapsed;
