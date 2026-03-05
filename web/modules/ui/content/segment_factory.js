@@ -55,7 +55,7 @@ export class SegmentFactory {
             const implicitCenter = item.html && item.html.match(/^<h[1-3]/i);
             const isCentered = explicitCenter || implicitCenter;
             
-            const memLabel = item.label.endsWith('-name') ? item.label : `heading-${item.id}`;
+            const memLabel = `heading-${item.id}`;
             this._addMemorizationUI(textEl, item, isCentered, memLabel);
         }
 
