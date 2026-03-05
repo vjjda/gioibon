@@ -125,6 +125,22 @@ export class TocRenderer {
         this._setupToggle();
     }
 
+    updateMemorizationColors() {
+        if (!this.memorizationManager || !this.container) return;
+        const allLinks = this.container.querySelectorAll('.toc-link');
+        allLinks.forEach(link => {
+            const label = link.dataset.label;
+            if (label) {
+                const level = this.memorizationManager.getLevel(label);
+                if (level > 0) {
+                    link.dataset.memLevel = level;
+                } else {
+                    delete link.dataset.memLevel;
+                }
+            }
+        });
+    }
+
     _createLink(uid, displayTxt, fullText, memLabel) {
         const link = document.createElement('a');
         link.className = 'toc-link';
