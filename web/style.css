@@ -12,7 +12,8 @@
 @import "css/components/_segments.css";
 @import "css/components/_forms.css";
 @import "css/components/_modal.css";
-@import "css/components/_splash.css"; /* Thêm hiệu ứng cho Splash Screen */
+@import "css/components/_splash.css";
+@import "css/components/_search_sheet.css"; /* Thêm hiệu ứng cho Splash Screen */
 
 /* Layout */
 @import "css/layout/_global_actions.css";

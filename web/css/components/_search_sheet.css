@@ -1,0 +1,175 @@
+/* Path: web/css/components/_search_sheet.css */
+
+/* --- Selection Tooltip --- */
+.selection-tooltip {
+    position: absolute;
+    z-index: 10000;
+    background-color: var(--text-main);
+    color: var(--bg-card);
+    border-radius: 6px;
+    padding: 6px 10px;
+    box-shadow: var(--shadow-float);
+    transform: translate(-50%, -100%);
+    margin-top: -10px; /* Offset above selection */
+    pointer-events: auto;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    /* Arrow pointing down */
+}
+
+.selection-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: var(--text-main) transparent transparent transparent;
+}
+
+.selection-tooltip button {
+    background: none;
+    border: none;
+    color: var(--bg-card);
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+}
+
+.selection-tooltip button:hover {
+    color: var(--primary-color); /* Highlight color on dark bg? Let's use a lighter shade if dark mode */
+    opacity: 0.8;
+}
+
+/* --- Bottom Sheet --- */
+.sheet-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 9998; /* Below sheet but above everything else including global-controls */
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.sheet-overlay.hidden {
+    display: none;
+    opacity: 0;
+}
+
+.bottom-sheet {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 60vh; /* Takes up 60% of screen */
+    background-color: var(--bg-body);
+    z-index: 9999;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    box-shadow: var(--shadow-float);
+    display: flex;
+    flex-direction: column;
+    transform: translateY(0);
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.bottom-sheet.hidden {
+    transform: translateY(100%);
+}
+
+.bottom-sheet-drag-handle {
+    width: 40px;
+    height: 4px;
+    background-color: var(--border-color);
+    border-radius: 2px;
+    margin: 10px auto;
+    cursor: grab;
+}
+
+.bottom-sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1.5rem 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.bottom-sheet-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-family: var(--font-ui);
+    color: var(--text-main);
+}
+
+.bottom-sheet-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 1.5rem;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* --- Search Result Cards --- */
+.search-result-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.search-result-card:hover {
+    box-shadow: var(--shadow-soft);
+    border-color: var(--primary-color);
+}
+
+.search-result-breadcrumbs {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-family: var(--font-ui);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.search-result-rule {
+    font-size: 0.95rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: block;
+    font-family: var(--font-ui);
+}
+
+.search-result-text {
+    font-size: 0.95rem;
+    color: var(--text-main);
+    line-height: 1.5;
+    font-family: var(--font-mono);
+    /* Giới hạn số dòng hiển thị */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.search-highlight {
+    background-color: rgba(210, 105, 30, 0.2); /* Highlight color based on accent */
+    color: var(--accent-color);
+    font-weight: bold;
+    border-radius: 2px;
+    padding: 0 2px;
+}
+
+/* Active Search Highlight in Content */
+.segment-text .active-search-highlight {
+    background-color: rgba(210, 105, 30, 0.3);
+    border-bottom: 2px solid var(--accent-color);
+}

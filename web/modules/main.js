@@ -10,6 +10,7 @@ import { SettingsModal } from 'ui/settings_modal.js';
 import { HeaderDrawer } from 'ui/header_drawer.js';
 import { ThemeSettings } from 'ui/theme_settings.js';
 import { FontSettings } from 'ui/font_settings.js';
+import { SearchManager } from 'ui/search_manager.js';
 import { setupPWA } from 'utils/pwa.js';
 import { AudioZipLoader } from 'services/audio_zip_loader.js';
 import { SplashManager } from 'utils/splash.js';
@@ -94,6 +95,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         (sequence, parentId) => { ttsPlayer.playSequence(sequence, parentId); },
         memorizationManager
     );
+
+    const searchManager = new SearchManager(contentLoader, contentRenderer);
 
     // Initial state for CollapseManager
     if (savedOutline) {

@@ -59,6 +59,34 @@ export class ContentLoader {
         }
     }
 
+    async searchSegments(keyword) {
+        if (!keyword || keyword.trim() === '') return [];
+        try {
+            // Using parameterized query or escaping if needed. wa-sqlite supports ? but our wrapper might not natively without an array.
+            // Let's use simple string concatenation with replace for safety since this is a local client-side db, but still be careful.
+            const safeKeyword = keyword.replace(/'/g, "''");
+            const query = `
+                SELECT 
+                    c.uid as id, 
+                    c.segment, 
+                    h.breadcrumbs,
+                    r.id as rule_id,
+                    r.viet as rule_viet,
+                    r.pali as rule_pali
+                FROM contents c
+                LEFT JOIN headings h ON c.heading_id = h.uid
+                LEFT JOIN rules r ON c.rule_id = r.id
+                WHERE c.segment LIKE '%${safeKeyword}%'
+                ORDER BY c.uid ASC
+            `;
+            const rows = await this.db.query(query);
+            return rows || [];
+        } catch (error) {
+            console.error("Search Error:", error);
+            return [];
+        }
+    }
+
     getAllSegments() {
         if (!this.data) return [];
         return this.data.filter(item => item.audio !== 'skip').map(item => ({
