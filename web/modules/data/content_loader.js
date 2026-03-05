@@ -81,7 +81,8 @@ export class ContentLoader {
                     h.breadcrumbs,
                     r.id as rule_id,
                     r.viet as rule_viet,
-                    r.pali as rule_pali
+                    r.pali as rule_pali,
+                    r.acronym as rule_acronym
                 FROM contents_fts fts
                 JOIN contents c ON fts.rowid = c.uid
                 LEFT JOIN headings h ON c.heading_id = h.uid
@@ -104,7 +105,8 @@ export class ContentLoader {
                         h.breadcrumbs,
                         r.id as rule_id,
                         r.viet as rule_viet,
-                        r.pali as rule_pali
+                        r.pali as rule_pali,
+                        r.acronym as rule_acronym
                     FROM contents c
                     LEFT JOIN headings h ON c.heading_id = h.uid
                     LEFT JOIN rules r ON c.rule_id = r.id

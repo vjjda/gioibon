@@ -168,18 +168,6 @@ export class SearchManager {
         this._renderResults(results, keyword);
     }
 
-    _formatRuleId(ruleId) {
-        if (!ruleId) return '';
-        // Tách phần chữ cái (vd: ss) và phần số (vd: 1)
-        const match = ruleId.match(/^([a-z]+)(\d+)?$/i);
-        if (match) {
-            const prefix = match[1].charAt(0).toUpperCase() + match[1].slice(1).toLowerCase();
-            const number = match[2] ? ` ${match[2]}` : '';
-            return `${prefix}${number}. `;
-        }
-        return `${ruleId}. `;
-    }
-
     _renderResults(results, keyword) {
         if (!results || results.length === 0) {
             this.resultsContainer.innerHTML = '<div style="text-align:center; padding: 2rem; color: var(--text-muted);">Không tìm thấy đoạn văn nào chứa cụm từ này.</div>';
@@ -230,6 +218,7 @@ export class SearchManager {
                     rule_id: res.rule_id,
                     rule_viet: res.rule_viet,
                     rule_pali: res.rule_pali,
+                    rule_acronym: res.rule_acronym,
                     snippets: [{ id: res.id, html: snippet }]
                 };
                 seenGroups.set(groupKey, newGroup);
@@ -240,8 +229,11 @@ export class SearchManager {
         groupedResults.forEach(group => {
             let ruleText = '';
             if (group.rule_id) {
-                const acronym = this._formatRuleId(group.rule_id);
-                ruleText = `<span class="search-result-rule">${acronym}${this._escapeHtml(group.rule_viet)} (${this._escapeHtml(group.rule_pali)})</span>`;
+                const acronym = group.rule_acronym ? `<span class="rule-acronym">${this._escapeHtml(group.rule_acronym)}.</span> ` : '';
+                const viet = `<span class="rule-viet">${this._escapeHtml(group.rule_viet)}</span>`;
+                const pali = group.rule_pali ? ` <span class="rule-pali">(${this._escapeHtml(group.rule_pali)})</span>` : '';
+                
+                ruleText = `<div class="search-result-rule">${acronym}${viet}${pali}</div>`;
             }
 
             // Gộp các snippet lại với nhau, mỗi snippet có data-id riêng để jump
