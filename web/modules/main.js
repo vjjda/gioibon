@@ -153,7 +153,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         SplashManager.updateStatus("Đang sắp xếp nội dung...");
         // Render nội dung
         contentRenderer.render(data);
-        tocRenderer.render(data);
+        const headings = await contentLoader.loadHeadings();
+        tocRenderer.render(headings);
 
         // Xóa Màn hình chờ (Splash Screen)
         SplashManager.hide();

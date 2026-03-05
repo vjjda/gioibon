@@ -17,7 +17,7 @@ export class ContentLoader {
 
             while (hasMore) {
                 const rows = await this.db.query(
-                    `SELECT uid, html, label, audio_name, segment, segment_html, has_hint 
+                    `SELECT uid, html, label, audio_name, segment, segment_html, has_hint, heading_id, rule_id 
                      FROM contents WHERE uid > ${lastUid} ORDER BY uid ASC LIMIT ${BATCH_SIZE}`
                 );
 
@@ -29,7 +29,9 @@ export class ContentLoader {
                         audio: row.audio_name,
                         segment: row.segment,      // Bản thô (để search)
                         text: row.segment_html,    // Bản HTML (để hiển thị)
-                        hasHint: row.has_hint === 1
+                        hasHint: row.has_hint === 1,
+                        headingId: row.heading_id,
+                        ruleId: row.rule_id
                     }));
                     this.data.push(...batchItems);
                     lastUid = rows[rows.length - 1].uid;
@@ -44,6 +46,16 @@ export class ContentLoader {
         } catch (error) {
             console.error("ContentLoader Error:", error);
             throw error;
+        }
+    }
+
+    async loadHeadings() {
+        try {
+            const rows = await this.db.query(`SELECT uid, text, level, parent_uid, breadcrumbs FROM headings ORDER BY uid ASC`);
+            return rows || [];
+        } catch (error) {
+            console.error("ContentLoader loadHeadings Error:", error);
+            return [];
         }
     }
 
