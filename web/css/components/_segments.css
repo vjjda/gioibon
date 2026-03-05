@@ -104,6 +104,11 @@ body.hint-mode-active .segment-text.masked .selection-item {
     color: var(--text-selection) !important;
 }
 
+/* Bảo vệ border của selection-group không bị inherit màu đậm trong Hint Mode */
+body.hint-mode-active .segment-text.masked .selection-group {
+    border-color: var(--selection-border) !important;
+}
+
 body.hint-mode-active .segment-text.masked .hint-tail {
     color: transparent !important;
     border-bottom: 1px solid rgba(128, 128, 128, 0.8) !important;

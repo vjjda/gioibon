@@ -12,6 +12,7 @@
   --text-pali: #8b4513;    /* SaddleBrown for Pali */
   --text-quote: #6b4c3a;   /* Deep muted brown for multi-segment quotes */
   --text-selection: #3a5a40; /* Deep Moss Green for choices - more organic with sepia */
+  --selection-border: rgba(0, 0, 0, 0.12); /* Subtle divider for block choices */
 
   --primary-color: #8b4513; /* SaddleBrown */
   --primary-hover: #a0522d; /* Sienna */
@@ -58,6 +59,7 @@
   --text-pali: #ae7e68;
   --text-quote: #967a68;
   --text-selection: #a3b18a; /* Sage Green for choices in dark mode */
+  --selection-border: rgba(255, 255, 255, 0.15);
 
   --primary-color: #a0522d;
   --primary-hover: #ba6b45;
