@@ -10,7 +10,7 @@ import shutil
 import zipfile
 from typing import List, Optional, Set
 
-from src.data_builder.models import SegmentData
+from src.data_builder.models import SegmentData, RuleData, HeadingData
 
 logger = logging.getLogger(__name__)
 
@@ -23,21 +23,23 @@ class DataWriter:
         self.tmp_audio_dir: Optional[str] = tmp_audio_dir
         self.final_audio_dir: Optional[str] = final_audio_dir
 
-    def save(self, data: List[SegmentData]) -> None:
+    def save(self, data: List[SegmentData], rules: List[RuleData] = None, headings: List[HeadingData] = None) -> None:
+        if rules is None: rules = []
+        if headings is None: headings = []
         self._save_tsv(data)
-        self._save_sqlite(data)
+        self._save_sqlite(data, rules, headings)
         self._copy_audio_files(data)
 
     def _save_tsv(self, data: List[SegmentData]) -> None:
         os.makedirs(os.path.dirname(self.tsv_path), exist_ok=True)
         with open(self.tsv_path, 'w', encoding='utf-8', newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=["uid", "html", "label", "segment", "audio", "segment_html", "has_hint"], delimiter='\t')
+            writer = csv.DictWriter(f, fieldnames=["uid", "html", "label", "segment", "audio", "segment_html", "has_hint", "heading_id", "rule_id"], delimiter='\t')
             writer.writeheader()
             for item in data:
                 writer.writerow(item.model_dump())
         logger.info(f"✅ Đã lưu TSV tại: {self.tsv_path}")
 
-    def _save_sqlite(self, data: List[SegmentData]) -> None:
+    def _save_sqlite(self, data: List[SegmentData], rules: List[RuleData], headings: List[HeadingData]) -> None:
         os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
         
         temp_db_path: str = self.db_path + ".tmp"
@@ -47,6 +49,7 @@ class DataWriter:
         conn = sqlite3.connect(temp_db_path)
         cursor = conn.cursor()
         
+        # Tạo bảng contents
         cursor.execute("""
             CREATE TABLE contents (
                 uid INTEGER PRIMARY KEY,
@@ -55,12 +58,36 @@ class DataWriter:
                 segment TEXT,
                 audio_name TEXT,
                 segment_html TEXT,
-                has_hint INTEGER
+                has_hint INTEGER,
+                heading_id INTEGER,
+                rule_id TEXT
             )
         """)
         
-        insert_contents: List[tuple] = []
+        # Tạo bảng rules
+        cursor.execute("""
+            CREATE TABLE rules (
+                id TEXT PRIMARY KEY,
+                type INTEGER,
+                pali TEXT,
+                viet TEXT,
+                "group" TEXT
+            )
+        """)
         
+        # Tạo bảng headings
+        cursor.execute("""
+            CREATE TABLE headings (
+                uid INTEGER PRIMARY KEY,
+                text TEXT,
+                level INTEGER,
+                parent_uid INTEGER,
+                breadcrumbs TEXT
+            )
+        """)
+        
+        # Chèn dữ liệu contents
+        insert_contents: List[tuple] = []
         for item in data:
             insert_contents.append((
                 item.uid,
@@ -69,10 +96,29 @@ class DataWriter:
                 item.segment,
                 item.audio,
                 item.segment_html,
-                item.has_hint
+                item.has_hint,
+                item.heading_id,
+                item.rule_id
             ))
-
-        cursor.executemany("INSERT INTO contents VALUES (?, ?, ?, ?, ?, ?, ?)", insert_contents)
+        cursor.executemany("INSERT INTO contents VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", insert_contents)
+        
+        # Chèn dữ liệu rules (loại bỏ trùng lặp nếu có do rule_groups và extracted data)
+        seen_rules = set()
+        insert_rules: List[tuple] = []
+        for r in rules:
+            if r.id not in seen_rules:
+                seen_rules.add(r.id)
+                insert_rules.append((r.id, r.type, r.pali, r.viet, r.group))
+        cursor.executemany('INSERT INTO rules (id, type, pali, viet, "group") VALUES (?, ?, ?, ?, ?)', insert_rules)
+        
+        # Chèn dữ liệu headings
+        seen_headings = set()
+        insert_headings: List[tuple] = []
+        for h in headings:
+            if h.uid not in seen_headings:
+                seen_headings.add(h.uid)
+                insert_headings.append((h.uid, h.text, h.level, h.parent_uid, h.breadcrumbs))
+        cursor.executemany("INSERT INTO headings VALUES (?, ?, ?, ?, ?)", insert_headings)
         
         conn.commit()
         conn.close()

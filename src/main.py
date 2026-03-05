@@ -42,12 +42,12 @@ def run_data_builder(clean: bool = False) -> None:
         processor = TsvContentProcessor(tts_generator)
 
         # 2. Xử lý nội dung từ TSV
-        segments = processor.process_tsv(TSV_SOURCE)
+        segments, rules, headings = processor.process_tsv(TSV_SOURCE)
 
         # 3. Ghi dữ liệu (TSV & SQLite & Copy Audio Files)
         # TRUYỀN THÊM THAM SỐ final_audio_dir ĐỂ COPY FILE
         writer = DataWriter(TSV_OUT, DB_OUT, AUDIO_TMP_DIR, AUDIO_FINAL_DIR)
-        writer.save(segments)
+        writer.save(segments, rules, headings)
 
         logger.info(
             f"🏁 Hoàn tất! Đã xử lý {len(segments)} segments và tạo/cache Audio thành công."
