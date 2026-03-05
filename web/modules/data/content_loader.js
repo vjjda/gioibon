@@ -10,42 +10,30 @@ export class ContentLoader {
     async load() {
         if (this.data) return this.data;
         try {
-            const BATCH_SIZE = 500; 
-            this.data = [];
-            let lastUid = 0;
-            let hasMore = true;
+            // Thay vì chia nhỏ, ta load một lần (với lượng data 800-1000 items, array này chỉ tốn <2MB RAM)
+            // Việc này giúp giảm tối đa chi phí chuyển ngữ cảnh (context switching) giữa JS và WASM (SQLite)
+            const rows = await this.db.query(
+                `SELECT c.uid, c.html, c.label, c.audio_name, c.segment, c.segment_html, c.has_hint, c.heading_id, c.rule_id, h.level as heading_level
+                 FROM contents c
+                 LEFT JOIN headings h ON c.heading_id = h.uid
+                 ORDER BY c.uid ASC`
+            );
 
-            while (hasMore) {
-                const rows = await this.db.query(
-                    `SELECT c.uid, c.html, c.label, c.audio_name, c.segment, c.segment_html, c.has_hint, c.heading_id, c.rule_id, h.level as heading_level
-                     FROM contents c
-                     LEFT JOIN headings h ON c.heading_id = h.uid
-                     WHERE c.uid > ${lastUid} ORDER BY c.uid ASC LIMIT ${BATCH_SIZE}`
-                );
-
-                if (rows && rows.length > 0) {
-                    const batchItems = rows.map(row => ({
-                        id: row.uid,
-                        html: row.html,
-                        label: row.label,
-                        audio: row.audio_name,
-                        segment: row.segment,      // Bản thô (để search)
-                        text: row.segment_html,    // Bản HTML (để hiển thị)
-                        hasHint: row.has_hint === 1,
-                        headingId: row.heading_id,
-                        headingLevel: row.heading_level,
-                        ruleId: row.rule_id
-                    }));
-                    this.data.push(...batchItems);
-                    lastUid = rows[rows.length - 1].uid;
-
-                    // Chỉ nhường Main Thread nếu vẫn còn dữ liệu để tải
-                    if (rows.length === BATCH_SIZE) {
-                        await new Promise(resolve => setTimeout(resolve, 0));
-                    }
-                } else {
-                    hasMore = false;
-                }
+            if (rows && rows.length > 0) {
+                this.data = rows.map(row => ({
+                    id: row.uid,
+                    html: row.html,
+                    label: row.label,
+                    audio: row.audio_name,
+                    segment: row.segment,      // Bản thô (để search)
+                    text: row.segment_html,    // Bản HTML (để hiển thị)
+                    hasHint: row.has_hint === 1,
+                    headingId: row.heading_id,
+                    headingLevel: row.heading_level,
+                    ruleId: row.rule_id
+                }));
+            } else {
+                this.data = [];
             }
 
             return this.data;
