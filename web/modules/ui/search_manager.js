@@ -206,9 +206,9 @@ export class SearchManager {
                 const group = seenGroups.get(groupKey);
                 // Chỉ gộp tối đa 3 snippet để tránh thẻ quá dài
                 if (group.snippets.length < 3) {
-                    group.snippets.push(snippet);
+                    group.snippets.push({ id: res.id, html: snippet });
                 } else if (group.snippets.length === 3) {
-                    group.snippets.push('<div style="font-style: italic; color: var(--text-light); margin-top: 4px;">... (còn nữa)</div>');
+                    group.snippets.push({ id: null, html: '<div style="font-style: italic; color: var(--text-light); margin-top: 4px;">... (còn nữa)</div>' });
                 }
             } else {
                 // Tạo nhóm mới
@@ -218,7 +218,7 @@ export class SearchManager {
                     rule_id: res.rule_id,
                     rule_viet: res.rule_viet,
                     rule_pali: res.rule_pali,
-                    snippets: [snippet]
+                    snippets: [{ id: res.id, html: snippet }]
                 };
                 seenGroups.set(groupKey, newGroup);
                 groupedResults.push(newGroup);
@@ -231,8 +231,13 @@ export class SearchManager {
                 ruleText = `<span class="search-result-rule">${this._escapeHtml(group.rule_viet)} (${this._escapeHtml(group.rule_pali)})</span>`;
             }
 
-            // Gộp các snippet lại với nhau, cách nhau bởi thẻ div có margin mỏng
-            const combinedSnippets = group.snippets.map(s => `<div>${s}</div>`).join('<div style="margin: 6px 0; border-top: 1px dashed var(--border-light);"></div>');
+            // Gộp các snippet lại với nhau, mỗi snippet có data-id riêng để jump
+            const combinedSnippets = group.snippets.map(s => {
+                if (s.id) {
+                    return `<div class="search-snippet-item" data-id="${s.id}">${s.html}</div>`;
+                }
+                return `<div>${s.html}</div>`; // "còn nữa" element
+            }).join('<div style="margin: 6px 0; border-top: 1px dashed var(--border-light);"></div>');
 
             html += `
                 <div class="search-result-card" data-id="${group.id}">
@@ -245,11 +250,18 @@ export class SearchManager {
 
         this.resultsContainer.innerHTML = html;
 
-        // Add click events to cards
+        // Add click events to cards and snippet items
         const cards = this.resultsContainer.querySelectorAll('.search-result-card');
         cards.forEach(card => {
-            card.addEventListener('click', () => {
-                const id = parseInt(card.dataset.id, 10);
+            card.addEventListener('click', (e) => {
+                // Tìm xem người dùng có click vào một snippet cụ thể nào không
+                let targetId = parseInt(card.dataset.id, 10); // Fallback: ID của snippet đầu tiên
+                
+                const snippetItem = e.target.closest('.search-snippet-item');
+                if (snippetItem && snippetItem.dataset.id) {
+                    targetId = parseInt(snippetItem.dataset.id, 10);
+                }
+
                 this._closeSheet();
                 
                 // Clear old highlight and jump
@@ -259,16 +271,16 @@ export class SearchManager {
                     // Sử dụng setTimeout để đảm bảo DOM (đóng Sheet, render Lazy Load) đã reflow xong 
                     // trước khi tính toán tọa độ cuộn
                     setTimeout(() => {
-                        this.contentRenderer.scrollToSegment(id);
+                        this.contentRenderer.scrollToSegment(targetId);
                         
                         // Highlight the jumped segment temporarily
                         setTimeout(() => {
-                            const targetEl = document.querySelector(`.segment[data-id="${id}"] .segment-text`);
+                            const targetEl = document.querySelector(`.segment[data-id="${targetId}"] .segment-text`);
                             if (targetEl) {
                                 targetEl.classList.add('active-search-highlight');
-                                this.activeSegmentId = id;
+                                this.activeSegmentId = targetId;
                                 setTimeout(() => {
-                                    if (this.activeSegmentId === id) {
+                                    if (this.activeSegmentId === targetId) {
                                         targetEl.classList.remove('active-search-highlight');
                                         this.activeSegmentId = null;
                                     }
