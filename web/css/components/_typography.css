@@ -151,13 +151,11 @@
     font-style: italic;
     font-size: 0.9em;
     font-weight: 400;
-    margin-left: 0;   /* Triệt tiêu lề trái để thẳng hàng tuyệt đối ở đầu dòng */
-    margin-right: 4px; /* Chỉ giữ lề phải để cách nội dung phía sau */
+    margin: 0 4px; /* Khoảng cách cân xứng cho chế độ hiển thị trên cùng một dòng */
 }
 
-/* Trong chế độ block, đảm bảo selection-or bám lề trái */
-.is-block .selection-or,
-.is-stacked .selection-or {
+/* Trong chế độ liệt kê (Block/Stacked), nếu selection-or nằm đầu dòng thì triệt tiêu lề trái */
+.selection-row > .selection-or:first-child {
     margin-left: 0;
 }
 
