@@ -117,8 +117,8 @@
 .selection-group.is-block {
     display: block;
     background-color: transparent;
-    padding: 0.5rem 0 0.5rem 1.5rem;
-    margin: 0.75rem 0;
+    padding: 0.25rem 0 0.25rem 1.25rem;
+    margin: 0.25rem 0;
     border-left: 2px solid var(--border-light);
 }
 
