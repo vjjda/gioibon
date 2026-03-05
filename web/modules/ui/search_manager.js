@@ -215,29 +215,33 @@ export class SearchManager {
         const cards = this.resultsContainer.querySelectorAll('.search-result-card');
         cards.forEach(card => {
             card.addEventListener('click', () => {
-                const id = card.dataset.id;
+                const id = parseInt(card.dataset.id, 10);
                 this._closeSheet();
                 
                 // Clear old highlight and jump
                 this._clearActiveHighlight();
                 
                 if (this.contentRenderer) {
-                    this.contentRenderer.scrollToSegment(id);
-                    
-                    // Highlight the jumped segment temporarily
+                    // Sử dụng setTimeout để đảm bảo DOM (đóng Sheet, render Lazy Load) đã reflow xong 
+                    // trước khi tính toán tọa độ cuộn
                     setTimeout(() => {
-                        const targetEl = document.querySelector(`.segment[data-id="${id}"] .segment-text`);
-                        if (targetEl) {
-                            targetEl.classList.add('active-search-highlight');
-                            this.activeSegmentId = id;
-                            setTimeout(() => {
-                                if (this.activeSegmentId === id) {
-                                    targetEl.classList.remove('active-search-highlight');
-                                    this.activeSegmentId = null;
-                                }
-                            }, 3000); // Remove highlight after 3 seconds
-                        }
-                    }, 100);
+                        this.contentRenderer.scrollToSegment(id);
+                        
+                        // Highlight the jumped segment temporarily
+                        setTimeout(() => {
+                            const targetEl = document.querySelector(`.segment[data-id="${id}"] .segment-text`);
+                            if (targetEl) {
+                                targetEl.classList.add('active-search-highlight');
+                                this.activeSegmentId = id;
+                                setTimeout(() => {
+                                    if (this.activeSegmentId === id) {
+                                        targetEl.classList.remove('active-search-highlight');
+                                        this.activeSegmentId = null;
+                                    }
+                                }, 3000); // Remove highlight after 3 seconds
+                            }
+                        }, 100);
+                    }, 50);
                 }
             });
         });
