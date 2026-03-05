@@ -70,29 +70,37 @@ class TsvContentProcessor:
         if not groups:
             return text
 
-        # 2. Xác định các cụm cần được "stacked" (có chính xác 2 items và đứng cạnh nhau)
+        # 2. Xác định các cụm cần được "stacked" hoặc "block"
         for i, g in enumerate(groups):
-            g['is_block'] = len(g['items']) >= 3
+            num_items = len(g['items'])
+            g['is_block'] = num_items >= 3
             g['is_stacked'] = False
             
-            if len(g['items']) == 2:
-                # Kiểm tra cụm phía trước (chỉ tính nếu khoảng cách giữa chúng chỉ có whitespace)
-                if i > 0:
-                    prev_g = groups[i-1]
-                    if len(prev_g['items']) == 2:
-                        between = text[prev_g['end']:g['start']]
-                        if between.strip() == "":
-                            g['is_stacked'] = True
-                            prev_g['is_stacked'] = True
+            if num_items == 2:
+                # Kiểm tra độ dài của các item (4 từ trở lên được coi là dài)
+                is_any_item_long = any(len(p.split()) >= 4 for p in g['items'])
                 
-                # Kiểm tra cụm phía sau
-                if i < len(groups) - 1:
-                    next_g = groups[i+1]
-                    if len(next_g['items']) == 2:
-                        between = text[g['end']:next_g['start']]
-                        if between.strip() == "":
-                            g['is_stacked'] = True
-                            next_g['is_stacked'] = True
+                # Stacked nếu: cụm dài HOẶC là một phần của chuỗi cụm liên tiếp
+                if is_any_item_long:
+                    g['is_stacked'] = True
+                else:
+                    # Kiểm tra cụm phía trước
+                    if i > 0:
+                        prev_g = groups[i-1]
+                        if len(prev_g['items']) == 2:
+                            between = text[prev_g['end']:g['start']]
+                            if between.strip() == "":
+                                g['is_stacked'] = True
+                                prev_g['is_stacked'] = True
+                    
+                    # Kiểm tra cụm phía sau
+                    if i < len(groups) - 1:
+                        next_g = groups[i+1]
+                        if len(next_g['items']) == 2:
+                            between = text[g['end']:next_g['start']]
+                            if between.strip() == "":
+                                g['is_stacked'] = True
+                                next_g['is_stacked'] = True
 
         # 3. Thực hiện thay thế từ cuối lên đầu
         result = text
