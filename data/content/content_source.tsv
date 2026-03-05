@@ -1,6 +1,6 @@
 html	label	segment
 <h1 class="title">{}</h1>	title	GIỚI BỔN TỲ KHƯU
-<h2 class="subtitle">{}</h2>	subtitle	PĀTIMOKKHA BHIKKHU
+<div class="subtitle">{}</div>	subtitle	PĀTIMOKKHA BHIKKHU
 <h2>{}</h2>	tiensu	TIỀN SỰ
 <p class='namo'>{}</p>	tiensu	NAMO TASSA BHAGAVATO ARAHATO SAMMĀSAMBUDDHASSA
 <h3>{}</h3>	tiensu-chuanbi	Công Việc Chuẩn Bị
@@ -815,19 +815,19 @@ html	label	segment
 <h2>{}</h2>	as-opening	THUYẾT GIỚI DÀN XẾP TRANH TỤNG
 <p>{}</p>	as-opening	Bạch chư đại đức, bảy pháp dàn xếp tranh tụng này được đưa ra đọc tụng.
 <p>{}</p>	as-opening	Nhằm đưa đến sự dàn xếp, nhằm đưa đến sự giải quyết các sự tranh tụng [đã sanh khởi hoặc chưa sanh khởi],
-<h4>{}</h4>	as1-name	As 1
+<h4>{}</h4>	as1-name	As 1. Hiện diện (Sammukhāvinaya)
 <p>{}</p>	as1	Nên áp dụng cách hành xử Luật với sự hiện diện,
-<h4>{}</h4>	as2-name	As 2
+<h4>{}</h4>	as2-name	As 2. Ghi nhớ (Sativinaya)
 <p>{}</p>	as2	Nên áp dụng cách hành xử Luật bằng sự ghi nhớ,
-<h4>{}</h4>	as3-name	As 3
+<h4>{}</h4>	as3-name	As 3. Không điên (Amūḷhavinaya)
 <p>{}</p>	as3	Nên áp dụng cách hành xử Luật khi không điên cuồng,
-<h4>{}</h4>	as4-name	As 4
+<h4>{}</h4>	as4-name	As 4. Thừa nhận (Paṭiññātakaraṇa)
 <p>{}</p>	as4	Nên phán xử theo sự thừa nhận,
-<h4>{}</h4>	as5-name	As 5
+<h4>{}</h4>	as5-name	As 5. Số đông (Yebhuyyasikā)
 <p>{}</p>	as5	Thuận theo số đông,
-<h4>{}</h4>	as6-name	As 6
+<h4>{}</h4>	as6-name	As 6. Theo tội (Tassapāpiyasikā)
 <p>{}</p>	as6	Theo tội của vị ấy,
-<h4>{}</h4>	as7-name	As 7
+<h4>{}</h4>	as7-name	As 7. Cỏ che lấp (Tiṇavatthāraka)
 <p>{}</p>	as7	Cách dùng cỏ che lấp.
 <h3>{}</h3>	as-ending	Dứt Giới Dàn Xếp Tranh Tụng
 <p>{}</p>	as-ending	Bạch chư đại đức, bảy pháp dàn xếp tranh tụng đã được đọc tụng xong.
