@@ -12,7 +12,7 @@
     left: 0;
     top: 0;
     z-index: 1000;
-    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    /* transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); - Removed for instant toggle */
 }
 
 .toc-header {

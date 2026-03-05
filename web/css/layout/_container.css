@@ -18,7 +18,7 @@ html, body {
     flex-direction: column;
     background-color: var(--bg-body);
     position: relative;
-    transition: margin-left 0.3s ease;
+    /* transition: margin-left 0.3s ease; - Removed for instant snappy feeling and better performance */
 }
 
 /* Add collapsed state for desktop */
