@@ -151,12 +151,14 @@
     font-style: italic;
     font-size: 0.9em;
     font-weight: 400;
-    margin: 0 2px;
+    margin-left: 0;   /* Triệt tiêu lề trái để thẳng hàng tuyệt đối ở đầu dòng */
+    margin-right: 4px; /* Chỉ giữ lề phải để cách nội dung phía sau */
 }
 
-/* Trong chế độ block, selection-or đóng vai trò như bullet */
-.is-block .selection-or {
-    margin-right: 6px;
+/* Trong chế độ block, đảm bảo selection-or bám lề trái */
+.is-block .selection-or,
+.is-stacked .selection-or {
+    margin-left: 0;
 }
 
 .selection-item {
