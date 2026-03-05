@@ -11,7 +11,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from src.config.logging_config import setup_logging
 from src.data_builder.writer import DataWriter
 from src.data_builder.tts_generator import TTSGenerator
-from src.data_builder.tsv_processor import TsvContentProcessor
+from src.data_builder.processors import TsvContentProcessor
 
 # Load Environment Variables (.env)
 load_dotenv()
