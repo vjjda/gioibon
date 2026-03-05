@@ -154,7 +154,11 @@ export class SearchManager {
 
         // Move segment to just below header
         if (this.activeSegmentId && this.contentRenderer) {
-            const anchor = { id: this.activeSegmentId, top: 80 }; // Header is 70px + 10px margin
+            // Ép lưu vị trí ngay lập tức để tránh lỗi lệch khi người dùng refresh ngay sau khi search
+            localStorage.setItem('sutta_last_segment_id', this.activeSegmentId.toString());
+            
+            const containerRect = this.contentRenderer.scrollManager.container.getBoundingClientRect();
+            const anchor = { id: this.activeSegmentId, top: containerRect.top + 10 }; 
             this.contentRenderer.scrollManager.scrollToAnchor(anchor);
         }
 

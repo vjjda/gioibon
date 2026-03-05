@@ -29,10 +29,15 @@ export class ScrollManager {
     _saveScrollPosition() {
         if (!this.container || this.isTransitioning) return;
         const segments = this.container.querySelectorAll('.segment');
+        const containerRect = this.container.getBoundingClientRect();
+        // Điểm nhìn an toàn: ngay dưới header (top + 10px)
+        const sightTop = containerRect.top + 10;
+
         for (const segment of segments) {
             const rect = segment.getBoundingClientRect();
-            // Ưu tiên đoạn văn bản ngay sát dưới header (70px)
-            if (rect.top >= 65 && rect.top < 150) {
+            // Lấy đoạn văn bản đầu tiên có phần đáy (bottom) vượt qua điểm nhìn
+            // Điều này đảm bảo bắt được cả những đoạn văn rất dài đang che kín màn hình
+            if (rect.bottom > sightTop) {
                 const id = parseInt(segment.dataset.id);
                 if (id) {
                     localStorage.setItem('sutta_last_segment_id', id.toString());
@@ -215,7 +220,7 @@ export class ScrollManager {
         const rect = el.getBoundingClientRect();
         const containerRect = this.container.getBoundingClientRect();
         
-        const offset = 20; 
+        const offset = 10; // Đồng bộ offset với sightTop
         const targetScrollTop = this.container.scrollTop + (rect.top - containerRect.top) - offset;
 
         this.container.scrollTo({
