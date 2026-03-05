@@ -113,21 +113,24 @@
     margin: 0 1px;
 }
 
-/* Thêm dấu ngoặc ảo bằng CSS để phân định ranh giới group mà không làm bẩn dữ liệu copy */
-.selection-group::before {
-    content: "[";
-    color: var(--text-light);
-    opacity: 0.4;
-    margin-right: 2px;
-    font-family: var(--font-ui);
+/* Trường hợp lựa chọn phức tạp (3+ items): Hiển thị dạng khối */
+.selection-group.is-block {
+    display: block;
+    background-color: transparent;
+    padding: 0.5rem 0 0.5rem 1.5rem;
+    margin: 0.75rem 0;
+    border-left: 2px solid var(--border-light);
 }
 
-.selection-group::after {
-    content: "]";
-    color: var(--text-light);
-    opacity: 0.4;
-    margin-left: 2px;
-    font-family: var(--font-ui);
+.selection-group.is-block::before,
+.selection-group.is-block::after {
+    content: ""; /* Bỏ dấu ngoặc ảo khi ở dạng block */
+}
+
+.selection-row {
+    display: block;
+    margin-bottom: 0.25rem;
+    line-height: 1.5;
 }
 
 .selection-or {
@@ -136,6 +139,11 @@
     font-size: 0.9em;
     font-weight: 400;
     margin: 0 2px;
+}
+
+/* Trong chế độ block, selection-or đóng vai trò như bullet */
+.is-block .selection-or {
+    margin-right: 6px;
 }
 
 .selection-item {

@@ -41,37 +41,70 @@ class TsvContentProcessor:
 
         def replacer(match):
             content = match.group(1).strip()
-
+            is_block = False
+            
             # 1. Trường hợp danh sách các cụm "hoặc là ..." hoặc "hoặc ..." ở đầu mỗi cụm (ngăn cách bởi dấu phẩy)
             # VD: [hoặc là với tội A, hoặc là với tội B]
             if content.startswith("hoặc"):
                 # Tách theo dấu phẩy, dùng lookahead để đảm bảo vế sau cũng bắt đầu bằng "hoặc"
                 parts = re.split(r',\s*(?=hoặc)', content)
+                if len(parts) >= 3:
+                    is_block = True
+                
                 processed_parts = []
                 for p in parts:
                     p = p.strip()
                     # Tách từ khóa ở đầu cụm (ưu tiên "hoặc là" dài hơn trước)
                     m = re.match(r'^(hoặc là|hoặc)\s*(.*)$', p)
                     if m:
-                        processed_parts.append(f"<span class='selection-or'>{m.group(1)}</span> <span class='selection-item'>{m.group(2)}</span>")
+                        inner_html = f"<span class='selection-or'>{m.group(1)}</span> <span class='selection-item'>{m.group(2)}</span>"
                     else:
-                        processed_parts.append(f"<span class='selection-item'>{p}</span>")
-                inner = ", ".join(processed_parts)
-                return f"<span class='selection-group'>{inner}</span>"
+                        inner_html = f"<span class='selection-item'>{p}</span>"
+                    
+                    if is_block:
+                        processed_parts.append(f"<div class='selection-row'>{inner_html}</div>")
+                    else:
+                        processed_parts.append(inner_html)
+                
+                sep = "" if is_block else ", "
+                inner_content = sep.join(processed_parts)
+                tag = "div" if is_block else "span"
+                block_class = " is-block" if is_block else ""
+                return f"<{tag} class='selection-group{block_class}'>{inner_content}</{tag}>"
 
             # 2. Trường hợp "hoặc" nằm ở giữa để phân tách các vế (Phổ biến)
             # VD: [vật thực cứng hoặc vật thực mềm]
-            # VD: [là người phụ việc chùa hoặc là nam cư sĩ] -> tách tại " hoặc " -> "là...chùa" và "là nam cư sĩ"
+            # VD: [A hoặc B hoặc C] -> 3 items -> block
             elif " hoặc " in content:
                 # Tách tất cả các vế bằng từ " hoặc " duy nhất làm mốc phân tách
                 parts = content.split(" hoặc ")
-                wrapped_parts = [f"<span class='selection-item'>{p.strip()}</span>" for p in parts]
-                inner = " <span class='selection-or'>hoặc</span> ".join(wrapped_parts)
-                return f"<span class='selection-group'>{inner}</span>"
-
+                if len(parts) >= 3:
+                    is_block = True
+                
+                processed_parts = []
+                for i, p in enumerate(parts):
+                    item_html = f"<span class='selection-item'>{p.strip()}</span>"
+                    if i == 0:
+                        # Dòng đầu tiên không có chữ "hoặc" phía trước
+                        inner_html = item_html
+                    else:
+                        inner_html = f"<span class='selection-or'>hoặc</span> {item_html}"
+                    
+                    if is_block:
+                        processed_parts.append(f"<div class='selection-row'>{inner_html}</div>")
+                    else:
+                        processed_parts.append(inner_html)
+                
+                sep = "" if is_block else " "
+                inner_content = sep.join(processed_parts)
+                tag = "div" if is_block else "span"
+                block_class = " is-block" if is_block else ""
+                return f"<{tag} class='selection-group{block_class}'>{inner_content}</{tag}>"
+            
             return content
 
         return re.sub(r'\[(.*?)\]', replacer, text)
+
     def _process_duyenco(self, text: str) -> str:
         """Xử lý định dạng danh sách duyenco."""
         # Tách các thành phần bằng dấu chấm phẩy
