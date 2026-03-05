@@ -39,10 +39,14 @@ class TsvContentProcessor:
         if '[' not in text:
             return text
 
-        # 1. Tìm tất cả các cụm ngoặc vuông và đếm số lượng item trong mỗi cụm
+        # 1. Tìm tất cả các cụm ngoặc vuông và dấu câu theo sau ngay lập tức
         groups = []
-        for match in re.finditer(r'\[(.*?)\]', text):
+        # Regex tìm: [nội dung] + các dấu câu bám sau
+        pattern = r'\[(.*?)\]([.,;!:\?]*)'
+        for match in re.finditer(pattern, text):
             content = match.group(1).strip()
+            suffix = match.group(2) # Dấu câu bám đuôi (nếu có)
+            
             items = []
             if content.startswith("hoặc"):
                 items = re.split(r',\s*(?=hoặc)', content)
@@ -51,11 +55,16 @@ class TsvContentProcessor:
             else:
                 items = [content]
             
+            # Nếu có dấu câu bám đuôi, gắn nó vào item cuối cùng của cụm
+            if items and suffix:
+                items[-1] = items[-1].strip() + suffix
+            
             groups.append({
                 'content': content,
                 'items': items,
                 'start': match.start(),
-                'end': match.end()
+                'end': match.end(),
+                'suffix': suffix
             })
 
         if not groups:
@@ -67,7 +76,7 @@ class TsvContentProcessor:
             g['is_stacked'] = False
             
             if len(g['items']) == 2:
-                # Kiểm tra cụm phía trước
+                # Kiểm tra cụm phía trước (chỉ tính nếu khoảng cách giữa chúng chỉ có whitespace)
                 if i > 0:
                     prev_g = groups[i-1]
                     if len(prev_g['items']) == 2:
@@ -85,7 +94,7 @@ class TsvContentProcessor:
                             g['is_stacked'] = True
                             next_g['is_stacked'] = True
 
-        # 3. Thực hiện thay thế từ cuối lên đầu để không làm lệch offset
+        # 3. Thực hiện thay thế từ cuối lên đầu
         result = text
         for g in reversed(groups):
             is_block = g['is_block']
@@ -110,8 +119,10 @@ class TsvContentProcessor:
                     else:
                         processed_parts.append(inner_html)
             elif " hoặc " in content:
+                # Lưu ý: items[-1] có thể đã chứa suffix (dấu câu)
                 for idx, p in enumerate(items):
-                    item_html = f"<span class='selection-item'>{p.strip()}</span>"
+                    item_text = p.strip()
+                    item_html = f"<span class='selection-item'>{item_text}</span>"
                     if idx == 0:
                         inner_html = item_html
                     else:
@@ -122,7 +133,8 @@ class TsvContentProcessor:
                     else:
                         processed_parts.append(inner_html)
             else:
-                processed_parts = [f"<span class='selection-item'>{content}</span>"]
+                # items[0] chứa content + suffix
+                processed_parts = [f"<span class='selection-item'>{items[0]}</span>"]
 
             sep = "" if should_wrap else (", " if content.startswith("hoặc") else " ")
             inner_content = sep.join(processed_parts)
