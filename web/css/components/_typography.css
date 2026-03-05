@@ -124,9 +124,20 @@
     border-radius: 0; /* Xoá bo góc để đường kẻ lề trái thẳng tuyệt đối */
 }
 
+/* Trường hợp nhiều cụm lựa chọn liên tiếp: Xếp chồng */
+.selection-group.is-stacked {
+    display: block;
+    background-color: transparent;
+    padding: 0.2rem 0 0.2rem 1.25rem;
+    margin: 0.2rem 0;
+    border-left: none; /* Không cần border cho dạng stacked liên tiếp */
+}
+
 .selection-group.is-block::before,
-.selection-group.is-block::after {
-    content: ""; /* Bỏ dấu ngoặc ảo khi ở dạng block */
+.selection-group.is-block::after,
+.selection-group.is-stacked::before,
+.selection-group.is-stacked::after {
+    content: ""; /* Bỏ dấu ngoặc ảo khi ở dạng block hoặc stacked */
 }
 
 .selection-row {
