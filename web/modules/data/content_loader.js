@@ -77,7 +77,6 @@ export class ContentLoader {
             const query = `
                 SELECT 
                     c.uid as id, 
-                    snippet(contents_fts, 0, '<span class="search-highlight">', '</span>', '...', 32) as segment_snippet,
                     c.segment as raw_segment,
                     h.breadcrumbs,
                     r.id as rule_id,

@@ -194,11 +194,8 @@ export class SearchManager {
                 ruleText = `<span class="search-result-rule">${this._escapeHtml(res.rule_viet)} (${this._escapeHtml(res.rule_pali)})</span>`;
             }
 
-            // Sử dụng snippet được tạo tự động bởi FTS5 SQLite, nếu không có (do fallback) thì tự làm mờ bằng JS
-            let snippet = res.segment_snippet;
-            if (!snippet) {
-                snippet = this._highlightKeyword(res.raw_segment, keyword);
-            }
+            // Sử dụng JS để highlight tất cả các vị trí xuất hiện của từ khóa trong đoạn văn bản
+            let snippet = this._highlightKeyword(res.raw_segment, keyword);
 
             html += `
                 <div class="search-result-card" data-id="${res.id}">
