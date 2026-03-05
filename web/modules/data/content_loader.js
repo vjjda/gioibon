@@ -10,15 +10,17 @@ export class ContentLoader {
     async load() {
         if (this.data) return this.data;
         try {
-            const BATCH_SIZE = 100; 
+            const BATCH_SIZE = 500; 
             this.data = [];
             let lastUid = 0;
             let hasMore = true;
 
             while (hasMore) {
                 const rows = await this.db.query(
-                    `SELECT uid, html, label, audio_name, segment, segment_html, has_hint, heading_id, rule_id 
-                     FROM contents WHERE uid > ${lastUid} ORDER BY uid ASC LIMIT ${BATCH_SIZE}`
+                    `SELECT c.uid, c.html, c.label, c.audio_name, c.segment, c.segment_html, c.has_hint, c.heading_id, c.rule_id, h.level as heading_level
+                     FROM contents c
+                     LEFT JOIN headings h ON c.heading_id = h.uid
+                     WHERE c.uid > ${lastUid} ORDER BY c.uid ASC LIMIT ${BATCH_SIZE}`
                 );
 
                 if (rows && rows.length > 0) {
@@ -31,12 +33,16 @@ export class ContentLoader {
                         text: row.segment_html,    // Bản HTML (để hiển thị)
                         hasHint: row.has_hint === 1,
                         headingId: row.heading_id,
+                        headingLevel: row.heading_level,
                         ruleId: row.rule_id
                     }));
                     this.data.push(...batchItems);
                     lastUid = rows[rows.length - 1].uid;
 
-                    await new Promise(resolve => setTimeout(resolve, 5));
+                    // Chỉ nhường Main Thread nếu vẫn còn dữ liệu để tải
+                    if (rows.length === BATCH_SIZE) {
+                        await new Promise(resolve => setTimeout(resolve, 0));
+                    }
                 } else {
                     hasMore = false;
                 }
