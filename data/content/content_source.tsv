@@ -69,7 +69,7 @@ html	label	segment
 <p>{}</p>	ss2	Vị tỳ khưu nào bị khởi dục, do tâm bị thay đổi, rồi thực hiện việc xúc chạm thân thể với người nữ là [sự nắm lấy tay, hoặc sự nắm lấy búi tóc, hoặc sự vuốt ve] bất cứ bộ phận nào thì phạm tội saṅghādisesa.
 <h4>{}</h4>	ss3-name	Ss 3. Lời thô tục (Duṭṭhullavācā)
 <p>{}</p>	ss3	Vị tỳ khưu nào bị khởi dục, do tâm bị thay đổi, rồi nói với người nữ bằng những lời thô tục như là việc người trai trẻ nói với cô gái bằng những lời có tính chất đôi lứa thì phạm tội saṅghādisesa.
-<h4>{}</h4>	ss4-name	Ss 4. Hầu hạ tình dục (Attakāmapāricariya)
+<h4>{}</h4>	ss4-name	Ss 4. Hầu hạ tình dục cho bản thân (Attakāmapāricariya)
 <p>{}	ss4	Vị tỳ khưu nào bị khởi dục, do tâm bị thay đổi, rồi ca ngợi sự hầu hạ tình dục cho bản thân trong sự hiện diện của người nữ rằng:
 {}	ss4	‘Này em gái, đây là việc đứng đầu trong các sự hầu hạ là việc người nữ nên hầu hạ đến người có giới, có thiện pháp, có Phạm hạnh như là ta bằng việc ấy,’
 {}</p>	ss4	là việc có tính chất đôi lứa, thì phạm tội saṅghādisesa.
@@ -87,7 +87,7 @@ html	label	segment
 <h4>{}</h4>	ss8-name	Ss 8. Xấu xa sân hận (Duṭṭhadosa)
 <p>{}	ss8	Vị tỳ khưu nào xấu xa, sân hận, bất bình vị tỳ khưu (khác) rồi bôi nhọ về tội pārājika không có nguyên cớ (nghĩ rằng):
 {}	ss8	‘Chắc là ta có thể loại vị ấy ra khỏi Phạm hạnh này.’
-{}</p>	ss8	Sau đó vào lúc khác, trong khi được hỏi hay trong khi không được hỏi và sự tranh tụng ấy thật sự không có nguyên cớ, vị tỳ khưu (dầu có) thú nhận lỗi lầm (cũng) phạm tội saṅghādisesa.
+{}</p>	ss8	Sau đó vào lúc khác, trong khi được hỏi hay trong khi không được hỏi và cuộc tranh tụng ấy thật sự không có nguyên cớ, vị tỳ khưu (dầu có) thú nhận lỗi lầm (cũng) phạm tội saṅghādisesa.
 <h4>{}</h4>	ss9-name	Ss 9. Có quan hệ khác biệt (Aññabhāgiya)
 <p>{}	ss9	Vị tỳ khưu nào xấu xa, sân hận, bất bình vị tỳ khưu (khác) rồi nắm lấy sự kiện nhỏ nhặt nào đó thuộc về cuộc tranh tụng có quan hệ khác biệt và bôi nhọ về tội pārājika (nghĩ rằng):
 {}	ss9	‘Chắc là ta có thể loại vị ấy ra khỏi Phạm hạnh này.’
@@ -299,7 +299,7 @@ html	label	segment
 <p>{}	np29	Khi mùa mưa (an cư) đã qua ngày rằm Kattika, trường hợp có những chỗ trú ngụ ở trong rừng được xác định là có sự nguy hiểm, có sự kinh hoàng, và vị tỳ khưu đang sống ở các chỗ trú ngụ có hình thức như thế, khi mong mỏi có thể để lại một y nào đó của ba y ở trong xóm nhà.
 {}	np29	Nếu vị tỳ khưu ấy có lý do nào đó đưa đến việc xa lìa y ấy, vị tỳ khưu ấy nên xa lìa y ấy tối đa là sáu đêm.
 {}</p>	np29	Nếu xa lìa vượt quá hạn ấy, ngoại trừ có sự đồng ý của các tỳ khưu, thì (y ấy) nên được xả bỏ và (vị ấy) phạm tội pācittiya.
-<h4>{}</h4>	np30-name	Np 30. Chuyển dâng (Pariṇata)
+<h4>{}</h4>	np30-name	Np 30. Đã được khẳng định (Pariṇata)
 <p>{}</p>	np30	Vị tỳ khưu nào dầu biết lợi lộc đã được khẳng định là dâng đến hội chúng vẫn thuyết phục dâng cho bản thân thì (vật ấy) nên được xả bỏ và (vị ấy) phạm tội pācittiya.
 <p class='endvagga'>{}</p>	np-ending	Phẩm Bình Bát là thứ ba.
 <h3>{}</h3>	np-ending	Dứt Giới Ưng Xả
@@ -326,7 +326,7 @@ html	label	segment
 <p>{}</p>	pc6	Vị tỳ khưu nào nằm chung chỗ ngụ với người nữ thì phạm tội pācittiya.
 <h4>{}</h4>	pc7-name	Pc 7. Thuyết pháp (Dhammadesanā)
 <p>{}</p>	pc7	Vị tỳ khưu nào thuyết Pháp đến người nữ hơn năm sáu câu ngoại trừ có người nam có trí suy xét thì phạm tội pācittiya.
-<h4>{}</h4>	pc8-name	Pc 8. Nói thật (Bhūtārocana)
+<h4>{}</h4>	pc8-name	Pc 8. Tuyên bố sự thực chứng (Bhūtārocana)
 <p>{}</p>	pc8	Vị tỳ khưu nào tuyên bố pháp thượng nhân đến người chưa tu lên bậc trên (nếu) đã thực chứng thì phạm tội pācittiya.
 <h4>{}</h4>	pc9-name	Pc 9. Công bố tội xấu xa (Duṭṭhullārocana)
 <p>{}</p>	pc9	Vị tỳ khưu nào công bố tội xấu xa của vị tỳ khưu đến người chưa tu lên bậc trên thì phạm tội pācittiya ngoại trừ có sự đồng ý của các tỳ khưu.
@@ -484,7 +484,7 @@ html	label	segment
 <h4>{}</h4>	pc62-name	Pc 62. Có sinh vật (Sappāṇaka)
 <p>{}</p>	pc62	Vị tỳ khưu nào trong khi biết nước có sinh vật vẫn sử dụng thì phạm tội pācittiya.
 <h4>{}</h4>	pc63-name	Pc 63. Khơi lại (Ukkoṭana)
-<p>{}</p>	pc63	Vị tỳ khưu nào trong khi biết sự tranh tụng đã được giải quyết đúng theo pháp vẫn khơi lại để làm hành sự lần nữa thì phạm tội pācittiya.
+<p>{}</p>	pc63	Vị tỳ khưu nào trong khi biết cuộc tranh tụng đã được giải quyết đúng theo pháp vẫn khơi lại để làm hành sự lần nữa thì phạm tội pācittiya.
 <h4>{}</h4>	pc64-name	Pc 64. Tội xấu xa (Duṭṭhulla)
 <p>{}</p>	pc64	Vị tỳ khưu nào trong khi biết tội xấu xa của vị tỳ khưu vẫn che giấu thì phạm tội pācittiya.
 <h4>{}</h4>	pc65-name	Pc 65. Chưa đủ hai mươi tuổi (Ūnavīsativassa)
@@ -513,7 +513,7 @@ html	label	segment
 {}	pc70	Chớ có vu khống đức Thế Tôn bởi vì việc vu khống đức Thế Tôn là không tốt.
 {}	pc70	Bởi vì đức Thế Tôn không có nói như thế.
 {}	pc70	Này ông sa di, đức Thế Tôn đã giảng giải bằng nhiều phương thức rằng các pháp chướng ngại có khả năng đem đến sự chướng ngại cho người thực hành.’
-{}	pc70	Và khi được các tỳ khưu nói như vậy mà vị sa di ấy vẫn chấp giữ y như thế, vị sa di ấy nên được các tỳ khưu nói như vầy:
+{}	pc70	Và khi được các tỳ khưu nói như vậy mà vị sa di ấy vẫn chấp giữ y như thế, thì vị sa di ấy nên được các tỳ khưu nói như vầy:
 {}	pc70	‘Này ông sa di, kể từ hôm nay không được tuyên bố đức Thế Tôn ấy là bậc Đạo sư của ngươi nữa.
 {}	pc70	Ngay cả việc các sa di khác được hưởng là việc nằm chung chỗ ngụ với các tỳ khưu hai ba đêm, việc ấy không có cho ngươi nữa.
 {}	pc70	Hãy đi chỗ khác, hãy biến mất đi.’
@@ -561,7 +561,7 @@ html	label	segment
 <h4>{}</h4>	pc81-name	Pc 81. Đã cũ (Dubbala)
 <p>{}	pc81	Vị tỳ khưu nào cùng với hội chúng hợp nhất đã cho y sau đó lại tiến hành việc phê phán rằng:
 {}</p>	pc81	‘Các tỳ khưu trao phần lợi lộc thuộc về hội chúng thuận theo sự quen biết,’ thì phạm tội pācittiya.
-<h4>{}</h4>	pc82-name	Pc 82. Chuyển dâng (Pariṇāmana)
+<h4>{}</h4>	pc82-name	Pc 82. Thuyết phục dâng (Pariṇāmana)
 <p>{}</p>	pc82	Vị tỳ khưu nào trong khi biết lợi lộc đã được khẳng định là dành riêng cho hội chúng vẫn thuyết phục dâng cho cá nhân thì phạm tội pācittiya.
 <p class='endvagga'>{}</p>	pc-ending	Phẩm (Nói) Theo Pháp là thứ tám.
 <h3>{}</h3>	pc-chapter	Phẩm 9: Báu Vật
@@ -814,7 +814,7 @@ html	label	segment
 <p class='endsection'>{}</p>	sk-ending	Dứt Các Điều Sekhiyā
 <h2>{}</h2>	as-opening	THUYẾT GIỚI DÀN XẾP TRANH TỤNG
 <p>{}</p>	as-opening	Bạch chư đại đức, bảy pháp dàn xếp tranh tụng này được đưa ra đọc tụng.
-<p>{}</p>	as-opening	Nhằm đưa đến sự dàn xếp, nhằm đưa đến sự giải quyết các sự tranh tụng [đã sanh khởi hoặc chưa sanh khởi],
+<p>{}</p>	as-opening	Nhằm đưa đến sự dàn xếp, nhằm đưa đến sự giải quyết các cuộc tranh tụng [đã sanh khởi hoặc chưa sanh khởi],
 <h4>{}</h4>	as1-name	As 1. Hiện diện (Sammukhāvinaya)
 <p>{}</p>	as1	Nên áp dụng cách hành xử Luật với sự hiện diện,
 <h4>{}</h4>	as2-name	As 2. Ghi nhớ (Sativinaya)
