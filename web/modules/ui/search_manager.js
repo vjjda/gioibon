@@ -94,12 +94,27 @@ export class SearchManager {
         
         if (rect.width === 0 && rect.height === 0) return; // Invisible selection
 
-        // Calculate position (centered above selection)
-        const top = rect.top + window.scrollY;
-        const left = rect.left + window.scrollX + (rect.width / 2);
+        // Kiểm tra xem có phải thiết bị di động không
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-        this.tooltip.style.top = `${top}px`;
-        this.tooltip.style.left = `${left}px`;
+        if (isMobile) {
+            // Trên Mobile: Ưu tiên đặt phía dưới vùng chọn để tránh menu Copy/Share mặc định của trình duyệt
+            const top = rect.bottom + window.scrollY;
+            const left = rect.left + window.scrollX + (rect.width / 2);
+            
+            this.tooltip.style.top = `${top}px`;
+            this.tooltip.style.left = `${left}px`;
+            this.tooltip.classList.add('at-bottom');
+        } else {
+            // Trên Desktop: Đặt phía trên như cũ
+            const top = rect.top + window.scrollY;
+            const left = rect.left + window.scrollX + (rect.width / 2);
+
+            this.tooltip.style.top = `${top}px`;
+            this.tooltip.style.left = `${left}px`;
+            this.tooltip.classList.remove('at-bottom');
+        }
+        
         this.tooltip.classList.remove('hidden');
     }
 

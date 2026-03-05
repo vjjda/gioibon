@@ -13,7 +13,12 @@
     margin-top: -10px; /* Offset above selection */
     pointer-events: auto;
     transition: opacity 0.2s ease, transform 0.2s ease;
-    /* Arrow pointing down */
+}
+
+/* Kiểu hiển thị phía dưới vùng chọn (Dành cho Mobile để tránh đè menu trình duyệt) */
+.selection-tooltip.at-bottom {
+    transform: translate(-50%, 10px); /* Đẩy xuống dưới */
+    margin-top: 0;
 }
 
 .selection-tooltip::after {
@@ -25,6 +30,12 @@
     border-width: 6px;
     border-style: solid;
     border-color: var(--text-main) transparent transparent transparent;
+}
+
+.selection-tooltip.at-bottom::after {
+    top: auto;
+    bottom: 100%; /* Đưa mũi tên lên đỉnh */
+    border-color: transparent transparent var(--text-main) transparent;
 }
 
 .selection-tooltip button {
