@@ -25,11 +25,12 @@ class StructureProcessor:
         """Nạp danh sách Rule Groups từ file TSV."""
         try:
             with open(path, 'r', encoding='utf-8') as f:
-                reader = csv.DictReader(f, delimiter='	')
+                reader = csv.DictReader(f, delimiter='\t')
                 for row in reader:
                     self.rules.append(RuleData(
                         id=row['id'],
                         type=int(row['type']),
+                        acronym=row.get('acronym', ''),
                         pali=row['pali'],
                         viet=row['viet'],
                         group=row['group'] if row['group'] else None
@@ -92,6 +93,14 @@ class StructureProcessor:
         group_match = re.match(r'^([a-z]+)', rule_id, re.IGNORECASE)
         group = group_match.group(1) if group_match else None
         
+        # Tạo acronym (VD: ss1 -> Ss 1)
+        acronym = ""
+        acronym_match = re.match(r'^([a-z]+)(\d+)?$', rule_id, re.IGNORECASE)
+        if acronym_match:
+            prefix = acronym_match.group(1).capitalize()
+            number = f" {acronym_match.group(2)}" if acronym_match.group(2) else ""
+            acronym = f"{prefix}{number}"
+        
         # Trích xuất pali và viet
         # Format thường gặp: Pj 1. Tên Tiếng Việt (Pali Name)
         m = re.match(r'^(?:.*?\.\s*)?(.*?)(?:\s*\((.*?)\))?$', raw_text)
@@ -104,6 +113,7 @@ class StructureProcessor:
         self.rules.append(RuleData(
             id=rule_id,
             type=1, # 1: rule
+            acronym=acronym,
             pali=pali,
             viet=viet,
             group=group

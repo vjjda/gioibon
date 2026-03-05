@@ -1,11 +1,11 @@
-id	type	pali	viet	group
-pj	0	Pārājika	Bất cộng trụ	
-ss	0	Saṅghādisesa	Tăng tàn	
-ay	0	Aniyata	Bất định	
-np	0	Nissaggiya Pācittiya	Ưng xả đối trị	
-pc	0	Pācittiya	Ưng đối trị	
-pd	0	Pāṭidesanīya	Ưng phát lộ	
-sk	0	Sekhiya	Ưng học pháp	
-as	0	Adhikaraṇasamatha	Diệt tranh	
-modau	0	Pubbabāga	Phần mở đầu	
-ketthuc	0	Niggama	Phần kết thúc	
+id	type	acronym	pali	viet	group
+pj	0	Pj	Pārājika	Bất cộng trụ	
+ss	0	Ss	Saṅghādisesa	Tăng tàn	
+ay	0	Ay	Aniyata	Bất định	
+np	0	Np	Nissaggiya Pācittiya	Ưng xả đối trị	
+pc	0	Pc	Pācittiya	Ưng đối trị	
+pd	0	Pd	Pāṭidesanīya	Ưng phát lộ	
+sk	0	Sk	Sekhiya	Ưng học pháp	
+as	0	As	Adhikaraṇasamatha	Diệt tranh	
+modau	0		Pubbabāga	Phần mở đầu	
+ketthuc	0		Niggama	Phần kết thúc	

@@ -14,6 +14,7 @@ class RuleData(BaseModel):
     type: int = Field(description="0: group, 1: rule")
     pali: str = Field(description="Tên tiếng Pali")
     viet: str = Field(description="Tên tiếng Việt")
+    acronym: str = Field(description="Tên viết tắt (VD: Ss 1)")
     group: Optional[str] = Field(None, description="Mã nhóm cha (nếu có)")
 
 class HeadingData(BaseModel):

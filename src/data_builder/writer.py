@@ -95,6 +95,7 @@ class DataWriter:
             CREATE TABLE rules (
                 id TEXT PRIMARY KEY,
                 type INTEGER,
+                acronym TEXT,
                 pali TEXT,
                 viet TEXT,
                 "group" TEXT
@@ -134,8 +135,8 @@ class DataWriter:
         for r in rules:
             if r.id not in seen_rules:
                 seen_rules.add(r.id)
-                insert_rules.append((r.id, r.type, r.pali, r.viet, r.group))
-        cursor.executemany('INSERT INTO rules (id, type, pali, viet, "group") VALUES (?, ?, ?, ?, ?)', insert_rules)
+                insert_rules.append((r.id, r.type, r.acronym, r.pali, r.viet, r.group))
+        cursor.executemany('INSERT INTO rules (id, type, acronym, pali, viet, "group") VALUES (?, ?, ?, ?, ?, ?)', insert_rules)
         
         # Chèn dữ liệu headings
         seen_headings = set()
