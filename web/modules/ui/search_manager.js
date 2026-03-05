@@ -180,6 +180,10 @@ export class SearchManager {
             </div>
         `;
 
+        // Gom nhóm kết quả theo rule_id và breadcrumbs
+        const groupedResults = [];
+        const seenGroups = new Map();
+
         results.forEach(res => {
             let breadcrumbs = res.breadcrumbs ? res.breadcrumbs : '';
             if (breadcrumbs) {
@@ -189,19 +193,52 @@ export class SearchManager {
                 }
             }
             
-            let ruleText = '';
-            if (res.rule_id) {
-                ruleText = `<span class="search-result-rule">${this._escapeHtml(res.rule_viet)} (${this._escapeHtml(res.rule_pali)})</span>`;
+            // Tạo một khóa duy nhất cho nhóm
+            const groupKey = `${res.rule_id || 'no-rule'}-${breadcrumbs}`;
+            
+            let snippet = res.segment_snippet;
+            if (!snippet) {
+                snippet = this._highlightKeyword(res.raw_segment, keyword);
             }
 
-            // Sử dụng JS để highlight tất cả các vị trí xuất hiện của từ khóa trong đoạn văn bản
-            let snippet = this._highlightKeyword(res.raw_segment, keyword);
+            if (seenGroups.has(groupKey)) {
+                // Đã có nhóm này, thêm snippet vào nhóm đó
+                const group = seenGroups.get(groupKey);
+                // Chỉ gộp tối đa 3 snippet để tránh thẻ quá dài
+                if (group.snippets.length < 3) {
+                    group.snippets.push(snippet);
+                } else if (group.snippets.length === 3) {
+                    group.snippets.push('<div style="font-style: italic; color: var(--text-light); margin-top: 4px;">... (còn nữa)</div>');
+                }
+            } else {
+                // Tạo nhóm mới
+                const newGroup = {
+                    id: res.id, // Dùng ID của segment đầu tiên tìm thấy để jump
+                    breadcrumbs: breadcrumbs,
+                    rule_id: res.rule_id,
+                    rule_viet: res.rule_viet,
+                    rule_pali: res.rule_pali,
+                    snippets: [snippet]
+                };
+                seenGroups.set(groupKey, newGroup);
+                groupedResults.push(newGroup);
+            }
+        });
+
+        groupedResults.forEach(group => {
+            let ruleText = '';
+            if (group.rule_id) {
+                ruleText = `<span class="search-result-rule">${this._escapeHtml(group.rule_viet)} (${this._escapeHtml(group.rule_pali)})</span>`;
+            }
+
+            // Gộp các snippet lại với nhau, cách nhau bởi thẻ div có margin mỏng
+            const combinedSnippets = group.snippets.map(s => `<div>${s}</div>`).join('<div style="margin: 6px 0; border-top: 1px dashed var(--border-light);"></div>');
 
             html += `
-                <div class="search-result-card" data-id="${res.id}">
-                    ${breadcrumbs ? `<span class="search-result-breadcrumbs">${this._escapeHtml(breadcrumbs)}</span>` : ''}
+                <div class="search-result-card" data-id="${group.id}">
+                    ${group.breadcrumbs ? `<span class="search-result-breadcrumbs">${this._escapeHtml(group.breadcrumbs)}</span>` : ''}
                     ${ruleText}
-                    <div class="search-result-text">${snippet}</div>
+                    <div class="search-result-text">${combinedSnippets}</div>
                 </div>
             `;
         });
