@@ -113,7 +113,23 @@ export class ScrollManager {
     restoreScrollPosition() {
         const lastId = localStorage.getItem('sutta_last_segment_id');
         if (lastId) {
-            this.scrollToId(parseInt(lastId, 10), 'auto');
+            const doScroll = () => {
+                // Tạm thời tắt smooth scroll khi restore để tránh bị giật
+                this.scrollToId(parseInt(lastId, 10), 'auto');
+            };
+            
+            // Cuộn ngay lập tức
+            doScroll();
+            
+            // Cuộn lại sau khi font chữ đã load xong (để sửa lỗi lệch do đổi chiều cao chữ)
+            if (document.fonts) {
+                document.fonts.ready.then(() => {
+                    setTimeout(doScroll, 50);
+                });
+            }
+            
+            // Fallback cuộn lại sau 500ms phòng trường hợp DOM thay đổi
+            setTimeout(doScroll, 500);
         }
     }
 

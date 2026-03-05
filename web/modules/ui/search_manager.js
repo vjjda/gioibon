@@ -177,7 +177,14 @@ export class SearchManager {
         `;
 
         results.forEach(res => {
-            const breadcrumbs = res.breadcrumbs ? res.breadcrumbs : '';
+            let breadcrumbs = res.breadcrumbs ? res.breadcrumbs : '';
+            if (breadcrumbs) {
+                const parts = breadcrumbs.split(' > ');
+                if (parts.length > 1) {
+                    breadcrumbs = parts.slice(1).join(' > ');
+                }
+            }
+            
             let ruleText = '';
             if (res.rule_id) {
                 ruleText = `<span class="search-result-rule">${this._escapeHtml(res.rule_viet)} (${this._escapeHtml(res.rule_pali)})</span>`;
