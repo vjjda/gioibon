@@ -39,9 +39,9 @@
         }
     }
     </script>
-  <script type="module" crossorigin src="/gioibon/assets/index.BtjB-R3l.js"></script>
+  <script type="module" crossorigin src="/gioibon/assets/index.ExrloAcI.js"></script>
   <link rel="modulepreload" crossorigin href="/gioibon/assets/vendor-sqlite.B5d0IBhS.js">
-  <link rel="stylesheet" crossorigin href="/gioibon/assets/index.CYyMiRB0.css">
+  <link rel="stylesheet" crossorigin href="/gioibon/assets/index.B2Hya-At.css">
 <link rel="manifest" href="/gioibon/manifest.webmanifest"></head>
 <body>
     <div id="splash-screen">
@@ -233,6 +233,26 @@
             </div>
         </div>
     </div>
+
+    <!-- Search Selection Tooltip -->
+    <div id="selection-tooltip" class="selection-tooltip hidden">
+        <button id="btn-search-selection" title="Tra cứu cụm từ này">
+            <i class="fas fa-search"></i> Tra cứu
+        </button>
+    </div>
+
+    <!-- Bottom Sheet for Search Results -->
+    <div id="search-bottom-sheet" class="bottom-sheet hidden">
+        <div class="bottom-sheet-drag-handle"></div>
+        <div class="bottom-sheet-header">
+            <h3>Kết quả tra cứu</h3>
+            <button id="btn-close-search-sheet" class="icon-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="bottom-sheet-content" id="search-results-container">
+            <!-- Results will be injected here -->
+        </div>
+    </div>
+    <div id="search-sheet-overlay" class="sheet-overlay hidden"></div>
 
     <script src="libs/jszip/jszip.min.js"></script>
 
