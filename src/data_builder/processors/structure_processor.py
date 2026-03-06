@@ -45,6 +45,10 @@ class StructureProcessor:
         Xử lý từng segment để trích xuất Heading và Rule.
         Trả về (heading_id, rule_id) cho segment hiện tại.
         """
+        # [FIX] Reset rule_id ngay nếu gặp thẻ kết thúc hoặc label là chapter nằm ngoài heading
+        if label.endswith('-ending') or label.endswith('-chapter'):
+            self.current_rule_id = None
+
         # Nếu là thẻ heading (h1-h6)
         heading_match = re.match(r'^<h([1-6])', html_template, re.IGNORECASE)
         if heading_match:
@@ -74,8 +78,8 @@ class StructureProcessor:
             # Nếu Heading là một Rule name
             if label.endswith('-name'):
                 self._extract_rule(label, clean_text)
-            elif level <= 2:
-                # Thường khi chuyển sang chapter mới (h1, h2), rule_id sẽ bị reset
+            # [FIX] Mở rộng điều kiện reset rule_id cho các tiêu đề cấp 3 (hoặc các label chapter)
+            elif level <= 3 or label.endswith('-chapter'):
                 self.current_rule_id = None
                 
         # Nếu là rule-name nhưng không phải heading (ít xảy ra)
