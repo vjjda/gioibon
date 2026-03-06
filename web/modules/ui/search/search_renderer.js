@@ -15,9 +15,7 @@ export class SearchRenderer {
 
         if (activeSegmentId && this.contentRenderer) {
             localStorage.setItem('sutta_last_segment_id', activeSegmentId.toString());
-            const containerRect = this.contentRenderer.scrollManager.container.getBoundingClientRect();
-            const anchor = { id: activeSegmentId, top: containerRect.top + 10 };
-            this.contentRenderer.scrollManager.scrollToAnchor(anchor);
+            // [REMOVED] Logic cuộn văn bản lên mép trên vì gây mất phương hướng cho người dùng.
         }
 
         const results = await this.contentLoader.searchSegments(keyword);

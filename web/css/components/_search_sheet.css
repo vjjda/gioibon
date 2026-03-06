@@ -126,6 +126,16 @@
     border-bottom: 1px solid var(--border-light);
 }
 
+#btn-close-search-sheet {
+    /* Tăng vùng bấm (hit area) cho nút đóng trên mobile */
+    padding: 12px;
+    margin: -8px -12px -8px 0; /* Bù trừ khoảng trống để không làm lệch bố cục */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem; /* Phóng to nhẹ icon */
+}
+
 .header-text-group {
     display: flex;
     flex-direction: column;
