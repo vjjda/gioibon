@@ -25,6 +25,12 @@ export class SearchSheet {
             this.bottomSheet.classList.remove('hidden');
             this.sheetOverlay.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+
+            // Hủy vùng chọn văn bản để ép hệ điều hành ẩn popup ngữ cảnh (Copy/Paste/Translate)
+            const selection = window.getSelection();
+            if (selection && selection.rangeCount > 0) {
+                selection.removeAllRanges();
+            }
         }
     }
 
@@ -43,11 +49,10 @@ export class SearchSheet {
 
     _setupDragToClose() {
         if (!this.dragHandle || !this.bottomSheet) return;
-
         let startY = 0;
         let startHeight = 0;
         let isDragging = false;
-
+        
         const onStart = (e) => {
             // Hỗ trợ cả chuột và chạm
             const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
@@ -62,14 +67,13 @@ export class SearchSheet {
 
         const onMove = (e) => {
             if (!isDragging) return;
-            
             const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
             const deltaY = startY - clientY; // Kéo lên là dương
             
             let newHeight = startHeight + deltaY;
             const maxHeight = window.innerHeight * 0.95;
             const minHeight = 150;
-
+            
             // Giới hạn chiều cao tối đa
             if (newHeight > maxHeight) newHeight = maxHeight;
             
@@ -96,7 +100,7 @@ export class SearchSheet {
                 // Có thể thêm logic snap vào các mốc cố định ở đây nếu muốn
             }
         };
-
+        
         // Gán sự kiện cho handle
         this.dragHandle.addEventListener('mousedown', onStart);
         this.dragHandle.addEventListener('touchstart', onStart, { passive: true });
