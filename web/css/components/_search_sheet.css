@@ -82,7 +82,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    height: 60vh; /* Takes up 60% of screen */
+    height: 60vh; /* Chiều cao mặc định */
     background-color: var(--bg-body);
     z-index: 9999;
     border-top-left-radius: 20px;
@@ -91,7 +91,8 @@
     display: flex;
     flex-direction: column;
     transform: translateY(0);
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    /* Thêm height vào transition để mượt khi snap hoặc đóng */
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), height 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .bottom-sheet.hidden {
