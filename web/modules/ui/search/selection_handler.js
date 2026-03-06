@@ -122,4 +122,3 @@ export class SelectionHandler {
         this.searchRenderer.performSearch(this.currentSelection, this.activeSegmentId);
     }
 }
-
