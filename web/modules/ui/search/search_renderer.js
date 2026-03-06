@@ -27,16 +27,15 @@ export class SearchRenderer {
     _renderResults(results, keyword) {
         if (!this.resultsContainer) return;
 
+        // Cập nhật Header của Bottom Sheet
+        this._updateSheetHeader(keyword, results ? results.length : 0);
+
         if (!results || results.length === 0) {
             this.resultsContainer.innerHTML = '<div style="text-align:center; padding: 2rem; color: var(--text-muted);">Không tìm thấy đoạn văn nào chứa cụm từ này.</div>';
             return;
         }
 
-        let html = `
-            <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
-                Tìm thấy <strong>${results.length}</strong> kết quả cho "<strong>${this._escapeHtml(keyword)}</strong>"
-            </div>
-        `;
+        let html = ''; // Xóa summary div cũ
 
         const groupedResults = [];
         const seenGroups = new Map();
@@ -87,9 +86,16 @@ export class SearchRenderer {
                 return s.id ? `<div class="search-snippet-item" data-id="${s.id}">${s.html}</div>` : `<div>${s.html}</div>`;
             }).join('<div style="margin: 6px 0; border-top: 1px dashed var(--border-light);"></div>');
 
+            // [NEW] Card Header Structure
+            const breadcrumbsHtml = group.breadcrumbs ? `<span class="search-result-breadcrumbs">${this._escapeHtml(group.breadcrumbs)}</span>` : '<span class="search-result-breadcrumbs"></span>';
+            const jumpButtonHtml = `<button class="btn secondary btn-jump icon-btn" title="Đi đến văn bản"><i class="fas fa-external-link-alt"></i></button>`;
+
             html += `
                 <div class="search-result-card" data-id="${group.id}" data-rule-id="${group.rule_id || ''}" data-heading-id="${group.heading_id || ''}">
-                    ${group.breadcrumbs ? `<span class="search-result-breadcrumbs">${this._escapeHtml(group.breadcrumbs)}</span>` : ''}
+                    <div class="search-result-card-header">
+                        ${breadcrumbsHtml}
+                        ${jumpButtonHtml}
+                    </div>
                     ${ruleText}
                     <div class="search-result-text">${combinedSnippets}</div>
                     <div class="search-result-expanded-content hidden" style="margin-top: 1rem; border-top: 1px solid var(--border-light); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;"></div>
@@ -101,16 +107,86 @@ export class SearchRenderer {
         this._attachCardEvents(keyword);
     }
 
+    _updateSheetHeader(keyword, count) {
+        if (!this.sheet || !this.sheet.bottomSheet) return;
+        
+        const header = this.sheet.bottomSheet.querySelector('.bottom-sheet-header');
+        if (!header) return;
+
+        // Tìm hoặc tạo group text
+        let textGroup = header.querySelector('.header-text-group');
+        if (!textGroup) {
+            // Nếu chưa có group, ta cần cấu trúc lại header
+            // Lấy nút close ra trước
+            const closeBtn = header.querySelector('#btn-close-search-sheet');
+            
+            // Xóa nội dung cũ trừ nút close (nếu nó ko nằm trong group)
+            // Cách an toàn: Tạo group mới, đưa h3 vào đó (hoặc tạo mới), rồi prepend group vào header
+            textGroup = document.createElement('div');
+            textGroup.className = 'header-text-group';
+            
+            // Tìm h3 cũ
+            const oldH3 = header.querySelector('h3');
+            if (oldH3) {
+                oldH3.remove(); // Xóa h3 cũ đi để tạo cái mới trong group
+            }
+            
+            // Tạo h3 mới và span count
+            const newH3 = document.createElement('h3');
+            newH3.className = 'header-keyword';
+            const newSpan = document.createElement('span');
+            newSpan.className = 'header-count';
+            
+            textGroup.appendChild(newH3);
+            textGroup.appendChild(newSpan);
+            
+            // Chèn group vào đầu header
+            header.insertBefore(textGroup, header.firstChild);
+        }
+
+        // Cập nhật nội dung
+        const h3 = textGroup.querySelector('.header-keyword');
+        const span = textGroup.querySelector('.header-count');
+        
+        if (h3) h3.textContent = keyword ? `"${keyword}"` : 'Kết quả tra cứu';
+        if (span) span.textContent = `${count} kết quả`;
+    }
+
     _attachCardEvents(keyword) {
         const cards = this.resultsContainer.querySelectorAll('.search-result-card');
         cards.forEach(card => {
+            // Xử lý nút Jump
+            const jumpBtn = card.querySelector('.btn-jump');
+            if (jumpBtn) {
+                jumpBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Ngăn chặn việc mở rộng card
+                    this.sheet.close();
+                    
+                    const jumpId = parseInt(card.dataset.id, 10);
+                    if (this.contentRenderer) {
+                        setTimeout(() => {
+                            this.contentRenderer.scrollToSegment(jumpId);
+                            setTimeout(() => {
+                                const targetEl = document.querySelector(`.segment[data-id="${jumpId}"] .segment-text`); 
+                                if (targetEl) {
+                                    targetEl.classList.add('active-search-highlight');
+                                    setTimeout(() => {
+                                        targetEl.classList.remove('active-search-highlight');
+                                    }, 3000);
+                                }
+                            }, 100);
+                        }, 50);
+                    }
+                });
+            }
+
+            // Xử lý mở rộng card
             card.addEventListener('click', (e) => {
+                // Nếu click vào jump btn thì đã được xử lý ở trên
+                if (e.target.closest('.btn-jump')) return;
+
                 const expandedContent = card.querySelector('.search-result-expanded-content');
                 const textContent = card.querySelector('.search-result-text');
-
-                if (e.target.closest('.search-result-expanded-content') && !e.target.closest('.btn-jump')) {
-                    return;
-                }
 
                 if (!expandedContent.classList.contains('hidden')) {
                     expandedContent.classList.add('hidden');
@@ -130,34 +206,7 @@ export class SearchRenderer {
 
                 if (segments && segments.length > 0) {
                     expandedContent.innerHTML = '';
-
-                    const jumpBtnContainer = document.createElement('div');
-                    jumpBtnContainer.style.display = 'flex';
-                    jumpBtnContainer.style.justifyContent = 'flex-end';
-                    jumpBtnContainer.style.marginBottom = '0.5rem';
-                    jumpBtnContainer.innerHTML = `<button class="btn secondary btn-jump" style="font-size: 0.85rem; padding: 4px 10px;"><i class="fas fa-external-link-alt"></i> Đi đến văn bản</button>`;
-                    
-                    const jumpId = parseInt(card.dataset.id, 10);
-                    jumpBtnContainer.querySelector('.btn-jump').addEventListener('click', (ev) => {
-                        ev.stopPropagation();
-                        this.sheet.close();
-                        if (this.contentRenderer) {
-                            setTimeout(() => {
-                                this.contentRenderer.scrollToSegment(jumpId);
-                                setTimeout(() => {
-                                    const targetEl = document.querySelector(`.segment[data-id="${jumpId}"] .segment-text`); 
-                                    if (targetEl) {
-                                        targetEl.classList.add('active-search-highlight');
-                                        setTimeout(() => {
-                                            targetEl.classList.remove('active-search-highlight');
-                                        }, 3000);
-                                    }
-                                }, 100);
-                            }, 50);
-                        }
-                    });
-
-                    expandedContent.appendChild(jumpBtnContainer);
+                    // Không cần tạo nút Jump ở đây nữa
 
                     segments.forEach(item => {
                         const segmentEl = this.contentRenderer.segmentFactory.create(item, -1);
