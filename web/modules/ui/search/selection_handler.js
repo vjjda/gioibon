@@ -83,29 +83,24 @@ export class SelectionHandler {
         const segmentEl = document.querySelector(`.segment[data-id="${this.activeSegmentId}"] .segment-text`);
         if (!segmentEl) return;
 
-        if (color === 'clear') {
-            // Remove selection highlight, wait no, "clear" here means we might want to clear highlights in the selection?
-            // Actually, we can clear all highlights in the active segment, or let user click to remove.
-            // For now, if "clear" is clicked, we clear ALL highlights in the current segment for simplicity
-            this.highlightManager.clearHighlights(this.activeSegmentId);
-            this._refreshSegmentDOM(this.activeSegmentId);
-            this._hideTooltip();
-            window.getSelection().removeAllRanges();
-            return;
-        }
-
         const offsets = this.highlightManager.constructor.getSelectionOffsets(selection, segmentEl);
         if (offsets.start === offsets.end) return;
 
-        this.highlightManager.addHighlight(
-            this.activeSegmentId, 
-            offsets.start, 
-            offsets.end, 
-            color, 
-            this.currentSelection
-        );
+        if (color === 'clear') {
+            this.highlightManager.removeHighlightsInRange(this.activeSegmentId, offsets.start, offsets.end);
+        } else {
+            this.highlightManager.addHighlight(
+                this.activeSegmentId, 
+                offsets.start, 
+                offsets.end, 
+                color, 
+                this.currentSelection
+            );
+        }
 
+        // Bắt buộc gọi refresh lại DOM để hiện hoặc ẩn màu lập tức
         this._refreshSegmentDOM(this.activeSegmentId);
+        
         this._hideTooltip();
         window.getSelection().removeAllRanges();
     }

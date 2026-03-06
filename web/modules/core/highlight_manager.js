@@ -68,6 +68,47 @@ export class HighlightManager {
         }
     }
 
+    removeHighlightsInRange(segmentId, startOffset, endOffset) {
+        if (!this.highlights[segmentId]) return;
+
+        const currentHighlights = this.highlights[segmentId];
+        const newHighlights = [];
+
+        for (const h of currentHighlights) {
+            // Trường hợp 1: Highlight nằm hoàn toàn ngoài vùng xóa -> Giữ nguyên
+            if (h.end <= startOffset || h.start >= endOffset) {
+                newHighlights.push(h);
+                continue;
+            }
+
+            // Trường hợp 2: Highlight nằm hoàn toàn trong vùng xóa -> Xóa (bỏ qua, không push)
+            if (h.start >= startOffset && h.end <= endOffset) {
+                continue;
+            }
+
+            // Trường hợp 3: Vùng xóa cắt ngang Highlight -> Chia nhỏ hoặc cắt ngắn
+            if (h.start < startOffset && h.end > endOffset) {
+                // Bị xóa đoạn giữa -> Tách làm 2 highlight mới
+                newHighlights.push({ ...h, id: Date.now().toString(36) + Math.random().toString(36).substring(2), end: startOffset });
+                newHighlights.push({ ...h, id: Date.now().toString(36) + Math.random().toString(36).substring(2), start: endOffset });
+            } else if (h.start < startOffset) {
+                // Bị xóa phần đuôi -> Cắt đuôi
+                newHighlights.push({ ...h, end: startOffset });
+            } else if (h.end > endOffset) {
+                // Bị xóa phần đầu -> Cắt đầu
+                newHighlights.push({ ...h, start: endOffset });
+            }
+        }
+
+        if (newHighlights.length === 0) {
+            delete this.highlights[segmentId];
+        } else {
+            this.highlights[segmentId] = newHighlights;
+        }
+
+        this._save();
+    }
+
     clearHighlights(segmentId) {
         if (this.highlights[segmentId]) {
             delete this.highlights[segmentId];
