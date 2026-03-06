@@ -10,8 +10,10 @@
     margin-bottom: 0.2rem;
     position: relative; /* Containing block cho play-btn::before và mask-toggle */
     border-radius: 0 8px 8px 0;
-
-    /* [REMOVED] contain: layout style; - Removed to prevent layer explosion crash on Safari iOS */
+    
+    /* [FIX iOS CRASH] Kích hoạt Lazy Rendering ở tầng CSS để giảm RAM/CPU */
+    content-visibility: auto;
+    contain-intrinsic-size: 0 80px; /* Ước lượng chiều cao trung bình của 1 segment */
 }
 
 /* [NEW] Note Segment Logic: Closer to previous segment */
@@ -41,14 +43,13 @@
     display: flex;
     align-items: flex-start;
     gap: 0.75rem;
-    position: static; /* [CHANGED] Để play-btn::before thoát ra ngoài neo vào .segment */
+    position: static;
     z-index: 1;
 }
 
 .segment-text {
     flex: 1;
     padding-right: 1rem;
-    /* [REMOVED] Transition removed to make masking/hinting instant */
 }
 
 /* --- LOGIC MASKING --- */
@@ -104,7 +105,6 @@ body.hint-mode-active .segment-text.masked .selection-item {
     color: var(--text-selection) !important;
 }
 
-/* Bảo vệ border của selection-group không bị inherit màu đậm trong Hint Mode */
 body.hint-mode-active .segment-text.masked .selection-group {
     border-color: var(--selection-border) !important;
 }
@@ -120,24 +120,20 @@ body.hint-mode-active .segment-text.masked .hint-tail {
 /* Play Buttons Alignment */
 .play-btn {
     margin-top: 6px;
-    position: static; /* [CHANGED] Để ::before neo vào .segment */
+    position: static;
 }
 
-/* [NEW] Full-height Left Hit Area for Play Button */
-/* Only apply to the main segment play button, not the sequence button */
 .play-btn:not(.play-sequence-btn)::before {
     content: '';
-    position: absolute; /* Neo vào .segment (relative) */
+    position: absolute; 
     top: 0;
     bottom: 0;
     left: 0;
-    width: 40px; /* Phủ kín lề trái và vùng nút play */
+    width: 40px;
     z-index: 5;
     cursor: pointer;
-    /* background-color: rgba(0, 255, 0, 0.1); */ /* Uncomment để debug vùng bấm */
 }
 
-/* Heading & End Segment Tweaks */
 .heading-segment .segment-content-wrapper,
 .end-segment .segment-content-wrapper {
     align-items: flex-start;
@@ -147,7 +143,6 @@ body.hint-mode-active .segment-text.masked .hint-tail {
 .rule-header .play-btn { margin-top: 0.35rem; }
 .end-segment .play-btn { margin-top: 0.5rem; }
 
-/* Reset margins */
 .segment-text h1:first-child,
 .segment-text h2:first-child,
 .segment-text h3:first-child,
@@ -204,7 +199,6 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     width: 3px;
 }
 
-/* Accent Highlight for Heading Segments */
 .heading-segment .segment-mask-toggle::after {
     background-color: var(--primary-color);
     opacity: 0.6;
@@ -234,7 +228,7 @@ body.hint-mode-active .segment-text.masked .hint-tail {
 .mem-dot {
     flex: 1;
     max-width: 45px;
-    height: 16px; /* Larger hit area */
+    height: 16px;
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -248,7 +242,7 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     top: 50%;
     left: 0;
     right: 0;
-    height: 4px; /* Slender visual line */
+    height: 4px;
     transform: translateY(-50%);
     background-color: var(--border-color);
     border-radius: 4px;
@@ -260,7 +254,6 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     opacity: 0.8;
 }
 
-/* Colors for active levels */
 .mem-dot.active[data-active-level="1"]::before { background-color: #ef4444; }
 .mem-dot.active[data-active-level="2"]::before { background-color: #f97316; }
 .mem-dot.active[data-active-level="3"]::before { background-color: #eab308; }
@@ -269,12 +262,12 @@ body.hint-mode-active .segment-text.masked .hint-tail {
 
 .mem-reset-dot {
     width: 24px;
-    height: 24px; /* Larger hit area */
+    height: 24px; 
     background-color: transparent;
     border: none;
     cursor: pointer;
     padding: 0;
-    margin-left: 12px; /* Extra space to separate from progress bars */
+    margin-left: 12px; 
     margin-right: 0;
     opacity: 0.5;
     position: relative;
@@ -288,9 +281,9 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 4px;
-    height: 4px; /* Delicate visual dot */
+    height: 4px; 
     border-radius: 50%;
-    background-color: var(--text-muted); /* Solid dot instead of border */
+    background-color: var(--text-muted); 
     border: none;
     transition: all 0.2s ease;
 }
@@ -304,7 +297,6 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     transform: translate(-50%, -50%) scale(1.2);
 }
 
-/* --- Hover State Indicator for Memorization --- */
 .mem-dot.hover-active[data-hover-level="1"]::before { background-color: #ef4444 !important; opacity: 1; }
 .mem-dot.hover-active[data-hover-level="2"]::before { background-color: #f97316 !important; opacity: 1; }
 .mem-dot.hover-active[data-hover-level="3"]::before { background-color: #eab308 !important; opacity: 1; }
@@ -319,7 +311,7 @@ body.hint-mode-active .segment-text.masked .hint-tail {
 .mem-dot::after, .mem-reset-dot::after {
     content: attr(data-level);
     position: absolute;
-    bottom: -22px; /* Changed from top to bottom */
+    bottom: -22px;
     left: 50%;
     transform: translateX(-50%) translateY(-5px) scale(0.8);
     font-size: 0.7rem;
@@ -352,10 +344,6 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     opacity: 1 !important;
 }
 
-/* --- OUTLINE MODE --- */
-/* [REMOVED] Logic moved to CollapseManager for unified behavior */
-
-
 /* --- COLLAPSE LOGIC --- */
 .hidden-by-collapse {
     display: none !important;
@@ -380,23 +368,21 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     padding-left: 1.5rem;
 }
 
-/* 1. Trường hợp chỉ có 1 item: không bullet, chỉ indent */
 .duyenco-list.single-item {
     list-style: none;
 }
 
-/* 2. Trường hợp nhiều items: đánh số subtle khoanh tròn */
 .duyenco-list.multi-item {
     list-style: none;
     counter-reset: duyenco-counter;
-    padding-left: 0.5rem; /* Giảm padding trái của list vì li::before sẽ chiếm chỗ */
+    padding-left: 0.5rem; 
 }
 
 .duyenco-list.multi-item li {
     counter-increment: duyenco-counter;
     display: flex;
     align-items: flex-start;
-    gap: 0.75rem; /* Khoảng cách rõ ràng giữa số và chữ */
+    gap: 0.75rem; 
 }
 
 .duyenco-list.multi-item li::before {
@@ -411,7 +397,7 @@ body.hint-mode-active .segment-text.masked .hint-tail {
     font-size: 0.7em;
     font-family: var(--font-ui);
     color: var(--text-muted);
-    margin-top: 0.25em; /* Căn chỉnh số theo dòng đầu tiên của text */
+    margin-top: 0.25em; 
     flex-shrink: 0;
     background-color: rgba(0, 0, 0, 0.02);
 }
@@ -425,7 +411,3 @@ body.hint-mode-active .segment-text.masked .hint-tail {
 .duyenco-list li:last-child {
     padding-bottom: 0;
 }
-
-/* Biểu tượng [ + ] đã bị loại bỏ theo yêu cầu */
-
-

@@ -82,17 +82,22 @@ export class AudioZipLoader {
                 return;
             }
 
-            const blob = await response.blob();
+            let blob = await response.blob();
+            
             // Lấy đối tượng JSZip từ global window
             const JSZip = window.JSZip;
-
             if (!JSZip) {
                 console.error("❌ Thư viện JSZip chưa được tải vào global.");
+                blob = null; // Giải phóng bộ nhớ
                 return;
             }
 
-            const jszip = new JSZip();
-            const zip = await jszip.loadAsync(blob);
+            let jszip = new JSZip();
+            let zip = await jszip.loadAsync(blob);
+            
+            // Ép dọn dẹp biến blob khổng lồ do JSZip đã parse xong
+            blob = null; 
+            
             let injectedCount = 0;
 
             // ==========================================
@@ -120,8 +125,18 @@ export class AudioZipLoader {
 
                     await cache.put(fileUrl, res);
                     injectedCount++;
+                    
+                    // [FIX iOS CRASH] Ép JS nhường Main Thread mỗi chu kỳ 
+                    // để hệ điều hành kích hoạt Garbage Collection, tránh tràn RAM
+                    if (injectedCount % 10 === 0) {
+                        await new Promise(resolve => setTimeout(resolve, 30));
+                    }
                 }
             }
+            
+            // Xóa sổ toàn bộ JSZip object khỏi RAM sau khi xong việc
+            zip = null;
+            jszip = null;
 
             console.log(`✅ Đã giải nén và lưu trực tiếp ${injectedCount} file âm thanh vào Cache để dùng Offline.`);
 
@@ -132,4 +147,3 @@ export class AudioZipLoader {
         }
     }
 }
-
