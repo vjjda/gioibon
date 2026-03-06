@@ -132,10 +132,25 @@ export default defineConfig(({ mode }) => {
                                 cacheableResponse: { statuses: [0, 200] }
                             }
                         },
-                        // 4. Cache Version Check
+                        // 4. Cache file Database (content.db) cho offline
+                        {
+                            urlPattern: ({ url }) => url.pathname.endsWith('content.db'),
+                            handler: 'StaleWhileRevalidate',
+                            options: {
+                                cacheName: 'database-cache',
+                                expiration: { maxEntries: 2, maxAgeSeconds: 60 * 60 * 24 * 365 },
+                                cacheableResponse: { statuses: [0, 200] }
+                            }
+                        },
+                        // 5. Cache Version Check
                         {
                             urlPattern: ({ url }) => url.pathname.endsWith('_version.json'),
-                            handler: 'NetworkOnly'
+                            handler: 'NetworkFirst',
+                            options: {
+                                cacheName: 'version-check-cache',
+                                networkTimeoutSeconds: 3,
+                                expiration: { maxEntries: 5, maxAgeSeconds: 60 * 60 * 24 }
+                            }
                         }
                     ]
                 }

@@ -97,12 +97,15 @@ export class LazyRenderer {
         this.isRendering = false;
 
         // Nếu vẫn còn trong vùng quan sát, tiếp tục render batch tiếp theo
+        // [FIX] Sử dụng setTimeout thay vì requestAnimationFrame để trình duyệt có thời gian dọn rác (GC) và layout
+        // Đồng thời ngăn chặn vòng lặp vô tận gây treo CPU trên iOS (Jetsam) khi các phần tử bị ẩn (ví dụ: Outline mode)
         if (this.renderedCount < this.items.length) {
-            // Kiểm tra xem sentinel còn trong viewport không (sau khi đã chèn batch mới)
             const rect = this.sentinel.getBoundingClientRect();
             if (rect.top < window.innerHeight + 1000) {
                  this.isRendering = true;
-                 requestAnimationFrame(() => this.renderNextBatch());
+                 setTimeout(() => {
+                     requestAnimationFrame(() => this.renderNextBatch());
+                 }, 50); // Nghỉ 50ms giữa các batch để tránh CPU 100%
             }
         } else {
             this._removeSentinel();

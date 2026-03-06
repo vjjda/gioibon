@@ -1,7 +1,7 @@
 // Path: web/modules/services/sqlite_helper.js
 import { Factory } from '@journeyapps/wa-sqlite/src/sqlite-api.js';
-import { IDBBatchAtomicVFS } from '@journeyapps/wa-sqlite/src/examples/IDBBatchAtomicVFS.js';
-import SQLiteESMFactory from '@journeyapps/wa-sqlite/dist/wa-sqlite-async.mjs';
+import { MemoryVFS } from '@journeyapps/wa-sqlite/src/examples/MemoryVFS.js';
+import SQLiteESMFactory from '@journeyapps/wa-sqlite/dist/wa-sqlite.mjs'; // <-- Changed to synchronous WASM
 import * as SQLiteConstants from '@journeyapps/wa-sqlite/src/sqlite-constants.js';
 import { BASE_URL } from 'core/config.js';
 
@@ -14,10 +14,10 @@ const getWasmUrl = () => {
     // Nếu đang chạy trong Vite (có import.meta.env)
     if (import.meta.env) {
         // Dùng URL đặc thù của Vite cho WASM
-        return new URL('@journeyapps/wa-sqlite/dist/wa-sqlite-async.wasm?url', import.meta.url).href;
+        return new URL('@journeyapps/wa-sqlite/dist/wa-sqlite.wasm?url', import.meta.url).href; // <-- Changed to synchronous WASM
     }
     // Nếu chạy Simple Server (Browser-sync)
-    return `${BASE_URL}node_modules/@journeyapps/wa-sqlite/dist/wa-sqlite-async.wasm`;
+    return `${BASE_URL}node_modules/@journeyapps/wa-sqlite/dist/wa-sqlite.wasm`; // <-- Changed to synchronous WASM
 };
 
 const wasmUrl = getWasmUrl();
@@ -33,21 +33,23 @@ export async function initSQLite(options) {
     });
 
     const sqlite = Factory(sqliteModule);
-    const idbVfs = await IDBBatchAtomicVFS.create(path, sqliteModule, vfsOptions);
-    sqlite.vfs_register(idbVfs, true); 
+    
+    // Sử dụng MemoryVFS để nạp toàn bộ DB vào RAM. Siêu tốc và không gây lỗi Asyncify (Jetsam iOS).
+    const memoryVfs = await MemoryVFS.create(path, sqliteModule);
+    sqlite.vfs_register(memoryVfs, true); 
 
     if (beforeOpen) {
-        await beforeOpen(sqlite, idbVfs, path);
+        await beforeOpen(sqlite, memoryVfs, path);
     }
 
     const db = await sqlite.open_v2(
         path,
         readonly ? SQLiteConstants.SQLITE_OPEN_READONLY : (SQLiteConstants.SQLITE_OPEN_READWRITE | SQLiteConstants.SQLITE_OPEN_CREATE),
-        idbVfs.name
+        memoryVfs.name
     );
 
     const core = {
-        db, path, pointer: db, sqlite, sqliteModule, vfs: idbVfs
+        db, path, pointer: db, sqlite, sqliteModule, vfs: memoryVfs
     };
 
     return {
@@ -59,18 +61,20 @@ export async function initSQLite(options) {
 
 export function withExistDB(file) {
     return {
-        beforeOpen: async (sqlite, idbVfs, dbPath) => {
+        beforeOpen: async (sqlite, memoryVfs, dbPath) => {
             const buffer = await file.arrayBuffer();
             const data = new Uint8Array(buffer);
             const fileId = 12345; 
             const pOutFlags = new DataView(new ArrayBuffer(4));
-            const openResult = await idbVfs.jOpen(dbPath, fileId, SQLiteConstants.SQLITE_OPEN_CREATE | SQLiteConstants.SQLITE_OPEN_READWRITE | SQLiteConstants.SQLITE_OPEN_MAIN_DB, pOutFlags);
+            
+            // Mở file ảo trên MemoryVFS
+            const openResult = await memoryVfs.jOpen(dbPath, fileId, SQLiteConstants.SQLITE_OPEN_CREATE | SQLiteConstants.SQLITE_OPEN_READWRITE | SQLiteConstants.SQLITE_OPEN_MAIN_DB, pOutFlags);
             
             if (openResult === SQLiteConstants.SQLITE_OK) {
-                await idbVfs.jTruncate(fileId, 0);
-                await idbVfs.jWrite(fileId, data, 0);
-                await idbVfs.jClose(fileId);
-                console.log("✅ Database imported successfully via VFS Direct Write.");
+                await memoryVfs.jTruncate(fileId, 0);
+                await memoryVfs.jWrite(fileId, data, 0);
+                await memoryVfs.jClose(fileId);
+                console.log("✅ Database imported successfully to RAM (MemoryVFS).");
             }
         }
     };
