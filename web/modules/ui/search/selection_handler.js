@@ -7,27 +7,24 @@ export class SelectionHandler {
         
         this.currentSelection = '';
         this.activeSegmentId = null;
+        this._selectionTimer = null;
 
         this._setupListeners();
+        console.log("✅ SelectionHandler initialized.");
     }
 
     _setupListeners() {
-        document.addEventListener('selectionchange', () => this._handleSelection());
+        // Safari (Mac/iOS) sometimes behaves better with mouseup/touchend than selectionchange alone
+        document.addEventListener('selectionchange', () => this._debouncedHandleSelection());
+        document.addEventListener('mouseup', () => this._debouncedHandleSelection());
+        document.addEventListener('touchend', () => this._debouncedHandleSelection());
+
         document.addEventListener('mousedown', (e) => {
             if (this.tooltip && !this.tooltip.contains(e.target) && !this.btnSearch.contains(e.target)) {
                 this._hideTooltip();
             }
         });
-        document.addEventListener('touchstart', (e) => {
-            if (this.tooltip && !this.tooltip.contains(e.target) && !this.btnSearch.contains(e.target)) {
-                setTimeout(() => {
-                    const selection = window.getSelection();
-                    if (!selection || selection.isCollapsed) {
-                        this._hideTooltip();
-                    }
-                }, 10);
-            }
-        });
+
         if (this.btnSearch) {
             this.btnSearch.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -37,9 +34,18 @@ export class SelectionHandler {
         }
     }
 
+    _debouncedHandleSelection() {
+        if (this._selectionTimer) {
+            clearTimeout(this._selectionTimer);
+        }
+        this._selectionTimer = setTimeout(() => {
+            this._handleSelection();
+        }, 50); // Small delay to let the selection stabilize
+    }
+
     _handleSelection() {
         const selection = window.getSelection();
-        if (!selection || selection.isCollapsed) {
+        if (!selection || selection.isCollapsed || selection.rangeCount === 0) {
             this._hideTooltip();
             return;
         }
@@ -47,7 +53,7 @@ export class SelectionHandler {
         const text = selection.toString().trim();
         if (text.length > 1 && text.length < 150) {
             this.currentSelection = text;
-            this._showTooltip(selection);
+            requestAnimationFrame(() => this._showTooltip(selection));
             this._highlightActiveSegment(selection);
         } else {
             this._hideTooltip();
@@ -55,14 +61,12 @@ export class SelectionHandler {
     }
 
     _showTooltip(selection) {
-        if (!this.tooltip) return;
+        if (!this.tooltip || selection.rangeCount === 0) return;
 
-        if (selection.rangeCount === 0) return;
         const range = selection.getRangeAt(0);
         let rect = range.getBoundingClientRect();
         
-        // Safari (Mac/iOS) fallback: sometimes getBoundingClientRect on range returns 0
-        // We fallback to getClientRects()[0] or the parent element's rect if needed.
+        // Safari fallback: range.getBoundingClientRect() can return a zero rect
         if (rect.width === 0 && rect.height === 0) {
             const rects = range.getClientRects();
             if (rects.length > 0) {
@@ -72,23 +76,20 @@ export class SelectionHandler {
             }
         }
 
-        // Phân biệt Android và phần còn lại (iOS, Desktop)
-        // iOS bao gồm iPhone, iPad, iPod và cả Safari trên iPadOS (nhận diện như Mac)
-        const isAndroid = /Android/i.test(navigator.userAgent);
+        // Use window.scrollY/scrollX if body/html is scrolling,
+        // but since we scroll inside #content, window.scrollY is usually 0.
+        // rect is already relative to the viewport.
+        const top = rect.top + window.scrollY;
+        const left = rect.left + window.scrollX + (rect.width / 2);
 
+        this.tooltip.style.top = `${top}px`;
+        this.tooltip.style.left = `${left}px`;
+
+        // Phân biệt Android và phần còn lại (iOS, Desktop)
+        const isAndroid = /Android/i.test(navigator.userAgent);
         if (isAndroid) {
-            // Android: Menu native thường ở trên, nên ta đặt popup custom ở dưới
-            const top = rect.bottom + window.scrollY;
-            const left = rect.left + window.scrollX + (rect.width / 2);
-            this.tooltip.style.top = `${top}px`;
-            this.tooltip.style.left = `${left}px`;
             this.tooltip.classList.add('at-bottom');
         } else {
-            // iOS & Desktop: Đặt popup custom ở trên để tránh đè vào menu native
-            const top = rect.top + window.scrollY;
-            const left = rect.left + window.scrollX + (rect.width / 2);
-            this.tooltip.style.top = `${top}px`;
-            this.tooltip.style.left = `${left}px`;
             this.tooltip.classList.remove('at-bottom');
         }
         
@@ -102,6 +103,8 @@ export class SelectionHandler {
     }
 
     _highlightActiveSegment(selection) {
+        if (selection.rangeCount === 0) return;
+        
         let node = selection.anchorNode;
         let segmentEl = null;
 
