@@ -190,43 +190,124 @@ export class SearchRenderer {
 
     _highlightDOMElement(element, keyword) {
         if (!keyword || !element) return;
-        
-        // Escape keyword tương tự như _highlightKeyword để đồng bộ logic tìm kiếm
-        const escapedKeyword = this._escapeHtml(keyword);
-        const regexStr = this._escapeRegExp(escapedKeyword).replace(/ /g, '[ \\u00A0]');
+
+        // 1. Lấy tất cả các text node trong element
+        const textNodes = [];
+        const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+        let node;
+        while (node = walker.nextNode()) {
+            textNodes.push(node);
+        }
+
+        // 2. Xây dựng fullText và map vị trí từ fullText về text node
+        let fullText = '';
+        const nodeMap = [];
+        for (const node of textNodes) {
+            nodeMap.push({
+                node: node,
+                start: fullText.length,
+                length: node.nodeValue.length
+            });
+            fullText += node.nodeValue;
+        }
+
+        // 3. Tìm tất cả các vị trí match trong fullText
+        // Xử lý keyword: chấp nhận cả space và non-breaking space cho mọi khoảng trắng
+        // Lưu ý: escapedKeywordReg xử lý trên textContent nên không cần escape HTML entities
+        const escapedKeyword = this._escapeRegExp(keyword);
+        // Thay thế cả space thường và nbsp trong keyword pattern thành class ký tự [ \u00A0]
+        const regexStr = escapedKeyword.replace(/[ \u00A0]/g, '[ \\u00A0]');
         const regex = new RegExp(`(${regexStr})`, 'gi');
-        
-        const walkAndHighlight = (node) => {
-            if (node.nodeType === 3) { // Node.TEXT_NODE
-                const text = node.nodeValue;
-                // Kiểm tra có văn bản không rỗng
-                if (text && text.trim() !== '') {
-                    const escapedText = this._escapeHtml(text);
-                    if (regex.test(escapedText)) {
-                        regex.lastIndex = 0; // Reset regex
-                        
-                        // Tạo một container ảo để render HTML
-                        const tempDiv = document.createElement('span');
-                        // Thực hiện replace trên text ĐÃ ESCAPE, giống như _highlightKeyword
-                        tempDiv.innerHTML = escapedText.replace(regex, '<mark class="search-highlight">$1</mark>');
-                        
-                        // Chèn các node mới vào trước text node cũ
-                        while (tempDiv.firstChild) {
-                            node.parentNode.insertBefore(tempDiv.firstChild, node);
-                        }
-                        // Xóa text node cũ
-                        node.parentNode.removeChild(node);
+
+        const matches = [];
+        let match;
+        while ((match = regex.exec(fullText)) !== null) {
+            matches.push({
+                start: match.index,
+                length: match[0].length
+            });
+        }
+
+        if (matches.length === 0) return;
+
+        // 4. Gom nhóm các highlight task theo từng node
+        // Một match có thể trải dài qua nhiều node, ta chia nhỏ nó ra
+        const tasksByNode = new Map(); // Map<Node, Array<{start, end}>>
+
+        for (const m of matches) {
+            const matchStart = m.start;
+            const matchEnd = m.start + m.length;
+
+            for (const item of nodeMap) {
+                const nodeStart = item.start;
+                const nodeEnd = item.start + item.length;
+
+                // Tính giao điểm giữa match và node
+                const intersectStart = Math.max(matchStart, nodeStart);
+                const intersectEnd = Math.min(matchEnd, nodeEnd);
+
+                if (intersectStart < intersectEnd) {
+                    // Chuyển về tọa độ cục bộ của node
+                    const localStart = intersectStart - nodeStart;
+                    const localEnd = intersectEnd - nodeStart;
+
+                    if (!tasksByNode.has(item.node)) {
+                        tasksByNode.set(item.node, []);
                     }
-                }
-            } else if (node.nodeType === 1) { // Node.ELEMENT_NODE
-                // Không đi vào script, style và không đi vào các thẻ <mark> vừa tạo để tránh lặp vô hạn
-                if (!/(script|style|mark)/i.test(node.tagName) && !node.classList.contains('search-highlight')) {
-                    Array.from(node.childNodes).forEach(child => walkAndHighlight(child));
+                    tasksByNode.get(item.node).push({ start: localStart, end: localEnd });
                 }
             }
-        };
+        }
 
-        walkAndHighlight(element);
+        // 5. Thực hiện highlight trên từng node
+        // Sử dụng Fragment để thay thế text node cũ
+        for (const [node, ranges] of tasksByNode.entries()) {
+            // Sắp xếp range tăng dần để cắt chuỗi từ trái qua phải
+            ranges.sort((a, b) => a.start - b.start);
+
+            // Gộp các range chồng lấn hoặc liền kề (nếu có)
+            const mergedRanges = [];
+            if (ranges.length > 0) {
+                let current = ranges[0];
+                for (let i = 1; i < ranges.length; i++) {
+                    if (current.end >= ranges[i].start) {
+                        current.end = Math.max(current.end, ranges[i].end);
+                    } else {
+                        mergedRanges.push(current);
+                        current = ranges[i];
+                    }
+                }
+                mergedRanges.push(current);
+            }
+
+            // Tạo Fragment thay thế
+            const fragment = document.createDocumentFragment();
+            const textValue = node.nodeValue;
+            let lastIndex = 0;
+
+            for (const range of mergedRanges) {
+                // Phần text trước match
+                if (range.start > lastIndex) {
+                    fragment.appendChild(document.createTextNode(textValue.substring(lastIndex, range.start)));
+                }
+
+                // Phần match -> bọc trong mark
+                const mark = document.createElement('mark');
+                mark.className = 'search-highlight';
+                mark.textContent = textValue.substring(range.start, range.end);
+                fragment.appendChild(mark);
+
+                lastIndex = range.end;
+            }
+
+            // Phần text còn lại sau match cuối cùng
+            if (lastIndex < textValue.length) {
+                fragment.appendChild(document.createTextNode(textValue.substring(lastIndex)));
+            }
+
+            // Thay thế text node bằng fragment
+            node.parentNode.replaceChild(fragment, node);
+        }
     }
 
     _escapeHtml(unsafe) {
