@@ -157,7 +157,7 @@
 .bottom-sheet-content {
     flex: 1;
     overflow-y: auto;
-    padding: 1rem 1.5rem 5rem 1.5rem; /* Tăng padding bottom để có khoảng trống cuộn thừa */
+    padding: 1rem 1.5rem 25vh 1.5rem; /* Tăng padding bottom cực đại (50% chiều cao viewport) */
     -webkit-overflow-scrolling: touch;
 }
 
