@@ -99,19 +99,28 @@
 }
 
 .bottom-sheet-drag-handle {
+    width: 100%;
+    height: 24px; /* Tăng vùng bấm lên 24px để dễ kéo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: grab;
+    touch-action: none; /* Quan trọng: Ngăn chặn scroll mặc định khi kéo */
+}
+
+.bottom-sheet-drag-handle::after {
+    content: '';
     width: 40px;
     height: 4px;
     background-color: var(--border-color);
     border-radius: 2px;
-    margin: 10px auto;
-    cursor: grab;
 }
 
 .bottom-sheet-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start; /* Canh lề trên để icon close không bị nhảy */
-    padding: 1rem 1.5rem;
+    align-items: flex-start;
+    padding: 0.5rem 1.5rem 0.75rem 1.5rem; /* Giảm padding trên dưới để gọn hơn */
     border-bottom: 1px solid var(--border-light);
 }
 
@@ -239,6 +248,19 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+.search-result-expanded-content {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--border-light);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.search-result-expanded-content.hidden {
+    display: none;
 }
 
 /* --- Search Highlights --- */

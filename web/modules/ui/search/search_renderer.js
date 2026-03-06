@@ -98,7 +98,7 @@ export class SearchRenderer {
                     </div>
                     ${ruleText}
                     <div class="search-result-text">${combinedSnippets}</div>
-                    <div class="search-result-expanded-content hidden" style="margin-top: 1rem; border-top: 1px solid var(--border-light); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;"></div>
+                    <div class="search-result-expanded-content hidden"></div>
                 </div>
             `;
         });
