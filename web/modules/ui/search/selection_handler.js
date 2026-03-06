@@ -9,7 +9,7 @@ export class SelectionHandler {
         
         this.currentSelection = '';
         this.activeSegmentId = null;
-        this.activeHighlightId = null; // [NEW] Dùng để theo dõi nếu người dùng click vào highlight có sẵn
+        this.activeHighlightId = null; // Dùng để theo dõi nếu người dùng click vào highlight có sẵn
         this._selectionTimer = null;
         this._isInteracting = false; 
 
@@ -40,10 +40,12 @@ export class SelectionHandler {
                 // Đang giữ chuột/tay vuốt chọn văn bản -> ẩn tooltip
                 this._hideTooltip();
             } else {
-                // Người dùng đang kéo các "cục handle" (Native Selection) của Android/iOS
-                // Hoặc đang dùng phím Shift + Mũi tên.
-                // Ẩn tooltip và đợi khi nào dừng kéo (khoảng 400ms) thì mới hiện.
-                this._hideTooltip();
+                // [FIXED] Không ẩn tooltip ngay lập tức nếu đang thao tác click trên Highlight có sẵn
+                if (!this.activeHighlightId) {
+                    this._hideTooltip();
+                }
+                
+                // Vẫn gọi hàm kiểm tra trễ để xem người dùng có đang bôi đen text mới không
                 this._debouncedShowTooltip(400); 
             }
         });
@@ -89,7 +91,7 @@ export class SelectionHandler {
         }
     }
 
-    // [UPDATED] Hàm xử lý click highlight KHÔNG bôi đen native
+    // Hàm xử lý click highlight KHÔNG bôi đen native
     _handleHighlightClick(segmentEl, highlightId) {
         // Lấy tất cả các thẻ có cùng chung mã bôi đen (các chunk liên tiếp)
         const spans = Array.from(segmentEl.querySelectorAll(`.user-highlight[data-highlight-id="${highlightId}"]`));
@@ -101,7 +103,7 @@ export class SelectionHandler {
         // Nối text từ các mảnh lại để phục vụ tìm kiếm
         this.currentSelection = spans.map(s => s.textContent).join('');
 
-        // TẠO RANGE ẢO CHỈ ĐỂ LẤY TỌA ĐỘ
+        // TẠO RANGE ẢO CHỈ ĐỂ LẤY TỌA ĐỘ (Giữ nguyên vị trí hiển thị tooltip)
         const range = document.createRange();
         range.setStartBefore(spans[0]);
         range.setEndAfter(spans[spans.length - 1]);
@@ -217,7 +219,7 @@ export class SelectionHandler {
         }
     }
 
-    // [UPDATED] Tách logic hiển thị theo tọa độ Rect ra hàm riêng
+    // Tách logic hiển thị theo tọa độ Rect ra hàm riêng
     _showTooltipAtRect(rect) {
         if (!this.tooltip || !rect) return;
 
@@ -255,7 +257,7 @@ export class SelectionHandler {
         if (this.tooltip) {
             this.tooltip.classList.add('hidden');
         }
-        this.activeHighlightId = null; // Reset
+        this.activeHighlightId = null; // Reset lại mỗi khi ẩn
     }
 
     _highlightActiveSegment(selection) {
