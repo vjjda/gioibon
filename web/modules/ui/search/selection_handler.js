@@ -8,22 +8,45 @@ export class SelectionHandler {
         this.currentSelection = '';
         this.activeSegmentId = null;
         this._selectionTimer = null;
+        this._isInteracting = false; // Cờ theo dõi người dùng đang nhấn giữ
 
         this._setupListeners();
-        console.log("✅ SelectionHandler initialized.");
+        console.log("✅ SelectionHandler initialized with Smart Interaction logic.");
     }
 
     _setupListeners() {
-        // Safari (Mac/iOS) sometimes behaves better with mouseup/touchend than selectionchange alone
-        document.addEventListener('selectionchange', () => this._debouncedHandleSelection());
-        document.addEventListener('mouseup', () => this._debouncedHandleSelection());
-        document.addEventListener('touchend', () => this._debouncedHandleSelection());
+        // Sự kiện thay đổi vùng chọn (bắn liên tục khi kéo)
+        document.addEventListener('selectionchange', () => {
+            this._handleSelectionUpdate();
+        });
+
+        // Theo dõi bắt đầu tương tác
+        const startInteracting = () => {
+            this._isInteracting = true;
+        };
+
+        // Kết thúc tương tác và hiển thị Tooltip
+        const endInteracting = () => {
+            this._isInteracting = false;
+            // Đợi một chút để vùng chọn ổn định rồi mới hiện Tooltip
+            setTimeout(() => this._handleSelectionUpdate(true), 10);
+        };
 
         document.addEventListener('mousedown', (e) => {
             if (this.tooltip && !this.tooltip.contains(e.target) && !this.btnSearch.contains(e.target)) {
                 this._hideTooltip();
             }
+            startInteracting();
         });
+        document.addEventListener('mouseup', endInteracting);
+
+        document.addEventListener('touchstart', (e) => {
+            if (this.tooltip && !this.tooltip.contains(e.target) && !this.btnSearch.contains(e.target)) {
+                this._hideTooltip();
+            }
+            startInteracting();
+        }, { passive: true });
+        document.addEventListener('touchend', endInteracting);
 
         if (this.btnSearch) {
             this.btnSearch.addEventListener('click', (e) => {
@@ -34,27 +57,28 @@ export class SelectionHandler {
         }
     }
 
-    _debouncedHandleSelection() {
-        if (this._selectionTimer) {
-            clearTimeout(this._selectionTimer);
-        }
-        this._selectionTimer = setTimeout(() => {
-            this._handleSelection();
-        }, 50); // Small delay to let the selection stabilize
-    }
-
-    _handleSelection() {
+    _handleSelectionUpdate(forceShow = false) {
         const selection = window.getSelection();
+        
+        // 1. Nếu vùng chọn trống -> Ẩn ngay lập tức
         if (!selection || selection.isCollapsed || selection.rangeCount === 0) {
             this._hideTooltip();
             return;
         }
 
         const text = selection.toString().trim();
+        
+        // 2. Kiểm tra tính hợp lệ của text
         if (text.length > 1 && text.length < 150) {
             this.currentSelection = text;
-            requestAnimationFrame(() => this._showTooltip(selection));
-            this._highlightActiveSegment(selection);
+            
+            // 3. LOGIC THÔNG MINH: 
+            // - Chỉ hiện Tooltip nếu người dùng ĐÃ buông tay (forceShow = true)
+            // - HOẶC nếu người dùng chọn bằng bàn phím (selectionchange bắn nhưng không có mousedown/touchstart)
+            if (forceShow || !this._isInteracting) {
+                requestAnimationFrame(() => this._showTooltip(selection));
+                this._highlightActiveSegment(selection);
+            }
         } else {
             this._hideTooltip();
         }
