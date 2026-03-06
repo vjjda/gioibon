@@ -66,33 +66,49 @@ export class SelectionHandler {
         const range = selection.getRangeAt(0);
         let rect = range.getBoundingClientRect();
         
-        // Safari fallback: range.getBoundingClientRect() can return a zero rect
         if (rect.width === 0 && rect.height === 0) {
             const rects = range.getClientRects();
             if (rects.length > 0) {
                 rect = rects[0];
             } else {
-                return; // Cannot determine position
+                return;
             }
         }
 
-        // Use window.scrollY/scrollX if body/html is scrolling,
-        // but since we scroll inside #content, window.scrollY is usually 0.
-        // rect is already relative to the viewport.
+        const viewportHeight = window.innerHeight;
+        const tooltipHeight = 50; // Estimated height including margin
+        const safeZoneTop = 60;   // Space for browser bars
+        
+        // Logic định vị thông minh:
+        // 1. Mặc định hiện ở trên (giống iOS native menu).
+        // 2. Nếu khoảng cách từ đỉnh vùng chọn tới mép trên màn hình < 60px (bị che bởi thanh địa chỉ/header)
+        //    -> Đẩy xuống dưới.
+        // 3. Nếu đang ở Android, ưu tiên hiện ở dưới vì Menu native Android thường ở trên cùng.
+        
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        let showAtBottom = isAndroid;
+
+        if (!isAndroid) {
+            // Trên iOS/Desktop, nếu không đủ chỗ ở trên thì hiện ở dưới
+            if (rect.top < (tooltipHeight + safeZoneTop)) {
+                showAtBottom = true;
+            }
+        }
+
+        // Tính toán tọa độ tuyệt đối so với tài liệu
         const top = rect.top + window.scrollY;
+        const bottom = rect.bottom + window.scrollY;
         const left = rect.left + window.scrollX + (rect.width / 2);
 
-        this.tooltip.style.top = `${top}px`;
-        this.tooltip.style.left = `${left}px`;
-
-        // Phân biệt Android và phần còn lại (iOS, Desktop)
-        const isAndroid = /Android/i.test(navigator.userAgent);
-        if (isAndroid) {
+        if (showAtBottom) {
+            this.tooltip.style.top = `${bottom}px`;
             this.tooltip.classList.add('at-bottom');
         } else {
+            this.tooltip.style.top = `${top}px`;
             this.tooltip.classList.remove('at-bottom');
         }
         
+        this.tooltip.style.left = `${left}px`;
         this.tooltip.classList.remove('hidden');
     }
 
