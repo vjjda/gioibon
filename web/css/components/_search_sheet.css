@@ -195,7 +195,7 @@ mark.search-highlight,
 .search-highlight {
     background-color: #ffeb3b !important; /* Nền vàng tươi rực rỡ */
     color: #000 !important; /* Chữ đen tương phản cao */
-    font-weight: 700 !important;
+    /* font-weight: 400 !important; */
     border-radius: 3px !important;
     padding: 2px 4px !important;
     box-shadow: 0 1px 3px rgba(0,0,0,0.15) !important;

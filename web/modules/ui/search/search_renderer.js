@@ -181,7 +181,9 @@ export class SearchRenderer {
         if (!text || !keyword) return this._escapeHtml(text || '');
         const escapedText = this._escapeHtml(text);
         const escapedKeyword = this._escapeHtml(keyword);
-        const highlightRegex = new RegExp(`(${this._escapeRegExp(escapedKeyword)})`, 'gi');
+        // Cho phép tìm kiếm flexible với space (chấp nhận cả space và &nbsp;)
+        const regexStr = this._escapeRegExp(escapedKeyword).replace(/ /g, '[ \\u00A0]');
+        const highlightRegex = new RegExp(`(${regexStr})`, 'gi');
         // Ở snippet vẫn ưu tiên dùng <mark> để đồng bộ
         return escapedText.replace(highlightRegex, '<mark class="search-highlight">$1</mark>');
     }
@@ -189,26 +191,32 @@ export class SearchRenderer {
     _highlightDOMElement(element, keyword) {
         if (!keyword || !element) return;
         
-        const regex = new RegExp(`(${this._escapeRegExp(keyword)})`, 'gi');
+        // Escape keyword tương tự như _highlightKeyword để đồng bộ logic tìm kiếm
+        const escapedKeyword = this._escapeHtml(keyword);
+        const regexStr = this._escapeRegExp(escapedKeyword).replace(/ /g, '[ \\u00A0]');
+        const regex = new RegExp(`(${regexStr})`, 'gi');
         
         const walkAndHighlight = (node) => {
             if (node.nodeType === 3) { // Node.TEXT_NODE
                 const text = node.nodeValue;
-                // Kiểm tra có văn bản không rỗng mới thực hiện replace
-                if (text && text.trim() !== '' && regex.test(text)) {
-                    regex.lastIndex = 0; // Reset regex
-                    
-                    // Tạo một container ảo để render HTML
-                    const tempDiv = document.createElement('div');
-                    // Thay thế thẻ <span> bằng thẻ <mark>
-                    tempDiv.innerHTML = text.replace(regex, '<mark class="search-highlight">$1</mark>');
-                    
-                    // Chèn các node mới vào trước text node cũ
-                    while (tempDiv.firstChild) {
-                        node.parentNode.insertBefore(tempDiv.firstChild, node);
+                // Kiểm tra có văn bản không rỗng
+                if (text && text.trim() !== '') {
+                    const escapedText = this._escapeHtml(text);
+                    if (regex.test(escapedText)) {
+                        regex.lastIndex = 0; // Reset regex
+                        
+                        // Tạo một container ảo để render HTML
+                        const tempDiv = document.createElement('span');
+                        // Thực hiện replace trên text ĐÃ ESCAPE, giống như _highlightKeyword
+                        tempDiv.innerHTML = escapedText.replace(regex, '<mark class="search-highlight">$1</mark>');
+                        
+                        // Chèn các node mới vào trước text node cũ
+                        while (tempDiv.firstChild) {
+                            node.parentNode.insertBefore(tempDiv.firstChild, node);
+                        }
+                        // Xóa text node cũ
+                        node.parentNode.removeChild(node);
                     }
-                    // Xóa text node cũ
-                    node.parentNode.removeChild(node);
                 }
             } else if (node.nodeType === 1) { // Node.ELEMENT_NODE
                 // Không đi vào script, style và không đi vào các thẻ <mark> vừa tạo để tránh lặp vô hạn
