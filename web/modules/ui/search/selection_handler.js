@@ -109,14 +109,22 @@ export class SelectionHandler {
         const viewportHeight = window.innerHeight;
         const middleLine = viewportHeight / 2;
         
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        
         // Mặc định Tooltip sẽ hiện ở TRÊN vùng chọn.
         let showAtBottom = false; 
 
-        // Nếu vùng chọn nằm ở nửa DƯỚI của màn hình (> 50% vh)
-        // iOS native menu sẽ mặc định nhảy lên TRÊN vùng chọn.
-        // Để không bị đè, Tooltip của chúng ta phải nhảy xuống DƯỚI.
-        if (rect.top > middleLine) {
+        if (isAndroid) {
+            // Trên Android: Menu Native LUÔN LUÔN hiện ở trên.
+            // Do đó, Tooltip của chúng ta phải LUÔN LUÔN hiện ở dưới để né.
             showAtBottom = true;
+        } else {
+            // Trên iOS/Desktop: Nếu vùng chọn nằm ở nửa DƯỚI của màn hình (> 50% vh)
+            // iOS native menu sẽ mặc định nhảy lên TRÊN vùng chọn.
+            // Để không bị đè, Tooltip của chúng ta phải nhảy xuống DƯỚI.
+            if (rect.top > middleLine) {
+                showAtBottom = true;
+            }
         }
 
         // Tọa độ tuyệt đối so với body (body không cuộn, nên scrollY thường là 0)
