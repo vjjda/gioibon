@@ -13,13 +13,11 @@ export class SelectionHandler {
 
     _setupListeners() {
         document.addEventListener('selectionchange', () => this._handleSelection());
-
         document.addEventListener('mousedown', (e) => {
             if (this.tooltip && !this.tooltip.contains(e.target) && !this.btnSearch.contains(e.target)) {
                 this._hideTooltip();
             }
         });
-
         document.addEventListener('touchstart', (e) => {
             if (this.tooltip && !this.tooltip.contains(e.target) && !this.btnSearch.contains(e.target)) {
                 setTimeout(() => {
@@ -30,7 +28,6 @@ export class SelectionHandler {
                 }, 10);
             }
         });
-
         if (this.btnSearch) {
             this.btnSearch.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -64,15 +61,19 @@ export class SelectionHandler {
         const rect = range.getBoundingClientRect();
         if (rect.width === 0 && rect.height === 0) return;
 
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        // Phân biệt Android và phần còn lại (iOS, Desktop)
+        // iOS bao gồm iPhone, iPad, iPod và cả Safari trên iPadOS (nhận diện như Mac)
+        const isAndroid = /Android/i.test(navigator.userAgent);
 
-        if (isMobile) {
+        if (isAndroid) {
+            // Android: Menu native thường ở trên, nên ta đặt popup custom ở dưới
             const top = rect.bottom + window.scrollY;
             const left = rect.left + window.scrollX + (rect.width / 2);
             this.tooltip.style.top = `${top}px`;
             this.tooltip.style.left = `${left}px`;
             this.tooltip.classList.add('at-bottom');
         } else {
+            // iOS & Desktop: Đặt popup custom ở trên để tránh đè vào menu native
             const top = rect.top + window.scrollY;
             const left = rect.left + window.scrollX + (rect.width / 2);
             this.tooltip.style.top = `${top}px`;
