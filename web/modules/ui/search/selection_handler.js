@@ -105,14 +105,21 @@ export class SelectionHandler {
             }
         }
 
-        // --- CHIẾN THUẬT ĐỊNH VỊ (Theo yêu cầu: Mặc định ở TRÊN, lật khi sát mép) ---
+        // --- CHIẾN THUẬT ĐỊNH VỊ ---
         const viewportHeight = window.innerHeight;
         
         // Mặc định Tooltip sẽ hiện ở TRÊN vùng chọn.
         let showAtBottom = false; 
 
-        // Nếu vùng chọn nằm quá sát mép trên màn hình (< 80px), lật Tooltip xuống DƯỚI
+        // 1. Nếu vùng chọn nằm quá sát mép trên màn hình (< 80px), lật Tooltip xuống DƯỚI
         if (rect.top < 80) {
+            showAtBottom = true;
+        }
+        
+        // 2. Nếu vùng chọn nằm sát mép dưới màn hình, Menu của iOS sẽ tự động nhảy lên TRÊN.
+        // Để tránh đè nhau, ta ép Tooltip của mình lật xuống DƯỚI (iOS sẽ cho phép kéo cuộn thêm một chút).
+        const spaceAtBottom = viewportHeight - rect.bottom;
+        if (spaceAtBottom < 120) {
             showAtBottom = true;
         }
 
