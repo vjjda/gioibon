@@ -1,4 +1,4 @@
-// Path: web/libs/chunk-XTDXRGBP.js
+// Path: web/public/libs/wa-sqlite/chunk-XTDXRGBP.js
 // wa-sqlite-fts5/wa-sqlite.mjs
 var Module = /* @__PURE__ */ (() => {
   return (async function(moduleArg = {}) {
