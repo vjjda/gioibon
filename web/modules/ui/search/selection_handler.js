@@ -105,14 +105,19 @@ export class SelectionHandler {
             }
         }
 
-        // --- CHIẾN THUẬT NỬA MÀN HÌNH (iOS/Android Optimization) ---
+        // --- CHIẾN THUẬT NÉ MENU NATIVE ---
         const viewportHeight = window.innerHeight;
-        const middleLine = viewportHeight / 2;
         
-        // Mặc định cho Android là hiện ở dưới. 
-        // Cho iOS/Desktop: Nếu vùng chọn nằm ở nửa trên (rect.top < middleLine) -> Hiện ở DƯỚI.
-        const isAndroid = /Android/i.test(navigator.userAgent);
-        let showAtBottom = isAndroid || (rect.top < middleLine);
+        // Mặc định Tooltip sẽ hiện ở DƯỚI vùng chọn.
+        // Lý do: Menu Native của iOS và Android (Copy, Look Up...) hầu hết luôn ưu tiên hiện ở TRÊN.
+        // Việc ta đặt ở DƯỚI sẽ giúp né được 90% trường hợp đè nhau.
+        let showAtBottom = true; 
+
+        // Chỉ lật lên TRÊN khi vùng chọn nằm quá sát đáy màn hình (khoảng trống dưới < 80px)
+        const spaceAtBottom = viewportHeight - rect.bottom;
+        if (spaceAtBottom < 80) {
+            showAtBottom = false;
+        }
 
         // Tọa độ tuyệt đối so với body (body không cuộn, nên scrollY thường là 0)
         const top = rect.top + window.scrollY;
