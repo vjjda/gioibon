@@ -7,7 +7,6 @@ import { LazyRenderer } from 'ui/content/lazy_renderer.js';
 import { PlaybackUIUpdater } from 'ui/content/playback_ui.js';
 import { SequenceBuilder } from 'ui/content/sequence_builder.js';
 import { CollapseManager } from 'ui/content/collapse_manager.js';
-
 import { CustomDialog } from 'ui/custom_dialog.js';
 
 export class ContentRenderer {
@@ -81,7 +80,6 @@ export class ContentRenderer {
 
     playSequenceFromIndex(startIndex) {
         if (!this.playSequenceCallback) return;
-        
         const result = SequenceBuilder.build(this.items, startIndex);
         if (result && result.sequence.length > 0) {
             this.playSequenceCallback(result.sequence, result.startId);
@@ -93,15 +91,15 @@ export class ContentRenderer {
     // --- Public API Facades ---
 
     refreshSegment(id) {
-        const item = this.items.find(i => i.id == id);
+        const numId = Number(id); // Ép kiểu về Number để tương thích với Map key
+        const item = this.items.find(i => i.id === numId);
         if (!item) return;
 
-        const oldEl = this.elementCache.get(id);
+        const oldEl = this.elementCache.get(numId);
         if (!oldEl || !oldEl.parentNode) return;
-
+        
         // Note: we need the original index, but it's only stored in data-index
         const index = parseInt(oldEl.dataset.index, 10);
-        
         const newEl = this.segmentFactory.create(item, index);
         
         // Restore collapse state if any
@@ -109,8 +107,13 @@ export class ContentRenderer {
             this.collapseManager.applyToElement(newEl, item);
         }
 
+        // Kế thừa các state class từ element cũ để tránh bị chớp hoặc mất trạng thái
+        if (oldEl.classList.contains('active')) newEl.classList.add('active');
+        if (oldEl.classList.contains('is-collapsed')) newEl.classList.add('is-collapsed');
+        if (oldEl.classList.contains('hidden-by-collapse')) newEl.classList.add('hidden-by-collapse');
+
         oldEl.parentNode.replaceChild(newEl, oldEl);
-        this.elementCache.set(id, newEl);
+        this.elementCache.set(numId, newEl);
     }
 
     scrollToSegment(id) {
@@ -131,7 +134,6 @@ export class ContentRenderer {
 
     getFirstVisibleSegmentId() {
         if (!this.container) return null;
-        
         const segments = this.container.querySelectorAll('.segment');
         for (const segment of segments) {
             const rect = segment.getBoundingClientRect();
@@ -165,4 +167,3 @@ export class ContentRenderer {
         });
     }
 }
-
