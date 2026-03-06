@@ -105,24 +105,23 @@ export class SelectionHandler {
             }
         }
 
-        // --- CHIẾN THUẬT ĐỊNH VỊ CHÍNH XÁC ---
+        // --- CHIẾN THUẬT ĐỊNH VỊ THEO YÊU CẦU CỦA USER ---
         const isAndroid = /Android/i.test(navigator.userAgent);
         // Nhận diện iOS (iPhone, iPad, iPod) kể cả iPadOS dùng MacIntel
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         
-        // MẶC ĐỊNH: Luôn hiện Tooltip ở DƯỚI vùng chọn.
-        // - Desktop: Không có menu hệ thống -> Ở dưới là lý tưởng, không che chữ đang đọc.
-        // - Android: Menu hệ thống luôn ở TRÊN đỉnh màn hình -> Tooltip ở DƯỚI là an toàn tuyệt đối.
-        // - iOS: Menu hệ thống mặc định ở TRÊN vùng chọn -> Tooltip ở DƯỚI là né được hoàn toàn.
+        const viewportHeight = window.innerHeight;
+
+        // MẶC ĐỊNH CHUNG: Hiện ở DƯỚI (Dành cho Desktop và Android)
         let showAtBottom = true; 
 
         if (isIOS) {
-            // Hành vi đặc biệt của iOS: 
-            // Khi vùng chọn nằm quá sát mép trên của màn hình, Menu hệ thống không còn chỗ ở trên
-            // nên nó sẽ bắt buộc "lật" xuống DƯỚI vùng chọn.
-            // Để tránh đè nhau trong trường hợp này, Tooltip của chúng ta phải "lật" ngược lên TRÊN.
-            if (rect.top < 120) {
-                showAtBottom = false;
+            // RIÊNG iOS: Mặc định Tooltip hiện ở TRÊN.
+            showAtBottom = false;
+
+            // Nếu vùng chọn nằm trong khoảng 40% dưới cùng của màn hình, đảo (reverse) lại xuống DƯỚI.
+            if (rect.top > viewportHeight * 0.6) {
+                showAtBottom = true;
             }
         }
 
