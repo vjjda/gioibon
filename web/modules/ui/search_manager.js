@@ -1,5 +1,4 @@
 // Path: web/modules/ui/search_manager.js
-
 export class SearchManager {
     constructor(contentLoader, contentRenderer) {
         this.contentLoader = contentLoader;
@@ -8,12 +7,10 @@ export class SearchManager {
         // UI Elements
         this.tooltip = document.getElementById('selection-tooltip');
         this.btnSearch = document.getElementById('btn-search-selection');
-        
         this.bottomSheet = document.getElementById('search-bottom-sheet');
         this.sheetOverlay = document.getElementById('search-sheet-overlay');
         this.btnCloseSheet = document.getElementById('btn-close-search-sheet');
         this.resultsContainer = document.getElementById('search-results-container');
-        
         this.dragHandle = this.bottomSheet.querySelector('.bottom-sheet-drag-handle');
 
         this.currentSelection = '';
@@ -61,6 +58,7 @@ export class SearchManager {
         if (this.btnCloseSheet) {
             this.btnCloseSheet.addEventListener('click', () => this._closeSheet());
         }
+
         if (this.sheetOverlay) {
             this.sheetOverlay.addEventListener('click', () => this._closeSheet());
         }
@@ -88,7 +86,7 @@ export class SearchManager {
 
     _showTooltip(selection) {
         if (!this.tooltip) return;
-        
+
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
         
@@ -109,7 +107,7 @@ export class SearchManager {
             // Trên Desktop: Đặt phía trên như cũ
             const top = rect.top + window.scrollY;
             const left = rect.left + window.scrollX + (rect.width / 2);
-
+            
             this.tooltip.style.top = `${top}px`;
             this.tooltip.style.left = `${left}px`;
             this.tooltip.classList.remove('at-bottom');
@@ -128,6 +126,7 @@ export class SearchManager {
         // Find the segment element containing the selection
         let node = selection.anchorNode;
         let segmentEl = null;
+
         while (node && node !== document.body) {
             if (node.nodeType === 1 && node.classList.contains('segment')) {
                 segmentEl = node;
@@ -138,7 +137,6 @@ export class SearchManager {
 
         if (segmentEl) {
             const segmentId = segmentEl.dataset.id;
-            
             // Remove previous highlight
             if (this.activeSegmentId && this.activeSegmentId !== segmentId) {
                 const prevEl = document.querySelector(`.segment[data-id="${this.activeSegmentId}"] .segment-text`);
@@ -164,22 +162,19 @@ export class SearchManager {
     async _performSearch() {
         this._hideTooltip();
         this._openSheet();
-        
         this.resultsContainer.innerHTML = '<div style="text-align:center; padding: 2rem; color: var(--text-muted);">Đang tìm kiếm...</div>';
 
         // Move segment to just below header
         if (this.activeSegmentId && this.contentRenderer) {
             // Ép lưu vị trí ngay lập tức để tránh lỗi lệch khi người dùng refresh ngay sau khi search
             localStorage.setItem('sutta_last_segment_id', this.activeSegmentId.toString());
-            
             const containerRect = this.contentRenderer.scrollManager.container.getBoundingClientRect();
-            const anchor = { id: this.activeSegmentId, top: containerRect.top + 10 }; 
+            const anchor = { id: this.activeSegmentId, top: containerRect.top + 10 };
             this.contentRenderer.scrollManager.scrollToAnchor(anchor);
         }
 
         const keyword = this.currentSelection;
         const results = await this.contentLoader.searchSegments(keyword);
-
         this._renderResults(results, keyword);
     }
 
@@ -207,7 +202,7 @@ export class SearchManager {
                     breadcrumbs = parts.slice(1).join(' > ');
                 }
             }
-            
+
             // Tạo một khóa duy nhất cho nhóm
             const groupKey = `${res.rule_id || 'no-rule'}-${breadcrumbs}`;
             
@@ -229,6 +224,7 @@ export class SearchManager {
                 // Tạo nhóm mới
                 const newGroup = {
                     id: res.id, // Dùng ID của segment đầu tiên tìm thấy để jump
+                    heading_id: res.heading_id,
                     breadcrumbs: breadcrumbs,
                     rule_id: res.rule_id,
                     rule_viet: res.rule_viet,
@@ -247,11 +243,10 @@ export class SearchManager {
                 const acronym = group.rule_acronym ? `<span class="rule-acronym">${this._escapeHtml(group.rule_acronym)}.</span> ` : '';
                 const viet = `<span class="rule-viet">${this._escapeHtml(group.rule_viet)}</span>`;
                 const pali = group.rule_pali ? ` <span class="rule-pali">(${this._escapeHtml(group.rule_pali)})</span>` : '';
-                
                 ruleText = `<div class="search-result-rule">${acronym}${viet}${pali}</div>`;
             }
 
-            // Gộp các snippet lại với nhau, mỗi snippet có data-id riêng để jump
+            // Gộp các snippet lại với nhau
             const combinedSnippets = group.snippets.map(s => {
                 if (s.id) {
                     return `<div class="search-snippet-item" data-id="${s.id}">${s.html}</div>`;
@@ -260,54 +255,98 @@ export class SearchManager {
             }).join('<div style="margin: 6px 0; border-top: 1px dashed var(--border-light);"></div>');
 
             html += `
-                <div class="search-result-card" data-id="${group.id}">
+                <div class="search-result-card" data-id="${group.id}" data-rule-id="${group.rule_id || ''}" data-heading-id="${group.heading_id || ''}">
                     ${group.breadcrumbs ? `<span class="search-result-breadcrumbs">${this._escapeHtml(group.breadcrumbs)}</span>` : ''}
                     ${ruleText}
                     <div class="search-result-text">${combinedSnippets}</div>
+                    <div class="search-result-expanded-content hidden" style="margin-top: 1rem; border-top: 1px solid var(--border-light); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;"></div>
                 </div>
             `;
         });
 
         this.resultsContainer.innerHTML = html;
 
-        // Add click events to cards and snippet items
+        // Add click events to cards
         const cards = this.resultsContainer.querySelectorAll('.search-result-card');
         cards.forEach(card => {
             card.addEventListener('click', (e) => {
-                // Tìm xem người dùng có click vào một snippet cụ thể nào không
-                let targetId = parseInt(card.dataset.id, 10); // Fallback: ID của snippet đầu tiên
-                
-                const snippetItem = e.target.closest('.search-snippet-item');
-                if (snippetItem && snippetItem.dataset.id) {
-                    targetId = parseInt(snippetItem.dataset.id, 10);
+                const expandedContent = card.querySelector('.search-result-expanded-content');
+                const textContent = card.querySelector('.search-result-text');
+
+                // Ngăn chặn event click trên các nút (như Play) trong expandedContent
+                if (e.target.closest('.search-result-expanded-content') && !e.target.closest('.btn-jump')) {
+                    return;
                 }
 
-                this._closeSheet();
+                if (!expandedContent.classList.contains('hidden')) {
+                    expandedContent.classList.add('hidden');
+                    textContent.classList.remove('hidden');
+                    return;
+                }
+
+                const ruleId = card.dataset.ruleId;
+                const headingId = card.dataset.headingId;
                 
-                // Clear old highlight and jump
-                this._clearActiveHighlight();
-                
-                if (this.contentRenderer) {
-                    // Sử dụng setTimeout để đảm bảo DOM (đóng Sheet, render Lazy Load) đã reflow xong 
-                    // trước khi tính toán tọa độ cuộn
-                    setTimeout(() => {
-                        this.contentRenderer.scrollToSegment(targetId);
-                        
-                        // Highlight the jumped segment temporarily
-                        setTimeout(() => {
-                            const targetEl = document.querySelector(`.segment[data-id="${targetId}"] .segment-text`);
-                            if (targetEl) {
-                                targetEl.classList.add('active-search-highlight');
-                                this.activeSegmentId = targetId;
+                let segments = [];
+                if (ruleId) {
+                    segments = this.contentLoader.getSegmentsByRuleId(ruleId);
+                } else if (headingId) {
+                    segments = this.contentLoader.getSegmentsByHeadingId(parseInt(headingId, 10));
+                }
+
+                if (segments && segments.length > 0) {
+                    expandedContent.innerHTML = '';
+
+                    // Bổ sung nút Jump để phòng khi người dùng vẫn muốn cuộn tới văn bản chính
+                    const jumpBtnContainer = document.createElement('div');
+                    jumpBtnContainer.style.display = 'flex';
+                    jumpBtnContainer.style.justifyContent = 'flex-end';
+                    jumpBtnContainer.style.marginBottom = '0.5rem';
+                    jumpBtnContainer.innerHTML = `<button class="btn secondary btn-jump" style="font-size: 0.85rem; padding: 4px 10px;"><i class="fas fa-external-link-alt"></i> Đi đến văn bản</button>`;
+                    
+                    const jumpId = parseInt(card.dataset.id, 10);
+                    
+                    jumpBtnContainer.querySelector('.btn-jump').addEventListener('click', (ev) => {
+                        ev.stopPropagation();
+                        this._closeSheet();
+                        this._clearActiveHighlight();
+                        if (this.contentRenderer) {
+                            setTimeout(() => {
+                                this.contentRenderer.scrollToSegment(jumpId);
                                 setTimeout(() => {
-                                    if (this.activeSegmentId === targetId) {
-                                        targetEl.classList.remove('active-search-highlight');
-                                        this.activeSegmentId = null;
+                                    const targetEl = document.querySelector(`.segment[data-id="${jumpId}"] .segment-text`); 
+                                    if (targetEl) {
+                                        targetEl.classList.add('active-search-highlight');
+                                        this.activeSegmentId = jumpId;
+                                        setTimeout(() => {
+                                            if (this.activeSegmentId === jumpId) {
+                                                targetEl.classList.remove('active-search-highlight');
+                                                this.activeSegmentId = null;
+                                            }
+                                        }, 3000);
                                     }
-                                }, 3000); // Remove highlight after 3 seconds
-                            }
-                        }, 100);
-                    }, 50);
+                                }, 100);
+                            }, 50);
+                        }
+                    });
+
+                    expandedContent.appendChild(jumpBtnContainer);
+
+                    // Sử dụng SegmentFactory để tạo DOM và highlight keyword
+                    segments.forEach(item => {
+                        const segmentEl = this.contentRenderer.segmentFactory.create(item, -1);
+                        
+                        // Highlight keyword một cách an toàn bên trong DOM (không làm hỏng HTML tag)
+                        const textEl = segmentEl.querySelector('.segment-text');
+                        if (textEl && keyword) {
+                            this._highlightDOMElement(textEl, keyword);
+                        }
+
+                        expandedContent.appendChild(segmentEl);
+                    });
+                    
+                    expandedContent.classList.remove('hidden');
+                    textContent.classList.add('hidden'); // Ẩn kết quả snippet
                 }
             });
         });
@@ -316,13 +355,64 @@ export class SearchManager {
     _highlightKeyword(text, keyword) {
         if (!text || !keyword) return this._escapeHtml(text || '');
         const regex = new RegExp(`(${this._escapeRegExp(keyword)})`, 'gi');
-        // Escape HTML before replacing to prevent XSS if segment contains raw HTML tags (it shouldn't, but safety first)
+        // Escape HTML before replacing to prevent XSS if segment contains raw HTML tags
         const escapedText = this._escapeHtml(text);
         const escapedKeyword = this._escapeHtml(keyword);
         
-        // Use regex on escaped text. Note: this might fail if keyword matches escaped entities like &amp;, but it's acceptable for pure text.
         const highlightRegex = new RegExp(`(${this._escapeRegExp(escapedKeyword)})`, 'gi');
         return escapedText.replace(highlightRegex, '<span class="search-highlight">$1</span>');
+    }
+
+    _highlightDOMElement(element, keyword) {
+        if (!keyword || !element) return;
+        const regex = new RegExp(`(${this._escapeRegExp(keyword)})`, 'gi');
+        
+        // Dùng TreeWalker để chỉ duyệt qua các TextNode, bỏ qua các thẻ HTML
+        const walk = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+        const textNodes = [];
+        let node;
+        while ((node = walk.nextNode())) {
+            textNodes.push(node);
+        }
+
+        textNodes.forEach(n => {
+            if (regex.test(n.nodeValue)) {
+                // Reset lại lastIndex của regex (do dùng flag 'g')
+                regex.lastIndex = 0; 
+                
+                const fragment = document.createDocumentFragment();
+                let lastIdx = 0;
+                let match;
+                
+                const text = n.nodeValue;
+                // Tìm tất cả các đoạn khớp trong text node hiện tại
+                while ((match = regex.exec(text)) !== null) {
+                    const offset = match.index;
+                    const matchedStr = match[0];
+                    
+                    // Thêm đoạn text bình thường nằm trước đoạn khớp
+                    if (offset > lastIdx) {
+                        fragment.appendChild(document.createTextNode(text.substring(lastIdx, offset)));
+                    }
+                    
+                    // Thêm đoạn text được bọc thẻ span highlight
+                    const span = document.createElement('span');
+                    span.className = 'search-highlight';
+                    span.textContent = matchedStr;
+                    fragment.appendChild(span);
+                    
+                    lastIdx = offset + matchedStr.length;
+                }
+                
+                // Thêm phần text còn lại sau điểm khớp cuối cùng
+                if (lastIdx < text.length) {
+                    fragment.appendChild(document.createTextNode(text.substring(lastIdx)));
+                }
+                
+                // Thay thế node text ban đầu bằng fragment chứa text và span
+                n.parentNode.replaceChild(fragment, n);
+            }
+        });
     }
 
     _escapeHtml(unsafe) {
@@ -351,7 +441,6 @@ export class SearchManager {
             this.bottomSheet.classList.add('hidden');
             this.sheetOverlay.classList.add('hidden');
             document.body.style.overflow = '';
-            
             // Don't clear selection automatically, let user click away
             // this._clearActiveHighlight();
         }
@@ -374,7 +463,6 @@ export class SearchManager {
             if (!isDragging) return;
             currentY = e.touches[0].clientY;
             const deltaY = currentY - startY;
-
             if (deltaY > 0) { // Only allow dragging downwards
                 this.bottomSheet.style.transform = `translateY(${deltaY}px)`;
             }
@@ -403,3 +491,4 @@ export class SearchManager {
         document.addEventListener('touchend', onTouchEnd);
     }
 }
+

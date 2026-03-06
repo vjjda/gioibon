@@ -9,11 +9,13 @@ export class ContentLoader {
 
     async load() {
         if (this.data) return this.data;
+
         try {
             // Thay vì chia nhỏ, ta load một lần (với lượng data 800-1000 items, array này chỉ tốn <2MB RAM)
             // Việc này giúp giảm tối đa chi phí chuyển ngữ cảnh (context switching) giữa JS và WASM (SQLite)
             const rows = await this.db.query(
-                `SELECT c.uid, c.html, c.label, c.audio_name, c.segment, c.segment_html, c.has_hint, c.heading_id, c.rule_id, h.level as heading_level
+                `SELECT c.uid, c.html, c.label, c.audio_name, c.segment, 
+                 c.segment_html, c.has_hint, c.heading_id, c.rule_id, h.level as heading_level
                  FROM contents c
                  LEFT JOIN headings h ON c.heading_id = h.uid
                  ORDER BY c.uid ASC`
@@ -55,6 +57,7 @@ export class ContentLoader {
 
     async searchSegments(keyword) {
         if (!keyword || keyword.trim() === '') return [];
+
         try {
             // Chuẩn bị từ khóa cho FTS5 (cần bọc trong ngoặc kép nếu có khoảng trắng hoặc ký tự đặc biệt)
             // Lọc bỏ ký tự có thể làm hỏng cú pháp MATCH của FTS5
@@ -72,6 +75,7 @@ export class ContentLoader {
                 SELECT 
                     c.uid as id, 
                     c.segment as raw_segment,
+                    c.heading_id,
                     h.breadcrumbs,
                     r.id as rule_id,
                     r.viet as rule_viet,
@@ -96,6 +100,7 @@ export class ContentLoader {
                     SELECT 
                         c.uid as id, 
                         c.segment as raw_segment, 
+                        c.heading_id,
                         h.breadcrumbs,
                         r.id as rule_id,
                         r.viet as rule_viet,
@@ -149,8 +154,14 @@ export class ContentLoader {
         return this.data.filter(item => item.label.startsWith(prefix));
     }
 
-    getRuleSegments(sectionIndex, startSegmentIndex) {
-        return [];
+    getSegmentsByRuleId(ruleId) {
+        if (!this.data) return [];
+        return this.data.filter(item => item.ruleId === ruleId);
+    }
+
+    getSegmentsByHeadingId(headingId) {
+        if (!this.data) return [];
+        return this.data.filter(item => item.headingId === headingId);
     }
 }
 
