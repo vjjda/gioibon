@@ -162,7 +162,7 @@ export class SearchRenderer {
                     segments.forEach(item => {
                         const segmentEl = this.contentRenderer.segmentFactory.create(item, -1);
                         
-                        // Đảm bảo highlight được bôi vào đúng văn bản (bất kể thẻ HTML bao bọc là gì)
+                        // Đảm bảo highlight được bôi vào đúng văn bản
                         if (keyword) {
                             this._highlightDOMElement(segmentEl, keyword);
                         }
@@ -182,7 +182,8 @@ export class SearchRenderer {
         const escapedText = this._escapeHtml(text);
         const escapedKeyword = this._escapeHtml(keyword);
         const highlightRegex = new RegExp(`(${this._escapeRegExp(escapedKeyword)})`, 'gi');
-        return escapedText.replace(highlightRegex, '<span class="search-highlight">$1</span>');
+        // Ở snippet vẫn ưu tiên dùng <mark> để đồng bộ
+        return escapedText.replace(highlightRegex, '<mark class="search-highlight">$1</mark>');
     }
 
     _highlightDOMElement(element, keyword) {
@@ -190,27 +191,28 @@ export class SearchRenderer {
         
         const regex = new RegExp(`(${this._escapeRegExp(keyword)})`, 'gi');
         
-        // Thuật toán đệ quy duyệt mảng childNodes tĩnh (an toàn hơn TreeWalker)
         const walkAndHighlight = (node) => {
             if (node.nodeType === 3) { // Node.TEXT_NODE
                 const text = node.nodeValue;
-                if (regex.test(text)) {
-                    regex.lastIndex = 0; // Reset regex để đảm bảo thay thế từ đầu text
+                // Kiểm tra có văn bản không rỗng mới thực hiện replace
+                if (text && text.trim() !== '' && regex.test(text)) {
+                    regex.lastIndex = 0; // Reset regex
                     
-                    // Tạo thẻ span ảo để nhúng class
-                    const tempSpan = document.createElement('span');
-                    tempSpan.innerHTML = text.replace(regex, '<span class="search-highlight">$1</span>');
+                    // Tạo một container ảo để render HTML
+                    const tempDiv = document.createElement('div');
+                    // Thay thế thẻ <span> bằng thẻ <mark>
+                    tempDiv.innerHTML = text.replace(regex, '<mark class="search-highlight">$1</mark>');
                     
-                    // Đưa kết quả thay thế vào DOM và gỡ bỏ text node cũ
-                    while (tempSpan.firstChild) {
-                        node.parentNode.insertBefore(tempSpan.firstChild, node);
+                    // Chèn các node mới vào trước text node cũ
+                    while (tempDiv.firstChild) {
+                        node.parentNode.insertBefore(tempDiv.firstChild, node);
                     }
+                    // Xóa text node cũ
                     node.parentNode.removeChild(node);
                 }
             } else if (node.nodeType === 1) { // Node.ELEMENT_NODE
-                // Không đi vào thẻ script, style và không đi vào thẻ đã được highlight
-                if (!/(script|style)/i.test(node.tagName) && !node.classList.contains('search-highlight')) {
-                    // Copy ra Array tĩnh để tránh vòng lặp bị phá vỡ khi thay đổi DOM
+                // Không đi vào script, style và không đi vào các thẻ <mark> vừa tạo để tránh lặp vô hạn
+                if (!/(script|style|mark)/i.test(node.tagName) && !node.classList.contains('search-highlight')) {
                     Array.from(node.childNodes).forEach(child => walkAndHighlight(child));
                 }
             }
@@ -232,4 +234,3 @@ export class SearchRenderer {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 }
-
