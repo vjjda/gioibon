@@ -101,14 +101,16 @@
     background-color: transparent;
     border: 1px solid rgba(255,255,255,0.4);
     color: #fff;
+    font-size: 0.8rem;
 }
 
 /* User Highlights in Text */
 .user-highlight {
-    border-radius: 3px;
-    padding: 2px 0;
-    cursor: pointer; /* To allow tapping to remove or edit */
+    cursor: pointer;
     transition: background-color 0.2s ease;
+    /* Loại bỏ border-radius và padding ngang để các thẻ nối tiếp nhau mượt mà */
+    border-radius: 0;
+    padding: 0; 
 }
 
 .user-highlight.color-yellow { background-color: rgba(255, 235, 59, 0.4); }
