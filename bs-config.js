@@ -1,3 +1,4 @@
+// Path: bs-config.js
 module.exports = {
     "server": {
         "baseDir": "web",

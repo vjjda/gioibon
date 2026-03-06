@@ -1,4 +1,4 @@
-// Path: web/libs/chunk-LGUUZUN7.js
+// Path: web/public/libs/wa-sqlite/chunk-LGUUZUN7.js
 // wa-sqlite-fts5/wa-sqlite-async.mjs
 var Module = /* @__PURE__ */ (() => {
   return (async function(moduleArg = {}) {

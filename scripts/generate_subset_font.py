@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # Path: scripts/generate_subset_font.py
 import os
 import subprocess
