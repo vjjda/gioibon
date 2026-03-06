@@ -246,9 +246,9 @@ html	label	segment
 <h4>{}</h4>	np14-name	Np 14. Sáu năm (Chabbassa)
 <p>{}	np14	Sau khi cho làm tấm trải nằm mới, vị tỳ khưu nên sử dụng sáu năm.
 {}</p>	np14	Nếu chưa đủ sáu năm mà [cho đi hoặc không cho đi] tấm trải nằm ấy rồi bảo làm tấm trải nằm mới khác thì (vật ấy) nên được xả bỏ và (vị ấy) phạm tội pācittiya, ngoại trừ có sự đồng ý của các tỳ khưu.
-<h4>{}</h4>	np15-name	Np 15. Tấm lót ngồi (Nisīdanasanthata)
-<p>{}	np15	Trong khi cho làm tấm lót ngồi, vị tỳ khưu nên lấy một gang tay của đức Thiện Thệ ở phần xung quanh của tấm lót cũ để hoại vẻ đẹp.
-{}</p>	np15	Nếu vị tỳ khưu không lấy một gang tay của đức Thiện Thệ ở phần xung quanh của tấm lót cũ mà bảo làm tấm lót ngồi mới thì (vật ấy) nên được xả bỏ và (vị ấy) phạm tội pācittiya.
+<h4>{}</h4>	np15-name	Np 15. Tấm trải lót ngồi (Nisīdanasanthata)
+<p>{}	np15	Trong khi cho làm tấm trải lót ngồi, vị tỳ khưu nên lấy một gang tay của đức Thiện Thệ ở phần xung quanh của tấm trải cũ để hoại vẻ đẹp.
+{}</p>	np15	Nếu vị tỳ khưu không lấy một gang tay của đức Thiện Thệ ở phần xung quanh của tấm trải cũ mà bảo làm tấm trải lót ngồi mới thì (vật ấy) nên được xả bỏ và (vị ấy) phạm tội pācittiya.
 <h4>{}</h4>	np16-name	Np 16. Lông cừu (Eḷakaloma)
 <p>{}	np16	Vị tỳ khưu trong khi đi đường xa có các lông cừu được phát sanh, vị tỳ khưu mong muốn thì nên nhận lãnh.
 {}	np16	Sau khi nhận lãnh, nên dùng tay mang tối đa ba do-tuần khi không có người mang.
@@ -515,7 +515,7 @@ html	label	segment
 {}	pc70	Này ông sa di, đức Thế Tôn đã giảng giải bằng nhiều phương thức rằng các pháp chướng ngại có khả năng đem đến sự chướng ngại cho người thực hành.’
 {}	pc70	Và khi được các tỳ khưu nói như vậy mà vị sa di ấy vẫn chấp giữ y như thế, thì vị sa di ấy nên được các tỳ khưu nói như vầy:
 {}	pc70	‘Này ông sa di, kể từ hôm nay không được tuyên bố đức Thế Tôn ấy là bậc Đạo sư của ngươi nữa.
-{}	pc70	Ngay cả việc các sa di khác được hưởng là việc nằm chung chỗ ngụ với các tỳ khưu hai ba đêm, việc ấy không có cho ngươi nữa.
+{}	pc70	Ngay cả việc các sa di khác được hưởng là việc nằm chung chỗ ngụ với các tỳ khưu hai ba đêm, việc ấy cũng không có cho ngươi nữa.
 {}	pc70	Hãy đi chỗ khác, hãy biến mất đi.’
 {}</p>	pc70	Vị tỳ khưu nào trong khi biết vị sa di là kẻ đã bị trục xuất như thế mà [vẫn dụ dỗ, hoặc vẫn bảo phục vụ, hoặc vẫn hưởng thụ chung, hoặc vẫn nằm chung chỗ ngụ] thì phạm tội pācittiya.
 <p class='endvagga'>{}</p>	pc-ending	Phẩm Có Sinh Vật là thứ bảy.

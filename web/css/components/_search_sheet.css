@@ -143,6 +143,7 @@
     /* Giới hạn 2 dòng nếu từ khóa quá dài */
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -247,6 +248,7 @@
     /* Giới hạn số dòng hiển thị */
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
