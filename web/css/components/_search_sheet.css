@@ -8,7 +8,8 @@
     color: var(--bg-card);
     border-radius: 6px;
     padding: 6px 10px;
-    box-shadow: var(--shadow-float);
+    /* Loại bỏ bóng đổ (box-shadow) để tránh làm lem màu text bên dưới */
+    box-shadow: none; 
     transform: translate(-50%, -100%);
     margin-top: -10px;
     /* Offset above selection */

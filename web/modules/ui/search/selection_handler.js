@@ -119,8 +119,7 @@ export class SelectionHandler {
             // RIÊNG iOS: Mặc định Tooltip hiện ở TRÊN.
             showAtBottom = false;
 
-            // Nếu vùng chọn nằm trong khoảng 40% dưới cùng của màn hình, đảo (reverse) lại xuống DƯỚI.
-            if (rect.top > viewportHeight * 0.6) {
+            if (rect.top > viewportHeight * 0.48) {
                 showAtBottom = true;
             }
         }
