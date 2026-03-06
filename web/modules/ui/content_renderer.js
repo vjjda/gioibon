@@ -11,11 +11,12 @@ import { CollapseManager } from 'ui/content/collapse_manager.js';
 import { CustomDialog } from 'ui/custom_dialog.js';
 
 export class ContentRenderer {
-    constructor(containerId, playSegmentCallback, playSequenceCallback, memorizationManager) {
+    constructor(containerId, playSegmentCallback, playSequenceCallback, memorizationManager, highlightManager) {
         this.container = document.getElementById(containerId);
         this.playSegmentCallback = playSegmentCallback;
         this.playSequenceCallback = playSequenceCallback;
         this.memorizationManager = memorizationManager;
+        this.highlightManager = highlightManager;
         
         this.items = [];
         this.hoveredSegmentId = null;
@@ -36,7 +37,7 @@ export class ContentRenderer {
             onHover: (id) => { this.hoveredSegmentId = id; },
             applySavedState: (el, id) => this.maskManager.applySavedState(el, id),
             onHeadingClick: (id) => this.collapseManager.toggleCollapse(id)
-        }, this.memorizationManager);
+        }, this.memorizationManager, this.highlightManager);
 
         this.lazyRenderer = new LazyRenderer(this.container, this.elementCache, this.segmentFactory, this.collapseManager);
         
@@ -90,6 +91,27 @@ export class ContentRenderer {
     }
 
     // --- Public API Facades ---
+
+    refreshSegment(id) {
+        const item = this.items.find(i => i.id == id);
+        if (!item) return;
+
+        const oldEl = this.elementCache.get(id);
+        if (!oldEl || !oldEl.parentNode) return;
+
+        // Note: we need the original index, but it's only stored in data-index
+        const index = parseInt(oldEl.dataset.index, 10);
+        
+        const newEl = this.segmentFactory.create(item, index);
+        
+        // Restore collapse state if any
+        if (this.collapseManager) {
+            this.collapseManager.applyToElement(newEl, item);
+        }
+
+        oldEl.parentNode.replaceChild(newEl, oldEl);
+        this.elementCache.set(id, newEl);
+    }
 
     scrollToSegment(id) {
         this.scrollManager.scrollToSegment(id);

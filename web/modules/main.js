@@ -16,6 +16,7 @@ import { AudioZipLoader } from 'services/audio_zip_loader.js';
 import { SplashManager } from 'utils/splash.js';
 import { MemorizationManager } from 'core/memorization.js';
 import { SyncManager } from 'core/sync_manager.js';
+import { HighlightManager } from 'core/highlight_manager.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     setupPWA();
@@ -88,15 +89,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const memorizationManager = new MemorizationManager();
+    const highlightManager = new HighlightManager();
 
     const contentRenderer = new ContentRenderer(
         'content',
         (segmentId, audio, text) => { ttsPlayer.playSegment(segmentId, audio, text); },
         (sequence, parentId) => { ttsPlayer.playSequence(sequence, parentId); },
-        memorizationManager
+        memorizationManager,
+        highlightManager
     );
 
-    const searchManager = new SearchManager(contentLoader, contentRenderer);
+    const searchManager = new SearchManager(contentLoader, contentRenderer, highlightManager);
 
     // Initial state for CollapseManager
     if (savedOutline) {

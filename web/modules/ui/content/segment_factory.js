@@ -1,9 +1,10 @@
 // Path: web/modules/ui/content/segment_factory.js
 
 export class SegmentFactory {
-    constructor(callbacks, memorizationManager) {
+    constructor(callbacks, memorizationManager, highlightManager) {
         this.callbacks = callbacks;
         this.memorizationManager = memorizationManager;
+        this.highlightManager = highlightManager;
         // { playSegment, playSequence, onMaskStart, onMaskEnter, onHover, applySavedState }
     }
 
@@ -39,6 +40,34 @@ export class SegmentFactory {
 
         this._addPlayButtons(contentWrapper, item, index);
         const textEl = this._addTextContent(contentWrapper, item);
+
+        // Apply User Highlights
+        if (this.highlightManager && item.id) {
+            const highlights = this.highlightManager.getHighlights(item.id);
+            if (highlights && highlights.length > 0) {
+                // Must access static method via constructor or import it. It's better to import or access via instance constructor.
+                // Wait, JS allows importing the class, but since we have an instance, we can do this.highlightManager.constructor.applyHighlightsToElement
+                const HM = this.highlightManager.constructor;
+                HM.applyHighlightsToElement(textEl, highlights, (highlightId) => {
+                    this.highlightManager.removeHighlight(item.id, highlightId);
+                    // Lại cần refresh DOM. Tạm thời re-render segment bằng cách trigger kiện hoặc trực tiếp xóa class.
+                    // Đơn giản nhất là xóa DOM thẳng thay vì re-render.
+                    // Wait, xóa element <span> và thay bằng TextNode khá phức tạp.
+                    // Dễ nhất là reload nguyên contentRenderer, hoặc dispatch 1 event để main.js gọi refresh.
+                    // Vì SegmentFactory không có refreshSegment, nên ta gửi qua callback
+                    if (this.callbacks.onHighlightRemoved) {
+                        this.callbacks.onHighlightRemoved(item.id);
+                    } else {
+                        // Tạm sửa css để nó "biến mất" cho nhanh. 
+                        // Khi cuộn đi cuộn lại (lazy render) thì nó sẽ thực sự mất vì DB đã bị xóa.
+                        const span = textEl.querySelector(`.user-highlight[data-highlight-id="${highlightId}"]`);
+                        if (span) {
+                            span.outerHTML = span.innerHTML; // Remove span but keep text
+                        }
+                    }
+                });
+            }
+        }
 
         const isHeading = item.html && item.html.match(/^<h[1-6]/i) && item.label !== 'title' && item.label !== 'subtitle';
         if (isHeading && this.callbacks.onHeadingClick) {

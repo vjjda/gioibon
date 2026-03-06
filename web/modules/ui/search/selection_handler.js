@@ -1,9 +1,11 @@
 // Path: web/modules/ui/search/selection_handler.js
 export class SelectionHandler {
-    constructor(searchRenderer) {
+    constructor(searchRenderer, highlightManager) {
         this.searchRenderer = searchRenderer;
+        this.highlightManager = highlightManager;
         this.tooltip = document.getElementById('selection-tooltip');
         this.btnSearch = document.getElementById('btn-search-selection');
+        this.colorBtns = this.tooltip ? this.tooltip.querySelectorAll('.color-btn') : [];
         
         this.currentSelection = '';
         this.activeSegmentId = null;
@@ -59,6 +61,66 @@ export class SelectionHandler {
                 e.preventDefault();
                 this._performSearch();
             });
+        }
+
+        if (this.colorBtns) {
+            this.colorBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    this._applyHighlight(btn.dataset.color);
+                });
+            });
+        }
+    }
+
+    _applyHighlight(color) {
+        if (!this.activeSegmentId || !this.highlightManager) return;
+        
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) return;
+
+        const segmentEl = document.querySelector(`.segment[data-id="${this.activeSegmentId}"] .segment-text`);
+        if (!segmentEl) return;
+
+        if (color === 'clear') {
+            // Remove selection highlight, wait no, "clear" here means we might want to clear highlights in the selection?
+            // Actually, we can clear all highlights in the active segment, or let user click to remove.
+            // For now, if "clear" is clicked, we clear ALL highlights in the current segment for simplicity
+            this.highlightManager.clearHighlights(this.activeSegmentId);
+            this._refreshSegmentDOM(this.activeSegmentId);
+            this._hideTooltip();
+            window.getSelection().removeAllRanges();
+            return;
+        }
+
+        const offsets = this.highlightManager.constructor.getSelectionOffsets(selection, segmentEl);
+        if (offsets.start === offsets.end) return;
+
+        this.highlightManager.addHighlight(
+            this.activeSegmentId, 
+            offsets.start, 
+            offsets.end, 
+            color, 
+            this.currentSelection
+        );
+
+        this._refreshSegmentDOM(this.activeSegmentId);
+        this._hideTooltip();
+        window.getSelection().removeAllRanges();
+    }
+
+    _refreshSegmentDOM(segmentId) {
+        // Find segment and re-render its text or re-apply highlights
+        const segmentEl = document.querySelector(`.segment[data-id="${segmentId}"]`);
+        if (segmentEl && this.searchRenderer.contentRenderer) {
+            // We need to re-render the segment content. The simplest way is to trigger a re-render of just this item, 
+            // but we might not have the item data easily available here.
+            // Instead, we can let contentRenderer handle it if we have a method, or just fire an event.
+            // Alternatively, we can dispatch a custom event or call a method on contentRenderer.
+            if (this.searchRenderer.contentRenderer.refreshSegment) {
+                this.searchRenderer.contentRenderer.refreshSegment(segmentId);
+            }
         }
     }
 

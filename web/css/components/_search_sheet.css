@@ -15,6 +15,9 @@
     /* Offset above selection */
     pointer-events: auto;
     transition: opacity 0.2s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 /* Kiểu hiển thị phía dưới vùng chọn (Dành cho Mobile để tránh đè menu trình duyệt) */
@@ -42,7 +45,7 @@
     border-color: transparent transparent var(--text-main) transparent;
 }
 
-.selection-tooltip button {
+.selection-tooltip button#btn-search-selection {
     background: none;
     border: none;
     color: var(--bg-card);
@@ -53,12 +56,68 @@
     align-items: center;
     gap: 6px;
     padding: 0;
+    white-space: nowrap;
 }
 
-.selection-tooltip button:hover {
+.selection-tooltip button#btn-search-selection:hover {
     color: var(--primary-color);
     opacity: 0.8;
 }
+
+.tooltip-divider {
+    width: 1px;
+    height: 16px;
+    background-color: rgba(255, 255, 255, 0.3);
+    margin: 0 4px;
+}
+
+.highlight-colors {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.color-btn {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s ease;
+    padding: 0;
+}
+
+.color-btn:active {
+    transform: scale(0.9);
+}
+
+.color-btn.color-yellow { background-color: #ffeb3b; }
+.color-btn.color-green { background-color: #a5d6a7; }
+.color-btn.color-pink { background-color: #f48fb1; }
+.color-btn.color-clear {
+    background-color: transparent;
+    border: 1px solid rgba(255,255,255,0.4);
+    color: #fff;
+}
+
+/* User Highlights in Text */
+.user-highlight {
+    border-radius: 3px;
+    padding: 2px 0;
+    cursor: pointer; /* To allow tapping to remove or edit */
+    transition: background-color 0.2s ease;
+}
+
+.user-highlight.color-yellow { background-color: rgba(255, 235, 59, 0.4); }
+.user-highlight.color-green { background-color: rgba(165, 214, 167, 0.5); }
+.user-highlight.color-pink { background-color: rgba(244, 143, 177, 0.5); }
+
+[data-theme="dark"] .user-highlight.color-yellow { background-color: rgba(255, 235, 59, 0.25); color: #ffd54f; }
+[data-theme="dark"] .user-highlight.color-green { background-color: rgba(165, 214, 167, 0.25); color: #a5d6a7; }
+[data-theme="dark"] .user-highlight.color-pink { background-color: rgba(244, 143, 177, 0.25); color: #f48fb1; }
 
 /* --- Bottom Sheet --- */
 .sheet-overlay {
