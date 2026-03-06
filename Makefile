@@ -78,6 +78,7 @@ deploy: build
 setup:
 	$(NPM) install
 	$(NPM) install --save-dev @vitejs/plugin-basic-ssl
+	mkdir -p web/public/libs/wa-sqlite && cp node_modules/@journeyapps/wa-sqlite/dist/wa-sqlite-async.wasm web/public/libs/wa-sqlite/wa-sqlite-async.wasm
 	pip install Pillow requests mutagen
 
 clean:

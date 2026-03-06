@@ -33,5 +33,9 @@ build/
 dist/
 *.egg-info/
 
+# Dynamic Web Libs (copied from node_modules)
+/web/public/libs/wa-sqlite/wa-sqlite-async.wasm
+/web/public/libs/**/*.wasm
+
 /tmp/*
 

@@ -1,10 +1,6 @@
 // Path: web/modules/services/sqlite_connection.js
-import { initSQLite, withExistDB } from 'libs/wa-sqlite/wa-sqlite-index.js';
-import { useIdbStorage } from 'libs/wa-sqlite/wa-sqlite-idb.js';
+import { initSQLite, withExistDB, useIdbStorage } from './sqlite_helper.js';
 import { BASE_URL } from 'core/config.js';
-
-// [FIX] Sử dụng đường dẫn trực tiếp thay vì import ?url (để chạy được cả trên Vite và Simple Server)
-const wasmUrl = 'libs/wa-sqlite/wa-sqlite-async.wasm';
 
 export class SqliteConnection {
     constructor(dbName = "content.db", dbUrl = `${BASE_URL}app-content/content.db`) {
@@ -64,8 +60,7 @@ export class SqliteConnection {
                 const file = new File([buffer], this.dbName);
                 
                 const db = await initSQLite(useIdbStorage(this.dbName, {
-                    ...withExistDB(file),
-                    url: wasmUrl // [FIX] Sử dụng url động được Vite cung cấp
+                    ...withExistDB(file)
                 }));
                 
                 if (remoteVersionData) {
@@ -84,9 +79,7 @@ export class SqliteConnection {
                     console.warn("⚠️ Cannot set PRAGMAs", e);
                 }
             } else {
-                const db = await initSQLite(useIdbStorage(this.dbName, {
-                    url: wasmUrl // [FIX] Sử dụng url động được Vite cung cấp
-                }));
+                const db = await initSQLite(useIdbStorage(this.dbName));
                 
                 try {
                     const tables = await db.run("SELECT name FROM sqlite_master WHERE type='table' AND name='contents'");
@@ -128,8 +121,7 @@ export class SqliteConnection {
         const file = new File([buffer], this.dbName);
         
         this.db = await initSQLite(useIdbStorage(this.dbName, {
-            ...withExistDB(file),
-            url: wasmUrl // [FIX] Sử dụng url động được Vite cung cấp
+            ...withExistDB(file)
         }));
         
         try {
