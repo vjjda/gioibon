@@ -11,39 +11,47 @@ export class SelectionHandler {
         this._isInteracting = false; 
 
         this._setupListeners();
-        console.log("✅ SelectionHandler initialized with Half-Screen Flip logic.");
+        console.log("✅ SelectionHandler initialized with robust touch/mouse sync.");
     }
 
     _setupListeners() {
-        document.addEventListener('selectionchange', () => {
-            this._handleSelectionUpdate();
-        });
-
-        const startInteracting = () => {
-            this._isInteracting = true;
-        };
-
-        const endInteracting = () => {
-            this._isInteracting = false;
-            // Tăng delay lên 50ms để Safari ổn định Menu Native
-            setTimeout(() => this._handleSelectionUpdate(true), 50);
-        };
-
-        document.addEventListener('mousedown', (e) => {
-            if (this.tooltip && !this.tooltip.contains(e.target) && !this.btnSearch.contains(e.target)) {
-                this._hideTooltip();
+        const startInteracting = (e) => {
+            // Nếu bấm vào chính tooltip hoặc nút Tra cứu thì bỏ qua (không ẩn)
+            if (this.tooltip && (this.tooltip.contains(e.target) || this.btnSearch.contains(e.target))) {
+                return;
             }
-            startInteracting();
+            this._isInteracting = true;
+            this._hideTooltip();
+        };
+
+        const endInteracting = (e) => {
+            if (this._isInteracting) {
+                this._isInteracting = false;
+                // Nhấc tay/chuột ra thì hiện Tooltip cực nhanh
+                this._debouncedShowTooltip(50);
+            }
+        };
+
+        document.addEventListener('selectionchange', () => {
+            if (this._isInteracting) {
+                // Đang giữ chuột/tay vuốt chọn văn bản -> ẩn tooltip
+                this._hideTooltip();
+            } else {
+                // Người dùng đang kéo các "cục handle" (Native Selection) của Android/iOS
+                // Hoặc đang dùng phím Shift + Mũi tên.
+                // Ẩn tooltip và đợi khi nào dừng kéo (khoảng 400ms) thì mới hiện.
+                this._hideTooltip();
+                this._debouncedShowTooltip(400); 
+            }
         });
+
+        document.addEventListener('mousedown', startInteracting);
         document.addEventListener('mouseup', endInteracting);
 
-        document.addEventListener('touchstart', (e) => {
-            if (this.tooltip && !this.tooltip.contains(e.target) && !this.btnSearch.contains(e.target)) {
-                this._hideTooltip();
-            }
-            startInteracting();
-        }, { passive: true });
+        document.addEventListener('touchstart', startInteracting, { passive: true });
         document.addEventListener('touchend', endInteracting);
+        // QUAN TRỌNG: Android khi Long Press (nhấn giữ để bôi đen) sẽ bắn touchcancel thay vì touchend!
+        document.addEventListener('touchcancel', endInteracting);
 
         if (this.btnSearch) {
             this.btnSearch.addEventListener('click', (e) => {
@@ -54,7 +62,16 @@ export class SelectionHandler {
         }
     }
 
-    _handleSelectionUpdate(forceShow = false) {
+    _debouncedShowTooltip(delay) {
+        if (this._selectionTimer) {
+            clearTimeout(this._selectionTimer);
+        }
+        this._selectionTimer = setTimeout(() => {
+            this._handleSelectionUpdate();
+        }, delay);
+    }
+
+    _handleSelectionUpdate() {
         const selection = window.getSelection();
         
         if (!selection || selection.isCollapsed || selection.rangeCount === 0) {
@@ -66,11 +83,8 @@ export class SelectionHandler {
         
         if (text.length > 1 && text.length < 150) {
             this.currentSelection = text;
-            
-            if (forceShow || !this._isInteracting) {
-                requestAnimationFrame(() => this._showTooltip(selection));
-                this._highlightActiveSegment(selection);
-            }
+            requestAnimationFrame(() => this._showTooltip(selection));
+            this._highlightActiveSegment(selection);
         } else {
             this._hideTooltip();
         }
