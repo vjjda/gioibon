@@ -105,18 +105,15 @@ export class SelectionHandler {
             }
         }
 
-        // --- CHIẾN THUẬT NÉ MENU NATIVE ---
+        // --- CHIẾN THUẬT ĐỊNH VỊ (Theo yêu cầu: Mặc định ở TRÊN, lật khi sát mép) ---
         const viewportHeight = window.innerHeight;
         
-        // Mặc định Tooltip sẽ hiện ở DƯỚI vùng chọn.
-        // Lý do: Menu Native của iOS và Android (Copy, Look Up...) hầu hết luôn ưu tiên hiện ở TRÊN.
-        // Việc ta đặt ở DƯỚI sẽ giúp né được 90% trường hợp đè nhau.
-        let showAtBottom = true; 
+        // Mặc định Tooltip sẽ hiện ở TRÊN vùng chọn.
+        let showAtBottom = false; 
 
-        // Chỉ lật lên TRÊN khi vùng chọn nằm quá sát đáy màn hình (khoảng trống dưới < 80px)
-        const spaceAtBottom = viewportHeight - rect.bottom;
-        if (spaceAtBottom < 80) {
-            showAtBottom = false;
+        // Nếu vùng chọn nằm quá sát mép trên màn hình (< 80px), lật Tooltip xuống DƯỚI
+        if (rect.top < 80) {
+            showAtBottom = true;
         }
 
         // Tọa độ tuyệt đối so với body (body không cuộn, nên scrollY thường là 0)
