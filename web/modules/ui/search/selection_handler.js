@@ -13,7 +13,7 @@ export class SelectionHandler {
         this._isInteracting = false; 
 
         this._setupListeners();
-        console.log("✅ SelectionHandler initialized with robust touch/mouse sync.");
+        console.log("✅ SelectionHandler initialized with robust touch/mouse sync and click-to-select.");
     }
 
     _setupListeners() {
@@ -49,11 +49,26 @@ export class SelectionHandler {
 
         document.addEventListener('mousedown', startInteracting);
         document.addEventListener('mouseup', endInteracting);
-
         document.addEventListener('touchstart', startInteracting, { passive: true });
         document.addEventListener('touchend', endInteracting);
         // QUAN TRỌNG: Android khi Long Press (nhấn giữ để bôi đen) sẽ bắn touchcancel thay vì touchend!
         document.addEventListener('touchcancel', endInteracting);
+
+        // [NEW] Bắt sự kiện Click lên thẻ Highlight bằng Capture mode để ưu tiên xử lý trước
+        document.addEventListener('click', (e) => {
+            const highlightEl = e.target.closest('.user-highlight');
+            if (highlightEl) {
+                // Ngăn chặn sự kiện click lan xuống (ví dụ click vào Heading làm thu gọn nội dung)
+                e.stopPropagation();
+                e.preventDefault();
+
+                const highlightId = highlightEl.dataset.highlightId;
+                const segmentEl = highlightEl.closest('.segment');
+                if (highlightId && segmentEl) {
+                    this._selectHighlight(segmentEl, highlightId);
+                }
+            }
+        }, true); // Sử dụng true (capture) để đón đầu sự kiện
 
         if (this.btnSearch) {
             this.btnSearch.addEventListener('click', (e) => {
@@ -74,9 +89,42 @@ export class SelectionHandler {
         }
     }
 
+    // [NEW] Hàm tái tạo vùng chọn bằng code
+    _selectHighlight(segmentEl, highlightId) {
+        // Lấy tất cả các thẻ có cùng chung mã bôi đen (các chunk liên tiếp)
+        const spans = Array.from(segmentEl.querySelectorAll(`.user-highlight[data-highlight-id="${highlightId}"]`));
+        if (spans.length === 0) return;
+
+        const firstSpan = spans[0];
+        const lastSpan = spans[spans.length - 1];
+
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+
+        const range = document.createRange();
+        
+        // Luôn trỏ vào TextNode bên trong để chọn chính xác ký tự
+        const startNode = firstSpan.firstChild || firstSpan;
+        const endNode = lastSpan.firstChild || lastSpan;
+
+        try {
+            range.setStart(startNode, 0);
+            range.setEnd(endNode, endNode.nodeValue ? endNode.nodeValue.length : 0);
+            selection.addRange(range);
+
+            this.activeSegmentId = segmentEl.dataset.id;
+            this.currentSelection = selection.toString().trim();
+            
+            // Ép xuất hiện Tooltip ngay lập tức
+            this._showTooltip(selection);
+        } catch (e) {
+            console.error("Could not select highlight programmatically", e);
+        }
+    }
+
     _applyHighlight(color) {
         if (!this.activeSegmentId || !this.highlightManager) return;
-        
+
         const selection = window.getSelection();
         if (!selection || selection.rangeCount === 0) return;
 
@@ -86,9 +134,10 @@ export class SelectionHandler {
         const offsets = this.highlightManager.constructor.getSelectionOffsets(selection, segmentEl);
         if (offsets.start === offsets.end) return;
 
-        if (color === 'clear') {
-            this.highlightManager.removeHighlightsInRange(this.activeSegmentId, offsets.start, offsets.end);
-        } else {
+        // [UPDATED] Luôn xóa các highlight bị chồng lấn trước khi áp dụng màu mới
+        this.highlightManager.removeHighlightsInRange(this.activeSegmentId, offsets.start, offsets.end);
+
+        if (color !== 'clear') {
             this.highlightManager.addHighlight(
                 this.activeSegmentId, 
                 offsets.start, 
@@ -100,7 +149,6 @@ export class SelectionHandler {
 
         // Bắt buộc gọi refresh lại DOM để hiện hoặc ẩn màu lập tức
         this._refreshSegmentDOM(this.activeSegmentId);
-        
         this._hideTooltip();
         window.getSelection().removeAllRanges();
     }
@@ -109,10 +157,6 @@ export class SelectionHandler {
         // Find segment and re-render its text or re-apply highlights
         const segmentEl = document.querySelector(`.segment[data-id="${segmentId}"]`);
         if (segmentEl && this.searchRenderer.contentRenderer) {
-            // We need to re-render the segment content. The simplest way is to trigger a re-render of just this item, 
-            // but we might not have the item data easily available here.
-            // Instead, we can let contentRenderer handle it if we have a method, or just fire an event.
-            // Alternatively, we can dispatch a custom event or call a method on contentRenderer.
             if (this.searchRenderer.contentRenderer.refreshSegment) {
                 this.searchRenderer.contentRenderer.refreshSegment(segmentId);
             }
@@ -130,14 +174,12 @@ export class SelectionHandler {
 
     _handleSelectionUpdate() {
         const selection = window.getSelection();
-        
         if (!selection || selection.isCollapsed || selection.rangeCount === 0) {
             this._hideTooltip();
             return;
         }
 
         const text = selection.toString().trim();
-        
         if (text.length > 1 && text.length < 150) {
             this.currentSelection = text;
             requestAnimationFrame(() => this._showTooltip(selection));
@@ -165,12 +207,13 @@ export class SelectionHandler {
         // --- CHIẾN THUẬT ĐỊNH VỊ THEO YÊU CẦU CỦA USER ---
         const isAndroid = /Android/i.test(navigator.userAgent);
         // Nhận diện iOS (iPhone, iPad, iPod) kể cả iPadOS dùng MacIntel
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         
         const viewportHeight = window.innerHeight;
 
         // MẶC ĐỊNH CHUNG: Hiện ở DƯỚI (Dành cho Desktop và Android)
-        let showAtBottom = true; 
+        let showAtBottom = true;
 
         if (isIOS) {
             // RIÊNG iOS: Mặc định Tooltip hiện ở TRÊN.
@@ -207,7 +250,7 @@ export class SelectionHandler {
 
     _highlightActiveSegment(selection) {
         if (selection.rangeCount === 0) return;
-        
+
         let node = selection.anchorNode;
         let segmentEl = null;
 
@@ -221,12 +264,14 @@ export class SelectionHandler {
 
         if (segmentEl) {
             const segmentId = segmentEl.dataset.id;
+            
             if (this.activeSegmentId && this.activeSegmentId !== segmentId) {
                 const prevEl = document.querySelector(`.segment[data-id="${this.activeSegmentId}"] .segment-text`);
                 if (prevEl) prevEl.classList.remove('active-search-highlight');
             }
 
             this.activeSegmentId = segmentId;
+
             const textEl = segmentEl.querySelector('.segment-text');
             if (textEl) {
                 textEl.classList.add('active-search-highlight');
