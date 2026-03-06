@@ -57,9 +57,20 @@ export class SelectionHandler {
     _showTooltip(selection) {
         if (!this.tooltip) return;
 
+        if (selection.rangeCount === 0) return;
         const range = selection.getRangeAt(0);
-        const rect = range.getBoundingClientRect();
-        if (rect.width === 0 && rect.height === 0) return;
+        let rect = range.getBoundingClientRect();
+        
+        // Safari (Mac/iOS) fallback: sometimes getBoundingClientRect on range returns 0
+        // We fallback to getClientRects()[0] or the parent element's rect if needed.
+        if (rect.width === 0 && rect.height === 0) {
+            const rects = range.getClientRects();
+            if (rects.length > 0) {
+                rect = rects[0];
+            } else {
+                return; // Cannot determine position
+            }
+        }
 
         // Phân biệt Android và phần còn lại (iOS, Desktop)
         // iOS bao gồm iPhone, iPad, iPod và cả Safari trên iPadOS (nhận diện như Mac)

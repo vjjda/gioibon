@@ -1,7 +1,8 @@
 // Path: web/modules/ui/content/lazy_renderer.js
 
 // Giảm Batch Size để mỗi lần render không làm treo main thread
-const BATCH_SIZE = 30; 
+// [OPTIMIZED] Tăng lên 100 vì số lượng DOM node nhỏ (tổng ~850 items), giúp render nhanh hơn mà vẫn an toàn
+const BATCH_SIZE = 100; 
 
 export class LazyRenderer {
     constructor(container, elementCache, segmentFactory, collapseManager = null) {
@@ -105,7 +106,7 @@ export class LazyRenderer {
                  this.isRendering = true;
                  setTimeout(() => {
                      requestAnimationFrame(() => this.renderNextBatch());
-                 }, 50); // Nghỉ 50ms giữa các batch để tránh CPU 100%
+                 }, 20); // Nghỉ 20ms giữa các batch để tránh CPU 100%
             }
         } else {
             this._removeSentinel();
