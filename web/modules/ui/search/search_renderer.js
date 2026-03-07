@@ -15,20 +15,24 @@ export class SearchRenderer {
 
         if (activeSegmentId && this.contentRenderer) {
             localStorage.setItem('sutta_last_segment_id', activeSegmentId.toString());
-            // [REMOVED] Logic cuộn văn bản lên mép trên vì gây mất phương hướng cho người dùng.
         }
 
-        const results = await this.contentLoader.searchSegments(keyword);
-        this._renderResults(results, keyword);
+        const allResults = await this.contentLoader.searchSegments(keyword);
+        const tokens = keyword.trim().split(/\s+/).filter(t => t.length > 0);
+        const isSingleWord = tokens.length === 1;
+        const isLimited = isSingleWord && allResults.length > 50;
+        
+        // Nếu là từ đơn và > 50 kết quả, chỉ lấy 50 cái đầu
+        const results = isLimited ? allResults.slice(0, 50) : allResults;
+        
+        this._renderResults(results, keyword, isLimited);
     }
 
-    _renderResults(results, keyword) {
+    _renderResults(results, keyword, isLimited = false) {
         if (!this.resultsContainer) return;
 
-        // Cập nhật Header của Bottom Sheet
-        this._updateSheetHeader(keyword, results ? results.length : 0);
-
         if (!results || results.length === 0) {
+            this._updateSheetHeader(keyword, 0, 0, isLimited);
             this.resultsContainer.innerHTML = '<div style="text-align:center; padding: 2rem; color: var(--text-muted);">Không tìm thấy đoạn văn nào chứa cụm từ này.</div>';
             return;
         }
@@ -71,6 +75,9 @@ export class SearchRenderer {
             }
         });
 
+        // Cập nhật Header của Bottom Sheet với số lượng kết quả và số lượng thẻ
+        this._updateSheetHeader(keyword, results.length, groupedResults.length, isLimited);
+
         groupedResults.forEach(group => {
             let ruleText = '';
             if (group.rule_id) {
@@ -105,7 +112,7 @@ export class SearchRenderer {
         this._attachCardEvents(keyword);
     }
 
-    _updateSheetHeader(keyword, count) {
+    _updateSheetHeader(keyword, count, cardCount, isLimited = false) {
         if (!this.sheet || !this.sheet.bottomSheet) return;
         
         const header = this.sheet.bottomSheet.querySelector('.bottom-sheet-header');
@@ -115,21 +122,14 @@ export class SearchRenderer {
         let textGroup = header.querySelector('.header-text-group');
         if (!textGroup) {
             // Nếu chưa có group, ta cần cấu trúc lại header
-            // Lấy nút close ra trước
             const closeBtn = header.querySelector('#btn-close-search-sheet');
             
-            // Xóa nội dung cũ trừ nút close (nếu nó ko nằm trong group)
-            // Cách an toàn: Tạo group mới, đưa h3 vào đó (hoặc tạo mới), rồi prepend group vào header
             textGroup = document.createElement('div');
             textGroup.className = 'header-text-group';
             
-            // Tìm h3 cũ
             const oldH3 = header.querySelector('h3');
-            if (oldH3) {
-                oldH3.remove(); // Xóa h3 cũ đi để tạo cái mới trong group
-            }
+            if (oldH3) oldH3.remove();
             
-            // Tạo h3 mới và span count
             const newH3 = document.createElement('h3');
             newH3.className = 'header-keyword';
             const newSpan = document.createElement('span');
@@ -138,7 +138,6 @@ export class SearchRenderer {
             textGroup.appendChild(newH3);
             textGroup.appendChild(newSpan);
             
-            // Chèn group vào đầu header
             header.insertBefore(textGroup, header.firstChild);
         }
 
@@ -147,7 +146,16 @@ export class SearchRenderer {
         const span = textGroup.querySelector('.header-count');
         
         if (h3) h3.textContent = keyword ? `"${keyword}"` : 'Kết quả tra cứu';
-        if (span) span.textContent = `${count} kết quả`;
+        
+        if (span) {
+            const accentStyle = 'color: var(--accent-color); font-weight: 600;';
+            const mutedStyle = 'color: var(--text-muted); opacity: 0.8; font-size: 0.95em; padding: 0 2px;';
+            if (isLimited) {
+                span.innerHTML = `<span style="${accentStyle}">50</span> kết quả đầu tiên <span style="${mutedStyle}">trong</span> <span style="${accentStyle}">${cardCount}</span> thẻ`;
+            } else {
+                span.innerHTML = `<span style="${accentStyle}">${count}</span> kết quả <span style="${mutedStyle}">trong</span> <span style="${accentStyle}">${cardCount}</span> thẻ`;
+            }
+        }
     }
 
     _attachCardEvents(keyword) {

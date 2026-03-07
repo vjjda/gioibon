@@ -67,9 +67,8 @@ export class ContentLoader {
             if (tokens.length === 0) return [];
             
             // Xây dựng câu query FTS: MATCH '"từ khóa" *' (phù hợp với việc gõ từng phần chữ)
-            // Thay vì exact match, ta tìm các từ cùng xuất hiện. NEAR() sẽ tốt hơn cho cụm từ dài.
-            // Để đơn giản và chính xác với cụm từ người dùng bôi đen, bọc toàn bộ thành 1 cụm phrase.
             const ftsMatch = `"${tokens.join(' ')}"`; 
+            const limitClause = tokens.length >= 2 ? '' : 'LIMIT 51';
 
             const query = `
                 SELECT 
@@ -87,7 +86,7 @@ export class ContentLoader {
                 LEFT JOIN rules r ON c.rule_id = r.id
                 WHERE contents_fts MATCH '${ftsMatch}'
                 ORDER BY fts.rank
-                LIMIT 50
+                ${limitClause}
             `;
             const rows = await this.db.query(query);
             return rows || [];
@@ -95,6 +94,8 @@ export class ContentLoader {
             console.error("Search Error:", error);
             // Fallback sang LIKE nếu FTS lỗi (do từ khóa quá đặc biệt)
             try {
+                const tokens = keyword.trim().split(/\s+/).filter(t => t.length > 0);
+                const limitClause = tokens.length >= 2 ? '' : 'LIMIT 51';
                 const safeKeyword = keyword.replace(/'/g, "''");
                 const fallbackQuery = `
                     SELECT 
@@ -111,7 +112,7 @@ export class ContentLoader {
                     LEFT JOIN rules r ON c.rule_id = r.id
                     WHERE c.segment LIKE '%${safeKeyword}%'
                     ORDER BY c.uid ASC
-                    LIMIT 50
+                    ${limitClause}
                 `;
                 return await this.db.query(fallbackQuery) || [];
             } catch (fallbackError) {

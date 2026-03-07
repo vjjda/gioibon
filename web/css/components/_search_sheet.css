@@ -175,7 +175,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    height: 60vh; /* Chiều cao mặc định */
+    height: 70vh; /* Chiều cao mặc định */
     background-color: var(--bg-body);
     z-index: 9999;
     border-top-left-radius: 20px;
@@ -215,7 +215,7 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 0.5rem 1.5rem 0.75rem 1.5rem; /* Giảm padding trên dưới để gọn hơn */
+    padding: 0.5rem 1.5rem 0.5rem 1.5rem; /* Giảm padding trên dưới để gọn hơn */
     border-bottom: 1px solid var(--border-light);
 }
 
