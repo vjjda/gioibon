@@ -83,10 +83,10 @@ export function setupPWA() {
     const closeBtn = document.getElementById('pwa-close');
     const manualUpdateBtn = document.getElementById('btn-update-app');
 
-    // [NEW] Biến lưu trữ version mới nhất để cập nhật vào LocalStorage khi reload
+    // [NEW] Biến lưu trữ version mới nhất và cờ trạng thái update
     let latestDataVersion = null;
+    let isSWUpdateAvailable = false; // [FIX] Theo dõi xem có cập nhật Service Worker không
 
-    // Hàm hiển thị Toast dùng chung
     const showUpdateToast = () => {
         if (toast) toast.classList.remove('hidden');
         if (manualUpdateBtn) {
@@ -100,6 +100,7 @@ export function setupPWA() {
     const updateSW = registerSW({
         onNeedRefresh() {
             console.log('[PWA] App update needed (SW)');
+            isSWUpdateAvailable = true; // [FIX] Đánh dấu có SW Update
             showUpdateToast();
         },
         onOfflineReady() {
@@ -117,17 +118,14 @@ export function setupPWA() {
             const res = await fetch(versionUrl, { cache: 'no-store' });
             if (res.ok) {
                 const remoteData = await res.json();
-                latestDataVersion = remoteData.version; // Lưu lại phiên bản mới nhất từ server
+                latestDataVersion = remoteData.version; 
                 
                 const localVersion = localStorage.getItem('db_version_content.db');
-                
-                // Lần đầu chạy app, lưu version hiện tại luôn để làm mốc cho các lần sau
                 if (!localVersion) {
                     localStorage.setItem('db_version_content.db', latestDataVersion);
                     return false;
                 }
 
-                // Nếu version khác biệt, báo hiệu cần cập nhật
                 if (latestDataVersion !== localVersion) {
                     return true;
                 }
@@ -138,17 +136,14 @@ export function setupPWA() {
         return false;
     };
 
-    // --- LẮNG NGHE SỰ KIỆN QUAY LẠI TAB (VISIBILITY CHANGE) ---
-    // Tự động kiểm tra cả SW và Data mỗi khi người dùng mở lại tab ứng dụng
+    // --- LẮNG NGHE SỰ KIỆN QUAY LẠI TAB ---
     document.addEventListener('visibilitychange', async () => {
         if (document.visibilityState === 'visible') {
-            // 1. Kích hoạt Service Worker tự kiểm tra bản mới
             if ('serviceWorker' in navigator) {
                 const reg = await navigator.serviceWorker.getRegistration();
                 if (reg) reg.update();
             }
             
-            // 2. Kiểm tra Data
             if (await checkDataUpdateSilently()) {
                 console.log('[PWA] Data update found in background.');
                 showUpdateToast();
@@ -157,27 +152,34 @@ export function setupPWA() {
     });
 
     if (toast && refreshBtn && closeBtn) {
-        const handleUpdate = () => {
+        const handleUpdate = async () => {
             refreshBtn.disabled = true;
             refreshBtn.textContent = "Đang tải...";
             closeBtn.disabled = true;
 
-            // [FIX] Cập nhật version mới vào localStorage để tránh lặp lại thông báo vĩnh viễn
+            // Xử lý cập nhật version DB
             if (latestDataVersion) {
                 localStorage.setItem('db_version_content.db', latestDataVersion);
+                // [FIX] Nếu có dữ liệu mới, chủ động xóa cache cũ của DB (nếu có)
+                if ('caches' in window) {
+                    try {
+                        await caches.delete('database-cache');
+                    } catch (e) { console.warn("Failed to clear DB cache:", e); }
+                }
             }
 
-            // Yêu cầu Service Worker mới giành quyền kiểm soát
-            updateSW(true);
-            
-            setTimeout(() => {
+            // [FIX] Phân bổ việc tải lại trang hợp lý để tránh Race Condition
+            if (isSWUpdateAvailable) {
+                // Nhường cho PWA Plugin thực hiện tải lại trang khi SW đã take control
+                updateSW(true);
+            } else {
+                // Chỉ là Data Update thuần túy, tự chúng ta load lại trang
                 window.location.reload();
-            }, 1000);
+            }
         };
 
         refreshBtn.addEventListener('click', handleUpdate);
         
-        // Nút check thủ công (dành cho người dùng muốn bấm trực tiếp)
         if (manualUpdateBtn) {
             manualUpdateBtn.addEventListener('click', async () => {
                 if (!toast.classList.contains('hidden')) {
@@ -201,6 +203,7 @@ export function setupPWA() {
                             await registration.update();
                             if (registration.installing || registration.waiting) {
                                 hasUpdate = true;
+                                isSWUpdateAvailable = true; // [FIX] Ghi nhận SW đang đợi
                             }
                         }
                     }
