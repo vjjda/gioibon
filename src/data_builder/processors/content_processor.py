@@ -32,13 +32,34 @@ class TsvContentProcessor:
         self.structure_proc = StructureProcessor(rule_groups_path)
 
     def _generate_hint_text(self, text: str) -> str:
-        """Tạo hint text: 6 từ nếu bắt đầu bằng 'Vị tỳ khưu' (không phân biệt hoa thường), còn lại 4 từ."""
+        """Tạo hint text: bọc 'Vị tỳ khưu [nào]' vào class mờ, 6 từ nếu có prefix, còn lại 4 từ."""
+        lower_text = text.lower()
         words = text.split()
-        limit = 6 if text.lower().startswith("vị tỳ khưu") else 4
+        
+        prefix_to_mute = ""
+        limit = 4
+        
+        if lower_text.startswith("vị tỳ khưu nào"):
+            prefix_to_mute = " ".join(words[:4]) # "Vị tỳ khưu nào" là 4 từ
+            limit = 6
+        elif lower_text.startswith("vị tỳ khưu"):
+            prefix_to_mute = " ".join(words[:3]) # "Vị tỳ khưu" là 3 từ
+            limit = 6
+            
+        if prefix_to_mute:
+            # Lấy các từ còn lại sau prefix cho đến limit
+            prefix_word_count = len(prefix_to_mute.split())
+            remaining_words = words[prefix_word_count:limit]
+            
+            hint_base = f"<span class='hint-prefix-muted'>{prefix_to_mute}</span>"
+            if remaining_words:
+                hint_base += " " + " ".join(remaining_words)
+        else:
+            hint_base = " ".join(words[:limit])
         
         if len(words) > limit:
-            return " ".join(words[:limit]) + " <span class='hint-ellipsis'>...</span>"
-        return " ".join(words)
+            return hint_base + " <span class='hint-ellipsis'>...</span>"
+        return hint_base
 
     def process_tsv(self, tsv_path: str):
         """Đọc file TSV nguồn và bổ sung cột Audio, segment_html bằng cách điều phối các bộ xử lý nhỏ."""

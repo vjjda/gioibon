@@ -84,13 +84,19 @@ body.hint-mode-active .segment-text.masked .full-content .hint-tail {
     pointer-events: none;
 }
 
-/* 3. Định dạng dấu ba chấm gợi ý cho hint-text */
+/* 5. Định dạng dấu ba chấm gợi ý cho hint-text */
 .hint-ellipsis {
     color: var(--text-muted, #999) !important;
     font-weight: normal;
     letter-spacing: 1px;
     margin-left: 4px;
     opacity: 0.5;
+}
+
+/* Làm mờ các cụm từ mồi (Vị tỳ khưu [nào]) */
+.hint-prefix-muted {
+    opacity: 0.5;
+    font-weight: normal;
 }
 
 /* 4. Trường hợp không có hint (Tiêu đề, Heading): Che đen hoàn toàn khi bị MASK */
