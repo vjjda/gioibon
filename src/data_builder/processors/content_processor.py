@@ -89,6 +89,8 @@ class TsvContentProcessor:
                     
                     # 3. Làm giàu nội dung hiển thị (Rich Text)
                     has_hint_val = 0
+                    is_end_segment = any(cls in html_template for cls in ["endvagga", "endsection", "endsutta"])
+                    
                     if is_heading:
                         current_display_text = self.addition_proc.process(current_display_text, True, label, html_template)
                     else:
@@ -102,9 +104,11 @@ class TsvContentProcessor:
                         # Chuẩn hoá HTML template nếu cần (p -> div)
                         html_template = self.list_proc.ensure_valid_html(html_template, current_display_text)
                         
-                        # Tạo Hint (Chạy cuối cùng để bọc cả các thẻ span đã tạo trước đó nếu cần)
-                        current_display_text = self.hint_proc.process(current_display_text)
-                        has_hint_val = 1
+                        # Chỉ tạo Hint nếu không phải là segment kết thúc
+                        if not is_end_segment:
+                            # Tạo Hint (Chạy cuối cùng để bọc cả các thẻ span đã tạo trước đó nếu cần)
+                            current_display_text = self.hint_proc.process(current_display_text)
+                            has_hint_val = 1
 
                     # 4. Tạo bản sạch (Raw Text) để Tìm kiếm & TTS
                     clean_segment = clean_brackets(raw_source_text)
