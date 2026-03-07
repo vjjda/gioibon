@@ -128,8 +128,8 @@ export class CollapseManager {
                     currentNearestHeadingCollapsed = this.normalCollapsedIds.has(id);
                 }
             } else {
-                // MIỄN NHIỄM: Các đoạn kết thúc (endsection, endvagga, endsutta) và title/subtitle không bao giờ bị ẩn
-                const isImmune = item.label === 'title' || item.label === 'subtitle' || (item.html && item.html.match(/class=['"](endsection|endvagga|endsutta)['"]/));
+                // MIỄN NHIỄM: Các đoạn has_hint=0 (như title/subtitle, end-segments) không bao giờ bị ẩn bởi Heading cha
+                const isImmune = !item.hasHint;
                 
                 if (currentNearestHeadingCollapsed && !isImmune) {
                     this.hiddenItemIds.add(Number(item.id));

@@ -93,6 +93,11 @@ class TsvContentProcessor:
                     
                     if is_heading:
                         current_display_text = self.addition_proc.process(current_display_text, True, label, html_template)
+                        # Headings có has_hint = 1 để hỗ trợ Masking (che các đoạn con), 
+                        # nhưng không có hint_text (sẽ được xử lý che đen ở CSS)
+                        # Ngoại trừ title/subtitle không cho phép mask
+                        if label not in ["title", "subtitle"]:
+                            has_hint_val = 1
                     else:
                         # Thứ tự: Bổ sung của dịch giả -> Lựa chọn [hoặc] -> Danh sách duyenco -> Hint
                         current_display_text = self.addition_proc.process(current_display_text, False, label, html_template)

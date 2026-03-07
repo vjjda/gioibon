@@ -108,15 +108,15 @@ export class MaskManager {
 
     // Helper kiểm tra các đoạn "miễn nhiễm" với toggle hàng loạt
     _isImmune(item) {
-        return item.html && item.html.match(/class=['"](endsection|endvagga|endsutta)['"]/);
+        return !item.hasHint;
     }
 
     handleMaskEnter(e, segmentEl) {
         if (!this.isDraggingMask || !this.dragMaskAction) return;
-        // Bỏ qua không mask các thẻ heading khi đang kéo chuột
+        // Bỏ qua không mask các thẻ không có hasHint
         const itemId = segmentEl.dataset.id;
         const item = this.items.find(i => String(i.id) === String(itemId));
-        if (item && (this._isHeading(item) || this._isImmune(item))) return;
+        if (item && !item.hasHint) return;
 
         const textEl = segmentEl.querySelector('.segment-text');
         this._applyMaskAction(textEl, this.dragMaskAction, itemId);
@@ -205,7 +205,7 @@ export class MaskManager {
                 continue; // Bỏ qua sub-heading, tiếp tục tìm nội dung
             }
             
-            if (this._isImmune(nextItem)) continue; // Bỏ qua các đoạn kết thúc
+            if (this._isImmune(nextItem)) continue; // Bỏ qua các đoạn không cho phép mask (has_hint=0)
             
             const nextEl = this._findElement(nextItem.id);
             if (nextEl) {
@@ -230,7 +230,7 @@ export class MaskManager {
                 continue; // [QUAN TRỌNG] Ngoại trừ các segment heading
             }
 
-            if (this._isImmune(nextItem)) continue; // [QUAN TRỌNG] Ngoại trừ các đoạn kết thúc
+            if (this._isImmune(nextItem)) continue; // [QUAN TRỌNG] Ngoại trừ các đoạn miễn nhiễm (has_hint=0)
 
             const nextEl = this._findElement(nextItem.id);
             if (nextEl) {

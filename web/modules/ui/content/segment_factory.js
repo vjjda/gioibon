@@ -140,26 +140,24 @@ export class SegmentFactory {
         const htmlTemplate = item.html || '{}';
         const content = item.text || ''; // item.text hiện chứa segment_html từ DB
         
-        // Nếu không có hint (Tiêu đề, hoặc các đoạn đặc biệt) -> Render 1 lớp như cũ
-        if (!item.hasHint) {
+        // Render 2 lớp nếu CÓ hint (Normal segments)
+        if (item.hasHint && item.hintText) {
+            // Lớp 1: Nội dung đầy đủ
+            const fullContent = document.createElement('div');
+            fullContent.className = 'full-content';
+            fullContent.innerHTML = htmlTemplate.replace('{}', content);
+            
+            // Lớp 2: Nội dung gợi ý (5-7 từ đầu + ...)
+            const hintContent = document.createElement('div');
+            hintContent.className = 'hint-content';
+            hintContent.innerHTML = htmlTemplate.replace('{}', item.hintText);
+
+            textEl.appendChild(fullContent);
+            textEl.appendChild(hintContent);
+        } else {
+            // Trường hợp không có hintText (Heading hoặc các đoạn has_hint=0) -> Render 1 lớp như cũ
             textEl.innerHTML = htmlTemplate.replace('{}', content);
-            wrapper.appendChild(textEl);
-            return textEl;
         }
-
-        // Nếu CÓ hint -> Render 2 lớp để hỗ trợ Hint Mode mới
-        // Lớp 1: Nội dung đầy đủ
-        const fullContent = document.createElement('div');
-        fullContent.className = 'full-content';
-        fullContent.innerHTML = htmlTemplate.replace('{}', content);
-        
-        // Lớp 2: Nội dung gợi ý (4 từ đầu + ...)
-        const hintContent = document.createElement('div');
-        hintContent.className = 'hint-content';
-        hintContent.innerHTML = htmlTemplate.replace('{}', item.hintText || '...');
-
-        textEl.appendChild(fullContent);
-        textEl.appendChild(hintContent);
 
         wrapper.appendChild(textEl);
         return textEl;
@@ -235,11 +233,8 @@ export class SegmentFactory {
     }
 
     _addMaskToggle(segmentEl, item) {
-        // Thay isRuleHeader bằng isHeading (bỏ qua title/subtitle)
-        const isHeading = item.html && item.html.match(/^<h[1-6]/i) && item.label !== 'title' && item.label !== 'subtitle';
-        const hasAudio = item.audio && item.audio !== 'skip';
-
-        if (hasAudio || isHeading) {
+        // [UNIFIED] Chỉ tạo vùng che/mở (mask toggle) nếu backend đánh dấu has_hint = 1
+        if (item.hasHint) {
             const toggleArea = document.createElement('div');
             toggleArea.className = 'segment-mask-toggle';
             toggleArea.title = "Nhấp để che/hiện text";
