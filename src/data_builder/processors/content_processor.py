@@ -32,7 +32,7 @@ class TsvContentProcessor:
         self.structure_proc = StructureProcessor(rule_groups_path)
 
     def _generate_hint_text(self, text: str) -> str:
-        """Tạo hint text: bọc 'Vị tỳ khưu [nào]' vào class mờ, 6 từ nếu có prefix, còn lại 4 từ."""
+        """Tạo hint text: bọc 'Vị tỳ khưu [nào]' vào class mờ, 7 từ nếu là 'nào', 6 từ nếu là 'vị tỳ khưu'."""
         lower_text = text.lower()
         words = text.split()
         
@@ -41,7 +41,7 @@ class TsvContentProcessor:
         
         if lower_text.startswith("vị tỳ khưu nào"):
             prefix_to_mute = " ".join(words[:4]) # "Vị tỳ khưu nào" là 4 từ
-            limit = 6
+            limit = 7
         elif lower_text.startswith("vị tỳ khưu"):
             prefix_to_mute = " ".join(words[:3]) # "Vị tỳ khưu" là 3 từ
             limit = 6
