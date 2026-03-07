@@ -15,7 +15,7 @@ export class ContentLoader {
             // Việc này giúp giảm tối đa chi phí chuyển ngữ cảnh (context switching) giữa JS và WASM (SQLite)
             const rows = await this.db.query(
                 `SELECT c.uid, c.html, c.label, c.audio_name, c.segment, 
-                 c.segment_html, c.has_hint, c.heading_id, c.rule_id, h.level as heading_level
+                 c.segment_html, c.has_hint, c.hint_text, c.heading_id, c.rule_id, h.level as heading_level
                  FROM contents c
                  LEFT JOIN headings h ON c.heading_id = h.uid
                  ORDER BY c.uid ASC`
@@ -29,6 +29,7 @@ export class ContentLoader {
                     audio: row.audio_name,
                     segment: row.segment,      // Bản thô (để search)
                     text: row.segment_html,    // Bản HTML (để hiển thị)
+                    hintText: row.hint_text,
                     hasHint: row.has_hint === 1,
                     headingId: row.heading_id,
                     headingLevel: row.heading_level,

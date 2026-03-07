@@ -138,12 +138,29 @@ export class SegmentFactory {
         textEl.className = 'segment-text';
         
         const htmlTemplate = item.html || '{}';
-        const content = item.text || ''; // item.text hiện chứa segment_html từ DB (đã xử lý duyenco list)
+        const content = item.text || ''; // item.text hiện chứa segment_html từ DB
         
-        // Render nội dung đã được xử lý từ Backend (bao gồm b, span.quote-text, span.hint-tail, ul/ol.duyenco-list)
-        const renderedHtml = htmlTemplate.replace('{}', content);
+        // Nếu không có hint (Tiêu đề, hoặc các đoạn đặc biệt) -> Render 1 lớp như cũ
+        if (!item.hasHint) {
+            textEl.innerHTML = htmlTemplate.replace('{}', content);
+            wrapper.appendChild(textEl);
+            return textEl;
+        }
+
+        // Nếu CÓ hint -> Render 2 lớp để hỗ trợ Hint Mode mới
+        // Lớp 1: Nội dung đầy đủ
+        const fullContent = document.createElement('div');
+        fullContent.className = 'full-content';
+        fullContent.innerHTML = htmlTemplate.replace('{}', content);
         
-        textEl.innerHTML = renderedHtml;
+        // Lớp 2: Nội dung gợi ý (4 từ đầu + ...)
+        const hintContent = document.createElement('div');
+        hintContent.className = 'hint-content';
+        hintContent.innerHTML = htmlTemplate.replace('{}', item.hintText || '...');
+
+        textEl.appendChild(fullContent);
+        textEl.appendChild(hintContent);
+
         wrapper.appendChild(textEl);
         return textEl;
     }

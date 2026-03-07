@@ -29,5 +29,6 @@ class SegmentData(SourceSegmentData):
     audio: str = Field(description="Tên file audio")
     segment_html: str = Field(description="Nội dung văn bản hiển thị (HTML)")
     has_hint: int = Field(description="Cờ hiệu hint (0/1)")
+    hint_text: Optional[str] = Field(None, description="Nội dung 4 từ đầu + ...")
     heading_id: Optional[int] = Field(None, description="ID tiêu đề trực thuộc")
     rule_id: Optional[str] = Field(None, description="ID luật trực thuộc")

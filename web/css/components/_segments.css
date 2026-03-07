@@ -51,70 +51,63 @@
     /* [REMOVED] Transition removed to make masking/hinting instant */
 }
 
-/* --- LOGIC MASKING --- */
-.segment-text.masked {
+/* --- LOGIC MASKING & HINTING --- */
+
+/* 1. Mặc định hiện full, ẩn hint */
+.full-content { display: block; }
+.hint-content { display: none; }
+
+/* 2. Khi bị MASKED: Ẩn full, Hiện hint */
+.segment-text.masked .full-content {
+    display: none;
+}
+
+.segment-text.masked .hint-content {
+    display: block;
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* 3. Khi TẮT Hint Mode (Mặc định): Che đen lớp hint-content */
+body:not(.hint-mode-active) .segment-text.masked .hint-content {
+    background-color: var(--mask-color, #2d3436);
     color: transparent !important;
-    background-color: transparent !important;
     user-select: none;
-    box-shadow: none;
+    cursor: pointer;
+    min-height: 1.2em; /* Đảm bảo có vùng bấm nếu hint trống */
 }
 
-.segment-text.masked * {
+/* 4. Khi BẬT Hint Mode: Lộ diện nội dung hint-content */
+body.hint-mode-active .segment-text.masked .hint-content {
+    background-color: transparent;
+    color: var(--text-main);
+}
+
+/* 5. Định dạng dấu ba chấm gợi ý */
+.hint-ellipsis {
+    color: var(--primary-color);
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-left: 2px;
+    opacity: 0.7;
+}
+
+/* 6. Trường hợp không có lớp con (Tiêu đề, Heading): Che toàn bộ textEl */
+.segment-text.masked:not(:has(.full-content)) {
+    background-color: var(--mask-color, #2d3436);
     color: transparent !important;
-    border-color: transparent !important;
-    text-decoration-color: transparent !important;
-    opacity: 0;
+    border-radius: 4px;
+    user-select: none;
 }
 
-/* --- HINT MODE --- */
-body.hint-mode-active .segment-text.masked {
-    color: var(--text-main) !important;
-}
-
-body.hint-mode-active .segment-text.masked * {
-    color: inherit !important;
-    border-color: inherit !important;
-    text-decoration-color: inherit !important;
-    opacity: 1;
-}
-
-body.hint-mode-active .segment-text.masked b,
-body.hint-mode-active .segment-text.masked strong {
+/* --- HINT MODE TWEAKS (Cho các thẻ con bên trong hint-content nếu có) --- */
+body.hint-mode-active .segment-text.masked .hint-content b,
+body.hint-mode-active .segment-text.masked .hint-content strong {
     color: var(--primary-color) !important;
 }
 
-body.hint-mode-active .segment-text.masked .pli {
+body.hint-mode-active .segment-text.masked .hint-content .pli {
     color: var(--text-pali) !important;
-}
-
-body.hint-mode-active .segment-text.masked .quote-text {
-    color: var(--text-quote) !important;
-}
-
-body.hint-mode-active .segment-text.masked .trans-addition {
-    color: var(--text-muted) !important;
-}
-
-body.hint-mode-active .segment-text.masked .selection-or {
-    color: var(--text-muted) !important;
-    font-style: italic !important;
-}
-
-body.hint-mode-active .segment-text.masked .selection-item {
-    color: var(--text-selection) !important;
-}
-
-/* Bảo vệ border của selection-group không bị inherit màu đậm trong Hint Mode */
-body.hint-mode-active .segment-text.masked .selection-group {
-    border-color: var(--selection-border) !important;
-}
-
-body.hint-mode-active .segment-text.masked .hint-tail {
-    color: transparent !important;
-    border-bottom: 1px solid rgba(128, 128, 128, 0.8) !important;
-    border-bottom-color: rgba(128, 128, 128, 0.8) !important;
-    user-select: none;
-    pointer-events: none;
 }
 
 /* Play Buttons Alignment */

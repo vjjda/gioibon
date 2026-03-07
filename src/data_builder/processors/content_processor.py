@@ -31,6 +31,13 @@ class TsvContentProcessor:
         self.hint_proc = HintProcessor()
         self.structure_proc = StructureProcessor(rule_groups_path)
 
+    def _generate_hint_text(self, text: str) -> str:
+        """Tạo hint text: 4 cụm ký tự đầu tiên + <span class='hint-ellipsis'>...</span>."""
+        words = text.split()
+        if len(words) > 4:
+            return " ".join(words[:4]) + " <span class='hint-ellipsis'>...</span>"
+        return " ".join(words)
+
     def process_tsv(self, tsv_path: str):
         """Đọc file TSV nguồn và bổ sung cột Audio, segment_html bằng cách điều phối các bộ xử lý nhỏ."""
         segments_output: List[SegmentData] = []
@@ -87,6 +94,11 @@ class TsvContentProcessor:
                         label=label
                     )
                     
+                    # 6. Tạo Hint Text (chỉ cho các segment có has_hint)
+                    hint_text = None
+                    if has_hint_val == 1:
+                        hint_text = self._generate_hint_text(clean_segment)
+
                     segments_output.append(SegmentData(
                         uid=uid,
                         html=html_template,
@@ -95,6 +107,7 @@ class TsvContentProcessor:
                         audio=audio_filename,
                         segment_html=current_display_text,
                         has_hint=has_hint_val,
+                        hint_text=hint_text,
                         heading_id=heading_id,
                         rule_id=rule_id
                     ))

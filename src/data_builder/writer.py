@@ -33,7 +33,7 @@ class DataWriter:
     def _save_tsv(self, data: List[SegmentData]) -> None:
         os.makedirs(os.path.dirname(self.tsv_path), exist_ok=True)
         with open(self.tsv_path, 'w', encoding='utf-8', newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=["uid", "html", "label", "segment", "audio", "segment_html", "has_hint", "heading_id", "rule_id"], delimiter='\t')
+            writer = csv.DictWriter(f, fieldnames=["uid", "html", "label", "segment", "audio", "segment_html", "has_hint", "hint_text", "heading_id", "rule_id"], delimiter='\t')
             writer.writeheader()
             for item in data:
                 writer.writerow(item.model_dump())
@@ -59,6 +59,7 @@ class DataWriter:
                 audio_name TEXT,
                 segment_html TEXT,
                 has_hint INTEGER,
+                hint_text TEXT,
                 heading_id INTEGER,
                 rule_id TEXT
             )
@@ -124,10 +125,11 @@ class DataWriter:
                 item.audio,
                 item.segment_html,
                 item.has_hint,
+                item.hint_text,
                 item.heading_id,
                 item.rule_id
             ))
-        cursor.executemany("INSERT INTO contents VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", insert_contents)
+        cursor.executemany("INSERT INTO contents VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", insert_contents)
         
         # Chèn dữ liệu rules (loại bỏ trùng lặp nếu có do rule_groups và extracted data)
         seen_rules = set()
