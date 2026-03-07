@@ -224,6 +224,16 @@ body.hint-mode-active .segment-text.masked .hint-content .pli {
     width: 4px;
 }
 
+/* Ẩn trang trí và vô hiệu hóa tương tác khi Heading đang bị Thu gọn (Collapsed) */
+.heading-segment.is-collapsed .segment-mask-toggle::after {
+    display: none !important;
+}
+
+.heading-segment.is-collapsed .segment-mask-toggle {
+    pointer-events: none !important;
+    cursor: default !important;
+}
+
 /* --- MEMORIZATION UI --- */
 .memorization-container {
     display: flex;
