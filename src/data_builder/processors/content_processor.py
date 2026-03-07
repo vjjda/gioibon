@@ -32,10 +32,10 @@ class TsvContentProcessor:
         self.structure_proc = StructureProcessor(rule_groups_path)
 
     def _generate_hint_text(self, text: str) -> str:
-        """Tạo hint text: 4 cụm ký tự đầu tiên + <span class='hint-ellipsis'>...</span>."""
+        """Tạo hint text: 5 cụm ký tự đầu tiên + <span class='hint-ellipsis'>...</span>."""
         words = text.split()
-        if len(words) > 4:
-            return " ".join(words[:4]) + " <span class='hint-ellipsis'>...</span>"
+        if len(words) > 5:
+            return " ".join(words[:5]) + " <span class='hint-ellipsis'>...</span>"
         return " ".join(words)
 
     def process_tsv(self, tsv_path: str):
