@@ -51,64 +51,61 @@
     /* [REMOVED] Transition removed to make masking/hinting instant */
 }
 
-/* --- LOGIC MASKING & HINTING (V2 - Strict) --- */
+/* --- LOGIC MASKING & HINTING (V3 - Corrected Logic) --- */
 
-/* 1. Trạng thái bình thường */
-.full-content { display: block; opacity: 1; visibility: visible; }
+/* 1. Mặc định: Hiện full, ẩn hint */
+.full-content { display: block; }
 .hint-content { display: none; }
 
-/* 2. Khi bị MASKED */
-.segment-text.masked .full-content {
+/* 2. Khi Segment bị MASKED (.masked) */
+
+/* 2.1. Trường hợp Hint Mode TẮT (OFF): HIỂN THỊ 4 TỪ ĐẦU */
+body:not(.hint-mode-active) .segment-text.masked .full-content {
+    display: none !important;
+}
+body:not(.hint-mode-active) .segment-text.masked .hint-content {
+    display: block !important;
+    color: var(--text-main) !important;
+}
+
+/* 2.2. Trường hợp Hint Mode BẬT (ON): HIỂN THỊ CHỮ CÁI ĐẦU (Dùng hint-tail) */
+body.hint-mode-active .segment-text.masked .full-content {
+    display: block !important;
+}
+body.hint-mode-active .segment-text.masked .hint-content {
     display: none !important;
 }
 
-.segment-text.masked .hint-content {
-    display: block !important;
-    border-radius: 4px;
-}
-
-/* 3. Khi TẮT Hint Mode (Che đen) */
-body:not(.hint-mode-active) .segment-text.masked .hint-content {
-    background-color: var(--mask-color, #2d3436) !important;
+/* Quy tắc ẩn đuôi từ (hint-tail) bên trong full-content khi ở chế độ này */
+body.hint-mode-active .segment-text.masked .full-content .hint-tail {
     color: transparent !important;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.4) !important;
     user-select: none;
-    cursor: pointer;
-    min-height: 1.2em;
+    pointer-events: none;
 }
 
-/* 4. Khi BẬT Hint Mode (Hiện 4 từ) */
-body.hint-mode-active .segment-text.masked .hint-content {
-    background-color: transparent !important;
-    color: var(--text-main) !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-
-/* Đảm bảo các thẻ con (p, b, span...) bên trong cũng phải hiện */
-body.hint-mode-active .segment-text.masked .hint-content * {
-    color: inherit !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    background-color: transparent !important;
-}
-
-/* 5. Định dạng dấu ba chấm gợi ý */
+/* 3. Định dạng dấu ba chấm gợi ý cho hint-text */
 .hint-ellipsis {
     color: var(--primary-color) !important;
     font-weight: bold;
     letter-spacing: 2px;
     margin-left: 2px;
-    opacity: 0.8 !important;
-    visibility: visible !important;
+    opacity: 0.8;
 }
 
-/* 6. Cho Heading hoặc Segment không có lớp con */
+/* 4. Trường hợp không có hint (Tiêu đề, Heading): Che đen hoàn toàn khi bị MASK */
 .segment-text.masked:not(:has(.full-content)) {
     background-color: var(--mask-color, #2d3436) !important;
     color: transparent !important;
     border-radius: 4px;
     user-select: none;
     min-height: 1.2em;
+}
+
+/* Đảm bảo các thẻ con của Heading cũng bị ẩn chữ */
+.segment-text.masked:not(:has(.full-content)) * {
+    color: transparent !important;
+    opacity: 0 !important;
 }
 
 /* --- HINT MODE TWEAKS (Cho các thẻ con bên trong hint-content nếu có) --- */
