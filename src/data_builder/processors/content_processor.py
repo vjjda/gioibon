@@ -32,9 +32,9 @@ class TsvContentProcessor:
         self.structure_proc = StructureProcessor(rule_groups_path)
 
     def _generate_hint_text(self, text: str) -> str:
-        """Tạo hint text: 6 từ nếu bắt đầu bằng 'Vị tỳ khưu', còn lại 4 từ."""
+        """Tạo hint text: 6 từ nếu bắt đầu bằng 'Vị tỳ khưu' (không phân biệt hoa thường), còn lại 4 từ."""
         words = text.split()
-        limit = 6 if text.startswith("Vị tỳ khưu") else 4
+        limit = 6 if text.lower().startswith("vị tỳ khưu") else 4
         
         if len(words) > limit:
             return " ".join(words[:limit]) + " <span class='hint-ellipsis'>...</span>"
