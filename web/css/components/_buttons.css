@@ -1,6 +1,7 @@
 /* Path: web/css/components/_buttons.css */
 
 /* Buttons */
+button,
 .btn {
     padding: 8px 20px;
     border-radius: 8px;
@@ -14,6 +15,8 @@
     align-items: center;
     gap: 8px;
     outline: none;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .btn:focus {
@@ -53,6 +56,8 @@
     align-items: center;
     justify-content: center;
     outline: none;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .icon-btn:focus {
