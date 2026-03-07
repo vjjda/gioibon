@@ -162,7 +162,14 @@
     background-color: rgba(0, 0, 0, 0.4);
     z-index: 9998; /* Below sheet but above everything else including global-controls */
     opacity: 1;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, left 0.3s ease;
+}
+
+/* Trên desktop, overlay không che sidebar nếu sidebar đang mở */
+@media (min-width: 1025px) {
+    #sidebar:not(.collapsed) ~ .sheet-overlay {
+        left: var(--sidebar-width);
+    }
 }
 
 .sheet-overlay.hidden {
@@ -180,12 +187,22 @@
     z-index: 9999;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
-    box-shadow: var(--shadow-float);
+    border-top: 1px solid var(--border-color);
+    box-shadow: none;
     display: flex;
     flex-direction: column;
     transform: translateY(0);
-    /* Thêm height vào transition để mượt khi snap hoặc đóng */
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), height 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    /* Thêm height và left vào transition để mượt khi snap hoặc đóng hoặc toggle sidebar */
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                height 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+                left 0.3s ease;
+}
+
+/* Trên desktop, bottom sheet không che sidebar nếu sidebar đang mở */
+@media (min-width: 1025px) {
+    #sidebar:not(.collapsed) ~ .bottom-sheet {
+        left: var(--sidebar-width);
+    }
 }
 
 .bottom-sheet.hidden {
@@ -194,7 +211,7 @@
 
 .bottom-sheet-drag-handle {
     width: 100%;
-    height: 24px;
+    height: 18px;
     /* Tăng vùng bấm lên 24px để dễ kéo */
     display: flex;
     justify-content: center;
@@ -288,6 +305,7 @@
 
 .search-result-breadcrumbs {
     font-size: 0.8rem;
+    /* font-style: italic; */
     color: var(--text-muted);
     font-family: var(--font-ui);
     display: block;

@@ -47,6 +47,12 @@ export class SearchRenderer {
             if (breadcrumbs) {
                 const parts = breadcrumbs.split(' > ');
                 if (parts.length > 1) breadcrumbs = parts.slice(1).join(' > ');
+                
+                // Loại bỏ "THUYẾT GIỚI" ở đầu nếu có
+                breadcrumbs = breadcrumbs.replace(/^THUYẾT GIỚI\s*/, '');
+                
+                // Loại bỏ phần nội dung trong ngoặc đơn ở cuối chuỗi (ví dụ: "(Dutiyapavāraṇā)")
+                breadcrumbs = breadcrumbs.replace(/\s*\([^)]*\)$/, '');
             }
 
             const groupKey = `${res.rule_id || 'no-rule'}-${breadcrumbs}`;
@@ -151,7 +157,7 @@ export class SearchRenderer {
             const accentStyle = 'color: var(--accent-color); font-weight: 600;';
             const mutedStyle = 'color: var(--text-muted); opacity: 0.8; font-size: 0.95em; padding: 0 2px;';
             if (isLimited) {
-                span.innerHTML = `<span style="${accentStyle}">50</span> kết quả đầu tiên <span style="${mutedStyle}">trong</span> <span style="${accentStyle}">${cardCount}</span> thẻ`;
+                span.innerHTML = `<span style="${accentStyle}">50</span> kết quả <span style="${accentStyle}">đầu tiên</span> <span style="${mutedStyle}">trong</span> <span style="${accentStyle}">${cardCount}</span> thẻ`;
             } else {
                 span.innerHTML = `<span style="${accentStyle}">${count}</span> kết quả <span style="${mutedStyle}">trong</span> <span style="${accentStyle}">${cardCount}</span> thẻ`;
             }
