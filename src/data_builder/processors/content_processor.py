@@ -89,7 +89,7 @@ class TsvContentProcessor:
                     
                     # 3. Làm giàu nội dung hiển thị (Rich Text)
                     has_hint_val = 0
-                    is_end_segment = any(cls in html_template for cls in ["endvagga", "endsection", "endsutta"])
+                    is_end_segment = any(cls in html_template for cls in ["endvagga", "endsection", "endsutta", "sadhu"])
                     
                     if is_heading:
                         current_display_text = self.addition_proc.process(current_display_text, True, label, html_template)
