@@ -27,7 +27,8 @@ export function setupPWA() {
                         'sutta_sepia_dark',
                         'sutta_loop_enabled',
                         'sutta_hint_mode_enabled',
-                        'sutta_normal_collapsed_ids'
+                        'sutta_normal_collapsed_ids',
+                        'db_version_content.db'
                     ];
 
                     const backup = {};
@@ -82,6 +83,9 @@ export function setupPWA() {
     const closeBtn = document.getElementById('pwa-close');
     const manualUpdateBtn = document.getElementById('btn-update-app');
 
+    // [NEW] Biến lưu trữ version mới nhất để cập nhật vào LocalStorage khi reload
+    let latestDataVersion = null;
+
     // Hàm hiển thị Toast dùng chung
     const showUpdateToast = () => {
         if (toast) toast.classList.remove('hidden');
@@ -113,10 +117,18 @@ export function setupPWA() {
             const res = await fetch(versionUrl, { cache: 'no-store' });
             if (res.ok) {
                 const remoteData = await res.json();
+                latestDataVersion = remoteData.version; // Lưu lại phiên bản mới nhất từ server
+                
                 const localVersion = localStorage.getItem('db_version_content.db');
-                // Chỉ báo update nếu đã có localVersion (nghĩa là không phải lần đầu tải) 
-                // và version trên server khác với local
-                if (localVersion && remoteData.version !== localVersion) {
+                
+                // Lần đầu chạy app, lưu version hiện tại luôn để làm mốc cho các lần sau
+                if (!localVersion) {
+                    localStorage.setItem('db_version_content.db', latestDataVersion);
+                    return false;
+                }
+
+                // Nếu version khác biệt, báo hiệu cần cập nhật
+                if (latestDataVersion !== localVersion) {
                     return true;
                 }
             }
@@ -150,9 +162,14 @@ export function setupPWA() {
             refreshBtn.textContent = "Đang tải...";
             closeBtn.disabled = true;
 
+            // [FIX] Cập nhật version mới vào localStorage để tránh lặp lại thông báo vĩnh viễn
+            if (latestDataVersion) {
+                localStorage.setItem('db_version_content.db', latestDataVersion);
+            }
+
             // Yêu cầu Service Worker mới giành quyền kiểm soát
             updateSW(true);
-
+            
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
@@ -206,3 +223,4 @@ export function setupPWA() {
         });
     }
 }
+
