@@ -112,9 +112,10 @@ export default defineConfig(({ mode }) => {
                                 cacheableResponse: { statuses: [0, 200] }
                             }
                         },
-                        // 2. Cache file Webfont của Google Fonts & FontAwesome (.woff2)
+                        // 2. Cache file Webfont của Google Fonts & FontAwesome (Bao gồm woff2, ttf, eot, otf, svg)
                         {
-                            urlPattern: /^https:\/\/(fonts\.gstatic\.com|cdnjs\.cloudflare\.com)\/.*\.woff2?/i,
+                            // [FIX] Mở rộng pattern để bắt được mọi định dạng font mà FontAwesome có thể fallback về
+                            urlPattern: /^https:\/\/(fonts\.gstatic\.com|cdnjs\.cloudflare\.com)\/.*\.(woff2?|ttf|eot|otf|svg)/i,
                             handler: 'CacheFirst',
                             options: {
                                 cacheName: 'external-webfonts',
@@ -126,7 +127,7 @@ export default defineConfig(({ mode }) => {
                         {
                             urlPattern: ({ url }) => url.pathname.includes('/app-content/audio/') && url.pathname.endsWith('.mp3'),
                             handler: 'CacheFirst',
-                            options: {
+                             options: {
                                 cacheName: 'audio-mp3-cache',
                                 expiration: { maxEntries: 600, maxAgeSeconds: 60 * 60 * 24 * 365 },
                                 cacheableResponse: { statuses: [0, 200] }

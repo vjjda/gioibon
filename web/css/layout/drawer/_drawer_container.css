@@ -24,16 +24,29 @@
     z-index: 1000;
     width: 330px;
     max-width: calc(100vw - 30px);
+    
+    /* [FIX] Luôn giữ element trong Render Tree để Safari không bị lỗi mất SVG */
     opacity: 1;
+    visibility: visible;
     transform: translateY(0) scale(1);
+    
+    /* Animation khi mở: transition opacity, transform và áp dụng visibility ngay lập tức */
     transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0s linear 0s;
     transform-origin: top right;
 }
 
 #control-drawer.hidden {
-    display: none;
+    /* [FIX] Loại bỏ display: none, thay bằng visibility: hidden và pointer-events */
     opacity: 0;
+    visibility: hidden;
     transform: translateY(-10px) scale(0.95);
     pointer-events: none;
+    
+    /* Animation khi đóng: chờ 0.2s (bằng thời gian mờ đi) rồi mới gán visibility: hidden */
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0s linear 0.2s;
 }
+

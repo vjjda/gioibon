@@ -104,3 +104,12 @@ button,
 .play-sequence-btn.active-play {
     font-size: 1.1rem;
 }
+
+/* [SAFARI & PWA FIX] Đảm bảo SVG nội tuyến bên trong nút không bị sập layout và luôn kế thừa màu */
+button svg,
+.btn svg,
+.icon-btn svg {
+    color: inherit;
+    flex-shrink: 0;
+}
+
