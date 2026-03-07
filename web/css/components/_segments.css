@@ -80,7 +80,14 @@ body:not(.hint-mode-active) .segment-text.masked .hint-content {
 /* 4. Khi BẬT Hint Mode: Lộ diện nội dung hint-content */
 body.hint-mode-active .segment-text.masked .hint-content {
     background-color: transparent;
-    color: var(--text-main);
+    color: var(--text-main) !important;
+}
+
+/* Đảm bảo các thẻ con (p, h1, h2, span...) bên trong hint-content cũng phải hiện chữ */
+body.hint-mode-active .segment-text.masked .hint-content * {
+    color: inherit !important;
+    opacity: 1 !important;
+    background-color: transparent !important;
 }
 
 /* 5. Định dạng dấu ba chấm gợi ý */
