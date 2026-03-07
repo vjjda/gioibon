@@ -11,6 +11,9 @@ export class SearchRenderer {
         this.sheet.open();
         if (this.resultsContainer) {
             this.resultsContainer.innerHTML = '<div style="text-align:center; padding: 2rem; color: var(--text-muted);">Đang tìm kiếm...</div>';
+            // Đặt lại vị trí cuộn về đầu trang cho vùng chứa nội dung
+            const scrollContainer = this.resultsContainer.closest('.bottom-sheet-content') || this.resultsContainer;
+            scrollContainer.scrollTop = 0;
         }
 
         if (activeSegmentId && this.contentRenderer) {
@@ -104,10 +107,12 @@ export class SearchRenderer {
             html += `
                 <div class="search-result-card" data-id="${group.id}" data-rule-id="${group.rule_id || ''}" data-heading-id="${group.heading_id || ''}">
                     <div class="search-result-card-header">
-                        ${breadcrumbsHtml}
+                        <div class="search-result-metadata">
+                            ${breadcrumbsHtml}
+                            ${ruleText}
+                        </div>
                         ${jumpButtonHtml}
                     </div>
-                    ${ruleText}
                     <div class="search-result-text">${combinedSnippets}</div>
                     <div class="search-result-expanded-content hidden"></div>
                 </div>

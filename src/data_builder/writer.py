@@ -70,7 +70,7 @@ class DataWriter:
                 segment,
                 content='contents',
                 content_rowid='uid',
-                tokenize='unicode61'
+                tokenize='unicode61 remove_diacritics 0'
             )
         """)
         
